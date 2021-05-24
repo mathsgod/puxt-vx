@@ -1,0 +1,28 @@
+{
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../puxt"
+        }
+    ],
+    "name": "mathsgod/puxt-vx",
+    "description": "vx framework",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Raymond Chong",
+            "email": "mathsgod@yahoo.com"
+        }
+    ],
+    "require": {
+        "mathsgod/puxt": "dev-main",
+        "hostlink/puxt-db": "^1.0",
+        "symfony/yaml": "^5.2",
+        "mathsgod/p-query": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "class/"
+        }
+    }
+}
