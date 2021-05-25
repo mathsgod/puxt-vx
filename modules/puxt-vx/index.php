@@ -36,6 +36,9 @@ return function ($options) {
             }
             $t[] = $q;
         }
+
+        $vx->object_id = $id;
+
         $path = implode("/", $t);
         $puxt->context->route->path = $path;
 

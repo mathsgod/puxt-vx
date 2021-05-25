@@ -139,7 +139,7 @@ class RTableResponse implements JsonSerializable
 
             if (is_array($obj)) {
                 if ($obj["canView"]) {
-                    $uri = $that->model . "/" . $obj[$that->key] . "/v";
+                    $uri = $that->model . "/" . $obj[$that->key] . "/view";
                     $a = html("router-link")->class("btn btn-xs btn-info")->to($uri);
                     $a->i->class("fa fa-search fa-fw");
                     return $a;
@@ -150,7 +150,7 @@ class RTableResponse implements JsonSerializable
             if (!$obj->canReadBy($this->context->user)) {
                 return;
             }
-            $a = html("router-link")->class("btn btn-xs btn-info")->to("/" . $obj->uri("v"));
+            $a = html("router-link")->class("btn btn-sm btn-info")->to("/" . $obj->uri("view"));
             $a->i->class("fa fa-search fa-fw");
 
             return "<vue>$a</vue>";

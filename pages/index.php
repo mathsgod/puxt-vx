@@ -6,6 +6,11 @@ use VX\Module;
 return [
     "get" => function () {
 
+        $data = [
+            "logined" => false
+        ];
+
+
         //load menus
         $modules = [];
         foreach (glob(__DIR__ . "/*", GLOB_ONLYDIR) as $m) {
@@ -24,7 +29,10 @@ return [
             $menus[] = $m->getMenuItem();
         }
 
-        return ["menus" => $menus];
+        $data["logined"]=true;
+        $data["menus"] = $menus;
+        return $data;
+
 
 
 
