@@ -1,12 +1,18 @@
-<el-card>{{form|raw}}</el-card>
+{{form|raw}}
 <?php
 return ["get" => function (VX $context) {
-
     $form = $context->createForm();
     $form->add("Name")->input("name")->required();
-    //$form->add("Name")->select
+    $form->add("Remark")->textarea("remark");
     $this->form = $form;
-}, "post" => function () {
+}, "post" => function (VX $context) {
+    $data = $context->req->getParsedBody();
 
-    print_R($_POST);
+    $obj = $context->object();
+    $obj->bind($data);
+    $obj->save();
+    return [
+        "status" => 303,
+        "location" => $obj->uri("view")
+    ];
 }];

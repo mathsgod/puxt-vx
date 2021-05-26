@@ -1,22 +1,21 @@
 {{table|raw}}
 <?php
 
-use VX\UserGroup;
+use VX\EventLog;
 
 return [
     "get" => function (VX $context) {
         $rt = $context->createRTable();
-        $rt->setAttribute("remote", "UserGroup/list?_action=ds");
+        $rt->setAttribute("remote", "EventLog/list?_action=ds");
         $rt->addView();
-        $rt->addDel();
-        $rt->add("Name", "name")->ss();
+        $rt->add("ID", "eventlog_id");
         $this->table = $rt;
     },
     "action" => [
         "ds" => function (VX $context) {
 
             $rt = $context->createRTableResponse();
-            $rt->source = UserGroup::Query();
+            $rt->source = EventLog::Query();
             return $rt;
         }
     ]

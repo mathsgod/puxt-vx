@@ -1,2 +1,3 @@
 class: VX\UserGroup
 icon: fa fa-users
+show_create: true

@@ -12,6 +12,7 @@ class FormItemInput extends HTMLElement
     public function __construct()
     {
         parent::__construct("el-input");
+        
     }
 
     public function required(string $message = null)

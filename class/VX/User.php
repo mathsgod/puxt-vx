@@ -6,7 +6,7 @@ use Exception;
 
 class User extends Model
 {
-    public static function Login(string $username, string $password, $code = null)
+    public static function Login(string $username, string $password, $code = null) 
     {
         $user = self::Query([
             "username" => $username,

@@ -29,7 +29,7 @@ class Model extends ORMModel implements IModel
         return true;
     }
 
-    public function uri(string $name): string
+    public function uri(string $name = null): string
     {
         $reflect = new ReflectionClass($this);
         $uri = $reflect->getShortName();
@@ -41,6 +41,7 @@ class Model extends ORMModel implements IModel
         if (isset($name)) {
             $uri .= "/" . $name;
         }
+
         return $uri;
     }
 }

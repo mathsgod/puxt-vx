@@ -3,22 +3,27 @@
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Yaml\Yaml;
+use VX\IModel;
 use VX\Module;
 use VX\UI\Form;
 use VX\UI\RTable;
+use VX\UI\Tabs;
 use VX\User;
 use VX\UI\View;
 
+/**
+ * @property Module $module
+ */
 class VX extends Context
 {
 
+    public $module;
     public function __construct(Context $context)
     {
         foreach ($context as $k => $v) {
             $this->$k = $v;
         }
 
-        session_start();
         if (!$_SESSION["VX"]) $_SESSION["VX"] = ["user_id" => 2];
 
         $this->user_id = $_SESSION["VX"]["user_id"];
@@ -29,14 +34,31 @@ class VX extends Context
         $this->module = $this->loadModule($p);
     }
 
+    public function createTab()
+    {
+        return new Tabs;
+    }
+
+    public function logined()
+    {
+        return $_SESSION["VX"]["user_id"] != 2;
+    }
+
+    public function acl(string $path)
+    {
+        if ($path == "index" || $path == "logout") {
+            return true;
+        }
+
+        return true;
+    }
+
     public function createForm()
     {
         $form = new Form;
-
         if ($obj = $this->object()) {
             $form->setData($obj);
         }
-
         return $form;
     }
 
@@ -48,14 +70,20 @@ class VX extends Context
 
     public function createRTableResponse()
     {
-        return new  RTableResponse($this, $this->query);
+        return new RTableResponse($this, $this->query);
     }
 
     public function login(string $username, string $password)
     {
+        try {
+            $user = User::Login($username, $password);
+            $_SESSION["VX"]["user_id"] = $user->user_id;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
-    public function object()
+    public function object(): ?IModel
     {
         if ($this->module) {
             $class = $this->module->class;

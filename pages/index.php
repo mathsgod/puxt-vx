@@ -4,33 +4,50 @@ use Symfony\Component\Yaml\Yaml;
 use VX\Module;
 
 return [
-    "get" => function () {
+    "get" => function (VX $context) {
 
+        $logined = $context->logined();
         $data = [
-            "logined" => false
+            "logined" => $logined
         ];
 
+        if ($logined) {
 
-        //load menus
-        $modules = [];
-        foreach (glob(__DIR__ . "/*", GLOB_ONLYDIR) as $m) {
-            $name = basename($m);
-            $config = [];
-            if (is_readable($config_file = $m . DIRECTORY_SEPARATOR . "setting.yml")) {
-                $config = Yaml::parseFile($config_file);
+
+
+            //load menus
+            $modules = [];
+            foreach (glob(__DIR__ . "/*", GLOB_ONLYDIR) as $m) {
+                $name = basename($m);
+                $config = [];
+                if (is_readable($config_file = $m . DIRECTORY_SEPARATOR . "setting.yml")) {
+                    $config = Yaml::parseFile($config_file);
+                }
+
+                $modules[] = new Module($name, $config);
             }
 
-            $modules[] = new Module($name, $config);
+
+            $menus = [];
+            foreach ($modules as $m) {
+                $menus[] = $m->getMenuItem();
+            }
+
+            $data["menus"] = $menus;
+
+
+            //language 
+            $data["language"] = $context->config["VX"]["language"];
+
+
+            //user
+            $user = $context->user;
+            $data["me"] = [
+                "first_name" => $user->first_name,
+                "last_name" => $user->last_name
+            ];
         }
 
-
-        $menus = [];
-        foreach ($modules as $m) {
-            $menus[] = $m->getMenuItem();
-        }
-
-        $data["logined"]=true;
-        $data["menus"] = $menus;
         return $data;
 
 

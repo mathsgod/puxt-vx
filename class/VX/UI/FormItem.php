@@ -32,6 +32,18 @@ class FormItem extends HTMLElement
         return $this;
     }
 
+    public function textarea(string $name)
+    {
+        $input = new FormItemInput();
+        $input->setAttribute("name", $name);
+        $input->setAttribute("v-model", "scope.form.{$name}");
+        $input->setAttribute("type", "textarea");
+
+        $this->append($input);
+        $this->setAttribute("prop", $name);
+        return $input;
+    }
+
     public function input(string $name)
     {
         $input = new FormItemInput();
@@ -138,7 +150,7 @@ class FormItem extends HTMLElement
 
         $this->append($cb);
         $this->setAttribute("prop", $name);
-/* 
+        /* 
         $hidden = new HTMLElement("input");
         $hidden->setAttribute("type", "hidden");
         $hidden->setAttribute("name", $name);

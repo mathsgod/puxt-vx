@@ -13,5 +13,11 @@ return [
         "database" => "raymond",
     ],
 
+    "VX" => [
+        "language" => [
+            "en" => "English",
+            "zh-hk" => "中文"
+        ]
+    ]
 
 ];

@@ -4,6 +4,7 @@ use PUXT\App;
 use VX\Model;
 
 return function ($options) {
+    session_start();
 
     $this->puxt->hook('ready', function (App $puxt) {
 
@@ -42,6 +43,17 @@ return function ($options) {
         $path = implode("/", $t);
         $puxt->context->route->path = $path;
 
+        //check permission
+        if (!$vx->acl($path)) {
+            header("Content-type: application/json; charset=utf-8");
+            echo json_encode(["error" => [
+                "code" => 401,
+                "message" => "access deny"
+            ]]);
+            die();
+        }
+
+
         $globs = glob("pages/" . $path . ".*");
 
         if (count($globs)) {
@@ -49,24 +61,35 @@ return function ($options) {
         }
 
         //$this->puxt->config["dir"]["pages"] = "modules/puxt-vx/pages";
+
+        if ($vx->req->getMethod() == "DELETE") {
+
+            if ($obj = $vx->object()) {
+                if ($obj->canDeleteBy($vx->user)) {
+                    $obj->delete();
+                }
+                echo json_encode(["code" => 200]);
+                die();
+            }
+        }
     });
 
     $this->puxt->hook("render:before", function ($page) {
 
+        $data = [];
 
+        $p = $page->stub["page"];
+        if ($p) {
+            $data = $p;
+        }
 
-        $type = $page->stub["type"];
 
         $content = $page->render("");
-        if ($type == "page") {
-            header("Content-type: application/json; charset=utf-8");
-            $data = [
-                "data" => [
-                    "content" => $content
-                ]
-            ];
 
-            echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        if ($p) {
+            header("Content-type: application/json; charset=utf-8");
+            $data["body"] = $content;
+            echo json_encode(["data" => $data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             exit();
         }
     });

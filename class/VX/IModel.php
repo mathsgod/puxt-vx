@@ -9,4 +9,7 @@ interface IModel
     public function canUpdateBy(User $user): bool;
 
     public function uri(string $name): string;
+
+    public function save();
+    public function delete();
 }

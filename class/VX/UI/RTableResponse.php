@@ -56,15 +56,20 @@ class RTableResponse implements JsonSerializable
     public function __construct(VX $context, $query)
     {
 
+
         $this->context = $context;
         $this->draw = intval($query["draw"]);
         $this->request["columns"] = $query["columns"];
         $this->order = $query["order"];
         $this->page = intval($query["page"]);
         $this->length = intval($query["length"]);
-        $this->search = $query["search"];
         $this->row = new Row();
-        $this->search = $query["search"] ?? [];
+        $this->search = [];
+        if ($query["search"]) {
+            foreach ($query["search"] as $s) {
+                $this->search[] = json_decode($s, true);
+            }
+        }
 
         foreach ($this->request["columns"] as $column) {
             if ($column == "__view__") {
@@ -173,13 +178,13 @@ class RTableResponse implements JsonSerializable
         $that = $this;
         $c->descriptor[] = function ($obj) use ($that) {
             if (is_array($obj)) {
-                if ($obj["canView"]) {
+                if ($obj["canDelete"]) {
                     return $that->model . "/" . $obj[$that->key];
                 }
                 return;
             }
 
-            if (!$obj->canDelete()) {
+            if (!$obj->canDeleteBy($this->context->user)) {
                 return;
             }
             return $obj->uri();
