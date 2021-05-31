@@ -1,6 +1,7 @@
 <?php
 
 use PUXT\App;
+use Symfony\Component\Yaml\Parser;
 use VX\Model;
 
 return function ($options) {
@@ -12,6 +13,11 @@ return function ($options) {
 
         $vx = $puxt->context = new VX($puxt->context);
         $vx->db = Model::$db;
+
+
+        $parser = new Parser();
+        $vx->config["VX"] = $parser->parseFile(__DIR__ . "/default.config.yml");
+
 
         $path = $puxt->context->route->path;
 

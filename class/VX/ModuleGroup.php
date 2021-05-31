@@ -4,20 +4,35 @@ namespace VX;
 
 class ModuleGroup
 {
+    public $name;
+    public $child = [];
 
-    public static $All = [];
-    public static function CreateOrLoad(string $name): self
+    public function __construct(string $name)
     {
-        if (!self::$All[$name]) {
-            self::$All[$name] = new self($name);
-        }
-
-        return self::$All[$name];
+        $this->name = $name;
     }
 
-    public $child = [];
+
     public function add(Module $module)
     {
         $this->child[] = $module;
+    }
+
+    public function getMenuItem()
+    {
+        $data = [];
+
+        $data["label"] = $this->name;
+        $data["icon"] = "far fa-circle";
+
+        $data["link"] = "#";
+
+        $submenu = [];
+        foreach ($this->child as $child) {
+            $submenu[] = $child->getMenuItem();
+        }
+        $data["submenu"] = $submenu;
+
+        return $data;
     }
 }

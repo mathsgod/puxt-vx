@@ -1,0 +1,29 @@
+company: HostLink
+2-step verification: 0
+2-step verification white list: null
+footer_content:
+copyright-year: 2021
+copyright-url: https://www.hostlink.com.hk
+copyright-name: HostLink
+logo:
+
+search-form: false
+default-skin: skin-blue
+
+domain:
+
+smtp:
+smtp-username:
+smtp-password:
+smtp-port:
+smtp-auto-tls: 1
+
+return-path:
+
+password-length: 6
+
+log-save: true
+
+development: true
+
+auth-lockout: true

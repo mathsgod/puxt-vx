@@ -6,17 +6,23 @@ use Symfony\Component\Yaml\Yaml;
 use VX\IModel;
 use VX\Module;
 use VX\UI\Form;
+use VX\UI\FormItem;
+use VX\UI\FormTable;
 use VX\UI\RTable;
 use VX\UI\Tabs;
 use VX\User;
 use VX\UI\View;
 
 /**
+ * @property User $user
+ * @property int $user_id
  * @property Module $module
  */
 class VX extends Context
 {
 
+    public $user;
+    public $user_id;
     public $module;
     public function __construct(Context $context)
     {
@@ -34,9 +40,25 @@ class VX extends Context
         $this->module = $this->loadModule($p);
     }
 
+    public function createFormTable($data, string $data_key, string $data_name = "data")
+    {
+        $t = new FormTable;
+        $t->setAttribute("data-key", $data_key);
+        $t->setAttribute("data-name", $data_name);
+
+        if ($data) {
+            $t->setAttribute(":data", json_encode($data));
+        }
+        return $t;
+    }
+
     public function createTab()
     {
-        return new Tabs;
+        $tab = new Tabs;
+
+        $tab->setBaseURL(dirname($this->req->getUri()->getPath()));
+
+        return $tab;
     }
 
     public function logined()
@@ -62,9 +84,19 @@ class VX extends Context
         return $form;
     }
 
-    public function createRTable()
+    public function createRTable(string $entry)
     {
         $rt = new RTable();
+
+        $uri = $this->req->getUri();
+
+        $query = $this->req->getQueryParams();
+        $query["_entry"] = $entry;
+
+        $uri = $uri->withQuery(http_build_query($query));
+
+        $rt->setAttribute("remote", $uri->getPath() . "?" . $uri->getQuery());
+
         return $rt;
     }
 
@@ -109,5 +141,19 @@ class VX extends Context
     public function createView()
     {
         return new View();
+    }
+
+    public function getModules()
+    {
+
+        $modules = [];
+        foreach (glob($this->root . "/pages/*", GLOB_ONLYDIR) as $m) {
+            $name = basename($m);
+            $module = new Module($name);
+            $module->loadConfigFile($m . "/setting.yml");
+            $modules[] = $module;
+        }
+
+        return $modules;
     }
 }

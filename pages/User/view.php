@@ -1,11 +1,21 @@
-<el-card>
-    <vx-view>
-        <vx-view-item label="First name">{{obj.first_name}}</vx-view-item>
-        <vx-view-item label="Last name">{{obj.last_name}}</vx-view-item>
-        <vx-view-item label="Username">{{obj.username}}</vx-view-item>
-    </vx-view>
-</el-card>
+<vx-card>
+    <vx-card-body>
+        {{tab|raw}}
+    </vx-card-body>
+</vx-card>
+
 <?php
+
+use VX\UI\Tabs;
+
 return ["get" => function (VX $context) {
-    $this->obj = $context->object();
+    $tab = $context->createTab();
+    $tab->setType(Tabs::TYPE_PILLS);
+    $tab->add("Info", "view_info");
+
+   
+    $tab->add("Edit", "ae");
+
+    
+    $this->tab = $tab;
 }];

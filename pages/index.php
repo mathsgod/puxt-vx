@@ -1,7 +1,36 @@
 <?php
 
-use Symfony\Component\Yaml\Yaml;
 use VX\Module;
+use VX\ModuleGroup;
+
+class Menu
+{
+    public $items = [];
+    public $groups = [];
+    public function addModule(Module $module)
+    {
+        if ($module->group) {
+            if (!$mg = $this->groups[$module->group]) {
+                $mg = new ModuleGroup($module->group);
+                $this->groups[$module->group] = $mg;
+                $this->items[] = $mg;
+            }
+            $mg->add($module);
+        } else {
+            $this->items[] = $module;
+        }
+    }
+
+
+    public function getMenu()
+    {
+        $data = [];
+        foreach ($this->items as $item) {
+            $data[] = $item->getMenuItem();
+        }
+        return $data;
+    }
+}
 
 return [
     "get" => function (VX $context) {
@@ -12,33 +41,17 @@ return [
         ];
 
         if ($logined) {
+            $modules = $context->getModules();
 
-
-
-            //load menus
-            $modules = [];
-            foreach (glob(__DIR__ . "/*", GLOB_ONLYDIR) as $m) {
-                $name = basename($m);
-                $config = [];
-                if (is_readable($config_file = $m . DIRECTORY_SEPARATOR . "setting.yml")) {
-                    $config = Yaml::parseFile($config_file);
-                }
-
-                $modules[] = new Module($name, $config);
-            }
-
-
-            $menus = [];
+            $menu = new Menu();
             foreach ($modules as $m) {
-                $menus[] = $m->getMenuItem();
+                $menu->addModule($m);
             }
 
-            $data["menus"] = $menus;
-
+            $data["menus"] = $menu->getMenu();
 
             //language 
             $data["language"] = $context->config["VX"]["language"];
-
 
             //user
             $user = $context->user;
@@ -47,6 +60,8 @@ return [
                 "last_name" => $user->last_name
             ];
         }
+
+        $data["config"] = $context->config["VX"];
 
         return $data;
 

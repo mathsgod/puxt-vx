@@ -1,0 +1,3 @@
+class: App\UserLog
+group: System
+icon: fa fa-file-alt

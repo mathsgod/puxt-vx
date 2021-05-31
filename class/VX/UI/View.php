@@ -12,7 +12,7 @@ class View extends HTMLElement
         parent::__construct("vx-view");
     }
 
-    public function addItem(string $label)
+    public function addItem(string $label, string $content)
     {
         $item = new ViewItem();
 
@@ -20,8 +20,19 @@ class View extends HTMLElement
 
         $this->appendChild($item);
 
+        $item->setContent($content);
+
         return $item;
     }
 
-    
+    public function add(string $label, $field)
+    {
+
+        return $this->addItem($label, var_get($this->data, $field));
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
 }

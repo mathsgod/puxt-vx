@@ -3,15 +3,18 @@
 namespace VX;
 
 use Exception;
+use Symfony\Component\Yaml\Yaml;
 
 class Module
 {
     public $name;
     public $class;
-    public $icon;
+    public $icon = "far fa-circle";
     public $group;
     public $sequence = PHP_INT_MAX;
     public $hide = false;
+
+    public $menu = [];
 
     public function __construct(string $name, array $config = [])
     {
@@ -20,6 +23,17 @@ class Module
 
         foreach ($config as $k => $v) {
             $this->$k = $v;
+        }
+    }
+
+    public function loadConfigFile(string $filename)
+    {
+        if (file_exists($filename)) {
+            $yaml = new Yaml;
+            $config = $yaml->parseFile($filename);
+            foreach ($config as $k => $v) {
+                $this->$k = $v;
+            }
         }
     }
 
@@ -40,11 +54,13 @@ class Module
         $data["icon"] = $this->icon;
 
 
-        if ($sub = $this->getMenuLink()) {
-            $data["link"] = $this->name;
-            $data["submenu"] = $sub;
+        $submenu = $this->getMenuLink();
+        if (count($submenu) == 1) {
+
+            $data["link"] = $submenu[0]["link"];
         } else {
             $data["link"] = "#";
+            $data["submenu"] = $submenu;
         }
 
 
@@ -73,6 +89,11 @@ class Module
 
 
 
+        foreach ($this->menu as $name => $m) {
+            $link = $m;
+
+            $links[] = $link;
+        }
 
 
         return $links;

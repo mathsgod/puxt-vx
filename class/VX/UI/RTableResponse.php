@@ -9,6 +9,7 @@ use JsonSerializable;
 use Exception;
 use Psr\Http\Message\RequestInterface;
 use VX;
+use VX\IModel;
 
 class Row
 {
@@ -40,6 +41,9 @@ class Row
     }
 }
 
+/**
+ * @property \VX $context
+ */
 class RTableResponse implements JsonSerializable
 {
     public $fields = [];
@@ -52,15 +56,21 @@ class RTableResponse implements JsonSerializable
     public $row;
 
     public $columns = [];
+    public $context;
+    public $order = [];
 
     public function __construct(VX $context, $query)
     {
-
-
         $this->context = $context;
         $this->draw = intval($query["draw"]);
         $this->request["columns"] = $query["columns"];
-        $this->order = $query["order"];
+
+        if ($query["order"]) {
+            foreach ($query["order"] as $order) {
+                $this->order[] = json_decode($order, true);
+            }
+        }
+
         $this->page = intval($query["page"]);
         $this->length = intval($query["length"]);
         $this->row = new Row();
@@ -108,23 +118,23 @@ class RTableResponse implements JsonSerializable
         $c->name = "__edit__";
         $c->className[] = "text-center";
         $c->width = "1px";
-        $c->descriptor[] = function ($obj) use ($that) {
+        $c->descriptor[] = function (IModel $obj) use ($that) {
             if (is_array($obj)) {
                 if ($obj["canUpdate"]) {
                     $uri = $that->model . "/" . $obj[$that->key] . "/ae";
-                    $a = html("a")->class("btn btn-xs btn-warning text-white")->href($uri);
+                    $a = html("router-link")->class("btn btn-sm btn-warning text-white")->href($uri);
                     $a->i->class("fa fa-pencil-alt fa-fw");
                     return $a;
                 }
                 return;
             }
 
-            if (!$obj->canUpdate()) {
+            if (!$obj->canUpdateBy($this->context->user)) {
                 return;
             }
-            $a = html("a")->class("btn btn-xs btn-warning text-white")->href($obj->uri("ae"));
+            $a = html("router-link")->class("btn btn-sm btn-warning text-white")->to("/" . $obj->uri("ae"));
             $a->i->class("fa fa-pencil-alt fa-fw");
-            return $a;
+            return "<vue>$a</vue>";
         };
         $this->_columns["__edit__"] = $c;
         return $c;
@@ -145,7 +155,7 @@ class RTableResponse implements JsonSerializable
             if (is_array($obj)) {
                 if ($obj["canView"]) {
                     $uri = $that->model . "/" . $obj[$that->key] . "/view";
-                    $a = html("router-link")->class("btn btn-xs btn-info")->to($uri);
+                    $a = html("router-link")->class("btn btn-sm btn-info")->to($uri);
                     $a->i->class("fa fa-search fa-fw");
                     return $a;
                 }
