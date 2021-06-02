@@ -13,9 +13,9 @@ return ["get" => function (VX $context) {
     $tab->setType(Tabs::TYPE_PILLS);
     $tab->add("Info", "view_info");
 
-   
+
     $tab->add("Edit", "ae");
 
-    
+
     $this->tab = $tab;
 }];

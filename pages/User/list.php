@@ -9,6 +9,7 @@ return [
         $rt->addView();
         $rt->addEdit();
         $rt->addDel();
+
         $rt->add("Username", "username")->ss();
         $rt->add("First name", "first_name")->ss();
         $rt->add("Last name", "last_name")->ss();
@@ -16,6 +17,7 @@ return [
         $rt->add("Email", "email")->ss();
         $rt->add("Join date", "join_date");
         $rt->add("Language", "language");
+        
         $this->table = $rt;
     },
     "entries" => [

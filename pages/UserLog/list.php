@@ -6,8 +6,7 @@ use VX\UserLog;
 
 return [
     "get" => function (VX $context) {
-        $rt = $context->createRTable();
-        $rt->setAttribute("remote", "UserLog/list?_action=ds");
+        $rt = $context->createRTable("ds");
         $rt->add("ID", "userlog_id")->sortable()->searchable("equal");
         $rt->add("User", "user_id")->searchOption(User::Query());
         $rt->add("Login time", "login_dt")->sortable()->searchable("date");
@@ -17,7 +16,7 @@ return [
         $rt->add("User agent", "user_agent")->searchable();
         $this->table = $rt;
     },
-    "action" => [
+    "entries" => [
         "ds" => function (VX $context) {
 
             $rt = $context->createRTableResponse();

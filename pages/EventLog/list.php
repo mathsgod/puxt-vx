@@ -5,13 +5,12 @@ use VX\EventLog;
 
 return [
     "get" => function (VX $context) {
-        $rt = $context->createRTable();
-        $rt->setAttribute("remote", "EventLog/list?_action=ds");
+        $rt = $context->createRTable("ds");
         $rt->addView();
         $rt->add("ID", "eventlog_id");
         $this->table = $rt;
     },
-    "action" => [
+    "entries" => [
         "ds" => function (VX $context) {
 
             $rt = $context->createRTableResponse();

@@ -75,7 +75,7 @@ class Module
         $link = [];
         $link["label"] = "List";
         $link["icon"] = "fa fa-list";
-        $link["link"] = $this->name;
+        $link["link"] = "/" . $this->name;
         $links[] = $link;
 
 
@@ -83,7 +83,7 @@ class Module
             $link = [];
             $link["label"] = "Add";
             $link["icon"] = "fa fa-plus";
-            $link["link"] = $this->name . "/ae";
+            $link["link"] = "/" . $this->name . "/ae";
             $links[] = $link;
         }
 

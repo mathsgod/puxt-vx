@@ -6,6 +6,6 @@
 
 return ["get" => function (VX $context) {
     $tab = $context->createTab();
-    $tab->add("All events", "EventLog/list");
+    $tab->add("All events", "list");
     $this->tab = $tab;
 }];

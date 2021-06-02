@@ -5,5 +5,5 @@ show_create: true
 
 menu:
   - label: Update
-    link: Config/update
+    link: /Config/update
     icon: far fa-circle

@@ -30,6 +30,11 @@ class VX extends Context
             $this->$k = $v;
         }
 
+//        $auth = $context->req->getHeader("Authorization");
+        
+        
+
+
         if (!$_SESSION["VX"]) $_SESSION["VX"] = ["user_id" => 2];
 
         $this->user_id = $_SESSION["VX"]["user_id"];

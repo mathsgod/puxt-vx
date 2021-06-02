@@ -14,6 +14,9 @@ return [
     ],
 
     "VX" => [
+        "jwt"=>[
+            "secret"=>"hostlink secret key"
+        ],
         "language" => [
             "en" => "English",
             "zh-hk" => "中文"
