@@ -42,6 +42,6 @@ class Model extends ORMModel implements IModel
             $uri .= "/" . $name;
         }
 
-        return $uri;
+        return "/" . $uri;
     }
 }

@@ -132,7 +132,7 @@ class RTableResponse implements JsonSerializable
             if (!$obj->canUpdateBy($this->context->user)) {
                 return;
             }
-            $a = html("router-link")->class("btn btn-sm btn-warning text-white")->to("/" . $obj->uri("ae"));
+            $a = html("router-link")->class("btn btn-sm btn-warning text-white")->to($obj->uri("ae"));
             $a->i->class("fa fa-pencil-alt fa-fw");
             return "<vue>$a</vue>";
         };
@@ -165,7 +165,7 @@ class RTableResponse implements JsonSerializable
             if (!$obj->canReadBy($this->context->user)) {
                 return;
             }
-            $a = html("router-link")->class("btn btn-sm btn-info")->to("/" . $obj->uri("view"));
+            $a = html("router-link")->class("btn btn-sm btn-info")->to($obj->uri("view"));
             $a->i->class("fa fa-search fa-fw");
 
             return "<vue>$a</vue>";

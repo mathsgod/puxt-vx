@@ -1,10 +1,12 @@
-{{view|raw}}
+<vx-card>
+    {{view|raw}}
+</vx-card>
 <?php
 return ["get" => function (VX $context) {
 
-    $obj = $context->object();
+
     $view = $context->createView();
-    $view->addItem("Name")->setContent($obj->name);
+    $view->add("Name", "name");
 
     $this->view = $view;
 }];

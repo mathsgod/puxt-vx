@@ -1,8 +1,28 @@
 <?php
-return ["post" => function (VX $context) {
-    $data = $context->req->getParsedBody();
+
+use Firebase\JWT\JWT;
+
+return [
+    "get" => function (VX $context) {
+    },
+    "post" => function (VX $context) {
+        $data = $context->req->getParsedBody();
 
 
-    $context->login($data["username"], $data["password"]);
-    return ["data" => true];
-}];
+
+        $user = $context->login($data["username"], $data["password"]);
+
+
+        $token = JWT::encode([
+            "type" => "access_token",
+            "iat" => time(),
+            "exp" => time() + 3600,
+            "user_id" => $user->user_id
+        ], $context->config["VX"]["jwt"]["secret"]);
+
+
+        return ["data" => [
+            "access_token" => $token
+        ]];
+    }
+];

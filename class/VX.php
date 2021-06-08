@@ -1,10 +1,12 @@
 <?php
 
+use Firebase\JWT\JWT;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Yaml\Yaml;
 use VX\IModel;
 use VX\Module;
+use VX\Response;
 use VX\UI\Form;
 use VX\UI\FormItem;
 use VX\UI\FormTable;
@@ -24,26 +26,48 @@ class VX extends Context
     public $user;
     public $user_id;
     public $module;
-    public function __construct(Context $context)
+    public $logined = false;
+    public $res;
+
+    public function __construct()
+    {
+        $this->res = new Response;
+    }
+
+    public function init(Context $context)
     {
         foreach ($context as $k => $v) {
             $this->$k = $v;
         }
 
-//        $auth = $context->req->getHeader("Authorization");
-        
-        
+        //        $auth = $context->req->getHeader("Authorization");
 
+        $token = $this->req->getHeader("Authorization")[0];
+        if ($token) {
+            $jwt = explode("Bearer ", $token)[1];
+        }
 
-        if (!$_SESSION["VX"]) $_SESSION["VX"] = ["user_id" => 2];
+        if ($this->req->getQueryParams()["_token"]) {
+            $jwt = $this->req->getQueryParams()["_token"];
+        }
 
-        $this->user_id = $_SESSION["VX"]["user_id"];
-        $this->user = User::Query(["user_id" => $this->user_id])->first();
+        if ($jwt) {
+
+            $this->user_id = 2;
+            try {
+                $data = (array)JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+                $this->user_id = $data["user_id"];
+                $this->logined = true;
+            } catch (Exception $e) {
+            }
+            $this->user = User::Query(["user_id" => $this->user_id])->first();
+        }
 
         $path = $context->route->path;
         $p = explode("/", $path)[0];
         $this->module = $this->loadModule($p);
     }
+
 
     public function createFormTable($data, string $data_key, string $data_name = "data")
     {
@@ -64,11 +88,6 @@ class VX extends Context
         $tab->setBaseURL(dirname($this->req->getUri()->getPath()));
 
         return $tab;
-    }
-
-    public function logined()
-    {
-        return $_SESSION["VX"]["user_id"] != 2;
     }
 
     public function acl(string $path)
@@ -110,11 +129,10 @@ class VX extends Context
         return new RTableResponse($this, $this->query);
     }
 
-    public function login(string $username, string $password)
+    public function login(string $username, string $password): ?User
     {
         try {
-            $user = User::Login($username, $password);
-            $_SESSION["VX"]["user_id"] = $user->user_id;
+            return User::Login($username, $password);
         } catch (Exception $e) {
             throw $e;
         }
@@ -145,7 +163,11 @@ class VX extends Context
 
     public function createView()
     {
-        return new View();
+        $view = new View();
+        $view->setData($this->object());
+
+
+        return $view;
     }
 
     public function getModules()
@@ -160,5 +182,15 @@ class VX extends Context
         }
 
         return $modules;
+    }
+
+    public function postForm()
+    {
+        $body = $this->req->getParsedBody();
+        if ($obj = $this->object()) {
+            $obj->bind($body);
+            $obj->save();
+        }
+        return $obj;
     }
 }

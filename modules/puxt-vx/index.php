@@ -7,16 +7,23 @@ use VX\Model;
 return function ($options) {
     session_start();
 
-    $this->puxt->hook('ready', function (App $puxt) {
+    $vx = new VX();
+
+    $this->puxt->hook('ready', function (App $puxt) use ($vx) {
 
         Model::$db = $puxt->context->db;
 
-        $vx = $puxt->context = new VX($puxt->context);
+        $vx->init($puxt->context);
+        $puxt->context = $vx;
+
         $vx->db = Model::$db;
 
 
         $parser = new Parser();
-        $vx->config["VX"] = $parser->parseFile(__DIR__ . "/default.config.yml");
+        foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
+            $vx->config["VX"][$k] = $v;
+        }
+
 
 
         $path = $puxt->context->route->path;
@@ -80,15 +87,15 @@ return function ($options) {
         }
     });
 
-    $this->puxt->hook("render:before", function ($page) {
+    $this->puxt->hook("render:before", function ($page) use ($vx) {
 
         $data = [];
+
 
         $p = $page->stub["page"];
         if ($p) {
             $data = $p;
         }
-
 
         $content = $page->render("");
 

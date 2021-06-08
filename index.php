@@ -1,10 +1,10 @@
 <?php
 
 
-$origin=$_SERVER["HTTP_ORIGIN"];
+$origin = $_SERVER["HTTP_ORIGIN"];
 header("Access-Control-Allow-Origin: $origin");
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE");
 
 if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
     exit();
 }
 
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 require_once("vendor/autoload.php");
 $app = new PUXT\App(__DIR__);
 $app->run();

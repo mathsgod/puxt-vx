@@ -25,7 +25,7 @@ return ["get" => function (VX $context) {
 
     $form->add("Expiry date")->date("expiry_date");
 
-//    $form->add("Language")->select("language", $context->languages);
+    //    $form->add("Language")->select("language", $context->languages);
 
     $form->add("Default page")->input("default_page");
 
@@ -33,9 +33,6 @@ return ["get" => function (VX $context) {
 
     $this->form = $form;
 }, "post" => function (VX $context) {
-
-
-    print_R($context->req->getParsedBody());
-
-    print_r($context);
+    $obj = $context->postForm();
+    yield $context->res->redirect($obj->uri("view"));
 }];

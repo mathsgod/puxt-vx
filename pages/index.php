@@ -35,7 +35,7 @@ class Menu
 return [
     "get" => function (VX $context) {
 
-        $logined = $context->logined();
+        $logined = $context->logined;
         $data = [
             "logined" => $logined
         ];
@@ -61,7 +61,14 @@ return [
             ];
         }
 
-        $data["config"] = $context->config["VX"];
+        $config = $context->config["VX"];
+        $data["config"] = [
+            "company" => $config["company"],
+            "copyright-year" => $config["copyright-year"],
+            "copyright-url" => $config["copyright-url"],
+            "copyright-name" => $config["copyright-name"]
+        ];
+
 
         return $data;
 
