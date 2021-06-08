@@ -31,10 +31,12 @@ class EventLog extends Model
         $el->class = $ro->getName();
         $el->action = "Update";
 
+        $id = $obj->_id();
         $class = $el->class;
-        $org = new $class($obj->_id());
+        $org = new $class($id);
         $el->source = $org;
         $el->target = $obj;
+        $el->id = $id;
         $el->save();
     }
 
@@ -46,8 +48,9 @@ class EventLog extends Model
         $el = new self;
         $el->user_id = $user->user_id;
         $el->class = $ro->getName();
-        $el->action = "Update";
+        $el->action = "Delete";
         $el->source = $obj;
+        $el->id = $obj->_id();
         $el->save();
     }
 }

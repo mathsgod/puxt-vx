@@ -87,7 +87,7 @@ class VX extends Context
     {
         $tab = new Tabs;
 
-        $tab->setBaseURL(dirname($this->req->getUri()->getPath()));
+        $tab->setBaseURL($this->req->getUri()->getPath());
 
         return $tab;
     }
@@ -242,6 +242,10 @@ class VX extends Context
         }
 
         if ($name == "after_update") {
+        }
+
+        if ($name == "before_delete") {
+            EventLog::LogDelete($obj, $this->user);
         }
     }
 }
