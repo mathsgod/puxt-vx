@@ -2,6 +2,7 @@
 
 namespace VX\UI;
 
+use Closure;
 use P\HTMLElement;
 
 class View extends HTMLElement
@@ -27,8 +28,14 @@ class View extends HTMLElement
 
     public function add(string $label, $field)
     {
+        $content = "";
+        if ($field instanceof Closure) {
+            $content = call_user_func($field, $this->data);
+        } else {
+            $content = var_get($this->data, $field);
+        }
 
-        return $this->addItem($label, var_get($this->data, $field));
+        return $this->addItem($label, $content);
     }
 
     public function setData($data)

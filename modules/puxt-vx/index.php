@@ -11,12 +11,16 @@ return function ($options) {
 
     $this->puxt->hook('ready', function (App $puxt) use ($vx) {
 
+        Model::$_vx = $vx;
+        
         Model::$db = $puxt->context->db;
 
         $vx->init($puxt->context);
         $puxt->context = $vx;
 
         $vx->db = Model::$db;
+
+
 
 
         $parser = new Parser();

@@ -4,6 +4,7 @@ use Firebase\JWT\JWT;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Yaml\Yaml;
+use VX\EventLog;
 use VX\IModel;
 use VX\Module;
 use VX\Response;
@@ -14,6 +15,7 @@ use VX\UI\RTable;
 use VX\UI\Tabs;
 use VX\User;
 use VX\UI\View;
+use VX\UserLog;
 
 /**
  * @property User $user
@@ -131,10 +133,36 @@ class VX extends Context
 
     public function login(string $username, string $password): ?User
     {
+        $ul = new UserLog();
+        $ul->login_dt = date("Y-m-d H:i:s");
+        $ul->ip = $_SERVER['REMOTE_ADDR'];
+        $ul->user_agent = $_SERVER["HTTP_USER_AGENT"];
+
         try {
-            return User::Login($username, $password);
+            $user = User::Login($username, $password);
+            $ul->user_id = $user->user_id;
+            $ul->result = "SUCCESS";
+            $ul->save();
         } catch (Exception $e) {
+            $ul = new UserLog();
+            $ul->result = "FAIL";
+            $ul->save();
             throw $e;
+        }
+        return $user;
+    }
+
+    public function logout()
+    {
+        $this->user_id = 2;
+        //get last logout
+        $o = UserLog::Query([
+            "user_id" => $this->user_id
+        ])->orderBy("userlog_id desc")->first();
+
+        if ($o) {
+            $o->logout_dt = date("Y-m-d H:i:s");
+            $o->save();
         }
     }
 
@@ -165,8 +193,6 @@ class VX extends Context
     {
         $view = new View();
         $view->setData($this->object());
-
-
         return $view;
     }
 
@@ -192,5 +218,30 @@ class VX extends Context
             $obj->save();
         }
         return $obj;
+    }
+
+    public function trigger(string $name, $obj)
+    {
+        if ($name == "before_insert") {
+            if (property_exists($obj, "created_by")) {
+                $obj->created_by = $this->user_id;
+            }
+            return;
+        }
+
+        if ($name == "after_insert") {
+            EventLog::LogInsert($obj, $this->user);
+        }
+
+        if ($name == "before_update") {
+            if (property_exists($obj, "updated_by")) {
+                $obj->created_by = $this->user_id;
+            }
+
+            EventLog::LogUpdate($obj, $this->user);
+        }
+
+        if ($name == "after_update") {
+        }
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-return ["get" => function () {
-    return [
-        "status" => 401
-    ];
+return ["get" => function (VX $vx) {
+    $vx->logout();
 }];
