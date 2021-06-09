@@ -29,6 +29,7 @@ class Form extends HTMLElement
         $this->_data = $data;
     }
 
+
     public function add(string $label)
     {
         $item = new FormItem;

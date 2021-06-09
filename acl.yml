@@ -1,0 +1,39 @@
+path:
+  access_deny: [Users,Power Users]
+  404_not_found: [Users,Power Users]
+  Dashboard: [Users,Power Users]
+  Dashboard/index: [Users,Power Users]
+  User/profile: [Users,Power Users]
+  User/myfav: [Users,Power Users]
+  User/2step: [Users,Power Users]
+  User/2step_whitelist: [Users,Power Users]
+  User/list: [Power Users]
+  User/setting: [Power Users,Users]
+  Dashboard/holiday: [Power Users,Users]
+  Dashboard/weather: [Power Users,Users]
+  User: [Power Users]
+  User/ae: [Power Users]
+  User/index: [Power Users]
+  UserGroup: [Power Users]
+  UserGroup/list: [Power Users]
+  UserGroup/ae: [Power Users]
+  UserGroup/index: [Power Users]
+  cancel_viewas: [Power Users,Users]
+  User/v: [Power Users]
+  User/e_userlist: [Power Users]
+  User/reset_password: [Power Users]
+  Fileman: [Users,Power Users]
+  Fileman/api: [Users,Power Users]
+  tinymce_code: [Users,Power Users]
+  
+action:
+  FC:
+    App\UserLog: [Power Users]
+  C:
+    App\User: [Power Users]
+  R:
+    
+  U:
+    App\User: [Power Users]
+  D:
+    App\User: [Power Users]

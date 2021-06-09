@@ -42,11 +42,15 @@ return [
                 $user->language = $body["data"];
                 $user->save();
                 break;
-            case "color":
+            case "navbar_color":
                 $user = $context->user;
-                $user->style["color"] = $body["data"];
+                $user->style["navbar_color"] = $body["data"];
                 $user->save();
                 break;
+            case "navbar_type":
+                $user = $context->user;
+                $user->style["navbar_type"] = $body["data"];
+                $user->save();
         }
         return ["code" => 200];
     },
@@ -76,8 +80,21 @@ return [
                 "first_name" => $user->first_name,
                 "last_name" => $user->last_name,
                 "language" => $user->language ?? "en",
-                "style" => $user->style
+                "style" => $user->style,
+                "default_page" => $user->default_page
             ];
+
+            //nav dropdown
+            $data["navbar"] = [];
+
+            $dropdown = [];
+            $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
+
+            if ($context->view_as) {
+                $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
+            }
+
+            $data["navbar"]["dropdown"] = $dropdown;
         }
 
         $config = $context->config["VX"];

@@ -6,15 +6,14 @@ use VX\Config;
 return [
     "get" => function (VX $context) {
 
-        $rt = $context->createRTable();
-        $rt->setAttribute("remote", "Config/list?_action=ds");
+        $rt = $context->createRTable("ds");
         $rt->addEdit();
         $rt->addDel();
         $rt->add("Name", "name")->sortable();
         $rt->add("Value", "value")->sortable();
         $this->table = $rt;
     },
-    "action" => [
+    "entries" => [
         "ds" => function (VX $context) {
 
             $rt = $context->createRTableResponse();

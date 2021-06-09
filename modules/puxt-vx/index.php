@@ -12,7 +12,7 @@ return function ($options) {
     $this->puxt->hook('ready', function (App $puxt) use ($vx) {
 
         Model::$_vx = $vx;
-        
+
         Model::$db = $puxt->context->db;
 
         $vx->init($puxt->context);
@@ -97,16 +97,19 @@ return function ($options) {
 
 
         $p = $page->stub["page"];
-        if ($p) {
-            $data = $p;
-        }
-
         $content = $page->render("");
 
-        if ($p) {
+        if (!is_array($content)) {
+            $data["type"] = "page";
+
+            $p["content"] = $content;
+            $data["body"] = $p;
+        }
+
+
+        if ($data) {
             header("Content-type: application/json; charset=utf-8");
-            $data["body"] = $content;
-            echo json_encode(["data" => $data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            echo json_encode([$data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             exit();
         }
     });

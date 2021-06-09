@@ -17,11 +17,11 @@
                     </div>
                     <div class="mt-2">
                         <h5 class="mb-75">Email:</h5>
-                        <p class="card-text">{{user.email}}</p>
+                        <p class="card-text mb-0">{{user.email}}</p>
                     </div>
                     <div class="mt-2">
-                        <h5 class="mb-50">Website:</h5>
-                        <p class="card-text mb-0">www.pixinvent.com</p>
+                        <h5 class="mb-50">Phone:</h5>
+                        <p class="card-text mb-0">{{user.phone}}</p>
                     </div>
                 </vx-card-body>
             </vx-card>
@@ -39,5 +39,6 @@ return [
     ], "get" => function (VX $context) {
 
         $this->user = $context->user;
+
     }
 ];

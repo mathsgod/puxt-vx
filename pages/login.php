@@ -17,8 +17,16 @@ return [
             "user_id" => $user->user_id
         ], $context->config["VX"]["jwt"]["secret"]);
 
+        $refresh_token = JWT::encode([
+            "type" => "refresh_token",
+            "iat" => time(),
+            "exp" => time() + 3600 * 24, //1 day
+            "user_id" => $user->user_id
+        ], $context->config["VX"]["jwt"]["secret"]);
+
         return ["data" => [
-            "access_token" => $token
+            "access_token" => $token,
+            "refresh_token" => $refresh_token
         ]];
     }
 ];

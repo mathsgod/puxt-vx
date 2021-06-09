@@ -4,6 +4,7 @@ use Firebase\JWT\JWT;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Yaml\Yaml;
+use VX\ACL;
 use VX\EventLog;
 use VX\IModel;
 use VX\Module;
@@ -16,6 +17,7 @@ use VX\UI\Tabs;
 use VX\User;
 use VX\UI\View;
 use VX\UserLog;
+use VX\UI;
 
 /**
  * @property User $user
@@ -30,10 +32,13 @@ class VX extends Context
     public $module;
     public $logined = false;
     public $res;
+    public $acl = [];
+    public $ui;
 
     public function __construct()
     {
         $this->res = new Response;
+        $this->ui = new UI($this);
     }
 
     public function init(Context $context)
@@ -53,21 +58,73 @@ class VX extends Context
             $jwt = $this->req->getQueryParams()["_token"];
         }
 
+        $this->user_id = 2;
         if ($jwt) {
-
-            $this->user_id = 2;
             try {
                 $data = (array)JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
                 $this->user_id = $data["user_id"];
                 $this->logined = true;
+
+                if ($view_as = $this->req->getHeader("vx-view-as")[0]) {
+                    $this->view_as = $view_as;
+                    $this->user_id = $view_as;
+                }
             } catch (Exception $e) {
             }
-            $this->user = User::Query(["user_id" => $this->user_id])->first();
         }
+        $this->user = User::Query(["user_id" => $this->user_id])->first();
 
         $path = $context->route->path;
         $p = explode("/", $path)[0];
         $this->module = $this->loadModule($p);
+
+        //load acl
+        $this->loadACL();
+    }
+
+    private function loadACL()
+    {
+        $this->acl = [];
+        $ugs = [];
+        foreach ($this->user->UserGroup() as $ug) {
+            $ugs[] = (string) $ug;
+        }
+
+        $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
+
+        foreach ($acl["path"] as $path => $usergroups) {
+            if (array_intersect($ugs, $usergroups)) {
+                $this->acl["path"]["allow"][] = $path;
+            }
+        }
+
+        foreach ($acl["action"] as $action => $actions) {
+            foreach ($actions as $module => $usergroups) {
+                if (array_intersect($ugs, $usergroups)) {
+                    $this->acl["action"]["allow"][$module][] = $action;
+                }
+            }
+        }
+
+        $w = [];
+        $u[] = "user_id=" . $this->user->user_id;
+        foreach ($this->user->UserGroup() as $ug) {
+            $u[] = "usergroup_id=$ug->usergroup_id";
+        }
+        $w[] = implode(" or ", $u);
+        $query = ACL::Query()->where($w);
+        foreach ($query as $acl) {
+            if ($acl->action) {
+                $this->acl["action"][$acl->value][$acl->module][] = $acl->action;
+            } else {
+                $this->acl["path"][$acl->value][] = $acl->path();
+            }
+        }
+
+        //all special user
+        foreach (ACL::Query()->where(["special_user is not null"]) as $acl) {
+            $this->acl["special_user"][$acl->special_user][$acl->value][$acl->module][] = $acl->action;
+        }
     }
 
 
@@ -87,7 +144,14 @@ class VX extends Context
     {
         $tab = new Tabs;
 
-        $tab->setBaseURL($this->req->getUri()->getPath());
+
+        if ($obj = $this->object()) {
+            if ($obj->_id()) {
+                $tab->setBaseURL($obj->uri(""));
+            }
+        }
+
+
 
         return $tab;
     }
@@ -101,10 +165,12 @@ class VX extends Context
         return true;
     }
 
-    public function createForm()
+    public function createForm($data = null)
     {
         $form = new Form;
-        if ($obj = $this->object()) {
+        if ($data) {
+            $form->setData($data);
+        } elseif ($obj = $this->object()) {
             $form->setData($obj);
         }
         return $form;

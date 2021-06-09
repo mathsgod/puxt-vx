@@ -59,7 +59,7 @@ class Module
 
             $data["link"] = $submenu[0]["link"];
         } else {
-            $data["link"] = "#";
+            $data["link"] = "/" . $this->name;
             $data["submenu"] = $submenu;
         }
 

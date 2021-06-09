@@ -7,6 +7,7 @@ use Exception;
 class User extends Model
 {
 
+
     const STATUS = ["Active", "Inactive"];
     public static function Login(string $username, string $password, $code = null)
     {
@@ -60,6 +61,27 @@ class User extends Model
         return in_array($group->usergroup_id, self::$_is[$this->user_id]);
     }
 
+
+    public function isAdmin(): bool
+    {
+        return $this->is("Administrators");
+    }
+
+    public function isPowerUser(): bool
+    {
+        return $this->is("Power Users");
+    }
+
+    public function isUser(): bool
+    {
+        return $this->is("Users");
+    }
+
+    public function isGuest(): bool
+    {
+        return $this->is("Guests");
+    }
+
     public function canDeleteBy(User $user): bool
     {
 
@@ -68,5 +90,10 @@ class User extends Model
             return false;
         }
         return parent::canDeleteBy($user);
+    }
+
+    public function UserGroup()
+    {
+        return UserGroup::Query()->where("usergroup_id in (select usergroup_id from UserList where user_id=:user_id)", ["user_id" => $this->user_id]);
     }
 }
