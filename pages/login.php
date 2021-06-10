@@ -4,10 +4,12 @@ use Firebase\JWT\JWT;
 
 return [
     "get" => function (VX $context) {
+        return ["login page"];
     },
     "post" => function (VX $context) {
         $data = $context->req->getParsedBody();
 
+        
         $user = $context->login($data["username"], $data["password"]);
 
         $token = JWT::encode([

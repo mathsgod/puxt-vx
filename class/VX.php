@@ -180,14 +180,12 @@ class VX extends Context
     {
         $rt = new RTable();
 
-        $uri = $this->req->getUri();
-
         $query = $this->req->getQueryParams();
         $query["_entry"] = $entry;
 
-        $uri = $uri->withQuery(http_build_query($query));
+        $remote = "/" . $this->route->path . "?" . http_build_query($query);
 
-        $rt->setAttribute("remote", $uri->getPath() . "?" . $uri->getQuery());
+        $rt->setAttribute("remote", $remote);
 
         return $rt;
     }
@@ -245,9 +243,19 @@ class VX extends Context
 
     public function loadModule(string $name)
     {
+
         if (file_exists($this->root . "/pages/$name")) {
             $config = [];
             if (file_exists($setting = $this->root . "/pages/$name/setting.yml")) {
+                $config = Yaml::parseFile($setting);
+            }
+
+            return new Module($name, $config);
+        }
+
+        if (file_exists(dirname(__DIR__) . "/pages/$name")) {
+            $config = [];
+            if (file_exists($setting = dirname(__DIR__) . "/pages/$name/setting.yml")) {
                 $config = Yaml::parseFile($setting);
             }
 
@@ -272,6 +280,14 @@ class VX extends Context
             $module->loadConfigFile($m . "/setting.yml");
             $modules[] = $module;
         }
+
+        foreach (glob(dirname(__DIR__) . "/pages/*", GLOB_ONLYDIR) as $m) {
+            $name = basename($m);
+            $module = new Module($name);
+            $module->loadConfigFile($m . "/setting.yml");
+            $modules[] = $module;
+        }
+
 
         return $modules;
     }

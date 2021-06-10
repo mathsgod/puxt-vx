@@ -76,22 +76,28 @@ return [
 
             //user
             $user = $context->user;
+
+
             $data["me"] = [
                 "first_name" => $user->first_name,
                 "last_name" => $user->last_name,
                 "language" => $user->language ?? "en",
                 "style" => $user->style,
-                "default_page" => $user->default_page
+                "default_page" => $user->default_page,
+                "usergroup" => collect($user->UserGroup()->toArray())->map(function ($o) {
+                    return $o->name;
+                })->join(",")
             ];
 
             //nav dropdown
             $data["navbar"] = [];
 
             $dropdown = [];
-            $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
 
-            if ($context->view_as) {
-                $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
+            if (!$context->view_as) {
+                $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
+            } else {
+                $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/System/cancel_view_as"];
             }
 
             $data["navbar"]["dropdown"] = $dropdown;
