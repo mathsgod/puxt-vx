@@ -20,16 +20,13 @@ return function ($options) {
         $vx->db = Model::$db;
 
 
-
-
         $parser = new Parser();
         foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
             $vx->config["VX"][$k] = $v;
         }
 
-
-
         $path = $puxt->context->route->path;
+
 
         if ($path == "") {
             $path = "index";
@@ -37,6 +34,10 @@ return function ($options) {
 
         if (substr($path, -1) == "/") {
             $path .= "index";
+        } else {
+            if (is_dir("pages/" . $path)) {
+                $path .= "/index";
+            }
         }
 
         // skip id
@@ -70,11 +71,13 @@ return function ($options) {
         }
 
 
+
         $globs = glob("pages/" . $path . ".*");
 
         if (count($globs)) {
             return;
         }
+
 
         $this->puxt->config["dir"]["pages"] = "vendor/mathsgod/puxt-vx/pages";
         if ($vx->req->getMethod() == "DELETE") {
