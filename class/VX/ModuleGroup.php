@@ -18,7 +18,7 @@ class ModuleGroup
         $this->child[] = $module;
     }
 
-    public function getMenuItem()
+    public function getMenuItemByUser(User $user)
     {
         $data = [];
 
@@ -29,7 +29,7 @@ class ModuleGroup
 
         $submenu = [];
         foreach ($this->child as $child) {
-            $submenu[] = $child->getMenuItem();
+            $submenu[] = $child->getMenuItemByUser($user);
         }
         $data["submenu"] = $submenu;
 

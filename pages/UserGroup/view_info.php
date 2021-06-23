@@ -2,10 +2,10 @@
     {{view|raw}}
 </vx-card>
 <?php
-return ["get" => function (VX $context) {
+return ["get" => function (VX $vx) {
 
 
-    $view = $context->createView();
+    $view = $vx->ui->createView();
     $view->add("Name", "name");
     //$view->add("Code", "code");
     $view->add("Remark", "remark");

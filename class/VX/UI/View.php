@@ -30,9 +30,9 @@ class View extends HTMLElement
     {
         $content = "";
         if ($field instanceof Closure) {
-            $content = call_user_func($field, $this->data);
+            $content = call_user_func($field, $this->data) ?? "";
         } else {
-            $content = var_get($this->data, $field);
+            $content = var_get($this->data, $field) ?? "";
         }
 
         return $this->addItem($label, $content);

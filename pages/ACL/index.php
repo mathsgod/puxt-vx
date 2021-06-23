@@ -4,8 +4,12 @@
 
 <?php
 
-return ["get" => function (VX $context) {
-    $tab = $context->createTab();
-    $tab->add("All ACL", "list");
-    $this->tab = $tab;
-}];
+return new class
+{
+    public function get(VX $vx)
+    {
+        $tab = $vx->ui->createTab();
+        $tab->add("All ACL", "list");
+        $this->tab = $tab;
+    }
+};

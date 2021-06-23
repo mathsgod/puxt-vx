@@ -5,17 +5,12 @@ use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Yaml\Yaml;
 use VX\ACL;
+use VX\AuthLock;
 use VX\EventLog;
 use VX\IModel;
 use VX\Module;
 use VX\Response;
-use VX\UI\Form;
-use VX\UI\FormItem;
-use VX\UI\FormTable;
-use VX\UI\RTable;
-use VX\UI\Tabs;
 use VX\User;
-use VX\UI\View;
 use VX\UserLog;
 use VX\UI;
 
@@ -64,142 +59,182 @@ class VX extends Context
                 $data = (array)JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
                 $this->user_id = $data["user_id"];
                 $this->logined = true;
-
+                $this->user = User::Query(["user_id" => $this->user_id])->first();
                 if ($view_as = $this->req->getHeader("vx-view-as")[0]) {
-                    $this->view_as = $view_as;
-                    $this->user_id = $view_as;
+
+                    if ($this->user->isAdmin()) {
+                        $this->view_as = $view_as;
+                        $this->user_id = $view_as;
+                        $this->user = User::Query(["user_id" => $this->user_id])->first();
+                    }
                 }
             } catch (Exception $e) {
+                $this->user = User::Query(["user_id" => $this->user_id])->first();
             }
+        } else {
+            $this->user = User::Query(["user_id" => $this->user_id])->first();
         }
-        $this->user = User::Query(["user_id" => $this->user_id])->first();
+
 
         $path = $context->route->path;
         $p = explode("/", $path)[0];
-        $this->module = $this->loadModule($p);
+        $this->module = $this->getModule($p);
 
         //load acl
-        $this->loadACL();
+        $this->acl = $this->loadACL($this->user);
     }
 
-    private function loadACL()
+    public function forgotPassword(string $username, string $email)
     {
-        $this->acl = [];
+        $user = User::Query(["username" => $username, "email" => $email])->first();
+        if (!$user) return;
+    }
+
+    public function getMailer()
+    {
+    }
+
+    public function allow(Module $module, string $action, User $user)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        $acl = $this->loadACL($user);
+
+        if (in_array($action, $acl["action"]["deny"][$module->name])) {
+            return false;
+        }
+
+        if (in_array($action, $acl["action"]["allow"][$module->name])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function is_allow(string $uri){
+        return true;
+    }
+
+    private function loadACL(User $user)
+    {
+        $acl = [];
         $ugs = [];
-        foreach ($this->user->UserGroup() as $ug) {
+        foreach ($user->UserGroup() as $ug) {
             $ugs[] = (string) $ug;
         }
 
-        $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
+        $acl_data = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
 
-        foreach ($acl["path"] as $path => $usergroups) {
+        foreach ($acl_data["path"] as $path => $usergroups) {
             if (array_intersect($ugs, $usergroups)) {
-                $this->acl["path"]["allow"][] = $path;
+                $acl["path"]["allow"][] = $path;
             }
         }
 
-        foreach ($acl["action"] as $action => $actions) {
+        foreach ($acl_data["action"] as $action => $actions) {
             foreach ($actions as $module => $usergroups) {
                 if (array_intersect($ugs, $usergroups)) {
-                    $this->acl["action"]["allow"][$module][] = $action;
+                    $acl["action"]["allow"][$module][] = $action;
                 }
             }
         }
 
         $w = [];
-        $u[] = "user_id=" . $this->user->user_id;
-        foreach ($this->user->UserGroup() as $ug) {
+        $u[] = "user_id=" . $user->user_id;
+        foreach ($user->UserGroup() as $ug) {
             $u[] = "usergroup_id=$ug->usergroup_id";
         }
         $w[] = implode(" or ", $u);
         $query = ACL::Query()->where($w);
-        foreach ($query as $acl) {
-            if ($acl->action) {
-                $this->acl["action"][$acl->value][$acl->module][] = $acl->action;
+        foreach ($query as $a) {
+            if ($a->action) {
+                $acl["action"][$a->value][$a->module][] = $a->action;
             } else {
-                $this->acl["path"][$acl->value][] = $acl->path();
+                $acl["path"][$a->value][] = $a->path();
             }
         }
 
         //all special user
         foreach (ACL::Query()->where(["special_user is not null"]) as $acl) {
-            $this->acl["special_user"][$acl->special_user][$acl->value][$acl->module][] = $acl->action;
+            $acl["special_user"][$a->special_user][$a->value][$a->module][] = $acl->action;
         }
+        return $acl;
     }
 
 
-    public function createFormTable($data, string $data_key, string $data_name = "data")
-    {
-        $t = new FormTable;
-        $t->setAttribute("data-key", $data_key);
-        $t->setAttribute("data-name", $data_name);
 
-        if ($data) {
-            $t->setAttribute(":data", json_encode($data));
-        }
-        return $t;
+
+    public function getModuleByPath(string $path)
+    {
+        $ps = explode("/", $path);
+        $ps = array_values(array_filter($ps, "strlen"));
+        return $this->getModule($ps[0]);
     }
 
-    public function createTab()
+    public function acl(string $path)
     {
-        $tab = new Tabs;
+        if ($path == "/") return true;
+        if ($path == "index") return true;
+        if ($this->user->isAdmin()) {
+            return true;
+        }
+
+        if (in_array($path, $this->acl["path"]["deny"])) {
+            return false;
+        }
+
+        $module = $this->getModuleByPath($path);
+        if ($module) {
+            //deny
+            $action = $this->acl["action"]["deny"][$module->name];
+            if (in_array("FC", $action)) {
+                return false;
+            }
+
+            $action = $this->acl["action"]["allow"][$module->name];
+            if (in_array("FC", $action)) {
+                return true;
+            }
+        }
 
 
-        if ($obj = $this->object()) {
-            if ($obj->_id()) {
-                $tab->setBaseURL($obj->uri(""));
+        $result = false;
+        if ($module->user_default_acl === false) {
+        } else {
+            if ($this->config["system"]["user_default_acl"] && $this->user->isUser()) {
+                if ($module) {
+                    if (!starts_with($module->class, "VX")) { //module is not system module
+                        $result = true;
+                    }
+                }
             }
         }
 
 
 
-        return $tab;
-    }
-
-    public function acl(string $path)
-    {
-        if ($path == "index" || $path == "logout") {
-            return true;
+        if (!$result) {
+            $result = (bool) in_array($path, $this->acl["path"]["allow"]);
         }
 
-        return true;
+        return $result;
     }
 
-    public function createForm($data = null)
-    {
-        $form = new Form;
-        if ($data) {
-            $form->setData($data);
-        } elseif ($obj = $this->object()) {
-            $form->setData($obj);
-        }
-        return $form;
-    }
 
-    public function createRTable(string $entry)
-    {
-        $rt = new RTable();
 
-        $query = $this->req->getQueryParams();
-        $query["_entry"] = $entry;
-
-        $remote = "/" . $this->route->path . "?" . http_build_query($query);
-
-        $rt->setAttribute("remote", $remote);
-
-        return $rt;
-    }
-
-    public function createRTableResponse()
-    {
-        return new RTableResponse($this, $this->query);
-    }
 
     public function login(string $username, string $password): ?User
     {
+        if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
+            throw new Exception("IP locked 180 seconds", 403);
+        }
+
+
+        $ip = $_SERVER['REMOTE_ADDR'];
         $ul = new UserLog();
         $ul->login_dt = date("Y-m-d H:i:s");
-        $ul->ip = $_SERVER['REMOTE_ADDR'];
+        $ul->ip = $ip;
         $ul->user_agent = $_SERVER["HTTP_USER_AGENT"];
 
         try {
@@ -207,10 +242,18 @@ class VX extends Context
             $ul->user_id = $user->user_id;
             $ul->result = "SUCCESS";
             $ul->save();
+            AuthLock::ClearLockedIP($ip);
         } catch (Exception $e) {
-            $ul = new UserLog();
-            $ul->result = "FAIL";
-            $ul->save();
+
+            AuthLock::LockIP($ip);
+
+            $user = User::Query(["username" => $username])->first();
+
+            if ($user) {
+                $ul->user_id = $user->user_id;
+                $ul->result = "FAIL";
+                $ul->save();
+            }
             throw $e;
         }
         return $user;
@@ -241,7 +284,7 @@ class VX extends Context
         }
     }
 
-    public function loadModule(string $name)
+    public function getModule(string $name)
     {
 
         if (file_exists($this->root . "/pages/$name")) {
@@ -261,13 +304,6 @@ class VX extends Context
 
             return new Module($name, $config);
         }
-    }
-
-    public function createView()
-    {
-        $view = new View();
-        $view->setData($this->object());
-        return $view;
     }
 
     public function getModules()

@@ -4,8 +4,8 @@
 use VX\ACL;
 
 return [
-    "get" => function (VX $context) {
-        $rt = $context->createRTable("ds");
+    "get" => function (VX $vx) {
+        $rt = $vx->ui->createRTable("ds");
         $rt->order("user_id", "desc");
 
         $rt->addDel();
@@ -22,10 +22,11 @@ return [
         $this->table = $rt;
     },
     "entries" => [
-        "ds" => function (VX $context) {
+        "ds" => function (VX $vx) {
 
-            $rt = $context->createRTableResponse();
+            $rt = $vx->ui->createRTableResponse();
             $rt->source = ACL::Query();
+            $rt->add("usergroup_id", "UserGroup()");
             return $rt;
         }
     ]

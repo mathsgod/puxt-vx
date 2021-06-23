@@ -26,7 +26,7 @@ return function ($options) {
         }
 
         $path = $puxt->context->route->path;
-
+        $org_path = $puxt->context->route->path;
 
         if ($path == "") {
             $path = "index";
@@ -40,6 +40,7 @@ return function ($options) {
             }
         }
 
+        $vx->request_uri = $path;
         // skip id
         $t = [];
         $id = null;
@@ -60,6 +61,8 @@ return function ($options) {
         $path = implode("/", $t);
         $puxt->context->route->path = $path;
 
+
+
         //check permission
         if (!$vx->acl($path)) {
             header("Content-type: application/json; charset=utf-8");
@@ -71,6 +74,40 @@ return function ($options) {
         }
 
 
+        $module = $vx->module;
+
+        //create
+        if (
+            $vx->req->getMethod() == "POST"
+            && strstr($vx->req->getHeader("Content-Type")[0], "application/json")
+            && $module
+            && !$vx->object_id
+            && $module->name == $org_path
+        ) {
+            $body = $vx->req->getParsedBody();
+            $obj = $module->createObject();
+            $obj->bind($body);
+            $obj->save();
+            $id = $obj->_id();
+
+            header("Location: /$module->name/$id", true, 201);
+            exit();
+        }
+
+        if (
+            $vx->req->getMethod() == "PATCH"
+            && strstr($vx->req->getHeader("Content-Type")[0], "application/json")
+            && $vx->object_id
+            && (($module->name . "/" . $vx->object_id) == $org_path)
+        ) {
+            $body = $vx->req->getParsedBody();
+            $obj = $module->getObject($vx->object_id);
+            $obj->bind($body);
+            $obj->save();
+
+            http_response_code(204);
+            exit();
+        }
 
         $globs = glob("pages/" . $path . ".*");
 
@@ -85,28 +122,49 @@ return function ($options) {
             if ($obj = $vx->object()) {
                 if ($obj->canDeleteBy($vx->user)) {
                     $obj->delete();
+                    http_response_code(204);
+                } else {
+                    http_response_code(401);
                 }
-                echo json_encode(["code" => 200]);
-                die();
+            } else {
+                http_response_code(404);
             }
+            die();
         }
     });
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
-
         $data = [];
+        if(is_object($page->stub)){
+            $p = [];
+        }else{
+            $p = $page->stub["page"];
+        }
+        
+
+        $basename = basename($page->context->route->path);
+        if ($basename == "ae" && !$p) {
+            if ($obj = $page->context->object()) {
+
+                if ($obj->_id()) {
+                    $p["header"] = ["title" => "Edit"];
+                } else {
+                    $p["header"] = ["title" => "Add"];
+                }
+            }
+        }
 
 
-        $p = $page->stub["page"];
+
+
         $content = $page->render("");
 
-        if (!is_array($content)) {
+        if (!is_array($content) && $content) {
             $data["type"] = "page";
 
             $p["content"] = $content;
             $data["body"] = $p;
         }
-
 
         if ($data) {
             header("Content-type: application/json; charset=utf-8");

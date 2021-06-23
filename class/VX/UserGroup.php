@@ -68,4 +68,9 @@ class UserGroup extends Model
     {
         return $this->name;
     }
+
+    public function User()
+    {
+        return User::Query()->where("user_id in (select user_id from UserList where usergroup_id=:usergroup_id)", ["usergroup_id" => $this->usergroup_id]);
+    }
 }

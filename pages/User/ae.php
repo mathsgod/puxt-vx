@@ -14,7 +14,7 @@ return ["get" => function (VX $context) {
         $obj->language = "en";
     }
 
-    $form = $context->createForm($obj);
+    $form = $context->ui->createForm($obj);
 
     $form->add("Username")->input("username")->required();
     $form->add("First name")->input("first_name")->required();

@@ -4,8 +4,8 @@
 use VX\EventLog;
 
 return [
-    "get" => function (VX $context) {
-        $rt = $context->createRTable("ds");
+    "get" => function (VX $vx) {
+        $rt = $vx->ui->createRTable("ds");
         $rt->order("eventlog_id", "desc");
         $rt->addView();
         $rt->add("ID", "eventlog_id")->ss();
@@ -14,12 +14,13 @@ return [
         $rt->add("Created time", "created_time");
 
 
+
         $this->table = $rt;
     },
     "entries" => [
-        "ds" => function (VX $context) {
+        "ds" => function (VX $vx) {
 
-            $rt = $context->createRTableResponse();
+            $rt = $vx->ui->createRTableResponse();
             $rt->source = EventLog::Query();
             return $rt;
         }

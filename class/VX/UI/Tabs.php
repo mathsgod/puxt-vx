@@ -22,9 +22,8 @@ class Tabs extends HTMLElement
         if ($uri[0] == "/") {
             $link = $uri;
         } else {
-            $link = $this->base_url .  $uri;
+            $link = $this->base_url .  "/" . $uri;
         }
-
 
         $tab = new Tab();
         $tab->setAttribute("label", $label);

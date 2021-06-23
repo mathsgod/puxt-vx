@@ -25,15 +25,14 @@ path:
   Fileman: [Users,Power Users]
   Fileman/api: [Users,Power Users]
   tinymce_code: [Users,Power Users]
-  
+  login: [Guests,Users,Power Users]
+  System/cancel_view_as: [Users,Power Users]
 action:
-  FC:
-    App\UserLog: [Power Users]
   C:
-    App\User: [Power Users]
+    User: [Power Users]
   R:
-    
+    User: [Power Users]
   U:
-    App\User: [Power Users]
+    User: [Power Users]
   D:
-    App\User: [Power Users]
+    User: [Power Users]

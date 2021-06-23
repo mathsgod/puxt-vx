@@ -1,11 +1,12 @@
 {{table|raw}}
 <?php
 
+return new class
+{
+    public function get(VX $vx)
+    {
+        $rt = $vx->ui->createRTable("ds");
 
-return [
-    "get" => function (VX $context) {
-        $rt = $context->createRTable("ds");
-        //$rt->setAttribute("remote", "User/list?_entry=ds");
         $rt->addView();
         $rt->addEdit();
         $rt->addDel();
@@ -17,14 +18,14 @@ return [
         $rt->add("Email", "email")->ss();
         $rt->add("Join date", "join_date");
         $rt->add("Language", "language");
-        
+
         $this->table = $rt;
-    },
-    "entries" => [
-        "ds" => function (VX $context) {
-            $rt = $context->createRTableResponse();
-            $rt->source = VX\User::Query();
-            return $rt;
-        }
-    ],
-];
+    }
+
+    public function ds(VX $vx)
+    {
+        $rt = $vx->ui->createRTableResponse();
+        $rt->source = VX\User::Query();
+        return $rt;
+    }
+};

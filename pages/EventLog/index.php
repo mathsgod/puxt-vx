@@ -1,11 +1,13 @@
-<el-card>
-    {{tab|raw}}
-</el-card>
+<vx-card>
+    <vx-card-body>
+        {{tab|raw}}
+    </vx-card-body>
+</vx-card>
 
 <?php
 
-return ["get" => function (VX $context) {
-    $tab = $context->createTab();
+return ["get" => function (VX $vx) {
+    $tab = $vx->ui->createTab();
     $tab->add("All events", "list");
     $this->tab = $tab;
 }];

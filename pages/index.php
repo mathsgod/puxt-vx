@@ -2,80 +2,61 @@
 
 use VX\Module;
 use VX\ModuleGroup;
+use VX\User;
 
-class Menu
+
+return new class
 {
-    public $items = [];
-    public $groups = [];
-    public function addModule(Module $module)
+    public function post(VX $vx)
     {
-        if ($module->group) {
-            if (!$mg = $this->groups[$module->group]) {
-                $mg = new ModuleGroup($module->group);
-                $this->groups[$module->group] = $mg;
-                $this->items[] = $mg;
-            }
-            $mg->add($module);
-        } else {
-            $this->items[] = $module;
-        }
-    }
-
-
-    public function getMenu()
-    {
-        $data = [];
-        foreach ($this->items as $item) {
-            $data[] = $item->getMenuItem();
-        }
-        return $data;
-    }
-}
-
-return [
-    "post" => function (VX $context) {
-        $body = $context->req->getParsedBody();
+        $body = $vx->req->getParsedBody();
 
         switch ($body["action"]) {
             case "selectedLanguage":
-                $user = $context->user;
+                $user = $vx->user;
                 $user->language = $body["data"];
                 $user->save();
                 break;
             case "navbar_color":
-                $user = $context->user;
+                $user = $vx->user;
                 $user->style["navbar_color"] = $body["data"];
                 $user->save();
                 break;
             case "navbar_type":
-                $user = $context->user;
+                $user = $vx->user;
                 $user->style["navbar_type"] = $body["data"];
                 $user->save();
+                break;
+            case "forgot_password":
+                $vx->forgotPassword($body["data"]["username"], $body["data"]["email"]);
+                break;
         }
         return ["code" => 200];
-    },
-    "get" => function (VX $context) {
+    }
 
-        $logined = $context->logined;
+    public function get(VX $vx)
+    {
+
+        $logined = $vx->logined;
         $data = [
             "logined" => $logined
         ];
 
         if ($logined) {
-            $modules = $context->getModules();
+            $modules = $vx->getModules();
 
-            $menu = new Menu();
+            $menu = new VX\Menu();
             foreach ($modules as $m) {
                 $menu->addModule($m);
             }
 
-            $data["menus"] = $menu->getMenu();
+            $data["menus"] = $menu->getMenuByUser($vx->user);
 
             //language 
-            $data["language"] = $context->config["VX"]["language"];
+            $data["language"] = $vx->config["VX"]["language"];
 
             //user
-            $user = $context->user;
+            $user = $vx->user;
 
 
             $data["me"] = [
@@ -86,7 +67,8 @@ return [
                 "default_page" => $user->default_page,
                 "usergroup" => collect($user->UserGroup()->toArray())->map(function ($o) {
                     return $o->name;
-                })->join(",")
+                })->join(","),
+                "image" => $user->photo()
             ];
 
             //nav dropdown
@@ -94,24 +76,35 @@ return [
 
             $dropdown = [];
 
-            if (!$context->view_as) {
+            if (!$vx->view_as) {
                 $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
             } else {
                 $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/System/cancel_view_as"];
             }
 
             $data["navbar"]["dropdown"] = $dropdown;
+
+
+            $data["acl"] = $vx->acl;
         }
 
-        $config = $context->config["VX"];
+        $config = $vx->config["VX"];
         $data["config"] = [
             "company" => $config["company"],
             "copyright-year" => $config["copyright-year"],
             "copyright-url" => $config["copyright-url"],
-            "copyright-name" => $config["copyright-name"]
+            "copyright-name" => $config["copyright-name"],
+
+            "company-logo" => "http://localhost:8001/vx/images/logo.png",
+            "company-url" => "https://www.hostlink.com.hk",
+            "login" => [
+                "version" => "v1"
+            ]
         ];
+
+
 
 
         return $data;
     }
-];
+};

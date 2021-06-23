@@ -26,6 +26,39 @@ class Module
         }
     }
 
+    public function getFiles()
+    {
+        $files = [];
+
+        $base = getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR;
+        $path = $base . "*";
+        foreach (glob($path) as $file) {
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+            if ($ext != "php" && $ext != "twig") continue;
+
+            $file = substr($file, 0, - (strlen($ext) + 1));
+
+            $files[] = substr($file, strlen($base));
+        }
+
+
+        $base = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR;
+        $path = $base . "*";
+        foreach (glob($path) as $file) {
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+            if ($ext != "php" && $ext != "twig") continue;
+
+            $file = substr($file, 0, - (strlen($ext) + 1));
+
+            $files[] = substr($file, strlen($base));
+        }
+
+
+        return $files;
+    }
+
     public function loadConfigFile(string $filename)
     {
         if (file_exists($filename)) {
@@ -35,6 +68,13 @@ class Module
                 $this->$k = $v;
             }
         }
+    }
+
+    public function createObject(): ?IModel
+    {
+        $class = $this->class;
+        if (!$class) return null;
+        return new $class;
     }
 
     public function getObject(int $id): IModel
@@ -47,55 +87,53 @@ class Module
         }
     }
 
-    public function getMenuItem(): array
+    public function getMenuItemByUser(User $user): array
     {
         $data = [];
         $data["label"] = $this->name;
         $data["icon"] = $this->icon;
 
 
-        $submenu = $this->getMenuLink();
-        if (count($submenu) == 1) {
+        $submenu = $this->getMenuLinkByUser($user);
+        $data["link"] = "/" . $this->name;
 
-            $data["link"] = $submenu[0]["link"];
-        } else {
-            $data["link"] = "/" . $this->name;
+        if (count($submenu)) {
             $data["submenu"] = $submenu;
         }
+
 
 
         return $data;
     }
 
-    public function getMenuLink(): array
+    public function getMenuLinkByUser(User $user): array
     {
 
         $links = [];
 
-        $link = [];
-        $link["label"] = "List";
-        $link["icon"] = "fa fa-list";
-        $link["link"] = "/" . $this->name;
-        $links[] = $link;
+        if ($user->allow_uri($this->name . "/index")) {
+            $link = [];
+            $link["label"] = "List";
+            $link["icon"] = "fa fa-list";
+            $link["link"] = "/" . $this->name;
+            $links[] = $link;
+        }
 
 
         if ($this->show_create) {
-            $link = [];
-            $link["label"] = "Add";
-            $link["icon"] = "fa fa-plus";
-            $link["link"] = "/" . $this->name . "/ae";
-            $links[] = $link;
+
+            if ($user->allow_uri($this->name . "/ae")) {
+                $link = [];
+                $link["label"] = "Add";
+                $link["icon"] = "fa fa-plus";
+                $link["link"] = "/" . $this->name . "/ae";
+                $links[] = $link;
+            }
         }
-
-
-
-        foreach ($this->menu as $name => $m) {
+        foreach ($this->menu as $m) {
             $link = $m;
-
             $links[] = $link;
         }
-
-
         return $links;
     }
 }
