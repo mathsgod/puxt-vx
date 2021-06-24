@@ -27,7 +27,7 @@ class Menu
         foreach ($this->items as $item) {
             $menu = $item->getMenuItemByUser($user);
 
-            if (count($menu["submenu"]) == 0 && $menu["link"] == "#") continue;
+//            if (count($menu["submenu"]) == 0) continue;
 
             $data[] = $menu;
         }

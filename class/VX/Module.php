@@ -95,10 +95,24 @@ class Module
 
 
         $submenu = $this->getMenuLinkByUser($user);
-        $data["link"] = "/" . $this->name;
+
+        $data["link"] = "#";
 
         if (count($submenu)) {
             $data["submenu"] = $submenu;
+
+
+            if ($user->allow_uri($this->name . "/index")) {
+                array_unshift($data["submenu"], [
+                    "label" => "List",
+                    "icon" => "fa fa-list",
+                    "link" => "/" . $this->name
+                ]);
+            }
+        } else {
+            if ($user->allow_uri($this->name . "/index")) {
+                $data["link"] = "/" . $this->name;
+            }
         }
 
 
@@ -110,14 +124,6 @@ class Module
     {
 
         $links = [];
-
-        if ($user->allow_uri($this->name . "/index")) {
-            $link = [];
-            $link["label"] = "List";
-            $link["icon"] = "fa fa-list";
-            $link["link"] = "/" . $this->name;
-            $links[] = $link;
-        }
 
 
         if ($this->show_create) {

@@ -110,6 +110,7 @@ class User extends Model
 
     public function allow_uri(string $uri)
     {
+        if ($this->isAdmin()) return true;
         $acl = $this->getACL();
         if (in_array($uri, $acl["path"]["allow"])) {
             return true;

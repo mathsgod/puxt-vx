@@ -4,9 +4,11 @@
 use VX\User;
 use VX\UserLog;
 
-return [
-    "get" => function (VX $context) {
-        $rt = $context->createRTable("ds");
+return new class
+{
+    function get(VX $context)
+    {
+        $rt = $context->ui->createRTable("ds");
         $rt->add("ID", "userlog_id")->sortable()->searchable("equal");
         $rt->add("User", "user_id")->searchOption(User::Query());
         $rt->add("Login time", "login_dt")->sortable()->searchable("date");
@@ -15,14 +17,14 @@ return [
         $rt->add("Result", "result")->sortable()->searchable("select")->searchOption(array("SUCCESS" => "SUCCESS", "FAIL" => "FAIL"));
         $rt->add("User agent", "user_agent")->searchable();
         $this->table = $rt;
-    },
-    "entries" => [
-        "ds" => function (VX $context) {
+    }
 
-            $rt = $context->createRTableResponse();
-            $rt->source = UserLog::Query();
-            $rt->add("user_id", "User()");
-            return $rt;
-        }
-    ]
-];
+    function ds(VX $context)
+    {
+
+        $rt = $context->ui->createRTableResponse();
+        $rt->source = UserLog::Query();
+        $rt->add("user_id", "User()");
+        return $rt;
+    }
+};
