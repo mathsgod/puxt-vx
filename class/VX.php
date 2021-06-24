@@ -13,6 +13,7 @@ use VX\Response;
 use VX\User;
 use VX\UserLog;
 use VX\UI;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 /**
  * @property User $user
@@ -82,6 +83,16 @@ class VX extends Context
 
         //load acl
         $this->acl = $this->loadACL($this->user);
+    }
+
+    
+    public function findWebauthnUserByUsername(string $username): ?PublicKeyCredentialUserEntity
+    {
+        $user = User::Query(["username" => $username])->first();
+
+        if (!$user) return null;
+
+        return new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
     }
 
     public function forgotPassword(string $username, string $email)

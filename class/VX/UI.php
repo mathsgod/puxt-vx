@@ -34,6 +34,11 @@ class UI
     {
         $form = new UI\Form;
 
+        $user = $this->vx->user;
+        if ($user->style["form_size"]) {
+            $form->setAttribute("size", $user->style["form_size"]);
+        }
+
         if ($obj = $this->vx->object()) {
             $action = "/" . $this->vx->module->name;
             if ($id = $obj->_id()) {
@@ -75,6 +80,15 @@ class UI
     public function createRTable(string $entry)
     {
         $rt = new UI\RTable();
+
+        $user = $this->vx->user;
+        if ($user->style["rtable_size"]) {
+            $rt->setAttribute("size", $user->style["rtable_size"]);
+        }
+
+        if ($user->style["rtable_small_table"]) {
+            $rt->setAttribute("small-table", true);
+        }
 
         $query = $this->vx->req->getQueryParams();
         $query["_entry"] = $entry;

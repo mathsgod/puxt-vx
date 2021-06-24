@@ -73,8 +73,11 @@ return function ($options) {
             die();
         }
 
-
         $module = $vx->module;
+        if (!$module->name) {
+            $module = null;
+        }
+
 
         //create
         if (
@@ -135,12 +138,12 @@ return function ($options) {
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
         $data = [];
-        if(is_object($page->stub)){
+        if (is_object($page->stub)) {
             $p = [];
-        }else{
+        } else {
             $p = $page->stub["page"];
         }
-        
+
 
         $basename = basename($page->context->route->path);
         if ($basename == "ae" && !$p) {

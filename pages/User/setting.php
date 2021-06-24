@@ -25,6 +25,30 @@
                         <span class="font-weight-bold">Information</span>
                     </a>
                 </li>
+
+                <!-- style -->
+                <li class="nav-item">
+                    <a class="nav-link" id="account-pill-style" data-toggle="pill" href="#account-vertical-style" aria-expanded="false">
+                        <i class="fa fa-brush fa-fw" class="font-medium-3 mr-1"></i>
+                        <span class="font-weight-bold">Style</span>
+                    </a>
+                </li>
+
+                <!-- 2step verification -->
+                <li class="nav-item">
+                    <a class="nav-link" id="account-pill-2step" data-toggle="pill" href="#account-vertical-2step" aria-expanded="false">
+                        <i class="fa fa-lock fa-fw" class="font-medium-3 mr-1"></i>
+                        <span class="font-weight-bold">2 Step Verification</span>
+                    </a>
+                </li>
+
+                <!-- Bio metric -->
+                <li class="nav-item">
+                    <a class="nav-link" id="account-pill-bio" data-toggle="pill" href="#account-vertical-bio" aria-expanded="false">
+                        <i class="fa fa-fingerprint fa-fw" class="font-medium-3 mr-1"></i>
+                        <span class="font-weight-bold">Biometric Authentication</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!--/ left menu section -->
@@ -170,6 +194,84 @@
                         </div>
                         <!--/ information -->
 
+                        <!-- style -->
+                        <div class="tab-pane fade" id="account-vertical-style" role="tabpanel" aria-labelledby="account-pill-info" aria-expanded="false">
+                            <div id="style">
+
+                                <el-form label-width="auto">
+                                    <el-form-item label="Form size">
+                                        <el-select v-model="form.form_size" clearable>
+                                            <el-option value="large" label="large"></el-option>
+                                            <el-option value="medium " label="medium"></el-option>
+                                            <el-option value="small" label="small"></el-option>
+                                            <el-option value="mini" label="mini"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="List view size">
+                                        <el-select v-model="form.rtable_size" clearable>
+                                            <el-option value="large" label="large"></el-option>
+                                            <el-option value="medium " label="medium"></el-option>
+                                            <el-option value="small" label="small"></el-option>
+                                            <el-option value="mini" label="mini"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="List view small table">
+                                        <el-checkbox v-model="form.rtable_small_table"></el-checkbox>
+                                    </el-form-item>
+
+
+                                    <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit">Save changes</button>
+
+
+                                </el-form>
+
+                            </div>
+                        </div>
+                        <!--/ style -->
+
+                        <!-- 2step -->
+                        <div class="tab-pane fade" id="account-vertical-2step" role="tabpanel" aria-labelledby="account-pill-info" aria-expanded="false">
+                            <div id="two_step">
+
+                                <el-switch v-model="on_off" active-text="2 step verification">
+                                </el-switch>
+
+                                <div v-if="show_setting">
+                                    <p>Now download the app and scan the qrcode. Input the code to the following input and submit</p>
+                                    <p>
+                                        For Android user, install
+                                        <el-link type="primary" target="_blank" href="https://play.google.com/store/apps/details?id=com.azure.authenticator">Authenticator</el-link>
+                                    </p>
+
+                                    <p>
+                                        For iOS user, install
+                                        <el-link type="primary" target="_blank" href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458">Authenticator</a>
+                                    </p>
+
+                                    <el-image :src="qr_code"></el-image>
+
+                                    <el-form>
+                                        <el-form-item label="Code">
+                                            <el-input v-model="code" placeholder="6 digits code" minlength="6" maxlength="6" />
+                                        </el-form-item>
+                                        <el-button type="primary" @click="onSubmit">Submit</el-button>
+                                    </el-form>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ 2step -->
+
+                        <div class="tab-pane fade" id="account-vertical-bio" role="tabpanel" aria-labelledby="account-pill-info" aria-expanded="false">
+                            <div id="bio">
+
+                                <el-switch v-model="on_off" active-text="Biometric authentication">
+                                </el-switch>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
@@ -246,12 +348,223 @@
             }
         });
     });
+
+    vx.get("User/setting?_entry=style").then(resp => {
+
+        new Vue({
+            el: "#style",
+            data() {
+                return {
+                    form: resp.data
+                }
+            },
+            methods: {
+                async submit() {
+                    let resp = await this.$vx.post("User/setting", {
+                        type: "style",
+                        data: this.form
+                    });
+
+                    if (resp.status == 204) {
+                        this.$message.success("style updated");
+                    }
+                }
+            }
+        });
+
+    });
+
+    vx.get("User/setting?_entry=two_step").then(resp => {
+        new Vue({
+            el: "#two_step",
+            data: {
+                has_two_step: resp.data.has_two_step,
+                qr_code: null,
+                code: null,
+                secret: null,
+                on_off: resp.data.has_two_step
+            },
+            computed: {
+                show_setting() {
+                    if (this.on_off && !this.has_two_step) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
+            watch: {
+                async on_off() {
+                    //get this qrcode
+                    if (!this.on_off) { //turn it off
+
+                        if (this.has_two_step) {
+                            try {
+                                await this.$confirm("Remove 2 step verification? You need to do setup process if you enable at next time.")
+
+                                //do remove
+                                this.$vx.post("User/setting", {
+                                    type: "remove_2step"
+                                });
+
+                                this.has_two_step = false;
+                            } catch {
+                                this.on_off = true;
+                            }
+                        }
+
+                        return;
+                    } else {
+                        let resp = (await this.$vx.get("User/setting?_entry=two_step_qrcode")).data;
+                        this.qr_code = resp.image;
+                        this.secret = resp.secret
+                    }
+                }
+            },
+            methods: {
+                async onSubmit() {
+                    let resp = (await this.$vx.post("User/setting", {
+                        type: "two_step",
+                        code: this.code,
+                        secret: this.secret
+                    })).data;
+
+                    if (resp.error) {
+                        this.$message.error(resp.error.message);
+                        return;
+                    }
+
+                    this.$message.success("2 Step verification updated");
+
+                    this.has_two_step = true;
+
+                    this.code = null;
+
+                }
+            }
+
+        });
+    });
+
+    vx.get("User/setting?_entry=bio").then(resp => {
+
+        new Vue({
+            el: "#bio",
+            data: {
+                on_off: false
+            },
+            watch: {
+                async on_off() {
+
+                    if (this.on_off) {
+
+                        let resp = (await this.$vx.get("User/setting?_entry=bio")).data;
+
+                        console.log("on");
+
+                    }
+
+                }
+            }
+        });
+    });
 </script>
 
 <?php
 
-return ["entries" => [
-    "general" => function (VX $vx) {
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Google\Authenticator\GoogleAuthenticator;
+
+return new class
+{
+
+    function bio(VX $vx)
+    {
+      
+    }
+
+
+    function two_step_qrcode(VX $vx)
+    {
+        $user = $vx->user;
+
+        $g = new GoogleAuthenticator();
+        $secret = $g->generateSecret();
+
+        $host = $_SERVER["HTTP_HOST"];
+
+
+        $url = sprintf("otpauth://totp/%s@%s?secret=%s", $user->username, $host, $secret);
+
+        $writer = new PngWriter();
+        $png = $writer->write(QrCode::create($url));
+        return [
+            "secret" => $secret,
+            "host" => $host,
+            "image" => $png->getDataUri()
+        ];
+    }
+
+    function two_step(VX $vx)
+    {
+        $user = $vx->user;
+
+
+        return [
+            "has_two_step" => (bool)$user->secret
+        ];
+    }
+
+    function post(VX $vx)
+    {
+        $post = $vx->_post;
+        if ($post["type"] == "style") {
+            $user = $vx->user;
+            foreach ($post["data"] as $k => $v) {
+                $user->style[$k] = $v;
+            }
+            $user->save();
+
+            http_response_code(204);
+
+            return;
+        }
+
+        if ($post["type"] == "two_step") {
+            $g = new GoogleAuthenticator();
+            if (!$g->checkCode($post["secret"], $post["code"])) {
+                throw new Exception("code incorrect");
+            }
+            $user = $vx->user;
+            $user->secret = $post["secret"];
+            $user->save();
+            return;
+        }
+
+        if ($post["type"] == "remove_2step") {
+            $user = $vx->user;
+            $user->secret = null;
+            $user->save();
+            http_response_code(204);
+            return;
+        }
+    }
+
+    function style(VX $vx)
+    {
+        $user = $vx->user;
+        $style = $user->style;
+        return [
+            "form_size" => $style["form_size"],
+            "rtable_size" => $style["rtable_size"],
+            "rtable_small_table" => $style["rtable_small_table"]
+        ];
+    }
+
+
+    function general(VX $vx)
+    {
         $user = $vx->user;
         return ["user" => [
             "photo" => $user->photo(),
@@ -261,8 +574,10 @@ return ["entries" => [
             "last_name" => $user->last_name,
             "email" => $user->email,
         ]];
-    },
-    "info" => function (VX $vx) {
+    }
+
+    function info(VX $vx)
+    {
         $user = $vx->user;
         return ["user" => [
             "user_id" => $user->user_id,
@@ -272,5 +587,4 @@ return ["entries" => [
             "addr3" => $user->addr3,
         ]];
     }
-
-]];
+};
