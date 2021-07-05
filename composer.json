@@ -11,7 +11,7 @@
     "require": {
         "hostlink/puxt-db": "^1.0",
         "symfony/yaml": "^5.2",
-        "mathsgod/p-query": "^2.4",
+        "mathsgod/p-query": "^2.4 | ^3.0",
         "firebase/php-jwt": "^5.3",
         "mathsgod/php-util": "^1.3",
         "nesbot/carbon": "^2.49",

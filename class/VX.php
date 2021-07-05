@@ -85,7 +85,7 @@ class VX extends Context
         $this->acl = $this->loadACL($this->user);
     }
 
-    
+
     public function findWebauthnUserByUsername(string $username): ?PublicKeyCredentialUserEntity
     {
         $user = User::Query(["username" => $username])->first();
@@ -124,7 +124,8 @@ class VX extends Context
         return false;
     }
 
-    public function is_allow(string $uri){
+    public function is_allow(string $uri)
+    {
         return true;
     }
 
@@ -192,20 +193,18 @@ class VX extends Context
             return true;
         }
 
-        if (in_array($path, $this->acl["path"]["deny"])) {
+        if (in_array($path, $this->acl["path"]["deny"] ?? [])) {
             return false;
         }
 
         $module = $this->getModuleByPath($path);
         if ($module) {
             //deny
-            $action = $this->acl["action"]["deny"][$module->name];
-            if (in_array("FC", $action)) {
+            if (in_array("FC", $this->acl["action"]["deny"][$module->name] ?? [])) {
                 return false;
             }
 
-            $action = $this->acl["action"]["allow"][$module->name];
-            if (in_array("FC", $action)) {
+            if (in_array("FC", $this->acl["action"]["allow"][$module->name]??[])) {
                 return true;
             }
         }

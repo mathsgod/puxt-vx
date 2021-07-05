@@ -16,7 +16,7 @@ class Module
 
     public $menu = [];
 
-    public function __construct(string $name, array $config = [])
+    public function __construct(string $name, ?array $config = [])
     {
         $this->name = $name;
         $this->class = $name;

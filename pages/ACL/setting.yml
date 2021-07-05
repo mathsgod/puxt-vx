@@ -1,3 +1,8 @@
 class: VX\ACL
 group: System
 icon: fa fa-lock fa-fw
+
+menu:
+  All:  
+    link: ACL/all
+    label: All
