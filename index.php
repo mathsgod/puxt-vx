@@ -3,6 +3,7 @@
 use PUXT\App;
 use Symfony\Component\Yaml\Parser;
 use VX\Model;
+use VX\Config;
 
 return function ($options) {
 
@@ -18,11 +19,13 @@ return function ($options) {
         $puxt->context = $vx;
 
         $vx->db = Model::$db;
-
-
         $parser = new Parser();
         foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
             $vx->config["VX"][$k] = $v;
+        }
+
+        foreach (Config::Query() as $config) {
+            $vx->config["VX"][$config->name] = $config->value;
         }
 
         $path = $puxt->context->route->path;

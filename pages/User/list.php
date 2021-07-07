@@ -26,6 +26,10 @@ return new class
     {
         $rt = $vx->ui->createRTableResponse();
         $rt->source = VX\User::Query();
+
+        if ($vx->_get["t"] !== null) {
+            $rt->source->filter(["status" => $vx->_get["t"]]);
+        }
         return $rt;
     }
 };

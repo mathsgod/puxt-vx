@@ -55,6 +55,8 @@ class UI
         } elseif ($obj = $this->vx->object()) {
             $form->setData($obj);
         }
+        
+
         return $form;
     }
 

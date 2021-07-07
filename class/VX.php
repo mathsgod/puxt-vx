@@ -30,11 +30,19 @@ class VX extends Context
     public $res;
     public $acl = [];
     public $ui;
+    public $config = [];
 
     public function __construct()
     {
         $this->res = new Response;
         $this->ui = new UI($this);
+    }
+
+    public function getFileManager()
+    {
+        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "uploads");
+        $fs = new League\Flysystem\Filesystem($adapter);
+        return $fs;
     }
 
     public function init(Context $context)
@@ -204,7 +212,7 @@ class VX extends Context
                 return false;
             }
 
-            if (in_array("FC", $this->acl["action"]["allow"][$module->name]??[])) {
+            if (in_array("FC", $this->acl["action"]["allow"][$module->name] ?? [])) {
                 return true;
             }
         }
@@ -292,6 +300,8 @@ class VX extends Context
                 return new $class($this->object_id);
             }
         }
+
+        return null;
     }
 
     public function getModule(string $name)

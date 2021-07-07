@@ -18,7 +18,8 @@
         "gumlet/php-image-resize": "^2.0",
         "mathsgod/puxt": "^1.9",
         "endroid/qr-code": "^4.1",
-        "web-auth/webauthn-lib": "^3.3"
+        "web-auth/webauthn-lib": "^3.3",
+        "league/flysystem": "^2.1"
     },
     "autoload": {
         "psr-4": {

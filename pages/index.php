@@ -39,33 +39,6 @@ return new class
 
             return $publicKeyCredentialRequestOptions->jsonSerialize();
         }
-
-        if ($vx->_get["action"] == "auth") {
-        }
-
-        $body = $vx->req->getParsedBody();
-
-        switch ($body["action"]) {
-            case "selectedLanguage":
-                $user = $vx->user;
-                $user->language = $body["data"];
-                $user->save();
-                break;
-            case "navbar_color":
-                $user = $vx->user;
-                $user->style["navbar_color"] = $body["data"];
-                $user->save();
-                break;
-            case "navbar_type":
-                $user = $vx->user;
-                $user->style["navbar_type"] = $body["data"];
-                $user->save();
-                break;
-            case "forgot_password":
-                $vx->forgotPassword($body["data"]["username"], $body["data"]["email"]);
-                break;
-        }
-        return ["code" => 200];
     }
 
     public function get(VX $vx)
@@ -125,14 +98,14 @@ return new class
         $config = $vx->config["VX"];
         $data["config"] = [
             "company" => $config["company"],
-            "copyright-year" => $config["copyright-year"],
-            "copyright-url" => $config["copyright-url"],
-            "copyright-name" => $config["copyright-name"],
+            "copyright-year" => $config["copyright_year"],
+            "copyright-url" => $config["copyright_url"],
+            "copyright-name" => $config["copyright_name"],
 
-            "company-logo" => "http://localhost:8001/vx/images/logo.png",
-            "company-url" => "https://www.hostlink.com.hk",
+            "company-logo" => $config["company_logo"],
+            "company-url" => $config["company_url"],
             "login" => [
-                "version" => "v1"
+                "version" => $config["login_version"]
             ]
         ];
 
@@ -140,5 +113,47 @@ return new class
 
 
         return $data;
+    }
+
+    public function forgetPassword(VX $vx)
+    {
+        $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
+    }
+
+
+    public function setNavbarColor(VX $vx)
+    {
+        $user = $vx->user;
+        $user->style["navbar_color"] = $vx->_post["color"];
+        $user->save();
+    }
+
+    public function setNavbarType(VX $vx)
+    {
+        $user = $vx->user;
+        $user->style["navbar_type"] = $vx->_post["type"];
+        $user->save();
+    }
+
+    public function selectLanguage(VX $vx)
+    {
+        if ($user = $vx->user) {
+            $user->style["language"] = $vx->_post["language"];
+            $user->save();
+        }
+    }
+
+    public function setFooterType(VX $vx)
+    {
+        $user = $vx->user;
+        $user->style["footer_type"] = $vx->_post["type"];
+        $user->save();
+    }
+
+    public function setCollapsible(VX $vx)
+    {
+        $user = $vx->user;
+        $user->style["collapsible"] = $vx->_post["collapsible"];
+        $user->save();
     }
 };

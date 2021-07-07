@@ -1,11 +1,16 @@
 company: HostLink
+company_logo: /vx/images/logo.png
+company_url: https://www.hostlink.com.hk
+
 2-step verification: 0
 2-step verification white list: null
 footer_content:
-copyright-year: 2021
-copyright-url: https://www.hostlink.com.hk
-copyright-name: HostLink
-logo:
+copyright_year: 2021
+copyright_url: https://www.hostlink.com.hk
+copyright_name: HostLink
+
+login_version: v1
+
 
 search-form: false
 default-skin: skin-blue

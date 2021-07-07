@@ -1,1 +1,6 @@
 group: System
+
+menu:
+  Setting:
+    link: /System/setting
+    label: Setting

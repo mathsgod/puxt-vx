@@ -21,6 +21,23 @@ class EventLog extends Model
         $el->save();
     }
 
+    private static function FindDifferent(array $source, array $target)
+    {
+        $a = array_diff_assoc($source, $target);
+        $b = array_diff_assoc($target, $source);
+
+        $diff = [];
+        foreach ($a as $name => $value) {
+            $diff[] = [
+                "field" => $name,
+                "from" => $b[$name],
+                "to" => $value
+            ];
+        }
+
+        return $diff;
+    }
+
     public static function LogUpdate(ORMModel $obj, User $user)
     {
         if ($obj instanceof self) return;
@@ -31,12 +48,17 @@ class EventLog extends Model
         $el->class = $ro->getName();
         $el->action = "Update";
 
+
         $id = $obj->_id();
         $class = $el->class;
         $org = new $class($id);
         $el->source = $org;
         $el->target = $obj;
         $el->id = $id;
+        
+
+        //$el->different = self::FindDifferent((array)$org, (array)$obj);
+
         $el->save();
     }
 
