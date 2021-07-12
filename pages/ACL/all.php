@@ -281,7 +281,7 @@ function getACLValue(UserGroup $usergroup, Module $module, string $action)
     }
     $yml = new Parser();
     $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
-    if (in_array($usergroup->name,  $acl["action"][$action][$module->name])) {
+    if (in_array($usergroup->name,  $acl["action"][$action][$module->name] ?? [])) {
         return true;
     }
 

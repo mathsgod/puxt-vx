@@ -1,25 +1,16 @@
 <?php
 
-namespace VX\UI;
+namespace VX\UI\EL;
 
 use P\Element;
 use P\HTMLElement;
 use Traversable;
 
-class FormItemSelect extends HTMLElement
+class Select extends FormItemElement
 {
     public function __construct()
     {
         parent::__construct("el-select");
-    }
-
-    public function required(string $message = null)
-    {
-        $node = $this->parentNode;
-        if ($node instanceof FormItem) {
-            $node->required($message);
-        }
-        return $this;
     }
 
     public function optionGroup(array $groups, string $key, $source, string $label = null, string $value = null)

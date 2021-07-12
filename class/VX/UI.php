@@ -2,6 +2,8 @@
 
 namespace VX;
 
+use VX\UI\Table;
+
 class UI
 {
 
@@ -9,6 +11,21 @@ class UI
     public function __construct(\VX $vx)
     {
         $this->vx = $vx;
+    }
+
+    public function createTable(?string $entry = null)
+    {
+        $table = new Table;
+
+        if ($entry) {
+            $query = $this->vx->req->getQueryParams();
+            $query["_entry"] = $entry;
+            $remote = "/" .    $this->vx->request_uri . "?" . http_build_query($query);
+
+            $table->setAttribute("remote", $remote);
+        }
+
+        return $table;
     }
 
     public function createFormTable($data, string $data_key, string $data_name = "data")
@@ -55,7 +72,7 @@ class UI
         } elseif ($obj = $this->vx->object()) {
             $form->setData($obj);
         }
-        
+
 
         return $form;
     }
@@ -106,5 +123,10 @@ class UI
     public function createRTableResponse()
     {
         return new UI\RTableResponse($this->vx, $this->vx->query);
+    }
+
+    public function createTableResponse()
+    {
+        return new UI\TableResponse($this->vx, $this->vx->query);
     }
 }

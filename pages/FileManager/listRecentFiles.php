@@ -2,7 +2,7 @@
 
 /**
  * Created by: Raymond Chong
- * Date: 2021-07-05 
+ * Date: 2021-07-06 
  */
 
 use Carbon\Carbon;
@@ -13,26 +13,10 @@ return new class
 {
     function get(VX $vx)
     {
-
         $fs = $vx->getFileManager();
-
-        $folders = $fs->listContents($vx->_get["path"] ?? "/")->filter(function (StorageAttributes $attr) {
-            return $attr->isDir();
-        })->map(function (StorageAttributes $attr) {
-            $mtime = Carbon::createFromTimestamp($attr->lastModified());
-            return [
-                "name" => basename($attr->path()),
-                "path" => $attr->path(),
-                "last_modified" => $mtime->format("Y-m-d"),
-                "last_modified_human" => (string)$mtime->diffForHumans(),
-                "size" => ""
-            ];
-        })->toArray();
-
-        $files = $fs->listContents($vx->_get["path"] ?? "/")->filter(function (StorageAttributes $attr) {
+        $ret = $fs->listContents("", true)->filter(function (StorageAttributes $attr) use ($fs) {
             return $attr->isFile();
         })->map(function (FileAttributes $attr) use ($fs) {
-
             $mtime = Carbon::createFromTimestamp($attr->lastModified());
 
             $filename = basename($attr->path());
@@ -50,9 +34,11 @@ return new class
             ];
         })->toArray();
 
+        usort($ret, function ($a, $b) {
+            return $b["last_modified"] <=> $a["last_modified"];
+        });
 
-
-        return ["folders" => $folders, "files" => $files];
+        return array_slice($ret, 0, 100);
     }
 
 

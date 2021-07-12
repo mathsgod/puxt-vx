@@ -1,17 +1,11 @@
 <?php
 
-namespace VX\UI;
+namespace VX\UI\EL;
 
-use P\HTMLElement;
+use P\Element as PElement;
 
-class FormItemCheckbox extends HTMLElement
+class Element extends PElement
 {
-    public function __construct()
-    {
-        parent::__construct("el-checkbox");
-    }
-
-
     public function required(string $message = null)
     {
         $node = $this->parentNode;

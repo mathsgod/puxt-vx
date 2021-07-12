@@ -67,7 +67,7 @@ class User extends Model
         if ($this->photo) {
             $photo = "data:image/png;base64," . base64_encode($this->photo);
         } else {
-            $photo = "/images/user.png";
+            $photo = "images/user.png";
         }
 
         return $photo;

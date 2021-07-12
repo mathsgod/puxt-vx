@@ -1,15 +1,107 @@
 <?php
 
-namespace VX\UI;
+namespace VX\UI\EL;
 
 use P\CustomEvent;
 use P\HTMLElement;
+use VX\FileManager;
 
 class FormItem extends HTMLElement
 {
     public function __construct()
     {
         parent::__construct("el-form-item");
+    }
+
+    public function upload(string $name)
+    {
+        $upload = new Upload;
+        $upload->setAttribute(":file-list", "scope.form.{$name}");
+        $upload->setAttribute("action", "");
+        $upload->setAttribute(":auto-upload", "false");
+
+        $btn = new Button;
+        $btn->textContent = "Select file";
+        $upload->append($btn);
+
+        //$upload->append()//
+        $this->append($upload);
+        $this->setAttribute("prop", $name);
+
+        return $upload;
+    }
+
+    public function switch(string $name)
+    {
+        $s = new _Switch;
+        $s->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($s);
+        $this->setAttribute("prop", $name);
+        return $s;
+    }
+
+    public function inputNumber(string $name)
+    {
+        $t = new InputNumber;
+        $t->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($t);
+        $this->setAttribute("prop", $name);
+        return $t;
+    }
+
+    public function transfer(string $name)
+    {
+        $t = new Transfer;
+        $t->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($t);
+        $this->setAttribute("prop", $name);
+        return $t;
+    }
+
+    public function rate(string $name)
+    {
+        $rate = new Rate;
+        $rate->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($rate);
+        $this->setAttribute("prop", $name);
+        return $rate;
+    }
+
+    public function timePicker(string $name)
+    {
+        $timePicker = new TimePicker;
+        $timePicker->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($timePicker);
+        $this->setAttribute("prop", $name);
+        return $timePicker;
+    }
+
+    public function timeSelect(string $name)
+    {
+        $timeSelect = new TimeSelect;
+        $timeSelect->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($timeSelect);
+        $this->setAttribute("prop", $name);
+        return $timeSelect;
+    }
+
+    public function tinymce(string $name)
+    {
+        $input = new HTMLElement("vx-tinymce");
+        $input->setAttribute("v-model", "scope.form.{$name}");
+        $input->setAttribute("accept", join(", ", FileManager::LookupMimeType("image")));
+        $this->append($input);
+        $this->setAttribute("prop", $name);
+        return $input;
+    }
+
+    public function filemanager(string $name)
+    {
+        $input = new HTMLElement("vx-file-input");
+        $input->setAttribute("v-model", "scope.form.{$name}");
+        $this->append($input);
+        $this->setAttribute("prop", $name);
+        return $input;
     }
 
     public function required(string $message = null)
@@ -34,7 +126,7 @@ class FormItem extends HTMLElement
 
     public function textarea(string $name)
     {
-        $input = new FormItemInput();
+        $input = new Input;
         $input->setAttribute("name", $name);
         $input->setAttribute("v-model", "scope.form.{$name}");
         $input->setAttribute("type", "textarea");
@@ -46,7 +138,7 @@ class FormItem extends HTMLElement
 
     public function input(string $name)
     {
-        $input = new FormItemInput();
+        $input = new Input;
         $input->setAttribute("name", $name);
         $input->setAttribute("v-model", "scope.form.{$name}");
 
@@ -57,7 +149,7 @@ class FormItem extends HTMLElement
 
     public function password(string $name)
     {
-        $input = new FormItemInput();
+        $input = new Input;
         $input->setAttribute("name", $name);
         $input->setAttribute("v-model", "scope.form.{$name}");
         $input->setAttribute("show-password", true);
@@ -88,7 +180,7 @@ class FormItem extends HTMLElement
 
     public function select(string $name, $data_source = null, $display_member = null, $value_member = null)
     {
-        $select = new FormItemSelect();
+        $select = new Select;
         $select->setAttribute("v-model", "scope.form.{$name}");
         $select->setAttribute("filterable", true);
         $select->setAttribute("clearable", true);
@@ -130,20 +222,13 @@ class FormItem extends HTMLElement
         }
 
 
-        $hidden = new HTMLElement("input");
-        $hidden->setAttribute("type", "hidden");
-        $hidden->setAttribute("name", $name);
-        $hidden->setAttribute("v-model", "scope.form.$name");
-        $this->append($hidden);
-
-
         $this->setAttribute("prop", $name);
         return $select;
     }
 
-    public function date(string $name)
+    public function datePicker(string $name)
     {
-        $date = new FormItemDatePicker();
+        $date = new DatePicker();
         $date->setAttribute("name", $name);
         $date->setAttribute("v-model", "scope.form.{$name}");
         $date->setAttribute("value-format", "yyyy-MM-dd");
@@ -153,9 +238,40 @@ class FormItem extends HTMLElement
         return $date;
     }
 
+    public function date(string $name)
+    {
+        return $this->datePicker($name);
+    }
+
+    public function colorPicker(string $name)
+    {
+        $c = new ColorPicker;
+        $c->setAttribute("name", $name);
+        $c->setAttribute("v-model", "scope.form.{$name}");
+
+        $this->append($c);
+        $this->setAttribute("prop", $name);
+
+        return $c;
+    }
+
+    public function dateTimePicker(string $name)
+    {
+        $dt = new DatePicker;
+        $dt->setAttribute("name", $name);
+        $dt->setAttribute("v-model", "scope.form.{$name}");
+        $dt->setAttribute("value-format", "yyyy-MM-dd HH:mm:ss");
+        $dt->setAttribute("type", "datetime");
+
+        $this->append($dt);
+        $this->setAttribute("prop", $name);
+
+        return $dt;
+    }
+
     public function checkbox(string $name)
     {
-        $cb = new FormItemCheckbox();
+        $cb = new Checkbox;
         $cb->setAttribute("v-model", "scope.form.{$name}");
 
         $this->append($cb);

@@ -1,4 +1,3 @@
-{{transfer}}
 {{form|raw}}
 <?php
 
@@ -7,20 +6,21 @@
  * Date: 2021-07-07 
  */
 
-use VX\UI\EL\Transfer;
-
 return new class
 {
     function post(VX $vx)
     {
-        var_dump($vx->_post);
+        outp($vx->_post);
         die();
     }
 
     function get(VX $vx)
     {
-        $form = $vx->ui->createForm(["file" => 'a.jpg', "file2" => "hello", "transfer1" => []]);
+        $form = $vx->ui->createForm(["file" => 'a.jpg', "file2" => "hello", "transfer1" => [1,2], "upload1" => []]);
         $form->setAction();
+
+
+        $form->add("Upload")->upload("upload1");
 
         $form->add("Switch")->switch("switch1");
 

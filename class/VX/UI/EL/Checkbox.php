@@ -1,19 +1,16 @@
 <?php
 
-namespace VX\UI;
+namespace VX\UI\EL;
 
 use P\HTMLElement;
 
-use VX\UI\FormItem;
-
-class FormItemInput extends HTMLElement
+class Checkbox extends HTMLElement
 {
-
     public function __construct()
     {
-        parent::__construct("el-input");
-        
+        parent::__construct("el-checkbox");
     }
+
 
     public function required(string $message = null)
     {
@@ -21,12 +18,6 @@ class FormItemInput extends HTMLElement
         if ($node instanceof FormItem) {
             $node->required($message);
         }
-        return $this;
-    }
-
-    public function placeholder(string $placeholder)
-    {
-        $this->setAttribute("placeholder", $placeholder);
         return $this;
     }
 }

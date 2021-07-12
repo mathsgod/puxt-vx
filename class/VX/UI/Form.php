@@ -32,7 +32,7 @@ class Form extends HTMLElement
 
     public function add(string $label)
     {
-        $item = new FormItem;
+        $item = new EL\FormItem;
         $this->template->append($item);
 
         $item->setLabel($label);

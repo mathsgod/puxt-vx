@@ -1,18 +1,11 @@
 <?php
 
-namespace VX\UI;
+namespace VX\UI\EL;
 
-use P\HTMLElement;
-use VX\UI\FormItem;
+use P\Element;
 
-class FormItemDatePicker extends HTMLElement
+class FormItemElement extends Element
 {
-
-    public function __construct()
-    {
-        parent::__construct("el-date-picker");
-    }
-
     public function required(string $message = null)
     {
         $node = $this->parentNode;
