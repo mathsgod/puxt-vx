@@ -30,10 +30,21 @@ class TableColumn extends HTMLElement
         return $this;
     }
 
+    public function filterable(array $value)
+    {
+        $this->setAttribute(":filters", json_encode($value));
+
+        $prop = $this->getAttribute("prop");
+        $this->setAttribute("column-key", $prop);
+
+        return $this;
+    }
+
     public function searchable(string $type = "text")
     {
         $node = $this->closest("vx-table");
         if ($node instanceof Table) {
+            $node->setAttribute("searchable", true);
             if ($type == "text") {
                 $node->search->addInput($this->getAttribute("label"), $this->getAttribute("prop"));
             } elseif ($type == "date") {

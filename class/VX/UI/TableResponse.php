@@ -5,6 +5,7 @@ namespace VX\UI;
 use Closure;
 use JsonSerializable;
 use VX;
+use VX\IModel;
 
 class TableResponse implements JsonSerializable
 {
@@ -16,6 +17,7 @@ class TableResponse implements JsonSerializable
     public $offset;
     public $sort;
     public $search;
+    public $filter;
 
     public function __construct(VX $vx, $query)
     {
@@ -26,11 +28,50 @@ class TableResponse implements JsonSerializable
 
         $this->sort = $vx->_get["sort"];
         $this->search = json_decode($vx->_get["search"], true);
+        $this->filter = json_decode($vx->_get["filter"], true);
+
+        if ($vx->_get["show_update"] == "true") {
+            $this->add("__view__", function ($obj) use ($vx) {
+                if ($obj instanceof IModel) {
+                    if ($obj->canReadBy($vx->user)) {
+                        return ["value" => $obj->uri("view")];
+                    }
+                }
+                return false;
+            });
+        }
+
+        if ($vx->_get["show_update"] == "true") {
+            $this->add("__update__", function ($obj) use ($vx) {
+                if ($obj instanceof IModel) {
+                    if ($obj->canUpdateBy($vx->user)) {
+                        return ["value" => $obj->uri("ae")];
+                    }
+                }
+                return false;
+            });
+        }
+
+        if ($vx->_get["show_delete"] == "true") {
+            $this->add("__delete__", function ($obj) use ($vx) {
+                if ($obj instanceof IModel) {
+                    if ($obj->canDeleteBy($vx->user)) {
+                        return ["value" => $obj->uri("")];
+                    }
+                }
+                return false;
+            });
+        }
     }
 
     public function filteredSource()
     {
         $source = clone $this->source;
+
+        if ($this->filter) {
+            $source->filter($this->filter);
+        }
+
 
         if ($this->search) {
             foreach ($this->search as $name => $value) {

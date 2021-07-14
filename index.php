@@ -65,15 +65,17 @@ return function ($options) {
         $puxt->context->route->path = $path;
 
 
-
         //check permission
         if (!$vx->acl($path)) {
-            header("Content-type: application/json; charset=utf-8");
-            echo json_encode(["error" => [
-                "code" => 401,
-                "message" => "access deny"
-            ]]);
-            die();
+
+            if ($vx->logined) {
+                http_response_code(403);
+            } else {
+                http_response_code(401);
+            }
+
+
+            exit();
         }
 
         $module = $vx->module;
