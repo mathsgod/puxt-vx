@@ -65,7 +65,7 @@ class Form extends HTMLElement
 
     public function setValue(string $name,$value){
         $data = json_decode($this->getAttribute(":data"), true);
-        $data[$name] = var_get($this->_data, $name);
+        $data[$name] = $value;
         $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
     }
 }
