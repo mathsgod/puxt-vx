@@ -23,6 +23,7 @@ class TableResponse implements JsonSerializable
     {
         $this->vx = $vx;
         $this->page = intval($vx->_get["page"]);
+
         $this->per_page = intval($vx->_get["per_page"]);
         $this->offset = intval(($this->page - 1) * $this->per_page);
 
@@ -141,7 +142,7 @@ class TableResponse implements JsonSerializable
         $source = $this->orderedSource();
 
 
-        if ($this->page) {
+        if ($this->page && $this->per_page) {
             $source->limit($this->per_page);
             $source->offset($this->offset);
         }

@@ -62,4 +62,10 @@ class Form extends HTMLElement
         $this->append($divider);
         return $divider;
     }
+
+    public function setValue(string $name,$value){
+        $data = json_decode($this->getAttribute(":data"), true);
+        $data[$name] = var_get($this->_data, $name);
+        $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
 }
