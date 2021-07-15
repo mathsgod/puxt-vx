@@ -13,9 +13,10 @@ class Form extends HTMLElement
     public function __construct()
     {
         parent::__construct("vx-form");
-        $this->template = new HTMLElement("template");
-        $this->template->setAttribute("slot-scope", "scope");
-        $this->append($this->template);
+        $this->setAttribute("v-slot:default", "scope");
+        //    $this->template = new HTMLElement("template");
+        //    $this->template->setAttribute("slot-scope", "scope");
+        //    $this->append($this->template);
     }
 
     public function setAction(string $url = "")
@@ -33,14 +34,9 @@ class Form extends HTMLElement
     public function add(string $label)
     {
         $item = new EL\FormItem;
-        $this->template->append($item);
+        $this->append($item);
 
         $item->setLabel($label);
-
-        $this->template->append($item);
-
-
-
         $item->addEventListener("prop_added", function ($e) {
             $detail = $e->detail;
             $name = $detail["name"];
@@ -53,5 +49,17 @@ class Form extends HTMLElement
         });
 
         return $item;
+    }
+
+    public function addDivider(string $content = null)
+    {
+
+        $divider = new EL\Divider();
+        if ($divider) {
+            $divider->textContent = $content;
+        }
+
+        $this->append($divider);
+        return $divider;
     }
 }

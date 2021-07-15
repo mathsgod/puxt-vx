@@ -276,12 +276,15 @@ class FormItem extends HTMLElement
 
         $this->append($cb);
         $this->setAttribute("prop", $name);
-        /* 
-        $hidden = new HTMLElement("input");
-        $hidden->setAttribute("type", "hidden");
-        $hidden->setAttribute("name", $name);
-        $hidden->setAttribute(":value", "scope.form.$name?1:0");
-        $this->append($hidden); */
         return $cb;
+    }
+
+    public function helpBlock(string $text)
+    {
+        $p = new HTMLElement("p");
+        $p->classList->add("mb-0");
+        $p->textContent = $text;
+        $this->append($p);
+        return $p;
     }
 }

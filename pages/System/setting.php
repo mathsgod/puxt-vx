@@ -22,8 +22,15 @@ return new class
 
     function get(VX $vx)
     {
-        $f = $vx->ui->createForm($vx->config["VX"]);
-        $f->add("Company")->input("company");
+        $config=$vx->config["VX"];
+        $config["two_step_verification"]=boolval($config["two_step_verification"]);
+
+        $f = $vx->ui->createForm($config);
+        $r = $f->add("Company");
+        $r->input("company");
+        $r->helpBlock("company name");
+
+
         $f->add("Company logo")->input("company_logo");
         $f->add("Company url")->input("company_url");
 
@@ -33,6 +40,11 @@ return new class
         $f->add("Copyright url")->input("copyright_url");
 
         $f->add("Login version")->select("login_version", ["v1" => "v1", "v2" => "v2"]);
+        $f->addDivider();
+
+        $f->add("2 step verification")->switch("two_step_verification");
+        $f->add("Biometric authentication")->switch("biometric_authentication");
+
         $this->form = $f;
     }
 };
