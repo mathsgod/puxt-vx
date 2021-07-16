@@ -16,6 +16,17 @@ class Model extends ORMModel implements IModel
         return self::$db;
     }
 
+    //load or create
+    public static function LoadOrCreate(?int $id): static
+    {
+        $key = static::_key();
+        if ($obj = static::Query([$key => $id])->first()) {
+            return $obj;
+        }
+
+        return new static;
+    }
+
     public function canDeleteBy(User $user): bool
     {
         return true;
