@@ -14,11 +14,12 @@ class Table extends HTMLElement
         parent::__construct("vx-table");
 
         $this->search = new TableSearch();
+        $this->search->setAttribute("v-slot:search", "table");
         $this->append($this->search);
 
-        
-        $this->setAttribute("v-slot", "table");
-        
+        $this->default = new HTMLElement("template");
+        $this->default->setAttribute("v-slot", "table");
+        $this->append($this->default);
     }
 
     public function addView()
@@ -30,7 +31,7 @@ class Table extends HTMLElement
         $template = new HTMLElement("template");
         $template->setAttribute("slot-scope", "props");
         $column->append($template);
-        $this->append($column);
+        $this->default->append($column);
         $template->innerHTML = "<el-button v-if='props.row.__view__' icon='el-icon-search' type='primary' size='mini' v-on:click='\$router.push(props.row.__view__.value)'></el-button>";
         return $template;
     }
@@ -38,15 +39,15 @@ class Table extends HTMLElement
     public function addEdit()
     {
         $this->setAttribute("show-update", true);
-        
+
         $column = new TableColumn;
         $column->setAttribute("width", "70");
         $template = new HTMLElement("template");
         $template->setAttribute("v-slot:default", "props");
-        
+
 
         $column->append($template);
-        $this->append($column);
+        $this->default->append($column);
         $template->innerHTML = "<el-button v-if='props.row.__update__' icon='el-icon-edit' type='warning' size='mini' v-on:click='\$router.push(props.row.__update__.value)'></el-button>";
 
         return $template;
@@ -60,7 +61,7 @@ class Table extends HTMLElement
         $template = new HTMLElement("template");
         $template->setAttribute("v-slot:default", "props");
         $column->append($template);
-        $this->append($column);
+        $this->default->append($column);
         $template->innerHTML = "<el-button v-if='props.row.__delete__' icon='el-icon-close' type='danger' size='mini' v-on:click='table.delete(props.row.__delete__.value)'></el-button>";
 
         return $template;
@@ -69,7 +70,7 @@ class Table extends HTMLElement
     public function add(string $label, string $prop)
     {
         $column = new TableColumn;
-        $this->append($column);
+        $this->default->append($column);
 
         $column->setLabel($label);
         $column->setProp($prop);
@@ -87,7 +88,7 @@ class Table extends HTMLElement
         $template->setAttribute("v-slot:default", "props");
         $column->append($template);
 
-        $this->append($column);
+        $this->default->append($column);
 
         return $template;
     }

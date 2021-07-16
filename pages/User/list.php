@@ -12,7 +12,7 @@ return new class
         $table->addView();
         $table->addEdit();
         $table->addDel();
-        $table->add("Username", "username")->sortable();
+        $table->add("Username", "username")->sortable()->searchable();
         $table->add("First name", "first_name")->sortable();
         $table->add("Last name", "last_name")->sortable();
         $table->add("Phone", "phone")->sortable();

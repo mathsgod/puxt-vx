@@ -3,29 +3,38 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX\UI\EL\Form;
 use VX\UI\EL\FormItem;
+use VX\UI\EL\Input;
 
 class TableSearch extends HTMLElement
 {
+    public $form;
+
     public function __construct()
     {
-        parent::__construct("vx-table-search");
 
-        $this->template = new HTMLElement("template");
-        $this->template->setAttribute("v-slot:default", "scope");
-        $this->append($this->template);
+        parent::__construct("template");
+        $this->form = new HTMLElement("el-form");
+        $this->form->setAttribute(":inline", "true");
+        $this->form->setAttribute("v-on:submit.native.prevent", true);
+        $this->form->classList->add("ml-2 mr-2");
+
+        $this->append($this->form);
     }
 
     public function addInput(string $label, string $prop)
     {
-        $item = new FormItem;
-        $item->setLabel($label);
+        $this->form->append($formItem = new HTMLElement("el-form-item"));
+        $formItem->append($input = new Input());
+        $formItem->setAttribute("label", $label);
 
-        $input = $item->input($prop);
-        $input->setAttribute("v-on:keyup.enter.native", 'table.search(scope.form)');
+        $input->setAttribute("v-model", "table.search.$prop");
+        $input->setAttribute("v-on:keyup.enter.native", 'table.onSearch');
         $input->setAttribute("clearable", true);
 
-        $this->template->append($item);
+        $formItem->append($input);
+
         return $input;
     }
 
@@ -36,9 +45,9 @@ class TableSearch extends HTMLElement
         $item->setLabel($label);
 
         $input = $item->datePicker($prop);
-        $input->setAttribute("type","daterange");
+        $input->setAttribute("type", "daterange");
 
-        $this->template->append($item);
+        $this->append($item);
         return $input;
     }
 
@@ -51,6 +60,6 @@ class TableSearch extends HTMLElement
         $input = $item->select($prop, [1 => "A", 2 => "B"]);
         $input->setAttribute("v-on:change", 'table.search(scope.form)');
 
-        $this->template->append($item);
+        $this->append($item);
     }
 }

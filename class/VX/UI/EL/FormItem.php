@@ -11,6 +11,12 @@ class FormItem extends HTMLElement
     public function __construct()
     {
         parent::__construct("el-form-item");
+        $this->scope = "scope.form.";
+    }
+
+    public function setScope(string $scope)
+    {
+        $this->scope = $scope;
     }
 
     public function upload(string $name)
@@ -140,7 +146,7 @@ class FormItem extends HTMLElement
     {
         $input = new Input;
         $input->setAttribute("name", $name);
-        $input->setAttribute("v-model", "scope.form.{$name}");
+        $input->setAttribute("v-model", $this->scope . $name);
 
         $this->append($input);
         $this->setAttribute("prop", $name);

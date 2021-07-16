@@ -26,7 +26,7 @@ return new class
         $table->addEdit();
         $table->addDel();
 
-        $table->add("Name", "name")->sortable();
+        $table->add("Name", "name")->sortable()->searchable();
         $table->add("Code", "code")->sortable();
         $table->add("Num of users", "num_of_user");
 
@@ -45,15 +45,19 @@ return new class
 
     function data(VX $vx)
     {
+
         $r = $vx->ui->createTableResponse();
         $r->source = UserGroup::Query();
 
         $r->add("usergroup_id");
         $r->add("name");
         $r->add("code");
-        $r->add("num_of_user", function ($obj) {
-            return $obj->User()->count();
-        });
+        $r->add("num_of_user", fn ($o) => $o->User()->count());
+
+        
+
+
+
         return $r;
     }
 };
