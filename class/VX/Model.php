@@ -32,7 +32,7 @@ class Model extends ORMModel implements IModel
 
     public function canDeleteBy(User $user): bool
     {
-        return $this->_acl_allow_by($user, ["FC", "D"]);
+        return self::_acl_allow_by($user, ["FC", "D"]);
     }
 
     private static function _acl_allow_by(User $user, array $action = []): bool
@@ -41,7 +41,7 @@ class Model extends ORMModel implements IModel
 
         $acl = self::$_vx->_loadACL($user);
 
-        $rc = new \ReflectionClass(static);
+        $rc = new ReflectionClass(static::class);
         $class = $rc->getShortName();
 
         //--- deny ---
@@ -57,12 +57,12 @@ class Model extends ORMModel implements IModel
 
     public function canReadBy(User $user): bool
     {
-        return $this->_acl_allow_by($user, ["FC", "R"]);
+        return self::_acl_allow_by($user, ["FC", "R"]);
     }
 
     public function canUpdateBy(User $user): bool
     {
-        return $this->_acl_allow_by($user, ["FC", "U"]);
+        return self::_acl_allow_by($user, ["FC", "U"]);
     }
 
     public function createdBy(): ?User
@@ -125,5 +125,29 @@ class Model extends ORMModel implements IModel
         $ret = parent::delete();
         self::$_vx->trigger("after_delete", $this);
         return $ret;
+    }
+
+    public function __call($function, $args)
+    {
+        $class = get_class($this);
+
+        //check const
+        $c = new \ReflectionClass($class);
+        if ($const = $c->getConstants()) {
+
+            $decamlize = function ($string) {
+                return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $string));
+            };
+            $field = $decamlize($function);
+
+            if (array_key_exists(strtoupper($field), $const)) {
+                return $const[strtoupper($field)][$this->$field];
+            }
+
+            if (array_key_exists($function, $const)) {
+                return $const[$function][$this->$field];
+            }
+        }
+        return parent::__call($function, $args);
     }
 }
