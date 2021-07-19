@@ -30,7 +30,9 @@ class Model extends ORMModel implements IModel
     }
 
 
-    //load or create
+    /**
+     * Load the object from DB, if the record not found , created it
+     */
     public static function LoadOrCreate(?int $id): static
     {
         $key = static::_key();
