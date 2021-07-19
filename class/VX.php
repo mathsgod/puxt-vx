@@ -78,7 +78,9 @@ class VX extends Context
                     }
                 }
             } catch (Exception $e) {
-                $this->user = User::Query(["user_id" => $this->user_id])->first();
+                http_response_code(401);
+                exit();
+                //$this->user = User::Query(["user_id" => $this->user_id])->first();
             }
         } else {
             $this->user = User::Query(["user_id" => $this->user_id])->first();

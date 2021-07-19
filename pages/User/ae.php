@@ -22,7 +22,7 @@ return new class
         $form->add("Username")->input("username")->required();
         $form->add("First name")->input("first_name")->required();
         $form->add("Last name")->input("last_name");
-
+        
 
         if (!$obj->user_id) {
             $form->add("Password")->password("password")->required();

@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX\UI\EL\DatePicker;
 use VX\UI\EL\Form;
 use VX\UI\EL\FormItem;
 use VX\UI\EL\Input;
@@ -33,7 +34,6 @@ class TableSearch extends HTMLElement
         $input->setAttribute("v-on:keyup.enter.native", 'table.onSearch');
         $input->setAttribute("clearable", true);
 
-        $formItem->append($input);
 
         return $input;
     }
@@ -41,14 +41,16 @@ class TableSearch extends HTMLElement
     public function addDate(string $label, string $prop)
     {
 
-        $item = new FormItem;
-        $item->setLabel($label);
+        $this->form->append($formItem = new HTMLElement("el-form-item"));
+        $formItem->append($date = new DatePicker());
+        $formItem->setAttribute("label", $label);
 
-        $input = $item->datePicker($prop);
-        $input->setAttribute("type", "daterange");
+        $date->setAttribute("v-model", "table.search.$prop");
+        $date->setType(DatePicker::TYPE_DATE_RANGE);
+        $date->setAttribute("value-format", "yyyy-MM-dd");
+        $date->setAttribute("v-on:change", "table.onSearch");
 
-        $this->append($item);
-        return $input;
+        return $date;
     }
 
     public function addSelect(string $label, string $prop)

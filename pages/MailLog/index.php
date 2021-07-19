@@ -1,5 +1,4 @@
 {{table|raw}}
-
 <?php
 
 use VX\MailLog;
@@ -11,7 +10,6 @@ return new class
         $table = $vx->ui->createTable("data");
 
         $template = $table->addExpand();
-
         $template->innerHTML = "<div v-html='props.row.body'></div>";
 
         $table->add("ID", "maillog_id")->sortable();

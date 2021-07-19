@@ -9,7 +9,7 @@ return [
     "post" => function (VX $context) {
         $data = $context->req->getParsedBody();
 
-        
+
         $user = $context->login($data["username"], $data["password"]);
 
         $token = JWT::encode([
@@ -26,9 +26,9 @@ return [
             "user_id" => $user->user_id
         ], $context->config["VX"]["jwt"]["secret"]);
 
-        return ["data" => [
+        return [
             "access_token" => $token,
             "refresh_token" => $refresh_token
-        ]];
+        ];
     }
 ];
