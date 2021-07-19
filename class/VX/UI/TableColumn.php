@@ -6,6 +6,11 @@ use P\HTMLElement;
 
 class TableColumn extends HTMLElement
 {
+
+    const SEARCH_TYPE_TEXT = "text";
+    const SEARCH_TYPE_DATE = "date";
+    const SEARCH_TYPE_SELECT = "select";
+
     public function __construct()
     {
         parent::__construct("el-table-column");
@@ -40,19 +45,19 @@ class TableColumn extends HTMLElement
         return $this;
     }
 
-    public function searchable(string $type = "text")
+    public function searchable(string $type = TableColumn::SEARCH_TYPE_TEXT)
     {
         $node = $this->closest("vx-table");
         if ($node instanceof Table) {
             $node->setAttribute("searchable", true);
-            if ($type == "text") {
-                $node->search->addInput($this->getAttribute("label"), $this->getAttribute("prop"));
-            } elseif ($type == "date") {
-                $node->search->addDate($this->getAttribute("label"), $this->getAttribute("prop"));
-            }
+
+            match ($type) {
+                self::SEARCH_TYPE_TEXT => $node->search->addInput($this->getAttribute("label"), $this->getAttribute("prop")),
+                self::SEARCH_TYPE_DATE => $node->search->addDate($this->getAttribute("label"), $this->getAttribute("prop")),
+                self::SEARCH_TYPE_SELECT => $node->search->addSelect($this->getAttribute("label"), $this->getAttribute("prop"))
+            };
         }
-
-
+        
         return $this;
     }
 }

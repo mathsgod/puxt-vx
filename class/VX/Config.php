@@ -4,7 +4,6 @@ namespace VX;
 
 class Config extends Model
 {
-
     static function CreateOrLoad(string $name):self
     {
         $r = self::Query(["name" => $name])->first();

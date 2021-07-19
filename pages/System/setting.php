@@ -24,6 +24,7 @@ return new class
     {
         $config=$vx->config["VX"];
         $config["two_step_verification"]=boolval($config["two_step_verification"]);
+        $config["biometric_authentication"]=boolval($config["biometric_authentication"]);
 
         $f = $vx->ui->createForm($config);
         $r = $f->add("Company");

@@ -34,6 +34,7 @@
                     </a>
                 </li>
 
+                {% if two_step_verification %}
                 <!-- 2step verification -->
                 <li class="nav-item">
                     <a class="nav-link" id="account-pill-2step" data-toggle="pill" href="#account-vertical-2step" aria-expanded="false">
@@ -41,7 +42,9 @@
                         <span class="font-weight-bold">2 Step Verification</span>
                     </a>
                 </li>
+                {% endif %}
 
+                {% if biometric_authentication %}
                 <!-- Bio metric -->
                 <li class="nav-item">
                     <a class="nav-link" id="account-pill-bio" data-toggle="pill" href="#account-vertical-bio" aria-expanded="false">
@@ -49,6 +52,7 @@
                         <span class="font-weight-bold">Biometric Authentication</span>
                     </a>
                 </li>
+                {% endif %}
             </ul>
         </div>
         <!--/ left menu section -->
@@ -221,6 +225,14 @@
                                         <el-checkbox v-model="form.rtable_small_table"></el-checkbox>
                                     </el-form-item>
 
+                                    <el-form-item label="Table size">
+                                        <el-select v-model="form.table_size" clearable>
+                                            <el-option value="large" label="large"></el-option>
+                                            <el-option value="medium " label="medium"></el-option>
+                                            <el-option value="small" label="small"></el-option>
+                                            <el-option value="mini" label="mini"></el-option>
+                                        </el-select>
+                                    </el-form-item>
 
                                     <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit">Save changes</button>
 
@@ -479,9 +491,15 @@ use Google\Authenticator\GoogleAuthenticator;
 return new class
 {
 
+    function get(VX $vx)
+    {
+        $config = $vx->config["VX"];
+        $this->two_step_verification = boolval($config["two_step_verification"]);
+        $this->biometric_authentication = boolval($config["biometric_authentication"]);
+    }
+
     function bio(VX $vx)
     {
-      
     }
 
 

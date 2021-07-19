@@ -25,6 +25,12 @@ class UI
             $table->setAttribute("remote", $remote);
         }
 
+        $user = $this->vx->user;
+        if ($user->style["table_size"]) {
+            $table->setSize($user->style["table_size"]);
+        }
+        
+
         return $table;
     }
 

@@ -17,6 +17,7 @@ class TableSearch extends HTMLElement
 
         parent::__construct("template");
         $this->form = new HTMLElement("el-form");
+        $this->form->setAttribute(":size", "table.size");
         $this->form->setAttribute(":inline", "true");
         $this->form->setAttribute("v-on:submit.native.prevent", true);
         $this->form->classList->add("ml-2 mr-2");
@@ -60,7 +61,7 @@ class TableSearch extends HTMLElement
 
         //$input = $item->input($prop);
         $input = $item->select($prop, [1 => "A", 2 => "B"]);
-        $input->setAttribute("v-on:change", 'table.search(scope.form)');
+        $input->setAttribute("v-on:change", 'table.onSearch');
 
         $this->append($item);
     }

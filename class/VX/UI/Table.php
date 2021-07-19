@@ -6,6 +6,12 @@ use P\HTMLElement;
 
 class Table extends HTMLElement
 {
+
+    const SIZE_SMALL = "small";
+    const SIZE_MINI = "mini";
+    const SIZE_MEDIUM = "medium";
+    const SIZE_LARGE = "large";
+
     public $search;
 
     public $body;
@@ -20,6 +26,11 @@ class Table extends HTMLElement
         $this->default = new HTMLElement("template");
         $this->default->setAttribute("v-slot", "table");
         $this->append($this->default);
+    }
+
+    public function setSize(string $size)
+    {
+        $this->setAttribute("size", $size);
     }
 
     public function addView()
