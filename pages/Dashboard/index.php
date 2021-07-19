@@ -1,3 +1,7 @@
+<vue>
+<router-link to="/User/ae">user</router-link>
+</vue>
+
 
 <?php
 
@@ -7,6 +11,8 @@ return new class
     {
 
 
+
+        return;
         $modules = $vx->getModules();
 
         $menu = new VX\Menu();
@@ -15,6 +21,5 @@ return new class
         }
 
         outp($menu->getMenuByUser($vx->user));
-
     }
 };

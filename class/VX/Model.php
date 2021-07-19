@@ -19,6 +19,17 @@ class Model extends ORMModel implements IModel
         return self::$db;
     }
 
+
+    /**
+     * Load by id
+     */
+    public static function Load(int $id): static
+    {
+        $key = static::_key();
+        return static::Query([$key => $id])->first();
+    }
+
+
     //load or create
     public static function LoadOrCreate(?int $id): static
     {
@@ -68,15 +79,17 @@ class Model extends ORMModel implements IModel
     public function createdBy(): ?User
     {
         if ($this->created_by) {
-            return new User($this->created_by);
+            return User::Load($this->created_by);
         }
+        return null;
     }
 
     public function updatedBy(): ?User
     {
         if ($this->updated_by) {
-            return new User($this->updated_by);
+            return User::Load($this->updated_by);
         }
+        return null;
     }
 
     public function uri(string $name = null): string
