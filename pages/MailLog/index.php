@@ -2,12 +2,14 @@
 <?php
 
 use VX\MailLog;
+use VX\UI\Table;
 
 return new class
 {
     function get(VX $vx)
     {
         $table = $vx->ui->createTable("data");
+        $table->setDefaultSort("maillog_id", Table::SORT_ORDER_DESC);
 
         $template = $table->addExpand();
         $template->innerHTML = "<div v-html='props.row.body'></div>";
@@ -17,6 +19,7 @@ return new class
         $table->add("To", "to")->sortable();
         $table->add("Subject", "subject")->sortable()->searchable();
         $table->add("Created time", "created_time")->sortable()->searchable("date");
+
 
         $this->table = $table;
     }

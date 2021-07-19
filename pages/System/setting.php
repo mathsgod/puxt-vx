@@ -22,9 +22,9 @@ return new class
 
     function get(VX $vx)
     {
-        $config=$vx->config["VX"];
-        $config["two_step_verification"]=boolval($config["two_step_verification"]);
-        $config["biometric_authentication"]=boolval($config["biometric_authentication"]);
+        $config = $vx->config["VX"];
+        $config["two_step_verification"] = boolval($config["two_step_verification"]);
+        $config["biometric_authentication"] = boolval($config["biometric_authentication"]);
 
         $f = $vx->ui->createForm($config);
         $r = $f->add("Company");
@@ -44,7 +44,9 @@ return new class
         $f->addDivider();
 
         $f->add("2 step verification")->switch("two_step_verification");
-        $f->add("Biometric authentication")->switch("biometric_authentication");
+        $r = $f->add("Biometric authentication");
+        $r->switch("biometric_authentication");
+        $r->helpBlock("Only https can use Biometric authentication");
 
         $this->form = $f;
     }

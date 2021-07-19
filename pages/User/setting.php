@@ -206,7 +206,7 @@
                                     <el-form-item label="Form size">
                                         <el-select v-model="form.form_size" clearable>
                                             <el-option value="large" label="large"></el-option>
-                                            <el-option value="medium " label="medium"></el-option>
+                                            <el-option value="medium" label="medium"></el-option>
                                             <el-option value="small" label="small"></el-option>
                                             <el-option value="mini" label="mini"></el-option>
                                         </el-select>
@@ -215,7 +215,7 @@
                                     <el-form-item label="List view size">
                                         <el-select v-model="form.rtable_size" clearable>
                                             <el-option value="large" label="large"></el-option>
-                                            <el-option value="medium " label="medium"></el-option>
+                                            <el-option value="medium" label="medium"></el-option>
                                             <el-option value="small" label="small"></el-option>
                                             <el-option value="mini" label="mini"></el-option>
                                         </el-select>
@@ -232,6 +232,10 @@
                                             <el-option value="small" label="small"></el-option>
                                             <el-option value="mini" label="mini"></el-option>
                                         </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="Table border">
+                                        <el-switch v-model="form.table_border"></el-switch>
                                     </el-form-item>
 
                                     <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit">Save changes</button>
@@ -573,11 +577,7 @@ return new class
     {
         $user = $vx->user;
         $style = $user->style;
-        return [
-            "form_size" => $style["form_size"],
-            "rtable_size" => $style["rtable_size"],
-            "rtable_small_table" => $style["rtable_small_table"]
-        ];
+        return $style;
     }
 
 

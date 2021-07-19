@@ -16,6 +16,16 @@ class TableColumn extends HTMLElement
         parent::__construct("el-table-column");
     }
 
+    public function template(callable $callback, string $scope = "scope")
+    {
+        $template = new HTMLElement("template");
+        $template->setAttribute("v-slot", "scope");
+        p($template)->html($callback());
+
+        $this->append($template);
+
+        return $this;
+    }
 
     public function setLabel(string $label)
     {
@@ -32,6 +42,12 @@ class TableColumn extends HTMLElement
     public function sortable()
     {
         $this->setAttribute("sortable", "custom");
+        return $this;
+    }
+
+    public function width(string $width)
+    {
+        $this->setAttribute("width", $width);
         return $this;
     }
 
@@ -57,7 +73,13 @@ class TableColumn extends HTMLElement
                 self::SEARCH_TYPE_SELECT => $node->search->addSelect($this->getAttribute("label"), $this->getAttribute("prop"))
             };
         }
-        
+
+        return $this;
+    }
+
+    public function fixed()
+    {
+        $this->setAttribute(":fixed", "true");
         return $this;
     }
 }

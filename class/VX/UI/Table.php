@@ -12,6 +12,9 @@ class Table extends HTMLElement
     const SIZE_MEDIUM = "medium";
     const SIZE_LARGE = "large";
 
+    const SORT_ORDER_DESC = "descending";
+    const SORT_ORDER_ASC = "ascending";
+
     public $search;
 
     public $body;
@@ -26,6 +29,20 @@ class Table extends HTMLElement
         $this->default = new HTMLElement("template");
         $this->default->setAttribute("v-slot", "table");
         $this->append($this->default);
+    }
+
+    public function setBorder(bool $border)
+    {
+        if ($border) {
+            $this->setAttribute("border", true);
+        } else {
+            $this->removeAttribute("border");
+        }
+    }
+
+    public function setDefaultSort(string $prop, string $order)
+    {
+        $this->setAttribute(":default-sort", json_encode(["prop" => $prop, "order" => $order]));
     }
 
     public function setSize(string $size)
@@ -78,13 +95,17 @@ class Table extends HTMLElement
         return $template;
     }
 
-    public function add(string $label, string $prop)
+    public function add(string $label, ?string $prop = null)
     {
         $column = new TableColumn;
         $this->default->append($column);
 
         $column->setLabel($label);
-        $column->setProp($prop);
+
+        if ($prop) {
+            $column->setProp($prop);
+        }
+
 
         return $column;
     }
