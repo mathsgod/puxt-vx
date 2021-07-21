@@ -157,7 +157,7 @@ class TableResponse implements JsonSerializable
                 $getter = $column["getter"];
                 if ($getter instanceof Closure) {
                     //$d[$prop] = call_user_func($getter, [$obj]);
-                    $d[$prop] = (string)call_user_func($getter, $obj);
+                    $d[$prop] = call_user_func($getter, $obj);
                 } else {
                     $d[$prop] = var_get($obj, $getter);
                 }
