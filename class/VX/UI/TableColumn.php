@@ -21,7 +21,7 @@ class TableColumn extends HTMLElement
     public function template(callable $callback, string $scope = "scope")
     {
         $template = new HTMLElement("template");
-        $template->setAttribute("v-slot", "scope");
+        $template->setAttribute("v-slot", $scope);
         p($template)->html($callback());
 
         $this->append($template);

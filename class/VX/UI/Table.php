@@ -31,6 +31,11 @@ class Table extends HTMLElement
         $this->append($this->default);
     }
 
+    public function setPagination(bool $pagination)
+    {
+        $this->setAttribute(":pagination", $pagination ? "true" : "false");
+    }
+
     public function setBorder(bool $border)
     {
         if ($border) {
