@@ -115,11 +115,12 @@ class Table extends HTMLElement
         return $column;
     }
 
-    public function addExpand()
+    public function addExpand(string $label = "")
     {
 
         $column = new TableColumn;
         $column->setAttribute("type", "expand");
+        $column->setAttribute("label", $label);
 
         $template = new HTMLElement("template");
         $template->setAttribute("v-slot:default", "props");
