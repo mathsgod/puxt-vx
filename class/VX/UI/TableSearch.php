@@ -33,6 +33,7 @@ class TableSearch extends HTMLElement
 
         $input->setAttribute("v-model", "table.search.$prop");
         $input->setAttribute("v-on:keyup.enter.native", 'table.onSearch');
+        $input->setAttribute("v-on:clear","table.onSearch");
         $input->setAttribute("clearable", true);
 
 

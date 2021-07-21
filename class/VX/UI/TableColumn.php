@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX\UI\EL\Input;
 
 class TableColumn extends HTMLElement
 {
@@ -10,6 +11,7 @@ class TableColumn extends HTMLElement
     const SEARCH_TYPE_TEXT = "text";
     const SEARCH_TYPE_DATE = "date";
     const SEARCH_TYPE_SELECT = "select";
+    public $header;
 
     public function __construct()
     {
@@ -74,12 +76,39 @@ class TableColumn extends HTMLElement
             };
         }
 
+        /*
+        search input in column
+        if (!$this->header) {
+            $this->header = new TableColumnHeader;
+            $this->header->setLabel($this->getAttribute("label"));
+
+            $this->append($this->header);
+            $this->setAttribute("label-class-name", "d-flex align-items-center");
+
+            $input = $this->header->addInput();
+
+            $prop = $this->getAttribute("prop");
+
+            $input->setAttribute("v-model", 'table.search.' . $prop);
+            //$input->setAttribute("v-on:keyup.enter.native", '');
+            //$input->setAttribute("v-on:clear", "table.onSearch");
+            $input->setAttribute("clearable", true);
+        }
+*/
+
         return $this;
     }
 
     public function fixed()
     {
         $this->setAttribute(":fixed", "true");
+        return $this;
+    }
+
+    public function nowrap()
+    {
+        //$this->setAttribute(':cell-style', json_encode(["white-space" => "nowrap"]));
+
         return $this;
     }
 }

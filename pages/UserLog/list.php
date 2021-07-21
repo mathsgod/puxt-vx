@@ -8,23 +8,31 @@ return new class
 {
     function get(VX $context)
     {
-        $rt = $context->ui->createRTable("ds");
-        $rt->add("ID", "userlog_id")->sortable()->searchable("equal");
-        $rt->add("User", "user_id")->searchOption(User::Query());
+        $rt = $context->ui->createTable("data");
+        $rt->add("ID", "userlog_id")->sortable()->searchable();
+        $rt->add("User", "user_id");
         $rt->add("Login time", "login_dt")->sortable()->searchable("date");
         $rt->add("Logout time", "logout_dt")->sortable()->searchable("date");
-        $rt->add("IP address", "ip")->ss();
-        $rt->add("Result", "result")->sortable()->searchable("select")->searchOption(array("SUCCESS" => "SUCCESS", "FAIL" => "FAIL"));
-        $rt->add("User agent", "user_agent")->searchable();
+        $rt->add("IP address", "ip")->sortable()->searchable();
+        $rt->add("Result", "result")->sortable()->filterable([
+            ["value" => "SUCCESS"],
+            ["value" => "FAIL"]
+        ]);
+        $rt->add("User agent", "user_agent")->searchable()->nowrap();
         $this->table = $rt;
     }
 
-    function ds(VX $context)
+    function data(VX $vx)
     {
-
-        $rt = $context->ui->createRTableResponse();
+        $rt = $vx->ui->createTableResponse();
         $rt->source = UserLog::Query();
-        $rt->add("user_id", "User()");
+        $rt->add("user_id", fn (UserLog $o) => $o->User());
+        $rt->add("userlog_id");
+        $rt->add("login_dt");
+        $rt->add("logout_dt");
+        $rt->add("ip");
+        $rt->add("result");
+        $rt->add("user_agent");
         return $rt;
     }
 };
