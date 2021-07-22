@@ -7,6 +7,8 @@ class ModuleGroup
     public $name;
     public $child = [];
 
+    public $sequence = PHP_INT_MAX;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -16,6 +18,7 @@ class ModuleGroup
     public function add(Module $module)
     {
         $this->child[] = $module;
+        $this->sequence = min($this->sequence, $module->sequence);
     }
 
     public function getMenuItemByUser(User $user)
@@ -24,15 +27,24 @@ class ModuleGroup
 
         $data["label"] = $this->name;
         $data["icon"] = "far fa-circle";
-
         $data["link"] = "#";
+        $data["seqeunce"] = $this->sequence;
 
         $submenu = [];
-        foreach ($this->child as $child) {
+        foreach ($this->getOrderedChild() as $child) {
             $submenu[] = $child->getMenuItemByUser($user);
         }
         $data["submenu"] = $submenu;
 
         return $data;
+    }
+
+    public function getOrderedChild()
+    {
+        $child = $this->child;
+        usort($child, function ($a, $b) {
+            return $a->sequence <=> $b->sequence;
+        });
+        return $child;
     }
 }

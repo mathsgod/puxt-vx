@@ -24,13 +24,20 @@ class Menu
     public function getMenuByUser(User $user)
     {
         $data = [];
-        foreach ($this->items as $item) {
+        foreach ($this->getOrderedItems() as $item) {
             $menu = $item->getMenuItemByUser($user);
-
-//            if (count($menu["submenu"]) == 0) continue;
-
             $data[] = $menu;
         }
         return $data;
+    }
+
+    private function getOrderedItems()
+    {
+        $items = $this->items;
+        usort($items, function ($a, $b) {
+            return $a->sequence <=> $b->sequence;
+        });
+
+        return $items;
     }
 }

@@ -100,6 +100,7 @@ class Module
         $submenu = $this->getMenuLinkByUser($user);
 
         $data["link"] = "#";
+        $data["name"] = $this->name;
 
         if (count($submenu)) {
             $data["submenu"] = $submenu;
