@@ -78,8 +78,10 @@ return new class
             foreach ($modules as $m) {
                 $menu->addModule($m);
             }
+            
 
             $data["menus"] = $menu->getMenuByUser($vx->user);
+
 
             //language 
             $data["language"] = $vx->config["VX"]["language"];

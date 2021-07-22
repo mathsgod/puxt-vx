@@ -32,8 +32,16 @@ class ModuleGroup
 
         $submenu = [];
         foreach ($this->getOrderedChild() as $child) {
-            $submenu[] = $child->getMenuItemByUser($user);
+            $menu = $child->getMenuItemByUser($user);
+            if ($menu) {
+                $submenu[] = $menu;
+            }
         }
+        if(count($submenu)==0){
+            return [];
+        }
+
+
         $data["submenu"] = $submenu;
 
         return $data;

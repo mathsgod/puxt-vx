@@ -123,11 +123,11 @@ class VX extends Context
 
         $acl = $this->loadACL($user);
 
-        if (in_array($action, $acl["action"]["deny"][$module->name])) {
+        if (in_array($action, $acl["action"]["deny"][$module->name]??[])) {
             return false;
         }
 
-        if (in_array($action, $acl["action"]["allow"][$module->name])) {
+        if (in_array($action, $acl["action"]["allow"][$module->name]??[])) {
             return true;
         }
 

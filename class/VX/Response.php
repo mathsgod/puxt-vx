@@ -8,12 +8,27 @@ class Response
     {
     }
 
-    public function redirect(string $url): array
+    /**
+     * code
+     * 200 OK,
+     * 201 Created,
+     * 202 Accepted,
+     * 204 No Content,
+     * 205 Reset Content,
+     * 206 Partial Content,
+     * 400 Bad Request,
+     * 401 Unauthorized,
+     * 403 Forbidden,
+     * 404 Not Found
+     */
+    public function code(int $code)
     {
-        return [
-            "type" => "redirect",
-            "body" => $url
-        ];
+        http_response_code($code);
+    }
+
+    public function redirect(string $url)
+    {
+        header("location: " . $url);
     }
 
     public function notify(string $title, string $message): array

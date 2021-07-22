@@ -192,8 +192,14 @@ use Carbon\Carbon;
 use VX\EventLog;
 use VX\UserLog;
 
-return [
-    "get" => function (VX $vx) {
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-07-22 
+ */
+return new class
+{
+    function get(VX $vx)
+    {
 
         $this->user = $vx->object();
         $this->usergroup = collect($this->user->UserGroup()->toArray())->map(function ($o) {
@@ -217,7 +223,7 @@ return [
         foreach ($vx->getModules() as $module) {
             $p = [];
             foreach (["C", "R", "U", "D"] as $action) {
-                $p[$action] = $vx->allow($module, $action, $this->user);;
+                $p[$action] = $vx->allow($module, $action, $this->user);
             }
 
             $this->permission[$module->name] = $p;
@@ -251,15 +257,13 @@ return [
 
 
         //die();
-    },
-    "entries" => [
-        "userlog" => function (VX $vx) {
-            $obj = $vx->object();
-            $rt = $vx->ui->createRTableResponse();
-            $rt->source = UserLog::Query(["user_id" => $obj->user_id]);
-            return $rt;
-        }
-    ]
+    }
 
-
-];
+    function userlog(VX $vx)
+    {
+        $obj = $vx->object();
+        $rt = $vx->ui->createRTableResponse();
+        $rt->source = UserLog::Query(["user_id" => $obj->user_id]);
+        return $rt;
+    }
+};

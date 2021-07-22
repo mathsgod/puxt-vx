@@ -105,7 +105,6 @@ class Module
         if (count($submenu)) {
             $data["submenu"] = $submenu;
 
-
             if ($user->allow_uri($this->name . "/index")) {
                 array_unshift($data["submenu"], [
                     "label" => "List",
@@ -116,6 +115,8 @@ class Module
         } else {
             if ($user->allow_uri($this->name . "/index")) {
                 $data["link"] = "/" . $this->name;
+            } else {
+                return [];
             }
         }
 
@@ -141,8 +142,11 @@ class Module
             }
         }
         foreach ($this->menu as $m) {
-            $link = $m;
-            $links[] = $link;
+
+            if ($user->allow_uri($m["link"])) {
+                $link = $m;
+                $links[] = $link;
+            }
         }
         return $links;
     }

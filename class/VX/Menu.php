@@ -20,13 +20,14 @@ class Menu
         }
     }
 
-
     public function getMenuByUser(User $user)
     {
         $data = [];
         foreach ($this->getOrderedItems() as $item) {
             $menu = $item->getMenuItemByUser($user);
-            $data[] = $menu;
+            if ($menu) {
+                $data[] = $menu;
+            }
         }
         return $data;
     }
