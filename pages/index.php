@@ -178,4 +178,11 @@ return new class
         $user->style["collapsible"] = $vx->_post["collapsible"];
         $user->save();
     }
+
+    public function setLayout(VX $vx)
+    {
+        $user = $vx->user;
+        $user->style["layout"] = $vx->_post["layout"];
+        $user->save();
+    }
 };

@@ -1,2 +1,3 @@
 group: System
 class: VX\MailLog
+icon: fa fa-envelope
