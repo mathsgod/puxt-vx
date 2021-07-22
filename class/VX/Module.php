@@ -89,6 +89,9 @@ class Module
 
     public function getMenuItemByUser(User $user): array
     {
+        if ($this->hide) {
+            return [];
+        }
         $data = [];
         $data["label"] = $this->name;
         $data["icon"] = $this->icon;
