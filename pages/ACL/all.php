@@ -238,7 +238,7 @@ return new class
         $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
         $allow_ug = $acl["path"][$module->name . "/" . $path];
 
-        return in_array($usergroup->name, $allow_ug);
+        return in_array($usergroup->name, $allow_ug??[]);
     }
 
     private function getACLPathValue(UserGroup $usergroup, Module $module, string $path, string $value)
@@ -257,7 +257,7 @@ return new class
         $yml = new Parser();
         $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
         $allow_ug = $acl["path"][$module->name . "/" . $path];
-        if (in_array($usergroup->name, $allow_ug)) {
+        if (in_array($usergroup->name, $allow_ug??[])) {
             return true;
         }
 
@@ -305,5 +305,5 @@ function getACLPreset(UserGroup $usergroup, Module $module, string $action)
 
     $yml = new Parser();
     $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
-    return in_array($usergroup->name,  $acl["action"][$action][$module->name]);
+    return in_array($usergroup->name,  $acl["action"][$action][$module->name] ?? []);
 }
