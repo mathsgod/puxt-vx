@@ -68,8 +68,20 @@ return new class
 
         $logined = $vx->logined;
         $data = [
-            "logined" => $logined
+            "logined" => $logined,
+            "version" => [
+                [
+                    "name" => "puxt-vx",
+                    "value" => Composer\InstalledVersions::getVersion("mathsgod/puxt-vx")
+                ],
+                [
+                    "name" => "puxt",
+                    "value" => Composer\InstalledVersions::getVersion("mathsgod/puxt")
+                ]
+            ]
         ];
+
+
 
         if ($logined) {
             $modules = $vx->getModules();
@@ -78,7 +90,7 @@ return new class
             foreach ($modules as $m) {
                 $menu->addModule($m);
             }
-            
+
 
             $data["menus"] = $menu->getMenuByUser($vx->user);
 
