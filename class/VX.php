@@ -42,7 +42,12 @@ class VX extends Context
 
     public function getFileManager()
     {
-        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "uploads");
+        $root = $this->root . DIRECTORY_SEPARATOR . "uploads";
+        if ($this->config["VX"]["file_manager"]["root"]) {
+            $root = $this->config["VX"]["file_manager"]["root"];
+        }
+
+        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($root);
         $fs = new League\Flysystem\Filesystem($adapter);
         return $fs;
     }
