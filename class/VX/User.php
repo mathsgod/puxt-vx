@@ -115,13 +115,41 @@ class User extends Model
 
     public function canDeleteBy(User $user): bool
     {
+        if ($user->user_id == $this->user_id) return false; //no one can delete self
 
-        //cannot delete myself
-        if ($this->user_id == $user->user_id) {
-            return false;
-        }
-        return parent::canDeleteBy($user);
+        if ($user->isAdmin()) return true; //admin can delete all
+        if ($this->isGuest()) return false; //cannot delete guest
+        if ($this->isAdmin()) return false; //no one can edit admin
+
+        if ($user->isPowerUser()) return true; //power user can delete other
+
+        return false;
     }
+
+    public function canUpdateBy(User $user): bool
+    {
+        if ($user->isAdmin()) return true; //admin can update all
+        if ($user->user_id == $this->user_id) return true; //update self
+
+        if ($this->isAdmin()) return false; //no one can edit admin
+        if ($this->isGuest()) return false; //cannot udpate guest
+
+        if ($user->isPowerUser()) return true; //power user can edit other
+
+        return false;
+    }
+
+    public function canReadBy(User $user): bool
+    {
+        if ($user->user_id == $this->user_id) return true; //anyone can read self
+        if ($user->isAdmin()) return true; //admin can read all
+        if ($this->isGuest()) return false; //cannot read guest
+        if ($this->isAdmin()) return false; //no one can read admin
+
+        return parent::canReadBy($user);
+    }
+
+
 
     public function UserGroup()
     {

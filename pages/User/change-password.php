@@ -64,8 +64,16 @@ return new class
     function post(VX $vx)
     {
         $user = $vx->object();
-        $user->password = password_hash($vx->post["password"], PASSWORD_DEFAULT);
-        $user->save();
-        http_response_code(204);
+        if (!$user->user_id) {
+            $user = $vx->user;
+        }
+
+        if ($user->canChangePasswordBy($vx->user)) {
+            $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
+            $user->save();
+            http_response_code(204);
+        } else {
+            http_response_code(403);
+        }
     }
 };

@@ -351,7 +351,8 @@
                         let file = upload.files[0];
                         let fd = new FormData();
                         fd.append("file", file);
-                        await vx.post("User/change-photo", fd);
+                        let resp = await this.$vx.post("User/change-photo", fd);
+                        console.log(resp);
                     }
                 },
 
@@ -576,7 +577,7 @@ return new class
     function style(VX $vx)
     {
         $user = $vx->user;
-        $style = $user->style;
+        $style = $user->style ?? [];
         return $style;
     }
 
