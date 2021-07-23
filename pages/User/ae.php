@@ -15,6 +15,11 @@ return new class
             $obj->join_date = date("Y-m-d");
             $obj->_usergroup_id = [3];
             $obj->language = "en";
+        } else {
+            $obj->_usergroup_id = [];
+            foreach ($obj->UserGroup() as $ug) {
+                $obj->_usergroup_id[] = $ug->usergroup_id;
+            }
         }
 
         $form = $context->ui->createForm($obj);
@@ -48,7 +53,7 @@ return new class
         $form->add("User group")->multiSelect("_usergroup_id")->option(UserGroup::Query(), "name", "usergroup_id");
 
 
-        $form->setAction($context->route->path);
+        $form->setAction($obj->uri("ae"));
 
         $this->form = $form;
     }
@@ -59,13 +64,36 @@ return new class
         $obj = $vx->postForm();
 
         $post = $vx->req->getParsedBody();
+
+        foreach ($obj->UserGroup() as $ug) {
+            $ug->removeUser($obj);
+        }
+
         foreach ($post["_usergroup_id"] as $uid) {
             $ug = new UserGroup($uid);
             $ug->addUser($obj);
         }
 
-
         $vx->res->redirect($obj->uri("view"));
         $vx->res->code(201);
+    }
+
+    function patch(VX $vx)
+    {
+        $obj = $vx->object();
+        $obj->bind($vx->_post);
+        $obj->save();
+
+        foreach ($obj->UserGroup() as $ug) {
+            $ug->removeUser($obj);
+        }
+
+        foreach ($vx->_post["_usergroup_id"] as $uid) {
+            $ug = new UserGroup($uid);
+            $ug->addUser($obj);
+        }
+
+        $vx->res->redirect($obj->uri("view"));
+        $vx->res->code(204);
     }
 };

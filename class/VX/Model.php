@@ -52,7 +52,7 @@ class Model extends ORMModel implements IModel
     {
         if ($user->isAdmin()) return true;
 
-        $acl = self::$_vx->_loadACL($user);
+        $acl = $user->getACL();
 
         $rc = new ReflectionClass(static::class);
         $class = $rc->getShortName();

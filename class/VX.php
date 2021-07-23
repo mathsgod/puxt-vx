@@ -8,6 +8,7 @@ use VX\ACL;
 use VX\AuthLock;
 use VX\EventLog;
 use VX\IModel;
+use VX\Model;
 use VX\Module;
 use VX\Response;
 use VX\User;
@@ -36,6 +37,7 @@ class VX extends Context
     {
         $this->res = new Response;
         $this->ui = new UI($this);
+        Model::$_vx = $this;
     }
 
     public function getFileManager()
@@ -123,11 +125,11 @@ class VX extends Context
 
         $acl = $this->loadACL($user);
 
-        if (in_array($action, $acl["action"]["deny"][$module->name]??[])) {
+        if (in_array($action, $acl["action"]["deny"][$module->name] ?? [])) {
             return false;
         }
 
-        if (in_array($action, $acl["action"]["allow"][$module->name]??[])) {
+        if (in_array($action, $acl["action"]["allow"][$module->name] ?? [])) {
             return true;
         }
 

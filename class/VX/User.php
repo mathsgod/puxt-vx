@@ -8,6 +8,26 @@ use Symfony\Component\Yaml\Yaml;
 class User extends Model
 {
 
+    public function canChangePasswordBy(User $user)
+    {
+        if ($this->user_id == $user->user_id) {
+            return true;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($this->isAdmin()) {
+            return false;
+        }
+
+        if ($user->isPowerUser()) {
+            return true;
+        }
+
+        return false;
+    }
 
     const STATUS = ["Active", "Inactive"];
     public static function Login(string $username, string $password, $code = null)

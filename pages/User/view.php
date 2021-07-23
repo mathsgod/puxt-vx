@@ -17,7 +17,10 @@
                                             <span class="card-text">{{user.email}}</span>
                                         </div>
                                         <div class="d-flex flex-wrap">
-                                            <router-link to="/User/{{user.user_id}}/setting" class="btn btn-primary">Edit</router-link>
+                                            {% if can_change_password %}
+                                            <router-link to="/User/{{user.user_id}}/change-password" class="btn btn-primary">Change password</router-link -->
+                                            {% endif %}
+
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +41,7 @@
                                         <i data-feather="check" class="mr-1"></i>
                                         <span class="card-text user-info-title font-weight-bold mb-0">Status</span>
                                     </div>
-                                    <p class="card-text mb-0">{{user.status}}</p>
+                                    <p class="card-text mb-0">{{user.status()}}</p>
                                 </div>
                                 <div class="d-flex flex-wrap my-50">
                                     <div class="user-info-title">
@@ -201,7 +204,12 @@ return new class
     function get(VX $vx)
     {
 
+
         $this->user = $vx->object();
+
+        $this->can_change_password = $this->user->canChangePasswordBy($vx->user);
+
+
         $this->usergroup = collect($this->user->UserGroup()->toArray())->map(function ($o) {
             return $o->name;
         })->join(", ");
