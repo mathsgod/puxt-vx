@@ -64,26 +64,12 @@ return function ($options) {
         $path = implode("/", $t);
         $puxt->context->route->path = $path;
 
-
-        //check permission
-        if (!$vx->acl($path)) {
-
-            if ($vx->logined) {
-                http_response_code(403);
-            } else {
-                http_response_code(401);
-            }
-
-
-            exit();
-        }
-
         $module = $vx->module;
         if (!$module->name) {
             $module = null;
         }
 
-
+        //--- REST ---
         //create
         if (
             $vx->req->getMethod() == "POST"
@@ -92,9 +78,13 @@ return function ($options) {
             && !$vx->object_id
             && $module->name == $org_path
         ) {
-            $body = $vx->req->getParsedBody();
+            if (!$vx->logined) {
+                http_response_code(401);
+                exit();
+            }
+
             $obj = $module->createObject();
-            $obj->bind($body);
+            $obj->bind($vx->req->getParsedBody());
             $obj->save();
             $id = $obj->_id();
 
@@ -108,12 +98,53 @@ return function ($options) {
             && $vx->object_id
             && (($module->name . "/" . $vx->object_id) == $org_path)
         ) {
+            if (!$vx->logined) {
+                http_response_code(401);
+                exit();
+            }
             $body = $vx->req->getParsedBody();
             $obj = $module->getObject($vx->object_id);
+
+            if (!$obj->canUpdateBy($vx->user)) {
+                http_response_code(403);
+                exit();
+            }
+
             $obj->bind($body);
             $obj->save();
 
             http_response_code(204);
+            exit();
+        }
+
+        if ($vx->req->getMethod() == "DELETE") {
+
+            if (!$vx->logined) {
+                http_response_code(401);
+                exit();
+            }
+
+            if ($obj = $vx->object()) {
+                if (!$obj->canDeleteBy($vx->user)) {
+                    http_response_code(403);
+                    exit();
+                }
+                $obj->delete();
+                http_response_code(204);
+            } else {
+                http_response_code(404);
+            }
+            die();
+        }
+
+        //check permission
+        if (!$vx->acl($path)) {
+
+            if ($vx->logined) {
+                http_response_code(403);
+            } else {
+                http_response_code(401);
+            }
             exit();
         }
 
@@ -122,23 +153,7 @@ return function ($options) {
         if (count($globs)) {
             return;
         }
-
-
         $this->puxt->config["dir"]["pages"] = "vendor/mathsgod/puxt-vx/pages";
-        if ($vx->req->getMethod() == "DELETE") {
-
-            if ($obj = $vx->object()) {
-                if ($obj->canDeleteBy($vx->user)) {
-                    $obj->delete();
-                    http_response_code(204);
-                } else {
-                    http_response_code(401);
-                }
-            } else {
-                http_response_code(404);
-            }
-            die();
-        }
     });
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
