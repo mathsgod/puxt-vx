@@ -6,3 +6,8 @@ menu:
   Setting:
     link: /System/setting
     label: Setting
+    icon: fa fa-sliders-h
+  Package:
+    link: /System/package
+    label: Package
+    icon: fa fa-cubes
