@@ -171,12 +171,14 @@ return new class
         $user->save();
     }
 
-    public function selectLanguage(VX $vx)
+    public function setLanguage(VX $vx)
     {
         if ($user = $vx->user) {
-            $user->style["language"] = $vx->_post["language"];
+            $user->language = $vx->_post["language"];
             $user->save();
+            http_response_code(204);
         }
+        
     }
 
     public function setFooterType(VX $vx)
@@ -191,6 +193,7 @@ return new class
         $user = $vx->user;
         $user->style["collapsible"] = $vx->_post["collapsible"];
         $user->save();
+       
     }
 
     public function setLayout(VX $vx)

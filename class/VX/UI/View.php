@@ -5,8 +5,12 @@ namespace VX\UI;
 use Closure;
 use P\HTMLElement;
 
-class View extends HTMLElement
+use VX\TranslatorAwareInterface;
+use VX\TranslatorAwareTrait;
+
+class View extends HTMLElement implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
 
     public function __construct()
     {
@@ -16,6 +20,7 @@ class View extends HTMLElement
     public function addItem(string $label, string $content)
     {
         $item = new ViewItem();
+        $item->setTranslator($this->translator);
 
         $item->setLabel($label);
 

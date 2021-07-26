@@ -3,10 +3,12 @@
 namespace VX\UI;
 
 use P\HTMLElement;
-use VX\UI\EL\Input;
+use VX\TranslatorAwareInterface;
+use VX\TranslatorAwareTrait;
 
-class TableColumn extends HTMLElement
+class TableColumn extends HTMLElement implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
 
     const SEARCH_TYPE_TEXT = "text";
     const SEARCH_TYPE_DATE = "date";
@@ -31,7 +33,8 @@ class TableColumn extends HTMLElement
 
     public function setLabel(string $label)
     {
-        $this->setAttribute("label", $label);
+
+        $this->setAttribute("label", $this->translator ? $this->translator->trans($label) : $label);
         return $this;
     }
 

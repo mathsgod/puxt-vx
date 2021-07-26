@@ -1,4 +1,4 @@
-{{transfer}}
+aaa Username {{Username|trans}}
 {{form|raw}}
 <?php
 
@@ -7,18 +7,45 @@
  * Date: 2021-07-07 
  */
 
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator;
 use VX\UI\EL\Transfer;
 
 return new class
 {
     function post(VX $vx)
     {
+
         var_dump($vx->_post);
         die();
     }
 
     function get(VX $vx)
     {
+
+        return;
+        echo $vx->translator->trans("Username");
+        die();
+
+        $translator = new Translator("zh-hk");
+
+        $translator->addLoader("yaml", new YamlFileLoader());
+        $translator->addResource("yaml", __DIR__ . "\messages.zh-hk.yml", "zh-hk");
+
+
+        $translator->addLoader("array", new ArrayLoader());
+        
+        $translator->addResource("array", ["Username" => "使用者名稱1"], "zh-hk");
+        $translator->addResource("array", ["username" => "Username"], "en");
+
+
+
+
+        echo $translator->trans("username");
+        die();
+
+
         $form = $vx->ui->createForm(["file" => 'a.jpg', "file2" => "hello", "transfer1" => []]);
         $form->setAction();
 

@@ -1,0 +1,96 @@
+<div id="div1">
+    <el-form>
+        <el-form-item label="Module">
+            <el-select v-model="module">
+                <el-option v-for="m in modules" :key="m.name" :label="m.name" :value="m.name"></el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
+
+    <template v-if="module">
+
+        <el-table :data="items" class="mb-1">
+            <el-table-column width="100">
+                <template v-slot:header="scope">
+                    <el-button icon="el-icon-plus" @click="addItem"></el-button>
+                </template>
+                <template v-slot="scope">
+                    <el-button icon="el-icon-minus" @click="items=items.filter((i)=>i!=scope.row)"></el-button>
+                </template>
+
+            </el-table-column>
+            <el-table-column label="Name" v-slot="scope">
+                <el-input v-model="scope.row.name"></el-input>
+            </el-table-column>
+
+            <el-table-column v-slot="scope" label="Value">
+                <el-table :data="scope.row.value" :show-header="false">
+                    <el-table-column v-slot="lang">
+                        <el-tooltip effect="dark" :content="lang.row.language" placement="top-start">
+                            <el-input v-model="lang.row.value" :placeHolder="lang.row.language"></el-input>
+                        </el-tooltip>
+                    </el-table-column>
+                </el-table>
+
+            </el-table-column>
+        </el-table>
+        <el-button @click="save" type="primary" icon="el-icon-check">Save</el-button>
+    </template>
+
+</div>
+
+<script>
+
+    new Vue({
+        el: "#div1",
+        data() {
+            return {
+                modules: [],
+                module: null,
+                items: [],
+                languages: []
+            }
+        },
+        async created() {
+            let { data } = await this.$vx.get("Translate/index?_entry=getData");
+            this.modules = data.modules;
+            this.languages = data.languages;
+        },
+        watch: {
+            async module() {
+                let { data } = await this.$vx.get("Translate/index?_entry=getTranslate", {
+                    params: {
+                        module: this.module
+                    }
+                });
+                this.items = data;
+            }
+        }, methods: {
+            addItem() {
+                let t = [];
+                for (let l of this.languages) {
+                    t.push({
+                        language: l,
+                        value: ""
+                    });
+                }
+                this.items.push({
+                    name: "",
+                    value: t
+                });
+            },
+            async save() {
+
+                await this.$vx.post("Translate/index", {
+                    module: this.module,
+                    items: this.items
+                });
+
+                this.$message("Updated", { type: "success" });
+
+
+            }
+
+        },
+    })
+</script>

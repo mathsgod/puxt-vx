@@ -3,9 +3,12 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX\TranslatorAwareInterface;
+use VX\TranslatorAwareTrait;
 
-class Table extends HTMLElement
+class Table extends HTMLElement implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
 
     const SIZE_SMALL = "small";
     const SIZE_MINI = "mini";
@@ -60,6 +63,7 @@ class Table extends HTMLElement
         $this->setAttribute("show-view", true);
 
         $column = new TableColumn;
+        $column->setTranslator($this->translator);
         $column->setAttribute("width", "70");
         $template = new HTMLElement("template");
         $template->setAttribute("slot-scope", "props");
@@ -103,6 +107,7 @@ class Table extends HTMLElement
     public function add(string $label, ?string $prop = null)
     {
         $column = new TableColumn;
+        $column->setTranslator($this->translator);
         $this->default->append($column);
 
         $column->setLabel($label);

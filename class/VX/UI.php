@@ -2,13 +2,14 @@
 
 namespace VX;
 
+use VX;
 use VX\UI\Table;
 
 class UI
 {
 
     public $vx;
-    public function __construct(\VX $vx)
+    public function __construct(VX $vx)
     {
         $this->vx = $vx;
     }
@@ -16,6 +17,8 @@ class UI
     public function createTable(?string $entry = null)
     {
         $table = new Table;
+
+        $table->setTranslator($this->vx->getTranslator());
 
         if ($entry) {
             $query = $this->vx->req->getQueryParams();
@@ -53,6 +56,8 @@ class UI
     public function createView()
     {
         $view = new UI\View();
+        $view->setTranslator($this->vx->getTranslator());
+
         $view->setData($this->vx->object());
         return $view;
     }

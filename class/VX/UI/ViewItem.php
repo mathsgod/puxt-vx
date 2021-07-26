@@ -3,9 +3,12 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX\TranslatorAwareInterface;
+use VX\TranslatorAwareTrait;
 
-class ViewItem extends HTMLElement
+class ViewItem extends HTMLElement implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
 
     public function __construct()
     {
@@ -14,7 +17,7 @@ class ViewItem extends HTMLElement
 
     public function setLabel(string $label)
     {
-        $this->setAttribute("label", $label);
+        $this->setAttribute("label", $this->translator->trans($label));
         return $this;
     }
 

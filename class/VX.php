@@ -3,7 +3,11 @@
 use Firebase\JWT\JWT;
 use VX\UI\RTableResponse;
 use PUXT\Context;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use VX\ACL;
 use VX\AuthLock;
 use VX\EventLog;
@@ -11,6 +15,7 @@ use VX\IModel;
 use VX\Model;
 use VX\Module;
 use VX\Response;
+use VX\Translate;
 use VX\User;
 use VX\UserLog;
 use VX\UI;
@@ -32,12 +37,15 @@ class VX extends Context
     public $acl = [];
     public $ui;
     public $config = [];
+    public TranslatorInterface $translator;
+    public $vx_root;
 
     public function __construct()
     {
         $this->res = new Response;
         $this->ui = new UI($this);
         Model::$_vx = $this;
+        $this->vx_root = dirname(__DIR__);
     }
 
     public function getFileManager()
@@ -100,8 +108,35 @@ class VX extends Context
 
         //load acl
         $this->acl = $this->loadACL($this->user);
+
+
+
+        $locale = $this->user->language ?? "en";
+        //translator
+        $translator = new Translator($locale);
+        $translator->setFallbackLocales(["en"]);
+
+        if (file_exists($this->vx_root . "/messages.$locale.yml")) {
+            $translator->addLoader("yaml", new YamlFileLoader);
+            $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
+        }
+
+        //load from db
+        $translator->addLoader("array", new ArrayLoader);
+        $a = [];
+        foreach (Translate::Query(["module" => $this->module->name, "language" => $locale]) as $t) {
+            $a[$t->name] = $t->value;
+        }
+        $translator->addResource("array", $a, $locale);
+
+
+        $this->translator = $translator;
     }
 
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
 
     public function findWebauthnUserByUsername(string $username): ?PublicKeyCredentialUserEntity
     {
