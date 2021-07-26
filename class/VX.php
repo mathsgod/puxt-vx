@@ -131,6 +131,7 @@ class VX extends Context
 
 
         $this->translator = $translator;
+        $this->ui->setTranslator($this->translator);
     }
 
     public function getTranslator()

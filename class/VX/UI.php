@@ -5,9 +5,9 @@ namespace VX;
 use VX;
 use VX\UI\Table;
 
-class UI
+class UI implements TranslatorAwareInterface
 {
-
+    use TranslatorAwareTrait;
     public $vx;
     public function __construct(VX $vx)
     {
@@ -18,7 +18,7 @@ class UI
     {
         $table = new Table;
 
-        $table->setTranslator($this->vx->getTranslator());
+        $table->setTranslator($this->translator);
 
         if ($entry) {
             $query = $this->vx->req->getQueryParams();
@@ -56,7 +56,7 @@ class UI
     public function createView()
     {
         $view = new UI\View();
-        $view->setTranslator($this->vx->getTranslator());
+        $view->setTranslator($this->translator);
 
         $view->setData($this->vx->object());
         return $view;
@@ -65,6 +65,7 @@ class UI
     public function createForm($data = null)
     {
         $form = new UI\Form;
+        $form->setTranslator($this->translator);
 
         $user = $this->vx->user;
         if ($user->style["form_size"]) {

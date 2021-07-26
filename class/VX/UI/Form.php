@@ -3,9 +3,12 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX\TranslatorAwareInterface;
+use VX\TranslatorAwareTrait;
 
-class Form extends HTMLElement
+class Form extends HTMLElement implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
 
     private $template;
     private $_data;
@@ -14,9 +17,6 @@ class Form extends HTMLElement
     {
         parent::__construct("vx-form");
         $this->setAttribute("v-slot:default", "scope");
-        //    $this->template = new HTMLElement("template");
-        //    $this->template->setAttribute("slot-scope", "scope");
-        //    $this->append($this->template);
     }
 
     public function setAction(string $url = "")
@@ -36,7 +36,7 @@ class Form extends HTMLElement
         $item = new EL\FormItem;
         $this->append($item);
 
-        $item->setLabel($label);
+        $item->setLabel($this->translator->trans($label));
         $item->addEventListener("prop_added", function ($e) {
             $detail = $e->detail;
             $name = $detail["name"];
@@ -63,7 +63,8 @@ class Form extends HTMLElement
         return $divider;
     }
 
-    public function setValue(string $name,$value){
+    public function setValue(string $name, $value)
+    {
         $data = json_decode($this->getAttribute(":data"), true);
         $data[$name] = $value;
         $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
