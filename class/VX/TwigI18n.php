@@ -5,8 +5,10 @@ namespace VX;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class TwigI18n extends AbstractExtension
+class TwigI18n extends AbstractExtension implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
     public function getFilters()
     {
         return [new TwigFilter("t", [$this, "translate"])];
@@ -14,6 +16,6 @@ class TwigI18n extends AbstractExtension
 
     public function translate($s)
     {
-        return "A";
+        return $this->translator->trans($s);
     }
 }

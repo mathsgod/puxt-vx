@@ -2834,12 +2834,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/puxt.git",
-                "reference": "ff092a423cc1412cae65d8e85ef2d40b3247fd40"
+                "reference": "30c4ebed5c34d5188719fa102ed411c22a153565"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/ff092a423cc1412cae65d8e85ef2d40b3247fd40",
-                "reference": "ff092a423cc1412cae65d8e85ef2d40b3247fd40",
+                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/30c4ebed5c34d5188719fa102ed411c22a153565",
+                "reference": "30c4ebed5c34d5188719fa102ed411c22a153565",
                 "shasum": ""
             },
             "require": {
@@ -2878,7 +2878,7 @@
                 "issues": "https://github.com/mathsgod/puxt/issues",
                 "source": "https://github.com/mathsgod/puxt/tree/main"
             },
-            "time": "2021-07-23T08:07:33+00:00"
+            "time": "2021-07-26T05:23:37+00:00"
         },
         {
             "name": "twig/extensions",

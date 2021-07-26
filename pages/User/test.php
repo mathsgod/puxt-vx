@@ -1,4 +1,4 @@
-aaa Username {{Username|t}}
+aaa  {{"Username"|t}}
 {{form|raw}}
 <?php
 

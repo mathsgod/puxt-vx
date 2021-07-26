@@ -11,15 +11,17 @@ return function ($options) {
     $vx = new VX();
 
     $this->puxt->hook('ready', function (App $puxt) use ($vx) {
-
-        
-
-
         Model::$_vx = $vx;
 
         Model::$db = $puxt->context->db;
 
         $vx->init($puxt->context);
+
+        $i18n = new TwigI18n;
+        $i18n->setTranslator($vx->getTranslator());
+        $puxt->addExtension($i18n);
+
+
         $puxt->context = $vx;
 
         $vx->db = Model::$db;
