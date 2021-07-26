@@ -4,12 +4,16 @@ use PUXT\App;
 use Symfony\Component\Yaml\Parser;
 use VX\Model;
 use VX\Config;
+use VX\TwigI18n;
 
 return function ($options) {
 
     $vx = new VX();
 
     $this->puxt->hook('ready', function (App $puxt) use ($vx) {
+
+        
+
 
         Model::$_vx = $vx;
 

@@ -19,7 +19,8 @@
         "endroid/qr-code": "^4.1",
         "web-auth/webauthn-lib": "^3.3",
         "league/flysystem": "^2.1",
-        "symfony/translation": "^5.3"
+        "symfony/translation": "^5.3",
+        "twig/twig": "^2.12"
     },
     "autoload": {
         "psr-4": {
@@ -30,6 +31,6 @@
         ]
     },
     "require-dev": {
-        "mathsgod/puxt": "^1.9"
+        "mathsgod/puxt": "dev-main"
     }
 }

@@ -1,9 +1,6 @@
 <?php
 
 use Firebase\JWT\JWT;
-use VX\Module;
-use VX\ModuleGroup;
-use VX\User;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialRequestOptions;
@@ -87,6 +84,8 @@ return new class
             $modules = $vx->getModules();
 
             $menu = new VX\Menu();
+            $menu->setTranslator($vx->getTranslator());
+            
             foreach ($modules as $m) {
                 $menu->addModule($m);
             }
@@ -178,7 +177,6 @@ return new class
             $user->save();
             http_response_code(204);
         }
-        
     }
 
     public function setFooterType(VX $vx)
@@ -193,7 +191,6 @@ return new class
         $user = $vx->user;
         $user->style["collapsible"] = $vx->_post["collapsible"];
         $user->save();
-       
     }
 
     public function setLayout(VX $vx)

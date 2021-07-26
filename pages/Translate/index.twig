@@ -1,13 +1,13 @@
 <div id="div1">
     <el-form>
         <el-form-item label="Module">
-            <el-select v-model="module">
+            <el-select v-model="module" clearable filterable>
                 <el-option v-for="m in modules" :key="m.name" :label="m.name" :value="m.name"></el-option>
             </el-select>
         </el-form-item>
     </el-form>
 
-    <template v-if="module">
+    <template>
 
         <el-table :data="items" class="mb-1">
             <el-table-column width="100">
@@ -55,6 +55,9 @@
             let { data } = await this.$vx.get("Translate/index?_entry=getData");
             this.modules = data.modules;
             this.languages = data.languages;
+        },
+        mounted() {
+            this.module = "";
         },
         watch: {
             async module() {

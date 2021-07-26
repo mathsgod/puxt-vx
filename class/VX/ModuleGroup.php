@@ -2,8 +2,10 @@
 
 namespace VX;
 
-class ModuleGroup
+class ModuleGroup implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
     public $name;
     public $child = [];
 
@@ -13,7 +15,6 @@ class ModuleGroup
     {
         $this->name = $name;
     }
-
 
     public function add(Module $module)
     {
@@ -25,7 +26,7 @@ class ModuleGroup
     {
         $data = [];
 
-        $data["label"] = $this->name;
+        $data["label"] = $this->translator->trans($this->name);
         $data["icon"] = "far fa-circle";
         $data["link"] = "#";
         $data["seqeunce"] = $this->sequence;
@@ -37,7 +38,7 @@ class ModuleGroup
                 $submenu[] = $menu;
             }
         }
-        if(count($submenu)==0){
+        if (count($submenu) == 0) {
             return [];
         }
 

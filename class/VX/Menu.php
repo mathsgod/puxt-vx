@@ -2,8 +2,11 @@
 
 namespace VX;
 
-class Menu
+
+class Menu implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
     public $items = [];
     public $groups = [];
     public function addModule(Module $module)
@@ -11,6 +14,7 @@ class Menu
         if ($module->group) {
             if (!$mg = $this->groups[$module->group]) {
                 $mg = new ModuleGroup($module->group);
+                $mg->setTranslator($this->translator);
                 $this->groups[$module->group] = $mg;
                 $this->items[] = $mg;
             }

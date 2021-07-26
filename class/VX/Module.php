@@ -5,8 +5,10 @@ namespace VX;
 use Exception;
 use Symfony\Component\Yaml\Yaml;
 
-class Module
+class Module implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
     public $name;
     public $class;
     public $icon = "far fa-circle";
@@ -93,7 +95,7 @@ class Module
             return [];
         }
         $data = [];
-        $data["label"] = $this->name;
+        $data["label"] = $this->translator->trans($this->name);
         $data["icon"] = $this->icon;
 
 
@@ -107,7 +109,7 @@ class Module
 
             if ($user->allow_uri($this->name . "/index")) {
                 array_unshift($data["submenu"], [
-                    "label" => "List",
+                    "label" => $this->translator->trans("List"),
                     "icon" => "fa fa-list",
                     "link" => "/" . $this->name
                 ]);
@@ -135,7 +137,7 @@ class Module
 
             if ($user->allow_uri($this->name . "/ae")) {
                 $link = [];
-                $link["label"] = "Add";
+                $link["label"] = $this->translator->trans("Add");
                 $link["icon"] = "fa fa-plus";
                 $link["link"] = "/" . $this->name . "/ae";
                 $links[] = $link;
@@ -150,5 +152,4 @@ class Module
         }
         return $links;
     }
-   
 }

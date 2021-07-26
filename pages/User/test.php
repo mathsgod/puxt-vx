@@ -1,4 +1,4 @@
-aaa Username {{Username|trans}}
+aaa Username {{Username|t}}
 {{form|raw}}
 <?php
 

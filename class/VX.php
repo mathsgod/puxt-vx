@@ -124,6 +124,12 @@ class VX extends Context
         //load from db
         $translator->addLoader("array", new ArrayLoader);
         $a = [];
+
+        foreach (Translate::Query(["module" => "", "language" => $locale]) as $t) {
+            $a[$t->name] = $t->value;
+        }
+
+
         foreach (Translate::Query(["module" => $this->module->name, "language" => $locale]) as $t) {
             $a[$t->name] = $t->value;
         }
@@ -379,6 +385,7 @@ class VX extends Context
             $name = basename($m);
             $module = new Module($name);
             $module->loadConfigFile($m . "/setting.yml");
+            $module->setTranslator($this->translator);
             $modules[] = $module;
         }
 
@@ -386,6 +393,7 @@ class VX extends Context
             $name = basename($m);
             $module = new Module($name);
             $module->loadConfigFile($m . "/setting.yml");
+            $module->setTranslator($this->translator);
             $modules[] = $module;
         }
 
