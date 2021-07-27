@@ -178,7 +178,7 @@ class VX extends Context
             "user_id" => $user->user_id
         ], $this->config["VX"]["jwt"]["secret"]);
 
-        $reset_link = $this->config["VX"]["vx_url"] . "/reset_password?token=" . $token;
+        $reset_link = $this->config["VX"]["vx_url"] . "/reset-password?token=" . $token;
 
         $html = $this->getTwig()->load("templates/reset-password.twig")->render([
             "ip" => $_SERVER["REMOTE_ADDR"],

@@ -150,7 +150,7 @@ return new class
         return $data;
     }
 
-    public function forgetPassword(VX $vx)
+    public function forgotPassword(VX $vx)
     {
         $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
     }
