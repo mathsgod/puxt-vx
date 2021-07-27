@@ -153,10 +153,12 @@ return new class
     public function forgotPassword(VX $vx)
     {
         $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
+        return ["data"=>true];
     }
 
     public function resetPassword(VX $vx){
         $vx->resetPassword($vx->_post["password"],$vx->_post["token"]);
+        return ["data"=>true];
     }
 
 
