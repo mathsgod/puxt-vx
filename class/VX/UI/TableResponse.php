@@ -134,6 +134,7 @@ class TableResponse implements JsonSerializable
         }
 
         $this->columns[] = $c;
+        return $c;
     }
 
     public function data()

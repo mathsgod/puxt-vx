@@ -8,10 +8,14 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Loader\LoaderInterface;
 use VX\ACL;
 use VX\AuthLock;
 use VX\EventLog;
 use VX\IModel;
+use VX\Mailer;
 use VX\Model;
 use VX\Module;
 use VX\Response;
@@ -154,14 +158,59 @@ class VX extends Context
         return new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
     }
 
+    public function resetPassword(string $password, string $token)
+    {
+        $payload = (array)JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        $user = User::Load($payload["user_id"]);
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->save();
+    }
+
     public function forgotPassword(string $username, string $email)
     {
-        $user = User::Query(["username" => $username, "email" => $email])->first();
+        $user = User::Query(["username" => $username, "email" => $email, "status" => 0])->first();
         if (!$user) return;
+
+        $token = JWT::encode([
+            "type" => "access_token",
+            "iat" => time(),
+            "exp" => time() + 3600,
+            "user_id" => $user->user_id
+        ], $this->config["VX"]["jwt"]["secret"]);
+
+        $reset_link = $this->config["VX"]["vx_url"] . "/reset_password?token=" . $token;
+
+        $html = $this->getTwig()->load("templates/reset-password.twig")->render([
+            "ip" => $_SERVER["REMOTE_ADDR"],
+            "user" => $user,
+
+            "company" => [
+                "name" => $this->config["VX"]["company"],
+                "logo" => $this->config["VX"]["company_logo"],
+                "url" => $this->config["VX"]["company_url"]
+            ],
+            "reset_link" => $reset_link
+        ]);
+
+        $mailer = $this->getMailer();
+        $mailer->setFrom("no-reply@" . $_SERVER["SERVER_NAME"]);
+        $mailer->addAddress($user->email, (string)$user);
+        $mailer->msgHTML($html);
+        $mailer->send();
+    }
+
+    public function getTwig(LoaderInterface $loader = null)
+    {
+        if (!$loader) {
+            $loader = new FilesystemLoader([$this->root, $this->vx_root]);
+        }
+        $twig = new Environment($loader);
+        return $twig;
     }
 
     public function getMailer()
     {
+        return new Mailer();
     }
 
     public function allow(Module $module, string $action, User $user)

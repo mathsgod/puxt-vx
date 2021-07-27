@@ -155,6 +155,10 @@ return new class
         $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
     }
 
+    public function resetPassword(VX $vx){
+        $vx->resetPassword($vx->_post["password"],$vx->_post["token"]);
+    }
+
 
     public function setNavbarColor(VX $vx)
     {

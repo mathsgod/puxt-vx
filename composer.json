@@ -20,7 +20,8 @@
         "web-auth/webauthn-lib": "^3.3",
         "league/flysystem": "^2.1",
         "symfony/translation": "^5.3",
-        "twig/twig": "^2.12"
+        "twig/twig": "^2.12",
+        "phpmailer/phpmailer": "^6.5"
     },
     "autoload": {
         "psr-4": {

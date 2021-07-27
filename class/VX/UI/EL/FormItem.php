@@ -178,6 +178,7 @@ class FormItem extends HTMLElement
     {
         $select = $this->select($name, $data_source, $display_member, $value_member);;
         $select->setAttribute("multiple", true);
+        $select->setAttribute("type","success");
 
         $select->style->width = "100%";
 

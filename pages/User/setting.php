@@ -82,7 +82,7 @@
                                 <!--/ header media -->
 
                                 <!-- form -->
-                                <el-form :model="user">
+                                <el-form :model="user" class="small-label">
                                     <div class="row">
 
                                         <el-form-item label="Username" required class="col-12 col-sm-6" prop="username">
@@ -115,7 +115,7 @@
                         <!-- change password -->
                         <div class="tab-pane fade" id="account-vertical-password" role="tabpanel" aria-labelledby="account-pill-password" aria-expanded="false">
                             <div id="password">
-                                <el-form :model="form" ref="form">
+                                <el-form :model="form" ref="form" class="small-label">
                                     <div class="row">
                                         <el-form-item label="New Password" required prop="new_password" class="col-12 col-sm-6">
                                             <el-input show-password type="password" v-model="form.new_password"></el-input>
@@ -169,7 +169,7 @@
                         <!-- information -->
                         <div class="tab-pane fade" id="account-vertical-info" role="tabpanel" aria-labelledby="account-pill-info" aria-expanded="false">
                             <div id="info">
-                                <el-form>
+                                <el-form class="small-label">
                                     <div class="row">
                                         <el-form-item label="Phone" class="col-12">
                                             <el-input v-model="user.phone"></el-input>

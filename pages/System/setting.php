@@ -27,6 +27,11 @@ return new class
         $config["biometric_authentication"] = boolval($config["biometric_authentication"]);
 
         $f = $vx->ui->createForm($config);
+
+
+        $f->add("VX URL")->input("vx_url");
+
+
         $r = $f->add("Company");
         $r->input("company");
         $r->helpBlock("company name");
