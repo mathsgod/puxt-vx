@@ -14,7 +14,7 @@ return new class
         $template = $table->addExpand();
         $template->innerHTML = "<div v-html='props.row.body'></div>";
 
-        $table->add("ID", "maillog_id")->sortable();
+        $table->add("ID", "maillog_id")->sortable()->width("80px");
         $table->add("From", "from")->sortable()->searchable();
         $table->add("To", "to")->sortable();
         $table->add("Subject", "subject")->sortable()->searchable();

@@ -15,7 +15,7 @@
                 <li class="nav-item">
                     <a class="nav-link" id="account-pill-password" data-toggle="pill" href="#account-vertical-password" aria-expanded="false">
                         <i class="fa fa-key fa-fw" class="font-medium-3 mr-1"></i>
-                        <span class="font-weight-bold">Change Password</span>
+                        <span class="font-weight-bold">{{ "Change Password"|t}}</span>
                     </a>
                 </li>
                 <!-- information -->

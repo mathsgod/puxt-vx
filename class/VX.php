@@ -7,7 +7,6 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -41,8 +40,9 @@ class VX extends Context
     public $acl = [];
     public $ui;
     public $config = [];
-    public TranslatorInterface $translator;
+    public Translator $translator;
     public $vx_root;
+    public $locale;
 
     public function __construct()
     {
@@ -116,6 +116,7 @@ class VX extends Context
 
 
         $locale = $this->user->language ?? "en";
+        $this->locale = $locale;
         //translator
         $translator = new Translator($locale);
         $translator->setFallbackLocales(["en"]);
@@ -139,10 +140,33 @@ class VX extends Context
         }
         $translator->addResource("array", $a, $locale);
 
-
         $this->translator = $translator;
         $this->ui->setTranslator($this->translator);
     }
+
+    public function getGlobalTranslator()
+    {
+        $locale = $this->locale;
+        $translator = new Translator($this->locale);
+        $translator->setFallbackLocales(["en"]);
+
+        if (file_exists($this->vx_root . "/messages.$locale.yml")) {
+            $translator->addLoader("yaml", new YamlFileLoader);
+            $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
+        }
+
+        //load from db
+        $translator->addLoader("array", new ArrayLoader);
+        $a = [];
+
+        foreach (Translate::Query(["module" => "", "language" => $locale]) as $t) {
+            $a[$t->name] = $t->value;
+        }
+
+        return $translator;
+    }
+
+
 
     public function getTranslator()
     {

@@ -3,6 +3,8 @@
 use Firebase\JWT\JWT;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+use VX\Translate;
+use VX\UI\EL\Transfer;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -85,7 +87,7 @@ return new class
 
             $menu = new VX\Menu();
             $menu->setTranslator($vx->getTranslator());
-            
+
             foreach ($modules as $m) {
                 $menu->addModule($m);
             }
@@ -128,6 +130,12 @@ return new class
 
 
             $data["acl"] = $vx->acl;
+
+            
+            $data["i18n"]=$vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
+
+            
+            $data["locale"] = $vx->user->language;
         }
 
         $config = $vx->config["VX"];
@@ -153,12 +161,13 @@ return new class
     public function forgotPassword(VX $vx)
     {
         $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
-        return ["data"=>true];
+        return ["data" => true];
     }
 
-    public function resetPassword(VX $vx){
-        $vx->resetPassword($vx->_post["password"],$vx->_post["token"]);
-        return ["data"=>true];
+    public function resetPassword(VX $vx)
+    {
+        $vx->resetPassword($vx->_post["password"], $vx->_post["token"]);
+        return ["data" => true];
     }
 
 
