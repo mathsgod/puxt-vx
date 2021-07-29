@@ -22,9 +22,11 @@ return new class
         $template = $table->addExpand();
         $template->append($user_table);
 
-        $table->addView();
-        $table->addEdit();
-        $table->addDel();
+
+        $action = $table->addActionColumn();
+        $action->addView();
+        $action->addEdit();
+        $action->addDelete();
 
         $table->add("Name", "name")->sortable()->searchable();
         $table->add("Code", "code")->sortable();
@@ -54,7 +56,7 @@ return new class
         $r->add("code");
         $r->add("num_of_user", fn ($o) => $o->User()->count());
 
-        
+
 
 
 

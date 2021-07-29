@@ -8,9 +8,12 @@ return new class
     {
 
         $table = $vx->ui->createTable("ds");
-        $table->addView();
-        $table->addEdit();
-        $table->addDel();
+
+        $action = $table->addActionColumn()->fixed();
+        $action->addView();
+        $action->addEdit();
+        $action->addDelete();
+
         $table->add("Username", "username")->sortable()->searchable();
         $table->add("First name", "first_name")->sortable();
         $table->add("Last name", "last_name")->sortable();

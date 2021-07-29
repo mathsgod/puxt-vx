@@ -31,11 +31,11 @@ class TableResponse implements JsonSerializable
         $this->search = json_decode($vx->_get["search"], true);
         $this->filter = json_decode($vx->_get["filter"], true);
 
-        if ($vx->_get["show_update"] == "true") {
+        if ($vx->_get["show_view"] == "true") {
             $this->add("__view__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canReadBy($vx->user)) {
-                        return ["value" => $obj->uri("view")];
+                        return $obj->uri("view");
                     }
                 }
                 return false;
@@ -46,7 +46,7 @@ class TableResponse implements JsonSerializable
             $this->add("__update__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canUpdateBy($vx->user)) {
-                        return ["value" => $obj->uri("ae")];
+                        return $obj->uri("ae");
                     }
                 }
                 return false;
@@ -57,7 +57,7 @@ class TableResponse implements JsonSerializable
             $this->add("__delete__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canDeleteBy($vx->user)) {
-                        return ["value" => $obj->uri("")];
+                        return $obj->uri("");
                     }
                 }
                 return false;

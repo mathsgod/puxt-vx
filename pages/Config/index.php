@@ -12,8 +12,10 @@ return new class
     function get(VX $vx)
     {
         $table = $vx->ui->createTable("data");
-        $table->addEdit();
-        $table->addDel();
+        $action = $table->addActionColumn();
+        $action->addEdit();
+        $action->addDelete();
+        
         $table->add("Name", "name")->sortable()->searchable();
         $table->add("Value", "value")->sortable();
         $this->table = $table;

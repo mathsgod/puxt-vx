@@ -12,9 +12,11 @@ return new class
     function get(VX $vx)
     {
         $rt = $vx->ui->createTable("ds");
-        $rt->setDefaultSort("eventlog_id","descending");
+        $rt->setDefaultSort("eventlog_id", "descending");
         //$rt->order("eventlog_id", "desc");
-        $rt->addView();
+        $action = $rt->addActionColumn();
+        $action->addView();
+
         $rt->add("ID", "eventlog_id")->sortable()->searchable();
         $rt->add("Class", "class")->sortable()->searchable();
         $rt->add("Action", "action")->sortable()->searchable();

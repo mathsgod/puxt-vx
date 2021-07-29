@@ -58,6 +58,25 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->setAttribute("size", $size);
     }
 
+    public function addActionColumn()
+    {
+        $this->setAttribute("show-view", true);
+        $this->setAttribute("show-update", true);
+        $this->setAttribute("show-delete", true);
+
+        $this->default->append($column = new TableActionColumn);
+        $column->setAttribute("v-slot:default", "props");
+        $column->setTranslator($this->translator);
+
+        $column->setAttribute("width", "115");
+        $column->setAttribute("min-width", "115");
+
+        return $column;
+    }
+
+    /**
+     * @deprecated Use addActionColumn
+     */
     public function addView()
     {
         $this->setAttribute("show-view", true);
@@ -73,6 +92,9 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         return $template;
     }
 
+    /**
+     * @deprecated Use addActionColumn
+     */
     public function addEdit()
     {
         $this->setAttribute("show-update", true);
@@ -90,6 +112,9 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         return $template;
     }
 
+    /**
+     * @deprecated Use addActionColumn
+     */
     public function addDel()
     {
         $this->setAttribute("show-delete", true);
