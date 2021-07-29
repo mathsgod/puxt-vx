@@ -66,6 +66,12 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
         return $this;
     }
 
+    public function overflow()
+    {
+        $this->setAttribute(":show-overflow-tooltip", "true");
+        return $this;
+    }
+
     public function searchable(string $type = TableColumn::SEARCH_TYPE_TEXT)
     {
         $node = $this->closest("vx-table");

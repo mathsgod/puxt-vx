@@ -9,16 +9,16 @@ return new class
 
         $table = $vx->ui->createTable("ds");
 
-        $action = $table->addActionColumn()->fixed();
+        $action = $table->addActionColumn();
         $action->addView();
         $action->addEdit();
         $action->addDelete();
 
         $table->add("Username", "username")->sortable()->searchable();
-        $table->add("First name", "first_name")->sortable();
-        $table->add("Last name", "last_name")->sortable();
-        $table->add("Phone", "phone")->sortable();
-        $table->add("Email", "email")->sortable();
+        $table->add("First name", "first_name")->sortable()->searchable();
+        $table->add("Last name", "last_name")->sortable()->searchable();
+        $table->add("Phone", "phone")->sortable()->searchable();
+        $table->add("Email", "email")->sortable()->searchable()->overflow();
         $table->add("Join date", "join_date")->sortable()->searchable("date");
 
 

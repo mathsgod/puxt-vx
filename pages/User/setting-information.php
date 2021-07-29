@@ -2,12 +2,12 @@
     <el-card>
         <el-form class="small-label">
             <div class="row">
-                <el-form-item label="Phone" class="col-12">
+                <el-form-item :label="$t('Phone')" class="col-12">
                     <el-input v-model="user.phone"></el-input>
                 </el-form-item>
 
                 <div class="col-12">
-                    <el-form-item label="Address">
+                    <el-form-item :label="$t('Address')">
                         <el-input v-model="user.addr1"></el-input>
                     </el-form-item>
                     <el-form-item>

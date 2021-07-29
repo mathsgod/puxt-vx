@@ -12,13 +12,13 @@ include_once(__DIR__ . "/setting-bio-auth.php");
         <el-col :md="6">
             <vx-nav v-model="selected" pills class="flex-column nav-left">
                 <vx-nav-item index="v-general" icon="fa fa-user fa-fw">General</vx-nav-item>
-                <vx-nav-item index="v-change-password" icon="fa fa-key fa-fw">Change Password</vx-nav-item>
-                <vx-nav-item index="v-information" icon="fa fa-info fa-fw">Information</vx-nav-item>
-                <vx-nav-item index="v-style" icon="fa fa-brush fa-fw">Style</vx-nav-item>
+                <vx-nav-item index="v-change-password" icon="fa fa-key fa-fw">{{'Change Password'|t}}</vx-nav-item>
+                <vx-nav-item index="v-information" icon="fa fa-info fa-fw">{{'Information'|t}}</vx-nav-item>
+                <vx-nav-item index="v-style" icon="fa fa-brush fa-fw">{{'Style'|t}}</vx-nav-item>
                 {% if two_step_verification %}
                 <vx-nav-item index="v-2step" icon="fa fa-lock fa-fw"> 2 Step Verification</vx-nav-item>
                 {% endif %}
-                <vx-nav-item index="v-bio-auth" icon="fa fa-fingerprint fa-fw">Biometric authentication</vx-nav-item>
+                <vx-nav-item index="v-bio-auth" icon="fa fa-fingerprint fa-fw">{{'Biometric authentication'|t}}</vx-nav-item>
             </vx-nav>
         </el-col>
 
@@ -31,6 +31,7 @@ include_once(__DIR__ . "/setting-bio-auth.php");
 <script>
     new Vue({
         el: "#div1",
+        i18n,
         data() {
             return {
                 selected: "v-general",

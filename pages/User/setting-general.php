@@ -20,20 +20,20 @@
         <el-form :model="user" class="small-label">
             <div class="row">
 
-                <el-form-item label="Username" required class="col-12 col-sm-6" prop="username">
+                <el-form-item :label="$t('Username')" required class="col-12 col-sm-6" prop="username">
                     <el-input v-model="user.username"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Email" required :rules="[{type:'email'}]" class="col-12 col-sm-6" prop="email">
+                <el-form-item :label="$t('Email')" required :rules="[{type:'email'}]" class="col-12 col-sm-6" prop="email">
                     <el-input v-model="user.email"></el-input>
                 </el-form-item>
 
-                <el-form-item label="First name" required class="col-12 col-sm-6" prop="first_name">
+                <el-form-item :label="$t('First name')" required class="col-12 col-sm-6" prop="first_name">
                     <el-input v-model="user.first_name"></el-input>
                 </el-form-item>
 
 
-                <el-form-item label="Last name" class="col-12 col-sm-6" prop="last_name">
+                <el-form-item :label="$t('Last name')" class="col-12 col-sm-6" prop="last_name">
                     <el-input v-model="user.last_name"></el-input>
                 </el-form-item>
 

@@ -2,7 +2,7 @@
     <el-card>
         <el-form :model="form" ref="form" class="small-label">
             <div class="row">
-                <el-form-item label="New Password" required prop="new_password" class="col-12 col-sm-6">
+                <el-form-item :label="$t('New Password')" required prop="new_password" class="col-12 col-sm-6">
                     <el-input show-password type="password" v-model="form.new_password"></el-input>
                 </el-form-item>
                 <el-form-item label="Retype New Password" required prop="retype_password" class="col-12 col-sm-6">
