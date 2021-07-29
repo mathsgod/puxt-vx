@@ -114,6 +114,8 @@ class FormItem extends HTMLElement
     {
         $label = $this->getAttribute("label");
 
+        $rules = json_decode($this->getAttribute(":rules") ?? "[]", true);
+
         $rules[] = [
             "required" => true,
             "message" => $message ?? "$label is required"
@@ -153,6 +155,24 @@ class FormItem extends HTMLElement
         return $input;
     }
 
+    public function email(string $name)
+    {
+        $input = new Input;
+        $input->setAttribute("name", $name);
+        $input->setAttribute("v-model", $this->scope . $name);
+
+        $this->append($input);
+        $this->setAttribute("prop", $name);
+
+        $this->setAttribute(":rules", json_encode([
+            [
+                "type" => "email"
+            ]
+        ]));
+        return $input;
+    }
+
+
     public function password(string $name)
     {
         $input = new Input;
@@ -178,7 +198,7 @@ class FormItem extends HTMLElement
     {
         $select = $this->select($name, $data_source, $display_member, $value_member);;
         $select->setAttribute("multiple", true);
-        $select->setAttribute("type","success");
+        $select->setAttribute("type", "success");
 
         $select->style->width = "100%";
 

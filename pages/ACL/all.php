@@ -1,12 +1,10 @@
+{% verbatim %}
 <div id="div1">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Permissions</h4>
-        </div>
-        <p class="card-text ml-2">Permission according to roles</p>
+    <el-card :header="$t('Permissions')">
+        <p>Permission according to roles</p>
 
-        <el-form class="ml-2">
-            <el-form-item label="User Group">
+        <el-form>
+            <el-form-item :label="$t('User group')">
                 <el-select v-model="usergroup_id" clearable>
                     <el-option v-for="ug in UserGroup" :value="ug.usergroup_id" :label="ug.name" :key="ug.usergroup_id"></el-option>
                 </el-select>
@@ -61,11 +59,13 @@
                 </template>
             </el-table-column>
         </el-table>
-    </div>
+    </el-card>
 </div>
+{% endverbatim %}
 
 <script>
     new Vue({
+        i18n,
         el: "#div1",
         data() {
             return {
@@ -238,7 +238,7 @@ return new class
         $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
         $allow_ug = $acl["path"][$module->name . "/" . $path];
 
-        return in_array($usergroup->name, $allow_ug??[]);
+        return in_array($usergroup->name, $allow_ug ?? []);
     }
 
     private function getACLPathValue(UserGroup $usergroup, Module $module, string $path, string $value)
@@ -257,7 +257,7 @@ return new class
         $yml = new Parser();
         $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
         $allow_ug = $acl["path"][$module->name . "/" . $path];
-        if (in_array($usergroup->name, $allow_ug??[])) {
+        if (in_array($usergroup->name, $allow_ug ?? [])) {
             return true;
         }
 

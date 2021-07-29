@@ -11,3 +11,11 @@ menu:
     link: /System/package
     label: Package
     icon: fa fa-cubes
+  PHPInfo:
+    link: /System/phpinfo
+    label: PHPInfo
+    icon: fab fa-php
+  Mail test:
+    link: /System/mail-test
+    label: Mail test
+    icon: far fa-envelope
