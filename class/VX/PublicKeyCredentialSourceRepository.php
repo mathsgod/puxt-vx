@@ -11,6 +11,18 @@ class PublicKeyCredentialSourceRepository implements WebauthnPublicKeyCredential
 
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
+
+        foreach (User::Query() as $user) {
+            foreach ($user->credential as $credential) {
+
+                $s = PublicKeyCredentialSource::createFromArray($credential);
+
+                if ($s->getPublicKeyCredentialId() == $publicKeyCredentialId) {
+
+                    return $s;
+                }
+            }
+        }
         return null;
     }
 
@@ -20,9 +32,11 @@ class PublicKeyCredentialSourceRepository implements WebauthnPublicKeyCredential
         foreach (User::Query() as $user) {
             if (!$user->credential) continue;
 
-            $source = PublicKeyCredentialSource::createFromArray($user->credential);
-            if ($source->getUserHandle() == $publicKeyCredentialUserEntity->getId()) {
-                $sources[] = $source;
+            foreach ($user->credential as $credential) {
+                $source = PublicKeyCredentialSource::createFromArray($credential);
+                if ($source->getUserHandle() == $publicKeyCredentialUserEntity->getId()) {
+                    $sources[] = $source;
+                }
             }
         }
         return $sources;

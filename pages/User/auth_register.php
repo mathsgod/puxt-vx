@@ -10,14 +10,11 @@ return new class
     {
         $user = $vx->user;
 
-
-
-        $rp = new PublicKeyCredentialRpEntity($_SERVER["HTTP_HOST"]);
-        $repo = new PublicKeyCredentialSourceRepository();
-        $server = new Webauthn\Server($rp, $repo);
+        $server = $vx->getWebAuthnServer();
 
         $publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptions::createFromArray($user->credential_creation_options);
 
+        $server->setSecuredRelyingPartyId(["localhost"]);
 
         $publicKeyCredentialSource = $server->loadAndCheckAttestationResponse(
             json_encode($vx->_post),
@@ -25,8 +22,8 @@ return new class
             $vx->req
         );
 
-        $repo->saveCredentialSource($publicKeyCredentialSource);
-        $user->credential = $publicKeyCredentialSource->jsonSerialize();
+        //$repo->saveCredentialSource($publicKeyCredentialSource);
+        $user->credential[] = $publicKeyCredentialSource->jsonSerialize();
         $user->save();
         http_response_code(204);
     }

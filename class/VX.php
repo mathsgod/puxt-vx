@@ -23,7 +23,8 @@ use VX\User;
 use VX\UserLog;
 use VX\UI;
 use Webauthn\PublicKeyCredentialUserEntity;
-
+use Webauthn\PublicKeyCredentialRpEntity;
+use VX\PublicKeyCredentialSourceRepository;
 /**
  * @property User $user
  * @property int $user_id
@@ -50,6 +51,23 @@ class VX extends Context
         $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
+    }
+
+    public function getWebAuthnServer(){
+        $name = $_SERVER["SERVER_NAME"];
+        $id = $_SERVER["SERVER_NAME"];
+        if ($id == "0.0.0.0") {
+            $id = "localhost";
+            $name = "localhost";
+        }
+
+        $user = $this->user;
+        $userEntity = new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
+
+        $rp = new PublicKeyCredentialRpEntity($name, $id);
+        $source = new PublicKeyCredentialSourceRepository();
+        $server = new Webauthn\Server($rp, $source);
+        return $server;
     }
 
     public function generateAccessToken(User $user)

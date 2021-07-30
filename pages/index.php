@@ -241,9 +241,8 @@ return new class
 
     public function authAssertion(VX $vx)
     {
-        $rp = new PublicKeyCredentialRpEntity($_SERVER["HTTP_HOST"], $_SERVER["HTTP_HOST"]);
-        $source = new PublicKeyCredentialSourceRepository();
-        $server = new Webauthn\Server($rp, $source);
+        $server = $vx->getWebAuthnServer();
+        $server->setSecuredRelyingPartyId(["localhost"]);
 
         $id = base64_decode($vx->_post["response"]["userHandle"]);
         $user = User::Load($id);
@@ -267,9 +266,8 @@ return new class
     public function authRequestOptions(VX $vx)
     {
 
-        $rp = new PublicKeyCredentialRpEntity($_SERVER["HTTP_HOST"], $_SERVER["HTTP_HOST"]);
         $source = new PublicKeyCredentialSourceRepository();
-        $server = new Webauthn\Server($rp, $source);
+        $server = $vx->getWebAuthnServer();
 
         // UseEntity found using the username.
         $userEntity = $vx->findWebauthnUserByUsername($vx->_post["username"]);
