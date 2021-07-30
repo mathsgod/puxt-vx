@@ -7,6 +7,23 @@ use Symfony\Component\Yaml\Yaml;
 
 class User extends Model
 {
+    public function removeMyFavorite(string $path)
+    {
+        return $this->MyFavorite->filter(["path" => $path])->delete()->execute();
+    }
+
+    public function addMyFavorite(string $label, string $path)
+    {
+
+        $fav = new MyFavorite;
+        $fav->user_id = $this->user_id;
+        $fav->label = $label;
+        $fav->path = $path;
+        $fav->save();
+
+        return $fav;
+    }
+
 
     public function canChangePasswordBy(User $user)
     {

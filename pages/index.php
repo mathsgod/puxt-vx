@@ -80,9 +80,20 @@ return new class
             ]
         ];
 
-
-
         if ($logined) {
+
+
+            //fav
+            $data["favs"] = [];
+            foreach ($vx->user->MyFavorite() as $fav) {
+                $data["favs"][] = [
+                    "label" => $fav->label,
+                    "link" => $fav->path,
+                    "name" => $fav->label
+                ];
+            }
+
+
             $modules = $vx->getModules();
 
             $menu = new VX\Menu();
@@ -131,10 +142,10 @@ return new class
 
             $data["acl"] = $vx->acl;
 
-            
-            $data["i18n"]=$vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
 
-            
+            $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
+
+
             $data["locale"] = $vx->user->language;
         }
 
@@ -213,5 +224,16 @@ return new class
         $user = $vx->user;
         $user->style["layout"] = $vx->_post["layout"];
         $user->save();
+    }
+
+    public function addMyFavorite(VX $vx)
+    {
+        $user = $vx->user;
+        $user->addMyFavorite($vx->_post["label"], $vx->_post["path"]);
+    }
+
+    public function removeMyFavorite(VX $vx){
+        $user = $vx->user;
+        $user->removeMyFavorite($vx->_post["path"]);
     }
 };
