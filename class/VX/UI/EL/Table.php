@@ -6,9 +6,19 @@ use P\HTMLElement;
 
 class Table extends HTMLElement
 {
+    const SIZE_MINI = "mini";
+    const SIZE_SMALL = "small";
+    const SIZE_MEDIUM = "medium";
+    const SIZE_LARGE = "large";
+
     public function __construct()
     {
         parent::__construct("el-table");
+    }
+
+    function setSize(string $size)
+    {
+        $this->setAttribute("size", $size);
     }
 
     public function setData(array $data)
@@ -43,6 +53,4 @@ class Table extends HTMLElement
         $this->setAttribute(":border", "true");
         return $this;
     }
-
-    
 }

@@ -28,4 +28,15 @@ class TableColumn extends HTMLElement
         $this->setAttribute("sortable", true);
         return $this;
     }
+
+    public function width(string $width)
+    {
+        $this->setWidth($width);
+        return $this;
+    }
+
+    public function setWidth(string $width)
+    {
+        $this->setAttribute("width", $width);
+    }
 }
