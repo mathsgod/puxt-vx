@@ -5,6 +5,7 @@ use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\Translate;
 use VX\UI\EL\Transfer;
+use VX\User;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -232,8 +233,67 @@ return new class
         $user->addMyFavorite($vx->_post["label"], $vx->_post["path"]);
     }
 
-    public function removeMyFavorite(VX $vx){
+    public function removeMyFavorite(VX $vx)
+    {
         $user = $vx->user;
         $user->removeMyFavorite($vx->_post["path"]);
+    }
+
+    public function authAssertion(VX $vx)
+    {
+        $rp = new PublicKeyCredentialRpEntity($_SERVER["HTTP_HOST"], $_SERVER["HTTP_HOST"]);
+        $source = new PublicKeyCredentialSourceRepository();
+        $server = new Webauthn\Server($rp, $source);
+
+        $id = base64_decode($vx->_post["response"]["userHandle"]);
+        $user = User::Load($id);
+        if (!$user) {
+            throw new Exception("user not found");
+        }
+        $userEntity = $vx->findWebauthnUserByUsername($user->username);
+        $server->loadAndCheckAssertionResponse(
+            json_encode($vx->_post),
+            PublicKeyCredentialRequestOptions::createFromArray($user->credential_request_options),
+            $userEntity,
+            $vx->req
+        );
+
+        return [
+            "access_token" => $vx->generateAccessToken($user),
+            "refresh_token" => $vx->generateRefreshToken($user)
+        ];
+    }
+
+    public function authRequestOptions(VX $vx)
+    {
+
+        $rp = new PublicKeyCredentialRpEntity($_SERVER["HTTP_HOST"], $_SERVER["HTTP_HOST"]);
+        $source = new PublicKeyCredentialSourceRepository();
+        $server = new Webauthn\Server($rp, $source);
+
+        // UseEntity found using the username.
+        $userEntity = $vx->findWebauthnUserByUsername($vx->_post["username"]);
+
+        // Get the list of authenticators associated to the user
+        $credentialSources = $source->findAllForUserEntity($userEntity);
+
+        // Convert the Credential Sources into Public Key Credential Descriptors
+        $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
+            return $credential->getPublicKeyCredentialDescriptor();
+        }, $credentialSources);
+
+        // We generate the set of options.
+        $publicKeyCredentialRequestOptions = $server->generatePublicKeyCredentialRequestOptions(
+            PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED, // Default value
+            $allowedCredentials
+        );
+
+        //save the request options
+        $user = User::Query(["username" => $vx->_post["username"]])->first();
+        $user->update([
+            "credential_request_options" => json_encode($publicKeyCredentialRequestOptions->jsonSerialize())
+        ]);
+
+        return $publicKeyCredentialRequestOptions->jsonSerialize();
     }
 };

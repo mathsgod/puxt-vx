@@ -52,6 +52,26 @@ class VX extends Context
         $this->vx_root = dirname(__DIR__);
     }
 
+    public function generateAccessToken(User $user)
+    {
+        return JWT::encode([
+            "type" => "access_token",
+            "iat" => time(),
+            "exp" => time() + 3600,
+            "user_id" => $user->user_id
+        ], $this->config["VX"]["jwt"]["secret"]);
+    }
+
+    public function generateRefreshToken(User $user)
+    {
+        return JWT::encode([
+            "type" => "refresh_token",
+            "iat" => time(),
+            "exp" => time() + 3600 * 24, //1 day
+            "user_id" => $user->user_id
+        ], $this->config["VX"]["jwt"]["secret"]);
+    }
+
     public function getFileManager()
     {
         $root = $this->root . DIRECTORY_SEPARATOR . "uploads";
