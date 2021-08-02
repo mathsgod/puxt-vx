@@ -1,5 +1,5 @@
 <template id="v-information">
-    <el-card>
+    <el-card :header="$t('Information')">
         <el-form class="small-label">
             <div class="row">
                 <el-form-item :label="$t('Phone')" class="col-12">

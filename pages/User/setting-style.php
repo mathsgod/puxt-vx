@@ -1,5 +1,5 @@
 <template id="v-style">
-    <el-card>
+    <el-card :header="$t('Style')">
         <el-form label-width="auto">
             <el-form-item label="Form size">
                 <el-select v-model="form.form_size" clearable>
@@ -36,7 +36,7 @@
                 <el-switch v-model="form.table_border"></el-switch>
             </el-form-item>
 
-            <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit">Save changes</button>
+            <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit" v-text="$t('Save changes')"></button>
 
         </el-form>
     </el-card>

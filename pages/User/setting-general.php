@@ -1,7 +1,7 @@
 <template id="v-general">
     <el-card>
         <!-- header media -->
-        <div class="media">
+        <div class="media mb-2">
             <a href="javascript:void(0);" class="mr-25">
                 <img :src="user.photo" class="rounded mr-50" alt="profile image" height="80" width="80" />
             </a>
@@ -39,7 +39,7 @@
 
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary mt-2 mr-1" @click.prevent="save">Save changes</button>
+                    <el-button type="primary" class="mt-2 mr-1" @click="save" v-text="$t('Save changes')"></button>
                 </div>
             </div>
         </el-form>

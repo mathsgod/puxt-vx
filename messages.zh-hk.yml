@@ -68,7 +68,7 @@ User agent: 使用者代理
 Version: 版本
 Home: 主頁
 Reset passsword: 重設密碼
-2 step verification: 雙重認證
+2 Step verification: 雙重認證
 FileManager: 檔案管理器
 Settings: 設定
 Change Password: 更改密碼
@@ -79,3 +79,23 @@ View: 檢視
 Biometric authentication: 生物認證
 New Password: 新密碼
 Permissions: 權限
+Information: 資訊
+Save: 儲存
+Save changes: 儲存更改
+Activate biometric authentication on this device: 在此設備上啟用生物識別身份驗證
+Time: 時間
+Style: 風格
+Mail test: 郵件測試
+mail-test: 郵件測試
+Documents: 文件
+Images: 圖像
+Videos: 影像
+Audio: 音訊
+Name: 名稱
+Date modified: 修改日期
+Size: 大小
+File: 檔案
+Folder: 資料夾
+Search: 搜尋
+Reset: 重設
+Reload: 重新載入

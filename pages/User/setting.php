@@ -16,7 +16,7 @@ include_once(__DIR__ . "/setting-bio-auth.php");
                 <vx-nav-item index="v-information" icon="fa fa-info fa-fw">{{'Information'|t}}</vx-nav-item>
                 <vx-nav-item index="v-style" icon="fa fa-brush fa-fw">{{'Style'|t}}</vx-nav-item>
                 {% if two_step_verification %}
-                <vx-nav-item index="v-2step" icon="fa fa-lock fa-fw"> 2 Step Verification</vx-nav-item>
+                <vx-nav-item index="v-2step" icon="fa fa-lock fa-fw">{{'2 Step verification'|t}}</vx-nav-item>
                 {% endif %}
                 {% if biometric_authentication %}
                 <vx-nav-item index="v-bio-auth" icon="fa fa-fingerprint fa-fw">{{'Biometric authentication'|t}}</vx-nav-item>

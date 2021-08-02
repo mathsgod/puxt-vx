@@ -147,6 +147,7 @@ class Module implements TranslatorAwareInterface
 
             if ($user->allow_uri($m["link"])) {
                 $link = $m;
+                $link["label"] = $this->translator->trans($link["label"]);
                 $links[] = $link;
             }
         }

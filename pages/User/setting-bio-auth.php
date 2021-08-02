@@ -1,6 +1,6 @@
 <template id="v-bio-auth">
     <el-card :header="$t('Biometric authentication')">
-        <el-switch v-model="on_off" active-text="Activate biometric authentication on this device" @change="changeActivate"></el-switch>
+        <el-switch v-model="on_off" :active-text="$t('Activate biometric authentication on this device')" @change="changeActivate"></el-switch>
         <el-divider></el-divider>
         <el-button @click="register">Register</el-button>
 
@@ -10,7 +10,7 @@
                     <vx-icon name="trash" width="14"></vx-icon>
                 </a>
             </el-table-column>
-            <el-table-column label="Time" prop="time" sortable></el-table-column>
+            <el-table-column :label="$t('Time')" prop="time" sortable></el-table-column>
             <el-table-column label="IP" prop="ip"></el-table-column>
             <el-table-column label="User agent" prop="user-agent"></el-table-column>
         </el-table>

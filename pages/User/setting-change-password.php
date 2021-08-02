@@ -10,7 +10,7 @@
                 </el-form-item>
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary mr-1 mt-1" @click.prevent="submit">Save changes</button>
+                    <el-button type="primary" class="mt-1 mr-1" @click="save" v-text="$t('Save changes')"></button>
                 </div>
             </div>
 

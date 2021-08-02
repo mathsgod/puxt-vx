@@ -2,8 +2,3 @@ class: VX\Config
 icon: fa fa-cog
 group: System
 show_create: true
-
-menu:
-  - label: Update
-    link: /Config/update
-    icon: far fa-circle
