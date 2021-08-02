@@ -245,8 +245,10 @@ return new class
         $server = $vx->getWebAuthnServer();
         $server->setSecuredRelyingPartyId(["localhost"]);
 
-        $id = base64_decode($vx->_post["response"]["userHandle"]);
-        $user = User::Load($id);
+
+
+        $username = $vx->_get["username"];
+        $user = User::Query(["username" => $username, "status" => 0])->first();
         if (!$user) {
             throw new Exception("user not found");
         }
