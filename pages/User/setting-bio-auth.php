@@ -1,8 +1,13 @@
 <template id="v-bio-auth">
-    <el-card header="Biometric authentication">
+    <el-card :header="$t('Biometric authentication')">
+
+        <el-switch v-model="on_off" active-text="Activate biometric authentication on this device" @change="changeActivate"></el-switch>
+        <el-divider></el-divider>
         <el-button @click="register">Register</el-button>
 
-        <el-table :data="items">
+
+
+        <el-table :data="items" size="mini">
             <el-table-column width="50" v-slot="scope">
                 <a @click.prevent="onDelete(scope.row)">
                     <vx-icon name="trash" width="14"></vx-icon>
@@ -20,17 +25,27 @@
         template: document.getElementById("v-bio-auth"),
         data() {
             return {
+                items: [],
                 on_off: false,
-                items: []
             }
         },
         created() {
             this.reload();
+            if (localStorage.getItem("auth_username") == this.$vx.me.username) {
+                this.on_off = true;
+            }
         },
         methods: {
+            changeActivate(value) {
+                if (value) {
+                    localStorage.setItem("auth_username", this.$vx.me.username);
+                } else {
+                    localStorage.removeItem("auth_username");
+                }
+            },
             async onDelete(item) {
 
-                await this.$confirm("Delete this record?", {
+                await this.$confirm(this.$t("Delete this record?"), {
                     type: "warning"
                 });
                 await this.$vx.post("User/setting?_entry=removeCredential", {
@@ -53,14 +68,15 @@
                 });
                 await this.reload();
 
-                localStorage.setItem("auth_first_name", this.$vx.me.first_name)
                 localStorage.setItem("auth_username", this.$vx.me.username);
+                this.on_off = true;
             },
             async reload() {
                 let {
                     data
                 } = await this.$vx.get("User/setting?_entry=getCredential");
                 this.items = data;
+
             }
         },
 
