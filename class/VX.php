@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Google\Authenticator\GoogleAuthenticator;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -25,6 +26,7 @@ use VX\UI;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+
 /**
  * @property User $user
  * @property int $user_id
@@ -53,7 +55,8 @@ class VX extends Context
         $this->vx_root = dirname(__DIR__);
     }
 
-    public function getWebAuthnServer(){
+    public function getWebAuthnServer()
+    {
         $name = $_SERVER["SERVER_NAME"];
         $id = $_SERVER["SERVER_NAME"];
         if ($id == "0.0.0.0") {
@@ -404,7 +407,7 @@ class VX extends Context
 
 
 
-    public function login(string $username, string $password): ?User
+    public function login(string $username, string $password, ?string $code = null): ?User
     {
         if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
             throw new Exception("IP locked 180 seconds", 403);
@@ -419,6 +422,20 @@ class VX extends Context
 
         try {
             $user = User::Login($username, $password);
+
+            if ($user->need2Step($_SERVER["REMOTE_ADDR"])) {
+                if (!$code) {
+                    throw new Exception("code required", 400);
+                }
+                if ($user->secret) {
+                }
+                $g = new GoogleAuthenticator();
+                if (!$g->checkCode($user->secret, $code)) {
+                    throw new Exception("code incorrect");
+                }
+            }
+
+
             $ul->user_id = $user->user_id;
             $ul->result = "SUCCESS";
             $ul->save();

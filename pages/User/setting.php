@@ -84,36 +84,6 @@ return new class
     }
 
 
-    function two_step_qrcode(VX $vx)
-    {
-        $user = $vx->user;
-
-        $g = new GoogleAuthenticator();
-        $secret = $g->generateSecret();
-
-        $host = $_SERVER["HTTP_HOST"];
-
-
-        $url = sprintf("otpauth://totp/%s@%s?secret=%s", $user->username, $host, $secret);
-
-        $writer = new PngWriter();
-        $png = $writer->write(QrCode::create($url));
-        return [
-            "secret" => $secret,
-            "host" => $host,
-            "image" => $png->getDataUri()
-        ];
-    }
-
-    function two_step(VX $vx)
-    {
-        $user = $vx->user;
-
-
-        return [
-            "has_two_step" => (bool)$user->secret
-        ];
-    }
 
     function post(VX $vx)
     {
@@ -130,24 +100,6 @@ return new class
             return;
         }
 
-        if ($post["type"] == "two_step") {
-            $g = new GoogleAuthenticator();
-            if (!$g->checkCode($post["secret"], $post["code"])) {
-                throw new Exception("code incorrect");
-            }
-            $user = $vx->user;
-            $user->secret = $post["secret"];
-            $user->save();
-            return;
-        }
-
-        if ($post["type"] == "remove_2step") {
-            $user = $vx->user;
-            $user->secret = null;
-            $user->save();
-            http_response_code(204);
-            return;
-        }
     }
 
     function style(VX $vx)

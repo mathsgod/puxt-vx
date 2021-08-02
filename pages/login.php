@@ -7,10 +7,8 @@ return [
         return ["login page"];
     },
     "post" => function (VX $context) {
-        $data = $context->req->getParsedBody();
-
-
-        $user = $context->login($data["username"], $data["password"]);
+        $data = $context->_post;
+        $user = $context->login($data["username"], $data["password"], $data["code"]);
 
         $token = JWT::encode([
             "type" => "access_token",

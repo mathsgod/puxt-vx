@@ -11,6 +11,7 @@ path:
   User/2step_whitelist: [Users,Power Users]
   User/list: [Power Users]
   User/setting: [Power Users,Users]
+  User/setting-2step: [Power Users,Users]
   Dashboard/holiday: [Power Users,Users]
   Dashboard/weather: [Power Users,Users]
   User: [Power Users]

@@ -3,10 +3,24 @@
 namespace VX;
 
 use Exception;
+use Google\Authenticator\GoogleAuthenticator;
 use Symfony\Component\Yaml\Yaml;
 
 class User extends Model
 {
+    public function need2Step(string $remote_ip)
+    {
+        if (!$this->secret) return false;
+
+        $whitelist = $this->two_step["whitelist"] ?? [];
+
+        if (in_array($remote_ip, $whitelist)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function removeMyFavorite(string $path)
     {
         return $this->MyFavorite->filter(["path" => $path])->delete()->execute();
@@ -47,7 +61,7 @@ class User extends Model
     }
 
     const STATUS = ["Active", "Inactive"];
-    public static function Login(string $username, string $password, $code = null)
+    public static function Login(string $username, string $password)
     {
         $user = self::Query([
             "username" => $username,
