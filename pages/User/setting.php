@@ -44,11 +44,6 @@ include_once(__DIR__ . "/setting-bio-auth.php");
 
 <?php
 
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
-use Google\Authenticator\GoogleAuthenticator;
-
 return new class
 {
 
@@ -59,79 +54,5 @@ return new class
         $this->biometric_authentication = boolval($config["biometric_authentication"]);
     }
 
-    function removeCredential(VX $vx)
-    {
 
-        $user = $vx->user;
-        $uuid = $vx->_post["uuid"];
-        $user->credential = collect($user->credential ?? [])->filter(function ($item) use ($uuid) {
-            return $item["uuid"] != $uuid;
-        })->toArray();
-
-        $user->save();
-    }
-
-    function getCredential(VX $vx)
-    {
-        return collect($vx->user->credential ?? [])->map(function ($item) {
-            return [
-                "uuid" => $item["uuid"],
-                "ip" => $item["ip"],
-                "time" => date("Y-m-d H:i:s", $item["timestamp"]),
-                "user-agent" => $item["user-agent"]
-            ];
-        })->toArray();
-    }
-
-
-
-    function post(VX $vx)
-    {
-        $post = $vx->_post;
-        if ($post["type"] == "style") {
-            $user = $vx->user;
-            foreach ($post["data"] as $k => $v) {
-                $user->style[$k] = $v;
-            }
-            $user->save();
-
-            http_response_code(204);
-
-            return;
-        }
-
-    }
-
-    function style(VX $vx)
-    {
-        $user = $vx->user;
-        $style = $user->style ?? [];
-        return $style;
-    }
-
-
-    function general(VX $vx)
-    {
-        $user = $vx->user;
-        return ["user" => [
-            "photo" => $user->photo(),
-            "user_id" => $user->user_id,
-            "username" => $user->username,
-            "first_name" => $user->first_name,
-            "last_name" => $user->last_name,
-            "email" => $user->email,
-        ]];
-    }
-
-    function info(VX $vx)
-    {
-        $user = $vx->user;
-        return ["user" => [
-            "user_id" => $user->user_id,
-            "phone" => $user->phone,
-            "addr1" => $user->addr1,
-            "addr2" => $user->addr2,
-            "addr3" => $user->addr3,
-        ]];
-    }
 };

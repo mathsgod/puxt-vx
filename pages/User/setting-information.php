@@ -39,7 +39,7 @@
         async created() {
             let {
                 data
-            } = await this.$vx.get("User/setting?_entry=info");
+            } = await this.$vx.get("User/setting-information");
             this.user = data.user;
         },
         methods: {
@@ -52,3 +52,25 @@
         }
     })
 </script>
+
+<?php
+
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-08-02 
+ */
+return new class
+{
+
+    function get(VX $vx)
+    {
+        $user = $vx->user;
+        return ["user" => [
+            "user_id" => $user->user_id,
+            "phone" => $user->phone,
+            "addr1" => $user->addr1,
+            "addr2" => $user->addr2,
+            "addr3" => $user->addr3,
+        ]];
+    }
+};

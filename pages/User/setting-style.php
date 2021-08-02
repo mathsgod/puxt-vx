@@ -38,12 +38,9 @@
 
             <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit">Save changes</button>
 
-
         </el-form>
     </el-card>
-
 </template>
-
 
 <script>
     Vue.component("v-style", {
@@ -56,16 +53,13 @@
         async created() {
             let {
                 data
-            } = await this.$vx.get("User/setting?_entry=style");
+            } = await this.$vx.get("User/setting-style");
             this.form = data;
 
         },
         methods: {
             async submit() {
-                let resp = await this.$vx.post("User/setting", {
-                    type: "style",
-                    data: this.form
-                });
+                let resp = await this.$vx.post("User/setting-style", this.form);
 
                 if (resp.status == 204) {
                     this.$message.success("style updated");
@@ -74,3 +68,31 @@
         }
     });
 </script>
+
+<?php
+
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-08-02 
+ */
+return new class
+{
+
+    function post(VX $vx)
+    {
+        $user = $vx->user;
+        foreach ($vx->_post as $k => $v) {
+            $user->style[$k] = $v;
+        }
+        $user->save();
+
+        http_response_code(204);
+    }
+
+    function get(VX $vx)
+    {
+        $user = $vx->user;
+        $style = $user->style ?? [];
+        return $style;
+    }
+};

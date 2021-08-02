@@ -1,4 +1,4 @@
-<template id="general1">
+<template id="v-general">
     <el-card>
         <!-- header media -->
         <div class="media">
@@ -48,7 +48,7 @@
 
 <script>
     Vue.component("v-general", {
-        template: document.getElementById("general1"),
+        template: document.getElementById("v-general"),
         data() {
             return {
                 user: {}
@@ -57,7 +57,7 @@
         async created() {
             let {
                 data
-            } = await this.$vx.get("User/setting?_entry=general")
+            } = await this.$vx.get("User/setting-general")
             this.user = data.user;
         },
         methods: {
@@ -92,9 +92,32 @@
             },
 
             async reloadPhoto() {
-                let resp = (await this.$vx.get("User/setting?_entry=general")).data;
+                let resp = (await this.$vx.get("User/setting-general")).data;
                 this.user.photo = resp.user.photo;
             }
         }
     });
 </script>
+
+<?php
+
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-08-02 
+ */
+return new class
+{
+
+    function get(VX $vx)
+    {
+        $user = $vx->user;
+        return ["user" => [
+            "photo" => $user->photo(),
+            "user_id" => $user->user_id,
+            "username" => $user->username,
+            "first_name" => $user->first_name,
+            "last_name" => $user->last_name,
+            "email" => $user->email,
+        ]];
+    }
+};

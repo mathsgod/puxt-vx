@@ -12,6 +12,8 @@ path:
   User/list: [Power Users]
   User/setting: [Power Users,Users]
   User/setting-2step: [Power Users,Users]
+  User/setting-style: [Power Users,Users]
+  User/setting-bio-auth: [Power Users,Users]
   Dashboard/holiday: [Power Users,Users]
   Dashboard/weather: [Power Users,Users]
   User: [Power Users]
@@ -30,6 +32,7 @@ path:
   tinymce_code: [Users,Power Users]
   login: [Guests,Users,Power Users]
   System/cancel_view_as: [Users,Power Users]
+  
 action:
   C:
     User: [Power Users]
