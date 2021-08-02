@@ -15,7 +15,7 @@ class PublicKeyCredentialSourceRepository implements WebauthnPublicKeyCredential
         foreach (User::Query() as $user) {
             foreach ($user->credential as $credential) {
 
-                $s = PublicKeyCredentialSource::createFromArray($credential);
+                $s = PublicKeyCredentialSource::createFromArray($credential["credential"]);
 
                 if ($s->getPublicKeyCredentialId() == $publicKeyCredentialId) {
 
@@ -33,7 +33,7 @@ class PublicKeyCredentialSourceRepository implements WebauthnPublicKeyCredential
             if (!$user->credential) continue;
 
             foreach ($user->credential as $credential) {
-                $source = PublicKeyCredentialSource::createFromArray($credential);
+                $source = PublicKeyCredentialSource::createFromArray($credential["credential"]);
                 if ($source->getUserHandle() == $publicKeyCredentialUserEntity->getId()) {
                     $sources[] = $source;
                 }

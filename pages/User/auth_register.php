@@ -1,5 +1,6 @@
 <?php
 
+use Ramsey\Uuid\Uuid;
 use VX\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -23,7 +24,15 @@ return new class
         );
 
         //$repo->saveCredentialSource($publicKeyCredentialSource);
-        $user->credential[] = $publicKeyCredentialSource->jsonSerialize();
+        $user->credential[] = [
+            "uuid" => Uuid::uuid4()->toString(),
+            "ip" => $_SERVER["REMOTE_ADDR"],
+            "user-agent" => $_SERVER["HTTP_USER_AGENT"],
+            "timestamp" => time(),
+            "credential" => $publicKeyCredentialSource->jsonSerialize()
+        ];
+
+
         $user->save();
         http_response_code(204);
     }

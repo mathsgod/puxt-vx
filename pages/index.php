@@ -116,6 +116,7 @@ return new class
 
 
             $data["me"] = [
+                "username" => $user->username,
                 "first_name" => $user->first_name,
                 "last_name" => $user->last_name,
                 "language" => $user->language ?? "en",
