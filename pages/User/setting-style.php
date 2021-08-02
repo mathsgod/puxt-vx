@@ -36,7 +36,7 @@
                 <el-switch v-model="form.table_border"></el-switch>
             </el-form-item>
 
-            <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit" v-text="$t('Save changes')"></button>
+            <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="save" v-text="$t('Save changes')"></button>
 
         </el-form>
     </el-card>
@@ -58,7 +58,7 @@
 
         },
         methods: {
-            async submit() {
+            async save() {
                 let resp = await this.$vx.post("User/setting-style", this.form);
 
                 if (resp.status == 204) {

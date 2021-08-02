@@ -28,7 +28,7 @@
             }
         },
         methods: {
-            submit() {
+            save() {
                 this.$refs.form.validate(async valid => {
                     if (valid) {
                         if (this.form.new_password != this.form.retype_password) {

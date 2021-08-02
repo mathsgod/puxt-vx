@@ -21,7 +21,7 @@
 
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="submit">Save changes</button>
+                    <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="save">Save changes</button>
                 </div>
             </div>
         </el-form>
@@ -43,7 +43,7 @@
             this.user = data.user;
         },
         methods: {
-            async submit() {
+            async save() {
                 let resp = await this.$vx.patch(`User/${this.user.user_id}`, this.user);
                 if (resp.status == 204) {
                     this.$message.success("User updated");
