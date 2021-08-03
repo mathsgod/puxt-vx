@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use VX\FileManager;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\Translate;
@@ -29,38 +30,6 @@ return new class
         return ["error" => [
             "message" => "error when renew access token"
         ]];
-    }
-
-    public function post(VX $vx)
-    {
-
-        if ($vx->_get["action"] == "auth_options") {
-
-
-            $rp = new PublicKeyCredentialRpEntity($_SERVER["HTTP_HOST"]);
-            $source = new PublicKeyCredentialSourceRepository();
-            $server = new Webauthn\Server($rp, $source);
-
-            // UseEntity found using the username.
-            $userEntity = $vx->findWebauthnUserByUsername($vx->_post["username"]);
-
-            // Get the list of authenticators associated to the user
-            $credentialSources = $source->findAllForUserEntity($userEntity);
-
-            // Convert the Credential Sources into Public Key Credential Descriptors
-            $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
-                return $credential->getPublicKeyCredentialDescriptor();
-            }, $credentialSources);
-
-            // We generate the set of options.
-            $publicKeyCredentialRequestOptions = $server->generatePublicKeyCredentialRequestOptions(
-                PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED, // Default value
-                $allowedCredentials
-            );
-
-
-            return $publicKeyCredentialRequestOptions->jsonSerialize();
-        }
     }
 
     public function get(VX $vx)
@@ -149,6 +118,8 @@ return new class
 
 
             $data["locale"] = $vx->user->language;
+
+            $data["file_upload_max_size"]=FileManager::FormatBytes($vx->getFileUploadMaxSize());
         }
 
         $config = $vx->config["VX"];
@@ -164,7 +135,6 @@ return new class
                 "version" => $config["login_version"]
             ]
         ];
-
 
 
 

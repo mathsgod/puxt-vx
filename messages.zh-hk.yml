@@ -76,6 +76,7 @@ Theme Customizer: 主題定制器
 Customize & Preview in Real Time: 實時自定義和預覽
 Delete: 刪除
 View: 檢視
+view: 檢視
 Biometric authentication: 生物認證
 New Password: 新密碼
 Permissions: 權限
@@ -99,3 +100,4 @@ Folder: 資料夾
 Search: 搜尋
 Reset: 重設
 Reload: 重新載入
+Rename: 重新命名
