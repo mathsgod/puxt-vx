@@ -32,7 +32,9 @@ return new class
                 "last_modified" => $mtime->format("Y-m-d"),
                 "last_modified_human" => (string)$mtime->diffForHumans(),
                 "extension" => pathinfo($filename, PATHINFO_EXTENSION),
-                "mime_type" => $fs->mimeType($attr->path())
+                "mime_type" => $fs->mimeType($attr->path()),
+                "type"=>$attr->type()
+                
             ];
         })->toArray();
     }
