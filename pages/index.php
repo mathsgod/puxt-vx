@@ -70,6 +70,12 @@ return new class
             $menu->setTranslator($vx->getTranslator());
 
             foreach ($modules as $m) {
+                if ($m->name == "FileManager") {
+                    if (!$vx->config["VX"]["file_manager"]) {
+                        continue;
+                    }
+                }
+
                 $menu->addModule($m);
             }
 
@@ -119,7 +125,7 @@ return new class
 
             $data["locale"] = $vx->user->language;
 
-            $data["file_upload_max_size"]=FileManager::FormatBytes($vx->getFileUploadMaxSize());
+            $data["file_upload_max_size"] = FileManager::FormatBytes($vx->getFileUploadMaxSize());
         }
 
         $config = $vx->config["VX"];

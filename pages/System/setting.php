@@ -25,6 +25,7 @@ return new class
         $config = $vx->config["VX"];
         $config["two_step_verification"] = boolval($config["two_step_verification"]);
         $config["biometric_authentication"] = boolval($config["biometric_authentication"]);
+        $config["file_manager"] = boolval($config["file_manager"]);
 
         $f = $vx->ui->createForm($config);
 
@@ -52,6 +53,9 @@ return new class
         $r = $f->add("Biometric authentication");
         $r->switch("biometric_authentication");
         $r->helpBlock("Only https can use Biometric authentication");
+
+        $f->addDivider();
+        $f->add("Show file manager")->switch("file_manager");
 
         $this->form = $f;
     }
