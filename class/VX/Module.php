@@ -82,11 +82,7 @@ class Module implements TranslatorAwareInterface
     public function getObject(int $id): IModel
     {
         $class = $this->class;
-        try {
-            $obj = new $class($id);
-            return $obj;
-        } catch (Exception $e) {
-        }
+        return $class::Load($id);
     }
 
     public function getMenuItemByUser(User $user): array

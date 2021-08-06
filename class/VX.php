@@ -159,22 +159,21 @@ class VX extends Context
                 $data = (array)JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
                 $this->user_id = $data["user_id"];
                 $this->logined = true;
-                $this->user = User::Query(["user_id" => $this->user_id])->first();
+                $this->user = User::Load($this->user_id);
                 if ($view_as = $this->req->getHeader("vx-view-as")[0]) {
 
                     if ($this->user->isAdmin()) {
                         $this->view_as = $view_as;
                         $this->user_id = $view_as;
-                        $this->user = User::Query(["user_id" => $this->user_id])->first();
+                        $this->user = User::Load($this->user_id);
                     }
                 }
             } catch (Exception $e) {
                 http_response_code(401);
                 exit();
-                //$this->user = User::Query(["user_id" => $this->user_id])->first();
             }
         } else {
-            $this->user = User::Query(["user_id" => $this->user_id])->first();
+            $this->user = User::Load($this->user_id);
         }
 
 

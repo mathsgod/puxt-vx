@@ -193,6 +193,7 @@
 
 use Carbon\Carbon;
 use VX\EventLog;
+use VX\UI\TableColumn;
 use VX\UserLog;
 
 /**
@@ -214,17 +215,26 @@ return new class
             return $o->name;
         })->join(", ");
 
-        $rt = $vx->ui->createRTable("userlog");
-        $rt->order("userlog_id", "desc");
-        $rt->add("ID", "userlog_id")->sortable()->searchable("equal");
-        $rt->add("Login time", "login_dt")->sortable()->searchable("date");
-        $rt->add("Logout time", "logout_dt")->sortable()->searchable("date");
-        $rt->add("IP address", "ip")->ss();
-        $rt->add("Result", "result")->sortable()->searchable("select")->searchOption(array("SUCCESS" => "SUCCESS", "FAIL" => "FAIL"));
-        $rt->add("User agent", "user_agent")->searchable();
+        $rt = $vx->ui->createTable("userlog");
+        $rt->setDefaultSort("userlog_id", "descending");
+        $rt->add("ID", "userlog_id")->sortable()->searchable()->width("60");
+        $rt->add("Login time", "login_dt")->sortable()->searchable(TableColumn::SEARCH_TYPE_DATE)->width("200");
+        $rt->add("Logout time", "logout_dt")->sortable()->searchable(TableColumn::SEARCH_TYPE_DATE)->width("200");
+        $rt->add("IP address", "ip")->sortable()->searchable()->width("130");
+
+        $rt->add("Result", "result")->sortable()->filterable([
+            [
+                "value" => "SUCCESS",
+                "text" => "Success"
+            ],            [
+                "value" => "FAIL",
+                "text" => "Fail"
+            ],
+        ])->width("200");
+
+        $rt->add("User agent", "user_agent")->searchable()->overflow();
 
         $this->userlog_table = $rt;
-
 
         $this->modules = $vx->getModules();
         $this->permission = [];
@@ -257,21 +267,19 @@ return new class
                 ];
             }
         };
-
-        //outp($els->toArray());
-        //die();
-
-
-
-
-        //die();
     }
 
     function userlog(VX $vx)
     {
         $obj = $vx->object();
-        $rt = $vx->ui->createRTableResponse();
+        $rt = $vx->ui->createTableResponse();
         $rt->source = UserLog::Query(["user_id" => $obj->user_id]);
+        $rt->add("userlog_id");
+        $rt->add("login_dt");
+        $rt->add("logout_dt");
+        $rt->add("ip");
+        $rt->add("result");
+        $rt->add("user_agent");
         return $rt;
     }
 };
