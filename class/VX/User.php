@@ -191,7 +191,7 @@ class User extends Model
     {
         if ($this->isAdmin()) return true;
         $acl = $this->getACL();
-        if (in_array($uri, $acl["path"]["allow"])) {
+        if (in_array($uri, $acl["path"]["allow"]??[])) {
             return true;
         }
 
