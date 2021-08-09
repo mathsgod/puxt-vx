@@ -44,10 +44,11 @@ return function ($options) {
         if (substr($path, -1) == "/") {
             $path .= "index";
         } else {
-            if (is_dir("pages/" . $path)) {
+            if (is_dir("pages" . DIRECTORY_SEPARATOR . $path) || is_dir(__DIR__ . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $path)) {
                 $path .= "/index";
             }
         }
+
 
         $vx->request_uri = $path;
         // skip id
@@ -144,7 +145,8 @@ return function ($options) {
         }
 
         //check permission
-        if (!$vx->acl($path)) {
+
+        if (!$vx->getAcl()->isAllowed($vx->user, $path)) {
 
             if ($vx->logined) {
                 http_response_code(403);

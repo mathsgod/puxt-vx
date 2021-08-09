@@ -2,8 +2,15 @@
 
 namespace VX;
 
-class UserGroup extends Model
+use Laminas\Permissions\Acl\Role\RoleInterface;
+
+class UserGroup extends Model implements RoleInterface
 {
+    public function getRoleId()
+    {
+        return "ug-" . $this->usergroup_id;
+    }
+
     public function removeUser(User $user)
     {
         foreach ($user->UserList() as $ul) {

@@ -1,47 +1,34 @@
 path:
-  access_deny: [Users,Power Users]
-  404_not_found: [Users,Power Users]
-  Dashboard: [Users,Power Users]
-  Dashboard/index: [Users,Power Users]
-  User/view: [Users,Power Users]
-  User/profile: [Users,Power Users]
-  User/change-photo: [Users,Power Users]
-  User/myfav: [Users,Power Users]
-  User/2step: [Users,Power Users]
-  User/2step_whitelist: [Users,Power Users]
-  User/list: [Power Users]
-  User/setting: [Power Users,Users]
-  User/setting-general: [Power Users,Users]
-  User/setting-change-password: [Power Users,Users]
-  User/setting-information: [Power Users,Users]
-  User/setting-2step: [Power Users,Users]
-  User/setting-style: [Power Users,Users]
-  User/setting-bio-auth: [Power Users,Users]
-  Dashboard/holiday: [Power Users,Users]
-  Dashboard/weather: [Power Users,Users]
-  User: [Power Users]
-  User/ae: [Power Users]
-  User/index: [Power Users]
-  UserGroup: [Power Users]
-  UserGroup/list: [Power Users]
-  UserGroup/ae: [Power Users]
-  UserGroup/index: [Power Users]
-  cancel_viewas: [Power Users,Users]
-  User/v: [Power Users]
-  User/e_userlist: [Power Users]
-  User/reset_password: [Power Users]
-  Fileman: [Users,Power Users]
-  Fileman/api: [Users,Power Users]
-  tinymce_code: [Users,Power Users]
-  login: [Guests,Users,Power Users]
-  System/cancel_view_as: [Users,Power Users]
+  User:
+    view: [Users,Power Users]
+    profile: [Users,Power Users]
+    change-photo: [Users,Power Users]
+    myfav: [Users,Power Users]
+    2step: [Users,Power Users]
+    2step_whitelist: [Users,Power Users]
+    list: [Power Users]
+    setting: [Power Users,Users]
+    setting-general: [Power Users,Users]
+    setting-change-password: [Power Users,Users]
+    setting-information: [Power Users,Users] 
+    setting-2step: [Power Users,Users]
+    setting-style: [Power Users,Users]
+    setting-bio-auth: [Power Users,Users]
+    ae: [Power Users]
+    index: [Power Users]
+  UserGroup:
+      index: [Power Users]
+      list: [Power Users]
+      ae: [Power Users]
+  System:
+    cancel_view_as: [Users,Power Users]
   
 action:
-  C:
+  create:
     User: [Power Users]
-  R:
+  read:
     User: [Power Users]
-  U:
+  update:
     User: [Power Users]
-  D:
+  delete:
     User: [Power Users]

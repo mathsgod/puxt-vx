@@ -35,27 +35,27 @@
             <el-table-column label="Module" prop="name"></el-table-column>
             <el-table-column label="Full Control">
                 <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.FC.value" :disabled="scope.row.FC.disabled" @input="changeValue(scope.row.name,'FC')"></el-checkbox>
+                    <el-checkbox v-model="scope.row.all.value" :disabled="scope.row.all.disabled" @input="changeValue(scope.row.name,'all')"></el-checkbox>
                 </template>
             </el-table-column>
             <el-table-column label="Create">
                 <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.C.value" :disabled="scope.row.C.disabled" @input="changeValue(scope.row.name,'C')"></el-checkbox>
+                    <el-checkbox v-model="scope.row.create.value" :disabled="scope.row.create.disabled" @input="changeValue(scope.row.name,'create')"></el-checkbox>
                 </template>
             </el-table-column>
             <el-table-column label="Read">
                 <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.R.value" :disabled="scope.row.R.disabled" @input="changeValue(scope.row.name,'R')"></el-checkbox>
+                    <el-checkbox v-model="scope.row.read.value" :disabled="scope.row.read.disabled" @input="changeValue(scope.row.name,'read')"></el-checkbox>
                 </template>
             </el-table-column>
             <el-table-column label="Write">
                 <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.U.value" :disabled="scope.row.U.disabled" @input="changeValue(scope.row.name,'U')"></el-checkbox>
+                    <el-checkbox v-model="scope.row.update.value" :disabled="scope.row.update.disabled" @input="changeValue(scope.row.name,'update')"></el-checkbox>
                 </template>
             </el-table-column>
             <el-table-column label="Delete">
                 <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.D.value" :disabled="scope.row.D.disabled" @input="changeValue(scope.row.name,'D')"></el-checkbox>
+                    <el-checkbox v-model="scope.row.delete.value" :disabled="scope.row.delete.disabled" @input="changeValue(scope.row.name,'delete')"></el-checkbox>
                 </template>
             </el-table-column>
         </el-table>
@@ -195,15 +195,32 @@ return new class
     {
         $usergroup = new UserGroup($vx->query["usergroup_id"]);
         $ret = [];
+        $acl = $vx->getAcl();
+
         foreach ($vx->getModules() as $module) {
             $r = [];
             $r["name"] = $module->name;
 
-            $r["FC"] = ["value" => getACLValue($usergroup, $module, "FC"), "disabled" => getACLPreset($usergroup, $module, "FC")];
-            $r["C"] = ["value" => getACLValue($usergroup, $module, "C"), "disabled" => getACLPreset($usergroup, $module, "C")];
-            $r["R"] = ["value" => getACLValue($usergroup, $module, "R"), "disabled" => getACLPreset($usergroup, $module, "R")];
-            $r["U"] = ["value" => getACLValue($usergroup, $module, "U"), "disabled" => getACLPreset($usergroup, $module, "U")];
-            $r["D"] = ["value" => getACLValue($usergroup, $module, "D"), "disabled" => getACLPreset($usergroup, $module, "D")];
+            $r["all"] = [
+                "value" => $acl->isAllowed($usergroup, $module),
+                "disabled" => $this->getACLPreset($usergroup, $module, "all")
+            ];
+            $r["create"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "create"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "create")
+            ];
+            $r["read"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "read"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "read")
+            ];
+            $r["update"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "update"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "update")
+            ];
+            $r["delete"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "delete"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "delete")
+            ];
 
 
 
@@ -211,14 +228,14 @@ return new class
 
             foreach ($module->getFiles() as $file) {
                 $r["files"][] = [
-                    "name" => $file,
+                    "name" => $file->name,
                     "allow" => [
-                        "checked" => $this->getACLPathValue($usergroup, $module, $file, "allow"),
-                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file, "allow")
+                        "checked" => $this->getACLPathValue($usergroup, $module, $file->name, "allow"),
+                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->name, "allow")
                     ],
                     "deny" => [
-                        "checked" => $this->getACLPathValue($usergroup, $module, $file, "deny"),
-                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file, "deny")
+                        "checked" => $this->getACLPathValue($usergroup, $module, $file->name, "deny"),
+                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->name, "deny")
                     ]
                 ];
             }
@@ -236,7 +253,7 @@ return new class
 
         $yml = new Parser();
         $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
-        $allow_ug = $acl["path"][$module->name . "/" . $path];
+        $allow_ug = $acl["path"][$module->name][$path];
 
         return in_array($usergroup->name, $allow_ug ?? []);
     }
@@ -256,7 +273,7 @@ return new class
 
         $yml = new Parser();
         $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
-        $allow_ug = $acl["path"][$module->name . "/" . $path];
+        $allow_ug = $acl["path"][$module->name][$path];
         if (in_array($usergroup->name, $allow_ug ?? [])) {
             return true;
         }
@@ -272,38 +289,17 @@ return new class
         if ($a) return true;
         return false;
     }
+
+
+
+    function getACLPreset(UserGroup $usergroup, Module $module, string $action)
+    {
+        if ($usergroup->name == "Administrators") {
+            return true;
+        }
+
+        $yml = new Parser();
+        $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
+        return in_array($usergroup->name,  $acl["action"][$action][$module->name] ?? []);
+    }
 };
-
-function getACLValue(UserGroup $usergroup, Module $module, string $action)
-{
-    if ($usergroup->name == "Administrators") {
-        return true;
-    }
-    $yml = new Parser();
-    $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
-    if (in_array($usergroup->name,  $acl["action"][$action][$module->name] ?? [])) {
-        return true;
-    }
-
-    $allow = ACL::Query([
-        "value" => "allow",
-        "module" => $module->name,
-        "action" => $action,
-        "usergroup_id" => $usergroup->usergroup_id,
-    ])->count() > 0;
-
-    if ($allow) {
-        return $allow;
-    }
-}
-
-function getACLPreset(UserGroup $usergroup, Module $module, string $action)
-{
-    if ($usergroup->name == "Administrators") {
-        return true;
-    }
-
-    $yml = new Parser();
-    $acl = $yml->parseFile(dirname(__DIR__, 2) . "/acl.yml");
-    return in_array($usergroup->name,  $acl["action"][$action][$module->name] ?? []);
-}

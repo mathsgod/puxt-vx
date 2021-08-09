@@ -116,12 +116,7 @@ return new class
 
             $data["navbar"]["dropdown"] = $dropdown;
 
-
-            $data["acl"] = $vx->acl;
-
-
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
-
 
             $data["locale"] = $vx->user->language;
 

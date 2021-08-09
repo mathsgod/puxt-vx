@@ -4,10 +4,16 @@ namespace VX;
 
 use Exception;
 use Google\Authenticator\GoogleAuthenticator;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class User extends Model
+class User extends Model implements RoleInterface
 {
+    public function getRoleId()
+    {
+        return "u-" . $this->user_id;
+    }
+
     public function need2Step(string $remote_ip)
     {
         if (!$this->secret) return false;
@@ -180,74 +186,8 @@ class User extends Model
         return parent::canReadBy($user);
     }
 
-
-
     public function UserGroup()
     {
         return UserGroup::Query()->where("usergroup_id in (select usergroup_id from UserList where user_id=:user_id)", ["user_id" => $this->user_id]);
-    }
-
-    public function allow_uri(string $uri)
-    {
-        if ($this->isAdmin()) return true;
-        $acl = $this->getACL();
-        if (in_array($uri, $acl["path"]["allow"]??[])) {
-            return true;
-        }
-
-        $module = explode("/", $uri)[0];
-        if (in_array("FC", $acl["action"]["allow"][$module] ?? [])) {
-            return true;
-        }
-        return false;
-    }
-
-    public function getACL(): array
-    {
-        if ($this->_acl) return $this->_acl;
-        $acl = [];
-        $ugs = [];
-        foreach ($this->UserGroup() as $ug) {
-            $ugs[] = (string) $ug;
-        }
-
-        $acl_data = Yaml::parseFile(dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "acl.yml");
-
-        foreach ($acl_data["path"] as $path => $usergroups) {
-            if (array_intersect($ugs, $usergroups)) {
-                $acl["path"]["allow"][] = $path;
-            }
-        }
-
-        foreach ($acl_data["action"] as $action => $actions) {
-            foreach ($actions as $module => $usergroups) {
-                if (array_intersect($ugs, $usergroups)) {
-                    $acl["action"]["allow"][$module][] = $action;
-                }
-            }
-        }
-
-        $w = [];
-        $u[] = "user_id=" . $this->user_id;
-        foreach ($this->UserGroup() as $ug) {
-            $u[] = "usergroup_id=$ug->usergroup_id";
-        }
-        $w[] = implode(" or ", $u);
-        $query = ACL::Query()->where($w);
-        foreach ($query as $a) {
-            if ($a->action) {
-                $acl["action"][$a->value][$a->module][] = $a->action;
-            } else {
-                $acl["path"][$a->value][] = $a->path();
-            }
-        }
-
-        //all special user
-        foreach (ACL::Query()->where(["special_user is not null"]) as $acl) {
-            $acl["special_user"][$a->special_user][$a->value][$a->module][] = $acl->action;
-        }
-
-        $this->_acl = $acl;
-        return $acl;
     }
 }

@@ -238,16 +238,15 @@ return new class
 
         $this->modules = $vx->getModules();
         $this->permission = [];
+        $acl = $vx->getAcl();
         foreach ($vx->getModules() as $module) {
             $p = [];
-            foreach (["C", "R", "U", "D"] as $action) {
-                $p[$action] = $vx->allow($module, $action, $this->user);
+            foreach (["create", "read", "update", "delete"] as $privilege) {
+                $p[$privilege] = $acl->isAllowed($this->user, $module, $privilege);
             }
 
             $this->permission[$module->name] = $p;
         }
-
-
         // timeline
         $this->timeline = [];
         $els = EventLog::Query(["user_id" => $this->user->user_id])->orderBy(["eventlog_id" => "desc"])->limit(10);

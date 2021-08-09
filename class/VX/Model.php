@@ -2,10 +2,11 @@
 
 namespace VX;
 
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\ORM\Model as ORMModel;
 use ReflectionClass;
 
-class Model extends ORMModel implements IModel
+class Model extends ORMModel implements IModel, ResourceInterface
 {
 
     /**
@@ -19,6 +20,11 @@ class Model extends ORMModel implements IModel
         return self::$db;
     }
 
+    public function getResourceId()
+    {
+        $r = new ReflectionClass(static::class);
+        return $r->getShortName();
+    }
 
     /**
      * Load by id
@@ -43,39 +49,20 @@ class Model extends ORMModel implements IModel
         return new static;
     }
 
+
     public function canDeleteBy(User $user): bool
     {
-        return self::_acl_allow_by($user, ["FC", "D"]);
-    }
-
-    private static function _acl_allow_by(User $user, array $action = []): bool
-    {
-        if ($user->isAdmin()) return true;
-
-        $acl = $user->getACL();
-
-        $rc = new ReflectionClass(static::class);
-        $class = $rc->getShortName();
-
-        //--- deny ---
-        if (array_intersect($action, $acl["action"]["deny"][$class] ?? [])) {
-            return false;
-        }
-
-        if (array_intersect($action, $acl["action"]["allow"][$class] ?? [])) {
-            return true;
-        }
-        return false;
+        return self::$_vx->getAcl()->isAllowed($user, $this, "delete");
     }
 
     public function canReadBy(User $user): bool
     {
-        return self::_acl_allow_by($user, ["FC", "R"]);
+        return self::$_vx->getAcl()->isAllowed($user, $this, "read");
     }
 
     public function canUpdateBy(User $user): bool
     {
-        return self::_acl_allow_by($user, ["FC", "U"]);
+        return self::$_vx->getAcl()->isAllowed($user, $this, "update");
     }
 
     public function createdBy(): ?User

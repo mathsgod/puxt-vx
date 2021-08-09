@@ -7,10 +7,10 @@ use VX\UserGroup;
 
 return new class
 {
-    function get(VX $context)
+    function get(VX $vx)
     {
 
-        $obj = $context->object();
+        $obj = $vx->object();
         if (!$obj->user_id) {
             $obj->join_date = date("Y-m-d");
             $obj->_usergroup_id = [3];
@@ -22,7 +22,7 @@ return new class
             }
         }
 
-        $form = $context->ui->createForm($obj);
+        $form = $vx->ui->createForm($obj);
 
         $form->add("Username")->input("username")->required();
         $form->add("First name")->input("first_name")->required();
@@ -46,11 +46,15 @@ return new class
 
         $form->add("Expiry date")->date("expiry_date");
 
-        $form->add("Language")->select("language", $context->config["VX"]["language"])->required();
+        $form->add("Language")->select("language", $vx->config["VX"]["language"])->required();
 
         $form->add("Default page")->input("default_page");
 
-        $form->add("User group")->multiSelect("_usergroup_id")->option(UserGroup::Query(), "name", "usergroup_id");
+        $ugs = UserGroup::Query();
+        if (!$vx->user->isAdmin()) {
+            $ugs = collect($ugs)->filter(fn ($ug) => $ug->name != "Administrators");
+        }
+        $form->add("User group")->multiSelect("_usergroup_id")->option($ugs, "name", "usergroup_id");
 
 
         $form->setAction($obj->uri("ae"));

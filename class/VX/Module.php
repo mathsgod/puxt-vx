@@ -3,9 +3,11 @@
 namespace VX;
 
 use Exception;
+use Laminas\Permissions\Acl\AclInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class Module implements TranslatorAwareInterface
+class Module implements TranslatorAwareInterface, ResourceInterface
 {
     use TranslatorAwareTrait;
 
@@ -17,6 +19,10 @@ class Module implements TranslatorAwareInterface
     public $hide = false;
 
     public $menu = [];
+    /**
+     * @var AclInterface $acl
+     */
+    public $acl;
 
     public function __construct(string $name, ?array $config = [])
     {
@@ -28,37 +34,42 @@ class Module implements TranslatorAwareInterface
         }
     }
 
+    public function getResourceId()
+    {
+        return $this->name;
+    }
+
+    public function setAcl(AclInterface $acl)
+    {
+        $this->acl = $acl;
+    }
+
+    /**
+     * @return ModuleFile[]
+     */
     public function getFiles()
     {
+
         $files = [];
 
-        $base = getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR;
-        $path = $base . "*";
+
+        $path = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . "*";
         foreach (glob($path) as $file) {
             $ext = pathinfo($file, PATHINFO_EXTENSION);
-
             if ($ext != "php" && $ext != "twig") continue;
-
-            $file = substr($file, 0, - (strlen($ext) + 1));
-
-            $files[] = substr($file, strlen($base));
+            $filename = pathinfo($file, PATHINFO_FILENAME);
+            $files[$filename] = new ModuleFile($this, $file);
         }
 
-
-        $base = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR;
-        $path = $base . "*";
+        $path = getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . "*";
         foreach (glob($path) as $file) {
             $ext = pathinfo($file, PATHINFO_EXTENSION);
-
             if ($ext != "php" && $ext != "twig") continue;
-
-            $file = substr($file, 0, - (strlen($ext) + 1));
-
-            $files[] = substr($file, strlen($base));
+            $filename = pathinfo($file, PATHINFO_FILENAME);
+            $files[$filename] = new ModuleFile($this, $file);
         }
 
-
-        return $files;
+        return array_values($files);
     }
 
     public function loadConfigFile(string $filename)
@@ -103,7 +114,7 @@ class Module implements TranslatorAwareInterface
         if (count($submenu)) {
             $data["submenu"] = $submenu;
 
-            if ($user->allow_uri($this->name . "/index")) {
+            if ($this->acl->isAllowed($user, $this->name . "/index")) {
                 array_unshift($data["submenu"], [
                     "label" => $this->translator->trans("List"),
                     "icon" => "fa fa-list",
@@ -111,7 +122,7 @@ class Module implements TranslatorAwareInterface
                 ]);
             }
         } else {
-            if ($user->allow_uri($this->name . "/index")) {
+            if ($this->acl->isAllowed($user, $this->name . "/index")) {
                 $data["link"] = "/" . $this->name;
             } else {
                 return [];
@@ -130,8 +141,7 @@ class Module implements TranslatorAwareInterface
 
 
         if ($this->show_create) {
-
-            if ($user->allow_uri($this->name . "/ae")) {
+            if ($this->acl->isAllowed($user, $this->name . "/ae")) {
                 $link = [];
                 $link["label"] = $this->translator->trans("Add");
                 $link["icon"] = "fa fa-plus";
@@ -141,7 +151,9 @@ class Module implements TranslatorAwareInterface
         }
         foreach ($this->menu as $m) {
 
-            if ($user->allow_uri($m["link"])) {
+
+
+            if ($this->acl->isAllowed($user, substr($m["link"], 1))) {
                 $link = $m;
                 $link["label"] = $this->translator->trans($link["label"]);
                 $links[] = $link;

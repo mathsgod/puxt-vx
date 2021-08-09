@@ -2,6 +2,9 @@
 
 use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\AclInterface;
+use Laminas\Permissions\Acl\Resource\GenericResource;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -11,7 +14,7 @@ use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
-use VX\ACL;
+use VX\ACL as VXACL;
 use VX\AuthLock;
 use VX\EventLog;
 use VX\IModel;
@@ -26,6 +29,7 @@ use VX\UI;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+use VX\UserGroup;
 
 /**
  * @property User $user
@@ -40,7 +44,10 @@ class VX extends Context
     public $module;
     public $logined = false;
     public $res;
-    public $acl = [];
+    /**
+     * @var \Laminas\Permissions\Acl\Acl
+     */
+    private $acl;
     public $ui;
     public $config = [];
     public Translator $translator;
@@ -136,6 +143,69 @@ class VX extends Context
         return $fs;
     }
 
+    private function initAcl()
+    {
+        //acl
+        $acl = new Acl;
+        foreach (UserGroup::Query() as $usergroup) {
+            $acl->addRole($usergroup);
+        }
+
+        foreach (User::Query() as $user) {
+            $acl->addRole($user, $user->UserGroup());
+        }
+
+        $acl->allow(UserGroup::GetByNameOrCode("Administrators"));
+
+        $acl->addResource("index");
+        $acl->addResource("login");
+        $acl->addResource("logout");
+        $acl->allow(null, "index");
+        $acl->allow(null, "login");
+        $acl->allow(null, "logout");
+
+
+        $acl_data = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
+        foreach ($acl_data["path"] as $module => $paths) {
+            $acl->addResource($module);
+            foreach ($paths as $path => $roles) {
+                $acl->addResource($module . "/" . $path, $module);
+
+                foreach ($roles as $role) {
+
+                    $acl->allow(UserGroup::GetByNameOrCode($role), $module . "/" . $path);
+                }
+            }
+        }
+
+        foreach (VXACL::Query() as $a) {
+            if (!$acl->hasResource($a->module)) {
+                $acl->addResource($a->module);
+            }
+
+            if ($a->action) {
+                if ($a->action == "all") {
+                    $acl->allow("ug-{$a->usergroup_id}", $a->module);
+                } else {
+                    $acl->allow("ug-{$a->usergroup_id}", $a->module, $a->action);
+                }
+                continue;
+            }
+
+            if (!$acl->hasResource($a->module . "/" . $a->path)) {
+                $acl->addResource($a->module . "/" . $a->path, $a->module);
+            }
+
+            if ($a->value == "allow") {
+                $acl->allow("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+            } elseif ($a->value == "deny") {
+                $acl->deny("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+            }
+        }
+
+        $this->acl = $acl;
+    }
+
     public function init(Context $context)
     {
         foreach ($context as $k => $v) {
@@ -180,10 +250,10 @@ class VX extends Context
         $path = $context->route->path;
         $p = explode("/", $path)[0];
         $this->module = $this->getModule($p);
-
-        //load acl
-        $this->acl = $this->loadACL($this->user);
-
+        $this->initAcl();
+        if (!$this->acl->hasResource($this->module)) {
+            $this->acl->addResource($this->module);
+        }
 
 
         $locale = $this->user->language ?? "en";
@@ -237,6 +307,11 @@ class VX extends Context
         return $translator;
     }
 
+
+    public function getAcl(): AclInterface
+    {
+        return $this->acl;
+    }
 
 
     public function getTranslator()
@@ -326,58 +401,6 @@ class VX extends Context
 
         return false;
     }
-
-    public function is_allow(string $uri)
-    {
-        return true;
-    }
-
-    private function loadACL(User $user)
-    {
-        $acl = [];
-        $ugs = [];
-        foreach ($user->UserGroup() as $ug) {
-            $ugs[] = (string) $ug;
-        }
-
-        $acl_data = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
-
-        foreach ($acl_data["path"] as $path => $usergroups) {
-            if (array_intersect($ugs, $usergroups)) {
-                $acl["path"]["allow"][] = $path;
-            }
-        }
-
-        foreach ($acl_data["action"] as $action => $actions) {
-            foreach ($actions as $module => $usergroups) {
-                if (array_intersect($ugs, $usergroups)) {
-                    $acl["action"]["allow"][$module][] = $action;
-                }
-            }
-        }
-
-        $w = [];
-        $u[] = "user_id=" . $user->user_id;
-        foreach ($user->UserGroup() as $ug) {
-            $u[] = "usergroup_id=$ug->usergroup_id";
-        }
-        $w[] = implode(" or ", $u);
-        $query = ACL::Query()->where($w);
-        foreach ($query as $a) {
-            if ($a->action) {
-                $acl["action"][$a->value][$a->module][] = $a->action;
-            } else {
-                $acl["path"][$a->value][] = $a->path();
-            }
-        }
-
-        //all special user
-        foreach (ACL::Query()->where(["special_user is not null"]) as $acl) {
-            $acl["special_user"][$a->special_user][$a->value][$a->module][] = $acl->action;
-        }
-        return $acl;
-    }
-
 
 
 
@@ -516,16 +539,16 @@ class VX extends Context
     public function getModule(string $name)
     {
 
-        if (file_exists($this->root . "/pages/$name")) {
+        if (file_exists($this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $name)) {
             $config = [];
-            if (file_exists($setting = $this->root . "/pages/$name/setting.yml")) {
+            if (file_exists($setting = $this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . "setting.yml")) {
                 $config = Yaml::parseFile($setting);
             }
 
             return new Module($name, $config);
         }
 
-        if (file_exists(dirname(__DIR__) . "/pages/$name")) {
+        if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $name)) {
             $config = [];
             if (file_exists($setting = dirname(__DIR__) . "/pages/$name/setting.yml")) {
                 $config = Yaml::parseFile($setting);
@@ -535,23 +558,53 @@ class VX extends Context
         }
     }
 
+    /**
+     * @return Module[]
+     */
     public function getModules()
     {
 
         $modules = [];
-        foreach (glob($this->root . "/pages/*", GLOB_ONLYDIR) as $m) {
+        foreach (glob($this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
             $name = basename($m);
+
+            if (!$this->acl->hasResource($name)) {
+                $this->acl->addResource($name);
+            }
+
             $module = new Module($name);
             $module->loadConfigFile($m . "/setting.yml");
             $module->setTranslator($this->translator);
+            $module->setAcl($this->acl);
+
+            foreach ($module->getFiles() as $file) {
+                if (!$this->acl->hasResource($file)) {
+                    $this->acl->addResource($file, $module);
+                }
+            }
+
             $modules[] = $module;
         }
 
-        foreach (glob(dirname(__DIR__) . "/pages/*", GLOB_ONLYDIR) as $m) {
+        foreach (glob(dirname(__DIR__) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
             $name = basename($m);
+
+            if (!$this->acl->hasResource($name)) {
+                $this->acl->addResource($name);
+            }
+
             $module = new Module($name);
             $module->loadConfigFile($m . "/setting.yml");
             $module->setTranslator($this->translator);
+            $module->setAcl($this->acl);
+
+            foreach ($module->getFiles() as $file) {
+                if (!$this->acl->hasResource($file)) {
+                    $this->acl->addResource($file, $module);
+                }
+            }
+
+
             $modules[] = $module;
         }
 
