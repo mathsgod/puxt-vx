@@ -76,6 +76,7 @@ return function ($options) {
             $module = null;
         }
 
+
         //--- REST ---
         //create
         if (
@@ -145,7 +146,6 @@ return function ($options) {
         }
 
         //check permission
-
         if (!$vx->getAcl()->isAllowed($vx->user, $path)) {
 
             if ($vx->logined) {

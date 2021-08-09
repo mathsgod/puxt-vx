@@ -71,7 +71,7 @@ return new class
 
             foreach ($modules as $m) {
                 if ($m->name == "FileManager") {
-                    if (!$vx->config["VX"]["file_manager"]) {
+                    if (!$vx->config["VX"]["file_manager_show"]) {
                         continue;
                     }
                 }

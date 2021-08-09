@@ -132,7 +132,7 @@
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         {% set checked="" %}
-                                        {% if permission[module.name]['R'] %}
+                                        {% if permission[module.name]['read'] %}
                                         {% set checked="checked" %}
                                         {% endif %}
                                         <input type="checkbox" class="custom-control-input" id="admin-read" {{checked}} disabled />
@@ -142,7 +142,7 @@
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         {% set checked="" %}
-                                        {% if permission[module.name]['U'] %}
+                                        {% if permission[module.name]['update'] %}
                                         {% set checked="checked" %}
                                         {% endif %}
                                         <input type="checkbox" class="custom-control-input" id="admin-write" {{checked}} disabled />
@@ -152,7 +152,7 @@
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         {% set checked="" %}
-                                        {% if permission[module.name]['C'] %}
+                                        {% if permission[module.name]['create'] %}
                                         {% set checked="checked" %}
                                         {% endif %}
                                         <input type="checkbox" class="custom-control-input" id="admin-create" {{checked}} disabled />
@@ -162,7 +162,7 @@
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         {% set checked="" %}
-                                        {% if permission[module.name]['D'] %}
+                                        {% if permission[module.name]['delete'] %}
                                         {% set checked="checked" %}
                                         {% endif %}
                                         <input type="checkbox" class="custom-control-input" id="admin-delete" {{checked}} disabled />
@@ -205,13 +205,10 @@ return new class
     function get(VX $vx)
     {
 
-
         $this->user = $vx->object();
-
         $this->can_change_password = $this->user->canChangePasswordBy($vx->user);
 
-
-        $this->usergroup = collect($this->user->UserGroup()->toArray())->map(function ($o) {
+        $this->usergroup = collect($this->user->UserGroup())->map(function ($o) {
             return $o->name;
         })->join(", ");
 
@@ -247,6 +244,7 @@ return new class
 
             $this->permission[$module->name] = $p;
         }
+       
         // timeline
         $this->timeline = [];
         $els = EventLog::Query(["user_id" => $this->user->user_id])->orderBy(["eventlog_id" => "desc"])->limit(10);

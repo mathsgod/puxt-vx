@@ -143,10 +143,13 @@ class VX extends Context
         return $fs;
     }
 
-    private function initAcl()
+    public function getAcl(): AclInterface
     {
+        if ($this->acl) return $this->acl;
+
         //acl
         $acl = new Acl;
+
         foreach (UserGroup::Query() as $usergroup) {
             $acl->addRole($usergroup);
         }
@@ -203,7 +206,18 @@ class VX extends Context
             }
         }
 
+        if (!$acl->hasResource($this->module)) {
+            $acl->addResource($this->module);
+        }
+
+        foreach ($this->module->getFiles() as $file) {
+            if (!$acl->hasResource($file)) {
+                $acl->addResource($file, $this->module);
+            }
+        }
+
         $this->acl = $acl;
+        return $this->acl;
     }
 
     public function init(Context $context)
@@ -250,10 +264,6 @@ class VX extends Context
         $path = $context->route->path;
         $p = explode("/", $path)[0];
         $this->module = $this->getModule($p);
-        $this->initAcl();
-        if (!$this->acl->hasResource($this->module)) {
-            $this->acl->addResource($this->module);
-        }
 
 
         $locale = $this->user->language ?? "en";
@@ -306,13 +316,6 @@ class VX extends Context
 
         return $translator;
     }
-
-
-    public function getAcl(): AclInterface
-    {
-        return $this->acl;
-    }
-
 
     public function getTranslator()
     {
@@ -383,81 +386,12 @@ class VX extends Context
         return new Mailer();
     }
 
-    public function allow(Module $module, string $action, User $user)
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        $acl = $this->loadACL($user);
-
-        if (in_array($action, $acl["action"]["deny"][$module->name] ?? [])) {
-            return false;
-        }
-
-        if (in_array($action, $acl["action"]["allow"][$module->name] ?? [])) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-
     public function getModuleByPath(string $path)
     {
         $ps = explode("/", $path);
         $ps = array_values(array_filter($ps, "strlen"));
         return $this->getModule($ps[0]);
     }
-
-    public function acl(string $path)
-    {
-        if ($path == "/") return true;
-        if ($path == "index") return true;
-        if ($this->user->isAdmin()) {
-            return true;
-        }
-
-        if (in_array($path, $this->acl["path"]["deny"] ?? [])) {
-            return false;
-        }
-
-        $module = $this->getModuleByPath($path);
-        if ($module) {
-            //deny
-            if (in_array("FC", $this->acl["action"]["deny"][$module->name] ?? [])) {
-                return false;
-            }
-
-            if (in_array("FC", $this->acl["action"]["allow"][$module->name] ?? [])) {
-                return true;
-            }
-        }
-
-
-        $result = false;
-        if ($module->user_default_acl === false) {
-        } else {
-            if ($this->config["system"]["user_default_acl"] && $this->user->isUser()) {
-                if ($module) {
-                    if (!starts_with($module->class, "VX")) { //module is not system module
-                        $result = true;
-                    }
-                }
-            }
-        }
-
-
-
-        if (!$result) {
-            $result = (bool) in_array($path, $this->acl["path"]["allow"]);
-        }
-
-        return $result;
-    }
-
-
 
 
     public function login(string $username, string $password, ?string $code = null): ?User
