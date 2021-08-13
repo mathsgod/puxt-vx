@@ -180,7 +180,7 @@ class VX extends Context
 
                 foreach ($roles as $role) {
 
-                    $acl->allow( $ugs[$role] , $module . "/" . $path);
+                    $acl->allow($ugs[$role], $module . "/" . $path);
                 }
             }
         }
@@ -212,15 +212,17 @@ class VX extends Context
             }
         }
 
-        if (!$acl->hasResource($this->module)) {
-            $acl->addResource($this->module);
-        }
-
-        foreach ($this->module->getFiles() as $file) {
-            if (!$acl->hasResource($file)) {
-                $acl->addResource($file, $this->module);
+        if ($this->module) {
+            if (!$acl->hasResource($this->module)) {
+                $acl->addResource($this->module);
+            }
+            foreach ($this->module->getFiles() as $file) {
+                if (!$acl->hasResource($file)) {
+                    $acl->addResource($file, $this->module);
+                }
             }
         }
+
 
         $this->acl = $acl;
         return $this->acl;
@@ -268,7 +270,6 @@ class VX extends Context
             $this->user = User::Load($this->user_id);
         }
 
-
         $path = $context->route->path;
         $p = explode("/", $path)[0];
         $this->module = $this->getModule($p);
@@ -285,6 +286,7 @@ class VX extends Context
             $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
         }
 
+        error_log("translator");
         //load from db
         $translator->addLoader("array", new ArrayLoader);
         $a = [];
@@ -404,7 +406,7 @@ class VX extends Context
 
     public function login(string $username, string $password, ?string $code = null): ?User
     {
-
+        error_log("login");
         if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
             throw new Exception("IP locked 180 seconds", 403);
         }

@@ -26,6 +26,7 @@ class AuthLock extends Model
     public static function LockIP(string $ip)
     {
 
+        return ;
         $a = AuthLock::Query([
             "ip" => $ip
         ])->first();

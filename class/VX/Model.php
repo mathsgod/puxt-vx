@@ -8,18 +8,24 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
 use ReflectionClass;
 
-class Model extends DBModel implements ResourceInterface, EventManagerAwareInterface
+class Model extends DBModel implements ResourceInterface, IModel
 {
 
     static $_event;
     public function setEventManager(EventManagerInterface $eventManager)
     {
-        self::$_event=$eventManager;
+        self::$_event = $eventManager;
+    }
+
+    static $_db;
+    public static function __db()
+    {
+        return self::$_db;
     }
 
     public function getEventManager()
     {
-        return self::$_event;    
+        return self::$_event;
     }
 
     /**
@@ -30,7 +36,7 @@ class Model extends DBModel implements ResourceInterface, EventManagerAwareInter
 
     public function _id()
     {
-        $key = static::__key();
+        $key = static::_key();
         return $this->$key;
     }
 
@@ -77,7 +83,7 @@ class Model extends DBModel implements ResourceInterface, EventManagerAwareInter
         $reflect = new ReflectionClass($this);
         $uri = $reflect->getShortName();
 
-        $key = $key = self::__key();
+        $key = $key = self::_key();
         if ($this->$key) {
             $uri .= "/" . $this->$key;
         }
@@ -90,7 +96,7 @@ class Model extends DBModel implements ResourceInterface, EventManagerAwareInter
 
     public function save()
     {
-        $key = $this->__key();
+        $key = $this->_key();
 
         if (!$this->$key) { //insert
             if (property_exists($this, "created_time")) {

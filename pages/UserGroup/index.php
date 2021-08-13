@@ -9,7 +9,6 @@ return new class
 {
     function get(VX $vx)
     {
-
         $user_table = $vx->ui->createTable("user_data");
         $user_table->add("First name", "first_name");
 
@@ -55,6 +54,7 @@ return new class
         $r->add("name");
         $r->add("code");
         $r->add("num_of_user", fn ($o) => $o->User()->count());
+        
 
 
 

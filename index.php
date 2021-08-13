@@ -5,6 +5,7 @@ use Laminas\Db\TableGateway\Feature\EventFeature\TableGatewayEvent;
 use Laminas\EventManager\Event;
 use Laminas\EventManager\EventManager;
 use PUXT\App;
+use R\DB\Schema;
 use Symfony\Component\Yaml\Parser;
 use VX\Model;
 use VX\Config;
@@ -14,7 +15,7 @@ use VX\TwigI18n;
 return function ($options) {
 
     $db_config = $this->puxt->config["database"];
-    $db_config = array_merge($db_config, [
+  /*   $db_config = array_merge($db_config, [
         "driver" => "Pdo_Mysql",
         "charset" => "utf8mb4",
         "driver_options" => [
@@ -26,21 +27,25 @@ return function ($options) {
     ]);
     $adapter = new Adapter($db_config);
     $model = new Model;
-    $model->setDbAdapter($adapter);
+    $model->setDbAdapter($adapter); */
+
+    $db=new Schema($db_config["database"],$db_config["hostname"],$db_config["username"],$db_config["password"]);
     $vx = new VX();
 
-    $em = new EventManager();
-    $model->setEventManager($em);
-    $em->attach("preSelect", function (TableGatewayEvent $e) use ($adapter) {
+    //$em = new EventManager();
+    //$model->setEventManager($em);
+    //$em->attach("preSelect", function (TableGatewayEvent $e) use ($adapter) {
         /**
          * @var Laminas\Db\Sql\Select $select
          */
-        $select = $e->getParam("select");
-        error_log("preselect " . $select->getSqlString($adapter->getPlatform()));
-    });
+      //  $select = $e->getParam("select");
+       // error_log("preselect " . $select->getSqlString($adapter->getPlatform()));
+    //});
+    Model::$_db=$db;
 
+    
 
-    $this->puxt->hook('ready', function (App $puxt) use ($vx, $adapter) {
+    $this->puxt->hook('ready', function (App $puxt) use ($vx, $db) {
         error_log("ready");
         Model::$_vx = $vx;
 
@@ -53,7 +58,9 @@ return function ($options) {
 
         $puxt->context = $vx;
 
-        $vx->db = $adapter;
+        $vx->db = $db;
+        
+
         $parser = new Parser();
         foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
             $vx->config["VX"][$k] = $v;

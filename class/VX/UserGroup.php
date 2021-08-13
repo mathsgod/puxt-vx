@@ -3,6 +3,7 @@
 namespace VX;
 
 use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class UserGroup extends Model implements RoleInterface
@@ -80,6 +81,8 @@ class UserGroup extends Model implements RoleInterface
 
     public function User()
     {
-        return User::Query()->where("user_id in (select user_id from UserList where usergroup_id=:usergroup_id)", ["usergroup_id" => $this->usergroup_id]);
+        return User::Query(function (Where $where) {
+            $where->expression("user_id in (select user_id from UserList where usergroup_id=?)", $this->usergroup_id);
+        });
     }
 }
