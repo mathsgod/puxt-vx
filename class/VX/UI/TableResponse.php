@@ -118,7 +118,7 @@ class TableResponse implements JsonSerializable
             $ss = explode("|", $this->sort, 2);
             $sort = [];
             $sort[$ss[0]] = ($ss[1] == "descending") ? "desc" : "asc";
-            $source->orderBy($sort);
+            $source->order($sort);
         }
         return $source;
     }

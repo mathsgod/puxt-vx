@@ -2,23 +2,23 @@
 
 namespace VX;
 
-use R\ORM\Model as ORMModel;
+
 use ReflectionObject;
 
 class EventLog extends Model
 {
-    public static function LogInsert(ORMModel $obj, User $user)
+    public static function LogInsert($obj, User $user)
     {
         if ($obj instanceof self) return;
 
         $ro = new ReflectionObject($obj);
-        $el = new EventLog();
+        $el = EventLog::Create();
         $el->user_id = $user->user_id;
         $el->class = $ro->getName();
         $el->action = 'Insert';
         $el->target = $obj;
         $el->id = $obj->_id();
-        $el->save();
+       // $el->save();
     }
 
     private static function FindDifferent(array $source, array $target)
@@ -38,12 +38,12 @@ class EventLog extends Model
         return $diff;
     }
 
-    public static function LogUpdate(ORMModel $obj, User $user)
+    public static function LogUpdate($obj, User $user)
     {
         if ($obj instanceof self) return;
 
         $ro = new ReflectionObject($obj);
-        $el = new EventLog();
+        $el = EventLog::Create();
         $el->user_id = $user->user_id;
         $el->class = $ro->getName();
         $el->action = "Update";
@@ -62,12 +62,12 @@ class EventLog extends Model
         $el->save();
     }
 
-    public static function LogDelete(ORMModel $obj, User $user)
+    public static function LogDelete($obj, User $user)
     {
         if ($obj instanceof self) return;
 
         $ro = new ReflectionObject($obj);
-        $el = new self;
+        $el = self::Create();
         $el->user_id = $user->user_id;
         $el->class = $ro->getName();
         $el->action = "Delete";

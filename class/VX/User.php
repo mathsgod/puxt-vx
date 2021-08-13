@@ -4,11 +4,15 @@ namespace VX;
 
 use Exception;
 use Google\Authenticator\GoogleAuthenticator;
+use JsonSerializable;
+use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class User extends Model implements RoleInterface
 {
+ 
+
     public function getRoleId()
     {
         return "u-" . $this->user_id;
@@ -188,6 +192,7 @@ class User extends Model implements RoleInterface
 
     public function UserGroup()
     {
-        return UserGroup::Query()->where("usergroup_id in (select usergroup_id from UserList where user_id=:user_id)", ["user_id" => $this->user_id]);
+        return UserGroup::Query()
+            ->where(fn (Where $where) => $where->expression("usergroup_id in (select usergroup_id from UserList where user_id=?)", [$this->user_id]));
     }
 }

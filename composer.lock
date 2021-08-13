@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "988d2710009e20b37b77e06f18e6b98e",
+    "content-hash": "407f01ca12e5ba780c35063c9d847616",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -493,39 +493,77 @@
             "time": "2020-07-04T21:04:16+00:00"
         },
         {
-            "name": "hostlink/puxt-db",
-            "version": "1.0.1",
+            "name": "laminas/laminas-db",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/HostLink/puxt-db.git",
-                "reference": "ff1233d0026aea23c2b28f76ec15e7c17c587ef6"
+                "url": "https://github.com/laminas/laminas-db.git",
+                "reference": "80cbba4e749f9eb7d8036172acb9ad41e8b6923f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/HostLink/puxt-db/zipball/ff1233d0026aea23c2b28f76ec15e7c17c587ef6",
-                "reference": "ff1233d0026aea23c2b28f76ec15e7c17c587ef6",
+                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/80cbba4e749f9eb7d8036172acb9ad41e8b6923f",
+                "reference": "80cbba4e749f9eb7d8036172acb9ad41e8b6923f",
                 "shasum": ""
             },
             "require": {
-                "mathsgod/r-db": "^3.7"
+                "laminas/laminas-stdlib": "^3.3",
+                "laminas/laminas-zendframework-bridge": "^1.0",
+                "php": "^7.3 || ~8.0.0"
+            },
+            "replace": {
+                "zendframework/zend-db": "^2.11.0"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "~1.0.0",
+                "laminas/laminas-eventmanager": "^3.3",
+                "laminas/laminas-hydrator": "^3.2 || ^4.0",
+                "laminas/laminas-servicemanager": "^3.3",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.3"
+            },
+            "suggest": {
+                "laminas/laminas-eventmanager": "Laminas\\EventManager component",
+                "laminas/laminas-hydrator": "(^3.2 || ^4.0) Laminas\\Hydrator component for using HydratingResultSets",
+                "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
             },
             "type": "library",
+            "extra": {
+                "laminas": {
+                    "component": "Laminas\\Db",
+                    "config-provider": "Laminas\\Db\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Db\\": "src/"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-3-Clause"
             ],
-            "authors": [
+            "description": "Database abstraction layer, SQL abstraction, result set abstraction, and RowDataGateway and TableDataGateway implementations",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "db",
+                "laminas"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-db/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-db/issues",
+                "rss": "https://github.com/laminas/laminas-db/releases.atom",
+                "source": "https://github.com/laminas/laminas-db"
+            },
+            "funding": [
                 {
-                    "name": "Raymond Chong",
-                    "email": "mathsgod@yahoo.com"
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
                 }
             ],
-            "description": "puxt db library",
-            "support": {
-                "issues": "https://github.com/HostLink/puxt-db/issues",
-                "source": "https://github.com/HostLink/puxt-db/tree/1.0.1"
-            },
-            "time": "2020-12-28T07:05:02+00:00"
+            "time": "2021-02-22T22:27:56+00:00"
         },
         {
             "name": "laminas/laminas-permissions-acl",
@@ -590,6 +628,65 @@
                 }
             ],
             "time": "2021-04-08T12:56:14+00:00"
+        },
+        {
+            "name": "laminas/laminas-stdlib",
+            "version": "3.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-stdlib.git",
+                "reference": "c8ac6a76a133e682acfabc821d4a2ec646934b12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-stdlib/zipball/c8ac6a76a133e682acfabc821d4a2ec646934b12",
+                "reference": "c8ac6a76a133e682acfabc821d4a2ec646934b12",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "conflict": {
+                "zendframework/zend-stdlib": "*"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "~2.3.0",
+                "phpbench/phpbench": "^0.17.1",
+                "phpunit/phpunit": "~9.3.7",
+                "psalm/plugin-phpunit": "^0.16.0",
+                "vimeo/psalm": "^4.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Stdlib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "SPL extensions, array utilities, error handlers, and more",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "laminas",
+                "stdlib"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-stdlib/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-stdlib/issues",
+                "rss": "https://github.com/laminas/laminas-stdlib/releases.atom",
+                "source": "https://github.com/laminas/laminas-stdlib"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2021-08-03T13:40:40+00:00"
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
@@ -1100,20 +1197,21 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "3.13.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "243dc95208eafd1a56b4b43b681ad1f2f862d8fb"
+                "reference": "0016afaf2e493663648370c4fa14eb971e4cc9ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/243dc95208eafd1a56b4b43b681ad1f2f862d8fb",
-                "reference": "243dc95208eafd1a56b4b43b681ad1f2f862d8fb",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/0016afaf2e493663648370c4fa14eb971e4cc9ac",
+                "reference": "0016afaf2e493663648370c4fa14eb971e4cc9ac",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
+                "laminas/laminas-db": "^2.12",
                 "mathsgod/data-structure": "^1.3",
                 "mathsgod/php-util": "^1.1",
                 "php": ">=7.3",
@@ -1122,6 +1220,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1140,9 +1239,9 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/3.13.0"
+                "source": "https://github.com/mathsgod/r-db/tree/main"
             },
-            "time": "2021-07-13T07:34:57+00:00"
+            "time": "2021-08-13T03:01:04+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -3234,6 +3333,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "mathsgod/r-db": 20,
         "mathsgod/puxt": 20
     },
     "prefer-stable": false,

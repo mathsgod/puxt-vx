@@ -1,19 +1,48 @@
 <?php
 
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\TableGateway\Feature\EventFeature\TableGatewayEvent;
+use Laminas\EventManager\Event;
+use Laminas\EventManager\EventManager;
 use PUXT\App;
 use Symfony\Component\Yaml\Parser;
 use VX\Model;
 use VX\Config;
+use VX\EventLog;
 use VX\TwigI18n;
 
 return function ($options) {
 
+    $db_config = $this->puxt->config["database"];
+    $db_config = array_merge($db_config, [
+        "driver" => "Pdo_Mysql",
+        "charset" => "utf8mb4",
+        "driver_options" => [
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ]
+    ]);
+    $adapter = new Adapter($db_config);
+    $model = new Model;
+    $model->setDbAdapter($adapter);
     $vx = new VX();
 
-    $this->puxt->hook('ready', function (App $puxt) use ($vx) {
-        Model::$_vx = $vx;
+    $em = new EventManager();
+    $model->setEventManager($em);
+    $em->attach("preSelect", function (TableGatewayEvent $e) use ($adapter) {
+        /**
+         * @var Laminas\Db\Sql\Select $select
+         */
+        $select = $e->getParam("select");
+        error_log("preselect " . $select->getSqlString($adapter->getPlatform()));
+    });
 
-        Model::$db = $puxt->context->db;
+
+    $this->puxt->hook('ready', function (App $puxt) use ($vx, $adapter) {
+        error_log("ready");
+        Model::$_vx = $vx;
 
         $vx->init($puxt->context);
 
@@ -24,7 +53,7 @@ return function ($options) {
 
         $puxt->context = $vx;
 
-        $vx->db = Model::$db;
+        $vx->db = $adapter;
         $parser = new Parser();
         foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
             $vx->config["VX"][$k] = $v;
@@ -75,7 +104,6 @@ return function ($options) {
         if (!$module->name) {
             $module = null;
         }
-
 
         //--- REST ---
         //create
@@ -145,6 +173,9 @@ return function ($options) {
             die();
         }
 
+
+
+
         //check permission
         if (!$vx->getAcl()->isAllowed($vx->user, $path)) {
 
@@ -165,6 +196,7 @@ return function ($options) {
     });
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
+        error_log("render:before");
         $data = [];
         if (is_object($page->stub)) {
             $p = [];

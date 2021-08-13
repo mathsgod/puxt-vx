@@ -147,11 +147,15 @@ class VX extends Context
     {
         if ($this->acl) return $this->acl;
 
+
         //acl
         $acl = new Acl;
 
+        $ugs = [];
         foreach (UserGroup::Query() as $usergroup) {
             $acl->addRole($usergroup);
+
+            $ugs[$usergroup->name] = $usergroup;
         }
 
         foreach (User::Query() as $user) {
@@ -176,12 +180,14 @@ class VX extends Context
 
                 foreach ($roles as $role) {
 
-                    $acl->allow(UserGroup::GetByNameOrCode($role), $module . "/" . $path);
+                    $acl->allow( $ugs[$role] , $module . "/" . $path);
                 }
             }
         }
 
+
         foreach (VXACL::Query() as $a) {
+
             if (!$acl->hasResource($a->module)) {
                 $acl->addResource($a->module);
             }
@@ -222,6 +228,8 @@ class VX extends Context
 
     public function init(Context $context)
     {
+        error_log("vx init");
+
         foreach ($context as $k => $v) {
             $this->$k = $v;
         }
@@ -396,13 +404,13 @@ class VX extends Context
 
     public function login(string $username, string $password, ?string $code = null): ?User
     {
+
         if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
             throw new Exception("IP locked 180 seconds", 403);
         }
 
-
         $ip = $_SERVER['REMOTE_ADDR'];
-        $ul = new UserLog();
+        $ul = UserLog::Create();
         $ul->login_dt = date("Y-m-d H:i:s");
         $ul->ip = $ip;
         $ul->user_agent = $_SERVER["HTTP_USER_AGENT"];
@@ -449,7 +457,7 @@ class VX extends Context
         //get last logout
         $o = UserLog::Query([
             "user_id" => $this->user_id
-        ])->orderBy("userlog_id desc")->first();
+        ])->order("userlog_id desc")->first();
 
         if ($o) {
             $o->logout_dt = date("Y-m-d H:i:s");
@@ -457,7 +465,7 @@ class VX extends Context
         }
     }
 
-    public function object(): ?IModel
+    public function object()
     {
         if ($this->module) {
             $class = $this->module->class;

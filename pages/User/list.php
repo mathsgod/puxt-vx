@@ -9,11 +9,11 @@ return new class
 
         $table = $vx->ui->createTable("ds");
 
-        $action = $table->addActionColumn();
+    /*     $action = $table->addActionColumn();
         $action->addView();
         $action->addEdit();
         $action->addDelete();
-
+ */
         $table->add("Username", "username")->sortable()->searchable();
         $table->add("First name", "first_name")->sortable()->searchable();
         $table->add("Last name", "last_name")->sortable()->searchable();
@@ -39,7 +39,7 @@ return new class
         $rt->source = VX\User::Query();
 
         if ($vx->_get["t"] !== null) {
-            $rt->source->filter(["status" => $vx->_get["t"]]);
+            $rt->source->where(["status" => $vx->_get["t"]]);
         }
 
         $rt->add("username");

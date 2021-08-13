@@ -2,6 +2,7 @@
 
 namespace VX;
 
+use Laminas\Db\Sql\Predicate\PredicateSet;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 
 class UserGroup extends Model implements RoleInterface
@@ -49,9 +50,10 @@ class UserGroup extends Model implements RoleInterface
 
     public static function GetByNameOrCode(string $name): ?self
     {
-        $ug = self::Query()
-            ->where("name=:name or code=:code", ["name" => $name, "code" => $name])
-            ->first();
+        $ug = self::Query([
+            "name" => $name,
+            "code" => $name
+        ], "OR")->first();
         return $ug;
     }
 

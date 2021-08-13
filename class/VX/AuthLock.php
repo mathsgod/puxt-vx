@@ -2,6 +2,8 @@
 
 namespace VX;
 
+use Exception;
+
 class AuthLock extends Model
 {
     public static function IsLockedIP(string $ip): bool
@@ -27,10 +29,10 @@ class AuthLock extends Model
         $a = AuthLock::Query([
             "ip" => $ip
         ])->first();
+
         if ($a) {
             $a->value++;
         } else {
-            $a = new self;
             $a->ip = $ip;
             $a->value = 0;
         }

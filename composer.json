@@ -9,7 +9,6 @@
         }
     ],
     "require": {
-        "hostlink/puxt-db": "^1.0",
         "symfony/yaml": "^5.2",
         "mathsgod/p-query": "^2.4 | ^3.0",
         "firebase/php-jwt": "^5.3",
@@ -22,7 +21,8 @@
         "symfony/translation": "^5.3",
         "twig/twig": "^2.12",
         "phpmailer/phpmailer": "^6.5",
-        "laminas/laminas-permissions-acl": "^2.8"
+        "laminas/laminas-permissions-acl": "^2.8",
+        "mathsgod/r-db": "main-dev"
     },
     "autoload": {
         "psr-4": {

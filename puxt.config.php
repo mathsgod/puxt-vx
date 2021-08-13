@@ -2,7 +2,6 @@
 
 return [
     "modules" => [
-        "hostlink/puxt-db",
         "puxt-vx",
     ],
 

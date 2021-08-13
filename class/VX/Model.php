@@ -2,51 +2,42 @@
 
 namespace VX;
 
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use R\ORM\Model as ORMModel;
+use R\DB\Model as DBModel;
 use ReflectionClass;
 
-class Model extends ORMModel implements IModel, ResourceInterface
+class Model extends DBModel implements ResourceInterface, EventManagerAwareInterface
 {
+
+    static $_event;
+    public function setEventManager(EventManagerInterface $eventManager)
+    {
+        self::$_event=$eventManager;
+    }
+
+    public function getEventManager()
+    {
+        return self::$_event;    
+    }
 
     /**
      * @var \VX $_vx
      */
     public static $_vx;
 
-    public static $db;
-    public static function __db()
+
+    public function _id()
     {
-        return self::$db;
+        $key = static::__key();
+        return $this->$key;
     }
 
     public function getResourceId()
     {
         $r = new ReflectionClass(static::class);
         return $r->getShortName();
-    }
-
-    /**
-     * Load by id
-     */
-    public static function Load(int $id): static
-    {
-        $key = static::_key();
-        return static::Query([$key => $id])->first();
-    }
-
-
-    /**
-     * Load the object from DB, if the record not found , created it
-     */
-    public static function LoadOrCreate(?int $id): static
-    {
-        $key = static::_key();
-        if ($obj = static::Query([$key => $id])->first()) {
-            return $obj;
-        }
-
-        return new static;
     }
 
 
@@ -86,7 +77,7 @@ class Model extends ORMModel implements IModel, ResourceInterface
         $reflect = new ReflectionClass($this);
         $uri = $reflect->getShortName();
 
-        $key = $key = self::_key();
+        $key = $key = self::__key();
         if ($this->$key) {
             $uri .= "/" . $this->$key;
         }
@@ -99,7 +90,7 @@ class Model extends ORMModel implements IModel, ResourceInterface
 
     public function save()
     {
-        $key = $this->_key();
+        $key = $this->__key();
 
         if (!$this->$key) { //insert
             if (property_exists($this, "created_time")) {

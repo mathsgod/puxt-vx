@@ -29,6 +29,7 @@ return new class
 
     function ds(VX $vx)
     {
+        error_log("ds");
         $rt = $vx->ui->createTableResponse();
         $rt->source = EventLog::Query();
         $rt->add("eventlog_id");
