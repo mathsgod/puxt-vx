@@ -29,7 +29,8 @@ return function ($options) {
     $model = new Model;
     $model->setDbAdapter($adapter); */
 
-    $db=new Schema($db_config["database"],$db_config["hostname"],$db_config["username"],$db_config["password"]);
+    $schema=new Schema($db_config["database"],$db_config["hostname"],$db_config["username"],$db_config["password"]);
+    
     $vx = new VX();
 
     //$em = new EventManager();
@@ -41,11 +42,10 @@ return function ($options) {
       //  $select = $e->getParam("select");
        // error_log("preselect " . $select->getSqlString($adapter->getPlatform()));
     //});
-    Model::$_db=$db;
-
+    Model::SetSchema($schema);
     
 
-    $this->puxt->hook('ready', function (App $puxt) use ($vx, $db) {
+    $this->puxt->hook('ready', function (App $puxt) use ($vx, $schema) {
         Model::$_vx = $vx;
 
         $vx->init($puxt->context);
@@ -57,7 +57,7 @@ return function ($options) {
 
         $puxt->context = $vx;
 
-        $vx->db = $db;
+        $vx->db = $schema;
         
 
         $parser = new Parser();
