@@ -46,7 +46,6 @@ return function ($options) {
     
 
     $this->puxt->hook('ready', function (App $puxt) use ($vx, $db) {
-        error_log("ready");
         Model::$_vx = $vx;
 
         $vx->init($puxt->context);
@@ -203,7 +202,7 @@ return function ($options) {
     });
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
-        error_log("render:before");
+       
         $data = [];
         if (is_object($page->stub)) {
             $p = [];

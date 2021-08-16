@@ -230,7 +230,7 @@ class VX extends Context
 
     public function init(Context $context)
     {
-        error_log("vx init");
+     
 
         foreach ($context as $k => $v) {
             $this->$k = $v;
@@ -286,7 +286,7 @@ class VX extends Context
             $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
         }
 
-        error_log("translator");
+      
         //load from db
         $translator->addLoader("array", new ArrayLoader);
         $a = [];
@@ -406,7 +406,7 @@ class VX extends Context
 
     public function login(string $username, string $password, ?string $code = null): ?User
     {
-        error_log("login");
+
         if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
             throw new Exception("IP locked 180 seconds", 403);
         }

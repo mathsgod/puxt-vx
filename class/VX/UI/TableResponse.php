@@ -4,6 +4,7 @@ namespace VX\UI;
 
 use Closure;
 use JsonSerializable;
+use Laminas\Db\Sql\Where;
 use VX;
 use VX\IModel;
 
@@ -70,7 +71,7 @@ class TableResponse implements JsonSerializable
         $source = clone $this->source;
 
         if ($this->filter) {
-            $source->filter($this->filter);
+            $source->where($this->filter);
         }
 
 
@@ -85,16 +86,13 @@ class TableResponse implements JsonSerializable
 
 
                 if (is_array($value)) { //between
-                    $source->filter([
-                        $name => [
-                            "between" => $value
-                        ]
-                    ]);
+                    $source->where(function (Where $where) use ($name, $value) {
+                        $where->between($name, $value[0], $value[1]);
+                    });
                 } else {
-
-
-                    $b_name = ":" . $name;
-                    $source->where("`$name`" . " like $b_name", [$name => "%$value%"]);
+                    $source->where(function (Where $where) use ($name, $value) {
+                        $where->like($name, "%$value%");
+                    });
                 }
             }
         }

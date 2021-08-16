@@ -1273,16 +1273,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.0.8",
+            "version": "4.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "ac914790b36cea0bd548687d27f95114edc177b7"
+                "reference": "085828f6f647c57dcb204998df46e97dfe174fe8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/ac914790b36cea0bd548687d27f95114edc177b7",
-                "reference": "ac914790b36cea0bd548687d27f95114edc177b7",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/085828f6f647c57dcb204998df46e97dfe174fe8",
+                "reference": "085828f6f647c57dcb204998df46e97dfe174fe8",
                 "shasum": ""
             },
             "require": {
@@ -1315,9 +1315,9 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.0.8"
+                "source": "https://github.com/mathsgod/r-db/tree/4.0.9"
             },
-            "time": "2021-08-13T09:14:32+00:00"
+            "time": "2021-08-16T04:55:55+00:00"
         },
         {
             "name": "nesbot/carbon",
