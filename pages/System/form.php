@@ -34,7 +34,6 @@ return new class
         ]);
         $form->setAction();
 
-
         $form->add("Upload")->upload("upload1");
         $upload = $form->add("mutiple Upload")->upload("upload2");
         $upload->setMultiple(true);
