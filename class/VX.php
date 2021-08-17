@@ -177,9 +177,11 @@ class VX extends Context implements AdapterAwareInterface
         $acl->addResource("index");
         $acl->addResource("login");
         $acl->addResource("logout");
+        $acl->addResource("cancel-view-as");
         $acl->allow(null, "index");
         $acl->allow(null, "login");
         $acl->allow(null, "logout");
+        $acl->allow(null, "cancel-view-as");
 
 
         $acl_data = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
