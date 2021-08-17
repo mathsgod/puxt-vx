@@ -6,21 +6,38 @@
  * Date: 2021-07-07 
  */
 
+use Laminas\Diactoros\ServerRequestFactory;
+
 return new class
 {
     function post(VX $vx)
     {
+
+        
+        outp($vx->_files);
         outp($vx->_post);
+        die();
+        
+        outp($vx->_post);
+        outp($_FILES);
+        outP($vx->req->getParsedBody());
+        outp($vx->req->getUploadedFiles());
         die();
     }
 
     function get(VX $vx)
     {
-        $form = $vx->ui->createForm(["file" => 'a.jpg', "file2" => "hello", "transfer1" => [1,2], "upload1" => []]);
+        $form = $vx->ui->createForm([
+            "file" => 'a.jpg', "file2" => "hello", "transfer1" => [1, 2],
+            "upload1" => [],
+            "upload2" => []
+        ]);
         $form->setAction();
 
 
         $form->add("Upload")->upload("upload1");
+        $upload = $form->add("mutiple Upload")->upload("upload2");
+        $upload->setMultiple(true);
 
         $form->add("Switch")->switch("switch1");
 

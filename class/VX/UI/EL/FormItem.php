@@ -25,6 +25,7 @@ class FormItem extends HTMLElement
         $upload->setAttribute(":file-list", "scope.form.{$name}");
         $upload->setAttribute("action", "");
         $upload->setAttribute(":auto-upload", "false");
+        $upload->setAttribute("name", $name);
 
         $btn = new Button;
         $btn->textContent = "Select file";

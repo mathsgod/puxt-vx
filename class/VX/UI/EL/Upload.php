@@ -10,4 +10,9 @@ class Upload extends HTMLElement
     {
         parent::__construct("el-upload");
     }
+
+    public function setMultiple(bool $multiple)
+    {
+        $this->setAttribute("multiple", $multiple);
+    }
 }

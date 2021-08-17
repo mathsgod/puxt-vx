@@ -22,7 +22,8 @@
         "twig/twig": "^2.12",
         "phpmailer/phpmailer": "^6.5",
         "laminas/laminas-permissions-acl": "^2.8",
-        "mathsgod/r-db": "^4.0"
+        "mathsgod/r-db": "^4.0",
+        "laminas/laminas-diactoros": "^2.6"
     },
     "autoload": {
         "psr-4": {

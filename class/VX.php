@@ -264,6 +264,25 @@ class VX extends Context implements AdapterAwareInterface
             $this->$k = $v;
         }
 
+
+
+        $this->_files = [];
+        foreach ($this->req->getUploadedFiles() as $name => $file) {
+
+            if (is_array($file)) {
+                $this->_files[$name] = $file;
+                continue;
+            }
+
+            if ($file->getClientMediaType() == "application/json" && $name == "vx") {
+                $this->_post = json_decode($file->getStream()->getContents(), true);
+                continue;
+            }
+            $this->_files[$name] = $file;
+        }
+
+
+
         //        $auth = $context->req->getHeader("Authorization");
 
         $token = $this->req->getHeader("Authorization")[0];
