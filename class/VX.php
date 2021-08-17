@@ -9,6 +9,7 @@ use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\GenericResource;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
+use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use R\DB\Schema;
@@ -150,7 +151,23 @@ class VX extends Context implements AdapterAwareInterface
             $root = $this->config["VX"]["file_manager"]["root"];
         }
 
-        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($root);
+        $visibility = [
+            'file' => [
+                'public' => 0640,
+                'private' => 0640,
+            ],
+            'dir' => [
+                'public' => 0777,
+                'private' => 0777,
+            ],
+        ];
+
+        if ($this->config["VX"]["file_manager"]["visibility"]) {
+            $visibility = $this->config["VX"]["file_manager"]["visibility"];
+        }
+        $visibilityConverter = PortableVisibilityConverter::fromArray($visibility);
+
+        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($root, $visibilityConverter);
         $fs = new League\Flysystem\Filesystem($adapter);
         return $fs;
     }
