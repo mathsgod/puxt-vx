@@ -20,8 +20,6 @@ path:
       index: [Power Users]
       list: [Power Users]
       ae: [Power Users]
-  System:
-    cancel_view_as: [Users,Power Users]
   
 action:
   create:

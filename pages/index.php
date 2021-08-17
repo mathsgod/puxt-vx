@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
@@ -63,6 +64,15 @@ return new class
                 ];
             }
 
+            $page_setting = Yaml::parseFile(__DIR__ . "/setting.yml");
+
+
+            if (file_exists($setting_file = $this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "setting.yml")) {
+                $setting = Yaml::parseFile($setting_file);
+                foreach ($setting["group"] as $name => $value) {
+                    $page_setting["group"][$name] = $value;
+                }
+            }
 
             $modules = $vx->getModules();
 
@@ -109,9 +119,9 @@ return new class
             $dropdown = [];
 
             if (!$vx->view_as) {
-                $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view_as"];
+                $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view-as"];
             } else {
-                $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/System/cancel_view_as"];
+                $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/cancel-view-as"];
             }
 
             $data["navbar"]["dropdown"] = $dropdown;

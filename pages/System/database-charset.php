@@ -3,6 +3,8 @@
 
 
     <el-button @click="change">Change to utf8mb4</el-button>
+
+    <el-button @click="change_column">Change all column to table default</el-button>
 </el-card>
 
 
@@ -12,14 +14,36 @@
         methods: {
             async change() {
                 let {
-                    data
+                    data,
+                    status
                 } = await this.$vx.post(this.$vx.$route.path);
 
                 if (data.error) {
-                    alert(data.error.message);
+                    this.$message.error(data.error.message);
+                    return;
                 }
 
+                if (status == 200) {
+                    this.$message("Update successfully");
+                    return;
+                }
+            },
+            async change_column() {
+                let {
+                    data,
+                    status
+                } = await this.$vx.post(this.$vx.$route.path + "?_entry=change_column");
+                if (data.error) {
+                    this.$message.error(data.error.message);
+                    return;
+                }
+
+                if (status == 200) {
+                    this.$message("Update successfully");
+                    return;
+                }
             }
+
         },
 
     })
@@ -37,6 +61,39 @@ use VX\UI\EL\Table;
 
 return new class
 {
+    function change_column(VX $vx)
+    {
+        $error = [];
+
+        foreach ($vx->getDB()->getTables() as $table) {
+            foreach ($table->columns() as $column) {
+                if (
+                    strtolower(substr($column->Type, 0, 7)) == "varchar" ||
+                    strtolower($column->Type) == "text" ||
+                    strtolower($column->Type) == "longtext"
+                ) {
+
+                    $field = $column->Field;
+                    $type = $column->Type;
+                    $t = $table->name;
+                    $sql = "ALTER TABLE  `$t` CHANGE COLUMN `{$field}` `{$field}` {$type} NULL DEFAULT NULL;";
+
+                    try {
+                        $vx->getDB()->exec($sql);
+                    } catch (Exception $e) {
+                        $error[] = $sql;
+                        $error[] = $e->getMessage();
+                    }
+                }
+            }
+        }
+        if ($error) {
+            return ["error" => [
+                "message" => implode("\n", $error)
+            ]];
+        }
+    }
+
     function post(VX $vx)
     {
         $charset = "utf8mb4";
@@ -65,7 +122,7 @@ return new class
         $data = $vx->getDB()->query("SELECT @@character_set_database, @@collation_database")->fetch();
         $view = $vx->ui->createView($data);
         $view->add("Current database character set", "@@character_set_database");
-        $view->add("Current database collaction", "@@collation_database");
+        $view->add("Current database collation", "@@collation_database");
         $this->view = $view;
 
 
