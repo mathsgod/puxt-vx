@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use P\HTMLTemplateElement;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
@@ -22,10 +23,10 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
 
     public function template(callable $callback, string $scope = "scope")
     {
-        $template = new HTMLElement("template");
-        $template->setAttribute("v-slot", $scope);
-        p($template)->html($callback());
 
+        $template = new HTMLTemplateElement();
+        $template->setAttribute("v-slot", $scope);
+        $callback($template);
         $this->append($template);
 
         return $this;
