@@ -19,3 +19,16 @@ menu:
     link: /System/mail-test
     label: Mail test
     icon: far fa-envelope
+  Database:
+    link: /System/database
+    label: Database
+    icon: fa fa-database
+    menu: 
+      Table:
+        link: /System/database
+        label: Table
+        icon: fa fa-database
+      Charset:
+        link: /System/database-charset
+        label: Charset
+        icon: fa fa-database

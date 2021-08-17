@@ -53,12 +53,18 @@ class UI implements TranslatorAwareInterface
         return $t;
     }
 
-    public function createView()
+    public function createView($object = null)
     {
         $view = new UI\View();
         $view->setTranslator($this->translator);
 
-        $view->setData($this->vx->object());
+
+        if (is_null($object)) {
+            $object = $this->vx->object();
+        }
+        $view->setData($object);
+
+
         return $view;
     }
 

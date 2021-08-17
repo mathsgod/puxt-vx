@@ -150,15 +150,49 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             }
         }
         foreach ($this->menu as $m) {
-
-
-
-            if ($this->acl->isAllowed($user, substr($m["link"], 1))) {
-                $link = $m;
-                $link["label"] = $this->translator->trans($link["label"]);
-                $links[] = $link;
-            }
+            $mm = new ModuleMenu($m);
+            $links[] = $mm->getMenuLinkByUser($user);
         }
         return $links;
+    }
+}
+
+
+class ModuleMenu
+{
+    public $link;
+    public $label;
+    public $icon;
+    public $menu = [];
+    public function __construct($data)
+    {
+        $this->label = $data["label"];
+        $this->icon = $data["icon"];
+        $this->link = $data["link"];
+
+        foreach ($data["menu"] as $m) {
+            $this->menu[] = new ModuleMenu($m);
+        }
+    }
+
+    public function getMenuLinkByUser(User $user)
+    {
+        $data = [];
+
+        $data["name"] = $this->label;
+        $data["label"] = $this->label;
+        $data["icon"] = $this->icon;
+        $data["link"] = "#";
+
+        if ($this->menu) {
+            $data["submenu"] = [];
+            foreach ($this->menu as $m) {
+                $data["submenu"][] = $m->getMenuLinkByUser($user);
+            }
+        } else {
+            $data["link"] = $this->link;
+        }
+
+        return $data;
     }
 }

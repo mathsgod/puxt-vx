@@ -3,6 +3,7 @@
 namespace VX\UI\EL;
 
 use P\HTMLElement;
+use Traversable;
 
 class Table extends HTMLElement
 {
@@ -21,13 +22,17 @@ class Table extends HTMLElement
         $this->setAttribute("size", $size);
     }
 
-    public function setData(array $data)
+
+    public function setData(array|Traversable $data)
     {
+        if ($data instanceof Traversable) {
+            $data = iterator_to_array($data);
+        }
         $this->setAttribute(":data", json_encode($data));
         return $this;
     }
 
-    public function addColumn(?string $label, ?string $prop)
+    public function addColumn(?string $label = null, ?string $prop = null)
     {
         $column = new TableColumn;
         $this->append($column);

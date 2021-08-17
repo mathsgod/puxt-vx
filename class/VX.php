@@ -2,11 +2,14 @@
 
 use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
+use Laminas\Db\Adapter\AdapterAwareInterface;
+use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\GenericResource;
 use VX\UI\RTableResponse;
 use PUXT\Context;
+use R\DB\Schema;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -36,9 +39,10 @@ use VX\UserGroup;
  * @property int $user_id
  * @property Module $module
  */
-class VX extends Context
+class VX extends Context implements AdapterAwareInterface
 {
 
+    use AdapterAwareTrait;
     public $user;
     public $user_id;
     public $module;
@@ -53,6 +57,7 @@ class VX extends Context
     public Translator $translator;
     public $vx_root;
     public $locale;
+    public $db;
 
     public function __construct()
     {
@@ -60,6 +65,11 @@ class VX extends Context
         $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
+    }
+
+    public function getDB(): Schema
+    {
+        return $this->db;
     }
 
     public function getFileUploadMaxSize()
@@ -230,7 +240,7 @@ class VX extends Context
 
     public function init(Context $context)
     {
-     
+
 
         foreach ($context as $k => $v) {
             $this->$k = $v;
@@ -286,7 +296,7 @@ class VX extends Context
             $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
         }
 
-      
+
         //load from db
         $translator->addLoader("array", new ArrayLoader);
         $a = [];

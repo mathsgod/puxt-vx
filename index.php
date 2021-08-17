@@ -1,9 +1,5 @@
 <?php
 
-use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\TableGateway\Feature\EventFeature\TableGatewayEvent;
-use Laminas\EventManager\Event;
-use Laminas\EventManager\EventManager;
 use PUXT\App;
 use R\DB\Schema;
 use Symfony\Component\Yaml\Parser;
@@ -15,35 +11,11 @@ use VX\TwigI18n;
 return function ($options) {
 
     $db_config = $this->puxt->config["database"];
-  /*   $db_config = array_merge($db_config, [
-        "driver" => "Pdo_Mysql",
-        "charset" => "utf8mb4",
-        "driver_options" => [
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ]
-    ]);
-    $adapter = new Adapter($db_config);
-    $model = new Model;
-    $model->setDbAdapter($adapter); */
+    $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
 
-    $schema=new Schema($db_config["database"],$db_config["hostname"],$db_config["username"],$db_config["password"]);
-    
     $vx = new VX();
-
-    //$em = new EventManager();
-    //$model->setEventManager($em);
-    //$em->attach("preSelect", function (TableGatewayEvent $e) use ($adapter) {
-        /**
-         * @var Laminas\Db\Sql\Select $select
-         */
-      //  $select = $e->getParam("select");
-       // error_log("preselect " . $select->getSqlString($adapter->getPlatform()));
-    //});
+    $vx->setDbAdapter($schema->getDbAdatpter());
     Model::SetSchema($schema);
-    
 
     $this->puxt->hook('ready', function (App $puxt) use ($vx, $schema) {
         Model::$_vx = $vx;
@@ -58,7 +30,7 @@ return function ($options) {
         $puxt->context = $vx;
 
         $vx->db = $schema;
-        
+
 
         $parser = new Parser();
         foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
@@ -202,7 +174,7 @@ return function ($options) {
     });
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
-       
+
         $data = [];
         if (is_object($page->stub)) {
             $p = [];

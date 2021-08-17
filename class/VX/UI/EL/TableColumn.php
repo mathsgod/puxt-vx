@@ -3,6 +3,7 @@
 namespace VX\UI\EL;
 
 use P\HTMLElement;
+use P\HTMLTemplateElement;
 
 class TableColumn extends HTMLElement
 {
@@ -38,5 +39,22 @@ class TableColumn extends HTMLElement
     public function setWidth(string $width)
     {
         $this->setAttribute("width", $width);
+    }
+
+    function setType(string $type)
+    {
+        $this->setAttribute("type", $type);
+    }
+
+
+    public function addTemplate(callable $callback, string $scope = "scope")
+    {
+        $template = new HTMLTemplateElement();
+        $template->setAttribute("v-slot", $scope);
+        $callback($template);
+
+        $this->append($template);
+
+        return $this;
     }
 }
