@@ -7,6 +7,8 @@ use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\GenericResource;
+use League\Flysystem\FileAttributes;
+use League\Flysystem\StorageAttributes;
 use VX\UI\RTableResponse;
 use PUXT\Context;
 use R\DB\Schema;
@@ -184,9 +186,23 @@ class VX extends Context implements AdapterAwareInterface
         $acl->allow(null, "cancel-view-as");
 
 
+        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "/class");
+        $fs = new League\Flysystem\Filesystem($adapter);
+        $php = $fs->listContents("/")->filter(function (StorageAttributes $attr) {
+            return $attr->isFile();
+        })->map(function (FileAttributes  $attr) {
+            return pathinfo($attr->path(), PATHINFO_FILENAME);
+        });
+        foreach ($php as $r) {
+            $acl->addResource($r);
+        }
+
         $acl_data = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
         foreach ($acl_data["path"] as $module => $paths) {
-            $acl->addResource($module);
+            if (!$acl->hasResource($module)) {
+                $acl->addResource($module);
+            }
+
             foreach ($paths as $path => $roles) {
                 $acl->addResource($module . "/" . $path, $module);
 
