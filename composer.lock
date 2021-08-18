@@ -235,16 +235,16 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "4.2.1",
+            "version": "4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "4ef4c7815cf928392eecdb8cf7fd3ae45e6e3f59"
+                "reference": "53bfce79da95bf082484301fecbc1d77a3907f78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/4ef4c7815cf928392eecdb8cf7fd3ae45e6e3f59",
-                "reference": "4ef4c7815cf928392eecdb8cf7fd3ae45e6e3f59",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/53bfce79da95bf082484301fecbc1d77a3907f78",
+                "reference": "53bfce79da95bf082484301fecbc1d77a3907f78",
                 "shasum": ""
             },
             "require": {
@@ -295,7 +295,7 @@
             ],
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/4.2.1"
+                "source": "https://github.com/endroid/qr-code/tree/4.2.2"
             },
             "funding": [
                 {
@@ -303,7 +303,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-03T10:50:07+00:00"
+            "time": "2021-08-16T22:08:35+00:00"
         },
         {
             "name": "fgrosse/phpasn1",
@@ -832,16 +832,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "29a3ba148287db3142412ef34f6fdcbc22c957cd"
+                "reference": "f186fa328e0687b562fdf530f2642e1109ce261f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/29a3ba148287db3142412ef34f6fdcbc22c957cd",
-                "reference": "29a3ba148287db3142412ef34f6fdcbc22c957cd",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f186fa328e0687b562fdf530f2642e1109ce261f",
+                "reference": "f186fa328e0687b562fdf530f2642e1109ce261f",
                 "shasum": ""
             },
             "require": {
@@ -897,7 +897,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/2.2.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/2.2.1"
             },
             "funding": [
                 {
@@ -913,7 +913,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-20T16:54:08+00:00"
+            "time": "2021-08-17T13:57:50+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -1277,16 +1277,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.0.9",
+            "version": "4.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "085828f6f647c57dcb204998df46e97dfe174fe8"
+                "reference": "92b9b51e7a663c015db1246dcaf1ba258a174339"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/085828f6f647c57dcb204998df46e97dfe174fe8",
-                "reference": "085828f6f647c57dcb204998df46e97dfe174fe8",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/92b9b51e7a663c015db1246dcaf1ba258a174339",
+                "reference": "92b9b51e7a663c015db1246dcaf1ba258a174339",
                 "shasum": ""
             },
             "require": {
@@ -1319,9 +1319,9 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.0.9"
+                "source": "https://github.com/mathsgod/r-db/tree/4.0.11"
             },
-            "time": "2021-08-16T04:55:55+00:00"
+            "time": "2021-08-18T08:26:40+00:00"
         },
         {
             "name": "nesbot/carbon",

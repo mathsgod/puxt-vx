@@ -1,6 +1,9 @@
 {{table|raw}}
 <?php
 
+use P\HTMLTemplateElement;
+use VX\UI\Avatar;
+use VX\User;
 
 return new class
 {
@@ -9,11 +12,18 @@ return new class
 
         $table = $vx->ui->createTable("ds");
 
-    /*     $action = $table->addActionColumn();
+        $action = $table->addActionColumn();
         $action->addView();
         $action->addEdit();
         $action->addDelete();
- */
+
+        $table->add("", "avatar")->template(function (HTMLTemplateElement $template) {
+
+            $av = new Avatar();
+            $av->setAttribute(":title", "scope.row.name");
+            $template->innerHTML = $av;
+        });
+
         $table->add("Username", "username")->sortable()->searchable();
         $table->add("First name", "first_name")->sortable()->searchable();
         $table->add("Last name", "last_name")->sortable()->searchable();
@@ -49,6 +59,7 @@ return new class
         $rt->add("email");
         $rt->add("join_date");
         $rt->add("language");
+        $rt->add("name", fn (User $user) => $user->__toString());
         return $rt;
     }
 };

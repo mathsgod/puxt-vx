@@ -271,8 +271,7 @@ return new class
         );
 
         //save the request options
-        $user = User::Query(["username" => $vx->_post["username"]])->first();
-        $user->update([
+        User::Query(["username" => $vx->_post["username"]])->update([
             "credential_request_options" => json_encode($publicKeyCredentialRequestOptions->jsonSerialize())
         ]);
 
