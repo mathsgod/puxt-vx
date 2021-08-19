@@ -232,6 +232,7 @@ class VX extends Context implements AdapterAwareInterface
 
 
         foreach (VXACL::Query() as $a) {
+            if (!$a->module) continue;
 
             if (!$acl->hasResource($a->module)) {
                 $acl->addResource($a->module);
