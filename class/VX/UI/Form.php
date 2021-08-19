@@ -30,6 +30,11 @@ class Form extends HTMLElement implements TranslatorAwareInterface
         $this->_data = $data;
     }
 
+    public function setSuccessUrl(string $url)
+    {
+        $this->setAttribute("success-url", $url);
+    }
+
 
     public function add(string $label)
     {
