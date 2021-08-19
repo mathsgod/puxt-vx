@@ -282,7 +282,6 @@ class VX extends Context implements AdapterAwareInterface
         }
 
 
-
         $this->_files = [];
         foreach ($this->req->getUploadedFiles() as $name => $file) {
 
