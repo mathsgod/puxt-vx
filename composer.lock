@@ -832,16 +832,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "2.2.1",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "f186fa328e0687b562fdf530f2642e1109ce261f"
+                "reference": "811bdc2d52a07eafbb6cb68a7b368b0668b362c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f186fa328e0687b562fdf530f2642e1109ce261f",
-                "reference": "f186fa328e0687b562fdf530f2642e1109ce261f",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/811bdc2d52a07eafbb6cb68a7b368b0668b362c8",
+                "reference": "811bdc2d52a07eafbb6cb68a7b368b0668b362c8",
                 "shasum": ""
             },
             "require": {
@@ -897,7 +897,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/2.2.1"
+                "source": "https://github.com/thephpleague/flysystem/tree/2.2.3"
             },
             "funding": [
                 {
@@ -913,7 +913,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-17T13:57:50+00:00"
+            "time": "2021-08-18T19:59:31+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -1419,16 +1419,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.5.0",
+            "version": "v6.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "a5b5c43e50b7fba655f793ad27303cd74c57363c"
+                "reference": "dd803df5ad7492e1b40637f7ebd258fee5ca7355"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a5b5c43e50b7fba655f793ad27303cd74c57363c",
-                "reference": "a5b5c43e50b7fba655f793ad27303cd74c57363c",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/dd803df5ad7492e1b40637f7ebd258fee5ca7355",
+                "reference": "dd803df5ad7492e1b40637f7ebd258fee5ca7355",
                 "shasum": ""
             },
             "require": {
@@ -1440,10 +1440,12 @@
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
                 "doctrine/annotations": "^1.2",
+                "php-parallel-lint/php-console-highlighter": "^0.5.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
                 "phpcompatibility/php-compatibility": "^9.3.5",
                 "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.5.6",
-                "yoast/phpunit-polyfills": "^0.2.0"
+                "squizlabs/php_codesniffer": "^3.6.0",
+                "yoast/phpunit-polyfills": "^1.0.0"
             },
             "suggest": {
                 "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
@@ -1483,7 +1485,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.5.0"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.5.1"
             },
             "funding": [
                 {
@@ -1491,7 +1493,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-16T14:33:43+00:00"
+            "time": "2021-08-18T09:14:16+00:00"
         },
         {
             "name": "psr/http-client",
@@ -3268,6 +3270,108 @@
     ],
     "packages-dev": [
         {
+            "name": "laminas/laminas-diactoros",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-diactoros.git",
+                "reference": "7d2034110ae18afe05050b796a3ee4b3fe177876"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/7d2034110ae18afe05050b796a3ee4b3fe177876",
+                "reference": "7d2034110ae18afe05050b796a3ee4b3fe177876",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-zendframework-bridge": "^1.0",
+                "php": "^7.3 || ~8.0.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.9.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "replace": {
+                "zendframework/zend-diactoros": "^2.2.1"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-libxml": "*",
+                "http-interop/http-factory-tests": "^0.8.0",
+                "laminas/laminas-coding-standard": "~1.0.0",
+                "php-http/psr7-integration-tests": "^1.1",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.1",
+                "psalm/plugin-phpunit": "^0.14.0",
+                "vimeo/psalm": "^4.3"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "config-provider": "Laminas\\Diactoros\\ConfigProvider",
+                    "module": "Laminas\\Diactoros"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions/create_uploaded_file.php",
+                    "src/functions/marshal_headers_from_sapi.php",
+                    "src/functions/marshal_method_from_sapi.php",
+                    "src/functions/marshal_protocol_version_from_sapi.php",
+                    "src/functions/marshal_uri_from_sapi.php",
+                    "src/functions/normalize_server.php",
+                    "src/functions/normalize_uploaded_files.php",
+                    "src/functions/parse_cookie_header.php",
+                    "src/functions/create_uploaded_file.legacy.php",
+                    "src/functions/marshal_headers_from_sapi.legacy.php",
+                    "src/functions/marshal_method_from_sapi.legacy.php",
+                    "src/functions/marshal_protocol_version_from_sapi.legacy.php",
+                    "src/functions/marshal_uri_from_sapi.legacy.php",
+                    "src/functions/normalize_server.legacy.php",
+                    "src/functions/normalize_uploaded_files.legacy.php",
+                    "src/functions/parse_cookie_header.legacy.php"
+                ],
+                "psr-4": {
+                    "Laminas\\Diactoros\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "PSR HTTP Message implementations",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "http",
+                "laminas",
+                "psr",
+                "psr-17",
+                "psr-7"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-diactoros/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-diactoros/issues",
+                "rss": "https://github.com/laminas/laminas-diactoros/releases.atom",
+                "source": "https://github.com/laminas/laminas-diactoros"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2021-05-18T14:41:54+00:00"
+        },
+        {
             "name": "mathsgod/html",
             "version": "1.0.14",
             "source": {
@@ -3309,76 +3413,28 @@
             "time": "2020-12-29T03:04:12+00:00"
         },
         {
-            "name": "mathsgod/php-psr7",
-            "version": "1.0.20",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mathsgod/php-psr7.git",
-                "reference": "a086875dda43a3068860b5334413294b694f1c67"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/php-psr7/zipball/a086875dda43a3068860b5334413294b694f1c67",
-                "reference": "a086875dda43a3068860b5334413294b694f1c67",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "psr/http-message": "^1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PHP\\Psr7\\": "src/"
-                },
-                "files": [
-                    "function/function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Raymond Chong",
-                    "email": "mathsgod@yahoo.com"
-                }
-            ],
-            "description": "A standard implementation of php psr7",
-            "support": {
-                "issues": "https://github.com/mathsgod/php-psr7/issues",
-                "source": "https://github.com/mathsgod/php-psr7/tree/1.0.20"
-            },
-            "time": "2021-05-14T10:25:34+00:00"
-        },
-        {
             "name": "mathsgod/puxt",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/puxt.git",
-                "reference": "316727b6d759047c692b4b8e3be0805cfee60296"
+                "reference": "2a0ca4c639513bc89755fd099cd1a6d92f2492ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/316727b6d759047c692b4b8e3be0805cfee60296",
-                "reference": "316727b6d759047c692b4b8e3be0805cfee60296",
+                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/2a0ca4c639513bc89755fd099cd1a6d92f2492ab",
+                "reference": "2a0ca4c639513bc89755fd099cd1a6d92f2492ab",
                 "shasum": ""
             },
             "require": {
+                "laminas/laminas-diactoros": "^2.6",
                 "mathsgod/html": "^1.0",
-                "mathsgod/php-psr7": "^1.0",
-                "php": "^7.0|^8.0",
+                "php": "^7.3 || ~8.0.0",
                 "twig/extensions": "^1.5",
                 "twig/twig": "^2.12"
             },
             "require-dev": {
                 "hostlink/puxt-db": "^1.0",
-                "hostlink/puxt-gql": "^1.1",
                 "hostlink/puxt-i18n": "^1.0",
                 "hostlink/puxt-log": "^1.0",
                 "hostlink/puxt-vue-loader": "^1.0"
@@ -3403,9 +3459,9 @@
             "description": "PHP framework",
             "support": {
                 "issues": "https://github.com/mathsgod/puxt/issues",
-                "source": "https://github.com/mathsgod/puxt/tree/main"
+                "source": "https://github.com/mathsgod/puxt/tree/1.11.0"
             },
-            "time": "2021-08-09T02:33:47+00:00"
+            "time": "2021-08-19T03:14:25+00:00"
         },
         {
             "name": "twig/extensions",
