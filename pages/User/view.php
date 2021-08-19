@@ -247,7 +247,7 @@ return new class
        
         // timeline
         $this->timeline = [];
-        $els = EventLog::Query(["user_id" => $this->user->user_id])->orderBy(["eventlog_id" => "desc"])->limit(10);
+        $els = EventLog::Query(["user_id" => $this->user->user_id])->order(["eventlog_id" => "desc"])->limit(10);
         foreach ($els as $el) {
             $time = new Carbon($el->created_time);
             if ($el->action == "Insert") {

@@ -67,14 +67,14 @@ return new class
 
         $obj = $vx->postForm();
 
-        $post = $vx->req->getParsedBody();
+        $post = $vx->_post;
 
         foreach ($obj->UserGroup() as $ug) {
             $ug->removeUser($obj);
         }
 
         foreach ($post["_usergroup_id"] as $uid) {
-            $ug = new UserGroup($uid);
+            $ug = UserGroup::Load($uid);
             $ug->addUser($obj);
         }
 
@@ -93,7 +93,7 @@ return new class
         }
 
         foreach ($vx->_post["_usergroup_id"] as $uid) {
-            $ug = new UserGroup($uid);
+            $ug = UserGroup::Load($uid);
             $ug->addUser($obj);
         }
 
