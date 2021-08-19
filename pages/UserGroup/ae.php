@@ -8,7 +8,5 @@ return new class
         $form->add("Name")->input("name")->required();
         $form->add("Remark")->textarea("remark");
         $this->form = $form;
-
-        $form->setSuccessUrl(":content-location/view");
     }
 };

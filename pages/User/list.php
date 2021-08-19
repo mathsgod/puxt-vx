@@ -22,7 +22,7 @@ return new class
             $av = new Avatar();
             $av->setAttribute(":title", "scope.row.name");
             $template->innerHTML = $av;
-        });
+        })->width("60");
 
         $table->add("Username", "username")->sortable()->searchable();
         $table->add("First name", "first_name")->sortable()->searchable();
