@@ -8,10 +8,12 @@ interface IModel
     public function canDeleteBy(User $user): bool;
     public function canUpdateBy(User $user): bool;
 
-    public function uri(string $name): string;
+    public function uri(?string $name = null): string;
 
     public function save();
     public function delete();
     public function bind($obj);
-    static function Load(int $id): static;
+    static function Load(int $id): ?static;
+
+    public function _id();
 }

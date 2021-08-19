@@ -78,7 +78,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         return null;
     }
 
-    public function uri(string $name = null): string
+    public function uri(?string $name = null): string
     {
         $reflect = new ReflectionClass($this);
         $uri = $reflect->getShortName();

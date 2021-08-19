@@ -102,7 +102,7 @@ return function ($options) {
             $obj->save();
             $id = $obj->_id();
 
-            header("Content-Location: " . $obj->uri(""));
+            header("Content-Location: " . $obj->uri());
             http_response_code(201);
 
             exit();
@@ -129,7 +129,7 @@ return function ($options) {
             $obj->bind($body);
             $obj->save();
 
-            header("Content-Location: " . $obj->uri(""));
+            header("Content-Location: " . $obj->uri());
             http_response_code(201);
 
 
