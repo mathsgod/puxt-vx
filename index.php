@@ -132,15 +132,22 @@ return function ($options) {
                 exit();
             }
 
-            $obj = $module->createObject();
-            $obj->bind($vx->req->getParsedBody());
-            $obj->save();
-            $id = $obj->_id();
+            try {
 
-            header("Content-Location: " . $obj->uri());
-            http_response_code(201);
+                $obj = $module->createObject();
+                $obj->bind($vx->req->getParsedBody());
+                $obj->save();
+                $id = $obj->_id();
+            } catch (Exception $e) {
 
-            exit();
+                $result = ["error" => [
+                    "message" => $e->getMessage()
+                ]];
+
+                header("Content-Type: application/json");
+                echo json_encode($result, JSON_UNESCAPED_UNICODE);
+                exit();
+            }
         }
 
         if (
