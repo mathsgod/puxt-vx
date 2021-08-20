@@ -93,6 +93,13 @@ return function ($options) {
         ) {
 
             $obj = $module->getObject($vx->object_id);
+
+            if (!$obj->canReadBy($vx->user)) {
+                http_response_code(403);
+                die();
+            }
+
+
             header("Content-Type: application/json");
             header("Content-Location: " . $obj->uri());
             echo json_encode($obj, JSON_UNESCAPED_UNICODE);
@@ -134,7 +141,6 @@ return function ($options) {
                 http_response_code(401);
                 exit();
             }
-            $body = $vx->req->getParsedBody();
             $obj = $module->getObject($vx->object_id);
 
             if (!$obj->canUpdateBy($vx->user)) {
@@ -142,7 +148,7 @@ return function ($options) {
                 exit();
             }
 
-            $obj->bind($body);
+            $obj->bind($vx->req->getParsedBody());
             $obj->save();
 
             header("Content-Location: " . $obj->uri());
