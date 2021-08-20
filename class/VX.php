@@ -317,20 +317,25 @@ class VX extends Context implements AdapterAwareInterface
         if ($jwt) {
             try {
                 $data = (array)JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-                $this->user_id = $data["user_id"];
-                $this->logined = true;
-                $this->user = User::Load($this->user_id);
-                if ($view_as = $this->req->getHeader("vx-view-as")[0]) {
+                if ($user = User::Load($data["user_id"])) {
+                    $this->user = $user;
+                    $this->user_id = $user->user_id;
+                    $this->logined = true;
+                } else {
+                    throw new Exception("user not found");
+                }
 
+                if ($view_as = $this->req->getHeader("vx-view-as")[0]) {
                     if ($this->user->isAdmin()) {
-                        $this->view_as = $view_as;
-                        $this->user_id = $view_as;
-                        $this->user = User::Load($this->user_id);
+                        if ($user = User::Load($this->user_id)) {
+                            $this->view_as = $view_as;
+                            $this->user_id = $view_as;
+                            $this->user = $user;
+                        }
                     }
                 }
             } catch (Exception $e) {
-                http_response_code(401);
-                exit();
+                $this->user = User::Load($this->user_id);
             }
         } else {
             $this->user = User::Load($this->user_id);
