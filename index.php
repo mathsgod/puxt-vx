@@ -138,6 +138,8 @@ return function ($options) {
                 $obj->bind($vx->req->getParsedBody());
                 $obj->save();
                 $id = $obj->_id();
+                header("Content-Location: " . $obj->uri());
+                exit();
             } catch (Exception $e) {
 
                 $result = ["error" => [
