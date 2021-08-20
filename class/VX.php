@@ -68,6 +68,8 @@ class VX extends Context implements AdapterAwareInterface
         $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
+
+        
     }
 
     public function getDB(): Schema
