@@ -10,6 +10,18 @@ use VX\TwigI18n;
 
 return function ($options) {
 
+    $origin = $_SERVER["HTTP_ORIGIN"];
+    header("Access-Control-Allow-Origin: $origin");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, vx-view-as');
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE");
+    header("Access-Control-Expose-Headers: location, Content-Location");
+
+    if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
+        header("HTTP/1.1 200 OK");
+        exit();
+    }
+
     $db_config = $this->puxt->config["database"];
     $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
 
