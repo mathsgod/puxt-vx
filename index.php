@@ -138,6 +138,7 @@ return function ($options) {
                 $obj->bind($vx->req->getParsedBody());
                 $obj->save();
                 $id = $obj->_id();
+                http_response_code(201);
                 header("Content-Location: " . $obj->uri());
                 exit();
             } catch (Exception $e) {
