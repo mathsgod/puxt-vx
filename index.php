@@ -84,6 +84,22 @@ return function ($options) {
         }
 
         //--- REST ---
+        //get
+        if (
+            $vx->req->getMethod() == "GET"
+            && $module
+            && $vx->object_id
+            && (($module->name . "/" . $vx->object_id) == $org_path)
+        ) {
+
+            $obj = $module->getObject($vx->object_id);
+            header("Content-Type: application/json");
+            header("Content-Location: " . $obj->uri());
+            echo json_encode($obj, JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+
+
         //create
         if (
             $vx->req->getMethod() == "POST"
@@ -130,9 +146,6 @@ return function ($options) {
             $obj->save();
 
             header("Content-Location: " . $obj->uri());
-            http_response_code(201);
-
-
             http_response_code(204);
             exit();
         }
