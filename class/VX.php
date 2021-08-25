@@ -629,7 +629,7 @@ class VX extends Context implements AdapterAwareInterface
 
     public function postForm()
     {
-        $body = $this->req->getParsedBody();
+        $body = $this->_post;
         if ($obj = $this->object()) {
             $obj->bind($body);
             $obj->save();
