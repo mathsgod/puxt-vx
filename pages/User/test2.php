@@ -1,7 +1,16 @@
+{{form|raw}}
 <?php
 
-return [
-    "get" => function (VX $vx) {
-        yield $vx->res->message("hello");
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-08-26 
+ */
+return new class
+{
+    function get(VX $vx)
+    {
+        $form = $vx->ui->createForm([]);
+        $form->add("Name")->input("name")->required();
+        $this->form = $form;
     }
-];
+};

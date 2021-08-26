@@ -11,7 +11,7 @@
                     <!-- profile picture -->
                     <div class="profile-img-container d-flex align-items-center">
                         <div class="profile-img">
-                            <img src="http://localhost:8001/vx/images/user.png" class="rounded img-fluid" alt="Card image">
+                            <img src="{{user_photo}}" class="rounded img-fluid" alt="Card image">
                         </div>
                         <!-- profile title -->
                         <div class="profile-title ml-3">
@@ -35,14 +35,11 @@
                             <div class="profile-tabs d-flex justify-content-between flex-wrap mt-1 mt-md-0">
                                 <ul class="nav nav-pills mb-0">
                                     <li class="nav-item">
-                                        <a class="nav-link font-weight-bold active" href="javascript:void(0)">
-                                            <span class="d-none d-md-block">About</span>
-                                            <i data-feather="rss" class="d-block d-md-none"></i>
-                                        </a>
+                              
                                     </li>
                                 </ul>
                                 <!-- edit button -->
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" onclick="vx.$router.push('setting')">
                                     <i data-feather="edit" class="d-block d-md-none"></i>
                                     <span class="font-weight-bold d-none d-md-block">Edit</span>
                                 </button>
@@ -196,17 +193,20 @@
     </div>
 </section>
 <?php
-return [
-    "page" => [
-        "header" => [
-            "title" => "Profile"
-        ]
-    ], "get" => function (VX $context) {
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-08-26 
+ */
+return new class
+{
+    function get(VX $vx)
+    {
+        $this->user = $vx->user;
 
-        $this->user = $context->user;
+        $this->user_photo = $vx->user->photo();
 
-        $this->usergroup = collect($context->user->UserGroup()->toArray())->map(function ($o) {
+        $this->usergroup = collect($vx->user->UserGroup()->toArray())->map(function ($o) {
             return $o->name;
         })->join(", ");
     }
-];
+};
