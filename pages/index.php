@@ -106,7 +106,7 @@ return new class
                 "last_name" => $user->last_name,
                 "language" => $user->language ?? "en",
                 "style" => $user->style,
-                "default_page" => $user->default_page,
+                "default_page" => $user->default_page ?? "/Dashboard",
                 "usergroup" => collect($user->UserGroup()->toArray())->map(function ($o) {
                     return $o->name;
                 })->join(","),
