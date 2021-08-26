@@ -17,7 +17,9 @@ return new class
         $type = FileManager::LookupMimeType($vx->_get["type"]);
 
         $fs = $vx->getFileManager();
-        return $fs->listContents("", true)->filter(function (StorageAttributes $attr) use ($fs, $type) {
+        $parent = $vx->_get["path"] ?? "/";
+
+        return $fs->listContents($parent, true)->filter(function (StorageAttributes $attr) use ($fs, $type) {
             if ($attr->isFile()) {
                 return in_array($fs->mimeType($attr->path()), $type);
             }
@@ -33,8 +35,8 @@ return new class
                 "last_modified_human" => (string)$mtime->diffForHumans(),
                 "extension" => pathinfo($filename, PATHINFO_EXTENSION),
                 "mime_type" => $fs->mimeType($attr->path()),
-                "type"=>$attr->type()
-                
+                "type" => $attr->type()
+
             ];
         })->toArray();
     }
