@@ -3,15 +3,17 @@
 namespace VX;
 
 use Exception;
-use Google\Authenticator\GoogleAuthenticator;
-use JsonSerializable;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
-use Symfony\Component\Yaml\Yaml;
 
 class User extends Model implements RoleInterface
 {
- 
+
+    public function isSystemAccount()
+    {
+        return $this->user_id == 1 || $this->user_id == 2;
+    }
+
 
     public function getRoleId()
     {
@@ -156,6 +158,7 @@ class User extends Model implements RoleInterface
 
     public function canDeleteBy(User $user): bool
     {
+        if ($this->isSystemAccount()) return false;
         if ($user->user_id == $this->user_id) return false; //no one can delete self
 
         if ($user->isAdmin()) return true; //admin can delete all
