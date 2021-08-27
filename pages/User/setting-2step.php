@@ -65,7 +65,7 @@
         async created() {
             let {
                 data
-            } = await this.$vx.get("User/setting-2step");
+            } = await this.$vx.get("setting-2step");
             this.has_two_step = data.has_two_step;
             this.on_off = data.has_two_step;
             this.whitelist = data.whitelist;

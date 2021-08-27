@@ -57,7 +57,7 @@
         async created() {
             let {
                 data
-            } = await this.$vx.get("User/setting-general")
+            } = await this.$vx.get("setting-general")
             this.user = data.user;
         },
         methods: {
@@ -72,7 +72,7 @@
                     await this.$confirm("Reset photo?", {
                         type: "warning"
                     });
-                    await this.$vx.patch(`User/${this.user.user_id}`, {
+                    await this.$vx.patch(`/User/${this.user.user_id}`, {
                         photo: null
                     });
 
@@ -86,13 +86,13 @@
                     let file = upload.files[0];
                     let fd = new FormData();
                     fd.append("file", file);
-                    let resp = await this.$vx.post("User/change-photo", fd);
+                    let resp = await this.$vx.post("/User/change-photo", fd);
                     console.log(resp);
                 }
             },
 
             async reloadPhoto() {
-                let resp = (await this.$vx.get("User/setting-general")).data;
+                let resp = (await this.$vx.get("setting-general")).data;
                 this.user.photo = resp.user.photo;
             }
         }

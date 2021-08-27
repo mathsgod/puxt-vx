@@ -37,7 +37,7 @@
                             });
                             return;
                         }
-                        let resp = await this.$vx.post("User/change-password", {
+                        let resp = await this.$vx.post("/User/change-password", {
                             password: this.form.new_password
                         });
 

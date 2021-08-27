@@ -1277,16 +1277,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.0.11",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "92b9b51e7a663c015db1246dcaf1ba258a174339"
+                "reference": "a9697e0ba7925fb911a01560d848c85a6502f87a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/92b9b51e7a663c015db1246dcaf1ba258a174339",
-                "reference": "92b9b51e7a663c015db1246dcaf1ba258a174339",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/a9697e0ba7925fb911a01560d848c85a6502f87a",
+                "reference": "a9697e0ba7925fb911a01560d848c85a6502f87a",
                 "shasum": ""
             },
             "require": {
@@ -1295,8 +1295,7 @@
                 "laminas/laminas-hydrator": "^4.2",
                 "mathsgod/data-structure": "^1.3",
                 "mathsgod/php-util": "^1.3",
-                "php": ">=7.3",
-                "psr/log": "^1.1"
+                "php": ">=7.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -1319,22 +1318,22 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.0.11"
+                "source": "https://github.com/mathsgod/r-db/tree/4.1.0"
             },
-            "time": "2021-08-18T08:26:40+00:00"
+            "time": "2021-08-27T08:52:43+00:00"
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.51.1",
+            "version": "2.52.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922"
+                "reference": "369c0e2737c56a0f39c946dd261855255a6fccbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/369c0e2737c56a0f39c946dd261855255a6fccbe",
+                "reference": "369c0e2737c56a0f39c946dd261855255a6fccbe",
                 "shasum": ""
             },
             "require": {
@@ -1415,7 +1414,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-28T13:16:28+00:00"
+            "time": "2021-08-14T19:10:52+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -3414,16 +3413,16 @@
         },
         {
             "name": "mathsgod/php-psr7",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/php-psr7.git",
-                "reference": "6737d7942c9e4f1875a680e92cc18e460fe40f3a"
+                "reference": "d7e34f806b2cdb8033e030299412fa895bf7ecae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/php-psr7/zipball/6737d7942c9e4f1875a680e92cc18e460fe40f3a",
-                "reference": "6737d7942c9e4f1875a680e92cc18e460fe40f3a",
+                "url": "https://api.github.com/repos/mathsgod/php-psr7/zipball/d7e34f806b2cdb8033e030299412fa895bf7ecae",
+                "reference": "d7e34f806b2cdb8033e030299412fa895bf7ecae",
                 "shasum": ""
             },
             "require": {
@@ -3456,9 +3455,9 @@
             "description": "A standard implementation of php psr7",
             "support": {
                 "issues": "https://github.com/mathsgod/php-psr7/issues",
-                "source": "https://github.com/mathsgod/php-psr7/tree/2.0.0"
+                "source": "https://github.com/mathsgod/php-psr7/tree/2.0.1"
             },
-            "time": "2021-08-19T05:01:38+00:00"
+            "time": "2021-08-19T05:27:11+00:00"
         },
         {
             "name": "mathsgod/puxt",
@@ -3466,12 +3465,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/puxt.git",
-                "reference": "231a40c994a123415c31755119fcd0488010993a"
+                "reference": "13828c1b73a2304a69d6af3fb4a34695fb076839"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/231a40c994a123415c31755119fcd0488010993a",
-                "reference": "231a40c994a123415c31755119fcd0488010993a",
+                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/13828c1b73a2304a69d6af3fb4a34695fb076839",
+                "reference": "13828c1b73a2304a69d6af3fb4a34695fb076839",
                 "shasum": ""
             },
             "require": {
@@ -3482,7 +3481,6 @@
                 "twig/twig": "^2.12"
             },
             "require-dev": {
-                "hostlink/puxt-db": "^1.0",
                 "hostlink/puxt-i18n": "^1.0",
                 "hostlink/puxt-log": "^1.0",
                 "hostlink/puxt-vue-loader": "^1.0"
@@ -3509,7 +3507,7 @@
                 "issues": "https://github.com/mathsgod/puxt/issues",
                 "source": "https://github.com/mathsgod/puxt/tree/main"
             },
-            "time": "2021-08-19T05:06:23+00:00"
+            "time": "2021-08-26T08:39:13+00:00"
         },
         {
             "name": "twig/extensions",

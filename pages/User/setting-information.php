@@ -39,7 +39,7 @@
         async created() {
             let {
                 data
-            } = await this.$vx.get("User/setting-information");
+            } = await this.$vx.get("setting-information");
             this.user = data.user;
         },
         methods: {

@@ -45,7 +45,7 @@
                 await this.$confirm(this.$t("Delete this record?"), {
                     type: "warning"
                 });
-                await this.$vx.post("User/setting-bio-auth?_entry=removeCredential", {
+                await this.$vx.post("/User/setting-bio-auth?_entry=removeCredential", {
                     uuid: item.uuid
                 });
                 await this.reload();
@@ -71,7 +71,7 @@
             async reload() {
                 let {
                     data
-                } = await this.$vx.get("User/setting-bio-auth?_entry=getCredential");
+                } = await this.$vx.get("setting-bio-auth?_entry=getCredential");
                 this.items = data;
 
             }
