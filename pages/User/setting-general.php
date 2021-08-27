@@ -3,7 +3,7 @@
         <!-- header media -->
         <div class="media mb-2">
             <a href="javascript:void(0);" class="mr-25">
-                <img :src="user.photo" class="rounded mr-50" alt="profile image" height="80" width="80" />
+                <img :src="user._photo" class="rounded mr-50" alt="profile image" height="80" width="80" />
             </a>
             <!-- upload and reset button -->
             <div class="media-body mt-75 ml-1">
@@ -62,7 +62,7 @@
         },
         methods: {
             async save() {
-                let resp = await this.$vx.patch(`User/${this.user.user_id}`, this.user);
+                let resp = await this.$vx.patch(`/User/${this.user.user_id}`, this.user);
                 if (resp.status == 204) {
                     this.$message.success("User updated");
                 }
@@ -112,7 +112,7 @@ return new class
     {
         $user = $vx->user;
         return ["user" => [
-            "photo" => $user->photo(),
+            "_photo" => $user->photo(),
             "user_id" => $user->user_id,
             "username" => $user->username,
             "first_name" => $user->first_name,
