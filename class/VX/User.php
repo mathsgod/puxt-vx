@@ -11,7 +11,7 @@ class User extends Model implements RoleInterface
 
     public function isSystemAccount()
     {
-        return $this->user_id == 1 || $this->user_id == 2;
+        return $this->user_id == 1 || $this->user_id == 2 || $this->user_id == 3;
     }
 
 
