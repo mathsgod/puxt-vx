@@ -242,12 +242,15 @@ return function ($options) {
             }
         }
 
-
-
-
         $content = $page->render("");
 
-        if (!is_array($content) && $content) {
+        if (strstr($vx->req->getHeaderLine("accept"), "*/*") && $content) {
+            echo $content;
+            die();
+        }
+
+
+        /*         if (!is_array($content) && $content) {
             $data["type"] = "page";
 
             $p["content"] = $content;
@@ -259,5 +262,6 @@ return function ($options) {
             echo json_encode([$data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             exit();
         }
+ */
     });
 };

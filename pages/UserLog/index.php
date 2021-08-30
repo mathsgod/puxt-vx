@@ -19,7 +19,7 @@ return new class
             ["value" => "SUCCESS"],
             ["value" => "FAIL"]
         ]);
-        $rt->add("User agent", "user_agent")->searchable()->nowrap();
+        $rt->add("User agent", "user_agent")->searchable();
         $this->table = $rt;
     }
 

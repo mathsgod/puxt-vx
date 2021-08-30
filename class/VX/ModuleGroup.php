@@ -11,9 +11,16 @@ class ModuleGroup implements TranslatorAwareInterface
 
     public $sequence = PHP_INT_MAX;
 
+    public $icon = "far fa-circle";
+
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public function setIcon(string $icon)
+    {
+        $this->icon = $icon;
     }
 
     public function add(Module $module)
@@ -27,7 +34,7 @@ class ModuleGroup implements TranslatorAwareInterface
         $data = [];
 
         $data["label"] = $this->translator->trans($this->name);
-        $data["icon"] = "far fa-circle";
+        $data["icon"] = $this->icon;
         $data["link"] = "#";
         $data["seqeunce"] = $this->sequence;
 

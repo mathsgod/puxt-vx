@@ -2,6 +2,7 @@
 <?php
 
 use VX\EventLog;
+use VX\UI\TableColumn;
 
 /**
  * Created by: Raymond Chong
@@ -21,7 +22,8 @@ return new class
         $rt->add("Class", "class")->sortable()->searchable();
         $rt->add("Action", "action")->sortable()->searchable();
         $rt->add("Created time", "created_time");
-
+  //      $rt->add("Created by", "created_by")->searchable(TableColumn::SEARCH_TYPE_SELECT);
+//
 
 
         $this->table = $rt;
@@ -29,13 +31,14 @@ return new class
 
     function ds(VX $vx)
     {
-        
+
         $rt = $vx->ui->createTableResponse();
         $rt->source = EventLog::Query();
         $rt->add("eventlog_id");
         $rt->add("class");
         $rt->add("action");
         $rt->add("created_time");
+        $rt->add("created_by", fn (EventLog $e) => $e->User());
         return $rt;
     }
 };

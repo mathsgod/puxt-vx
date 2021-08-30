@@ -74,10 +74,20 @@ return new class
                 }
             }
 
+            $group_icons = [];
+            foreach ($page_setting["group"] as $name => $group) {
+                $group_icons[$name] = $group["icon"];
+            }
+
+
             $modules = $vx->getModules();
 
             $menu = new VX\Menu();
             $menu->setTranslator($vx->getTranslator());
+            $menu->setGroupIcon($group_icons);
+
+
+
 
             foreach ($modules as $m) {
                 if ($m->name == "FileManager") {

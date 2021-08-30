@@ -9,11 +9,17 @@ class Menu implements TranslatorAwareInterface
 
     public $items = [];
     public $groups = [];
+    public $icons = [];
     public function addModule(Module $module)
     {
         if ($module->group) {
             if (!$mg = $this->groups[$module->group]) {
                 $mg = new ModuleGroup($module->group);
+
+                if ($icon = $this->icons[$module->group]) {
+                    $mg->setIcon($icon);
+                }
+
                 $mg->setTranslator($this->translator);
                 $this->groups[$module->group] = $mg;
                 $this->items[] = $mg;
@@ -22,6 +28,11 @@ class Menu implements TranslatorAwareInterface
         } else {
             $this->items[] = $module;
         }
+    }
+
+    public function setGroupIcon(array $icons)
+    {
+        $this->icons = $icons;
     }
 
     public function getMenuByUser(User $user)
