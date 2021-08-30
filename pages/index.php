@@ -67,7 +67,7 @@ return new class
             $page_setting = Yaml::parseFile(__DIR__ . "/setting.yml");
 
 
-            if (file_exists($setting_file = $this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "setting.yml")) {
+            if (file_exists($setting_file = $vx->vx_root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "setting.yml")) {
                 $setting = Yaml::parseFile($setting_file);
                 foreach ($setting["group"] as $name => $value) {
                     $page_setting["group"][$name] = $value;
