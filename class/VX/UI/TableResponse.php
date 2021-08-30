@@ -12,7 +12,7 @@ use VX\IModel;
 class TableResponse implements JsonSerializable
 {
     /**
-     * @var \R\ORM\Query $source
+     * @var \R\DB\Query $source
      */
     public $source;
     public $per_page;
@@ -21,6 +21,7 @@ class TableResponse implements JsonSerializable
     public $search;
     public $filter;
     public $search_callback = [];
+    public $sort_callback = [];
 
     public function __construct(VX $vx, $query)
     {
@@ -66,6 +67,11 @@ class TableResponse implements JsonSerializable
                 return false;
             });
         }
+    }
+
+    public function addSortCallback(string $prop, callable $callback)
+    {
+        $this->sort_callback[$prop] = $callback;
     }
 
     public function addSearchCallback(string $prop, callable $callback)
@@ -130,6 +136,12 @@ class TableResponse implements JsonSerializable
             $ss = explode("|", $this->sort, 2);
             $sort = [];
             $sort[$ss[0]] = ($ss[1] == "descending") ? "desc" : "asc";
+
+            if ($callback = $this->sort_callback[$ss[0]]) {
+                $callback($source);
+                return $source;
+            }
+
             $source->order($sort);
         }
         return $source;
