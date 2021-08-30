@@ -4,6 +4,7 @@ namespace VX\UI;
 
 use P\HTMLElement;
 use P\HTMLTemplateElement;
+use Traversable;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
@@ -57,8 +58,11 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
         return $this;
     }
 
-    public function filterable(array $value)
+    public function filterable(Traversable|array $value)
     {
+        if ($value instanceof Traversable) {
+            $value = iterator_to_array($value);
+        }
         $this->setAttribute(":filters", json_encode($value));
 
         $prop = $this->getAttribute("prop");
