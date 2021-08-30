@@ -13,6 +13,15 @@ class Select extends FormItemElement
         parent::__construct("el-select");
     }
 
+    public function setClearable(bool $value)
+    {
+        if ($value) {
+            $this->setAttribute("clearable", true);
+        } else {
+            $this->removeAttribute("clearable");
+        }
+    }
+
     public function optionGroup(array $groups, string $key, $source, string $label = null, string $value = null)
     {
         if ($source instanceof  Traversable) {

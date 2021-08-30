@@ -87,6 +87,7 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
             switch ($type) {
                 case self::SEARCH_TYPE_SELECT:
                     $select = $node->search->addSelect($this->getAttribute("label"), $this->getAttribute("prop"));
+                    $select->setClearable(true);
 
                     if ($callback) {
                         $callback($select);
