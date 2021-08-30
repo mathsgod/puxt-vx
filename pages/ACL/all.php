@@ -75,7 +75,7 @@
             }
         },
         async created() {
-            this.UserGroup = (await this.$vx.get("ACL/all?_entry=getUserGroup")).data;
+            this.UserGroup = (await this.$vx.get("/ACL/all?_entry=getUserGroup")).data;
 
 
         },
@@ -86,7 +86,7 @@
                     return;
                 }
 
-                let resp = (await this.$vx.get("ACL/all", {
+                let resp = (await this.$vx.get("/ACL/all", {
                     params: {
                         _entry: "getACL",
                         usergroup_id: this.usergroup_id
@@ -98,7 +98,7 @@
         methods: {
             async changePathValue(module, path, value, checked) {
 
-                let resp = await this.$vx.post("ACL/all", {
+                let resp = await this.$vx.post("/ACL/all", {
                     usergroup_id: this.usergroup_id,
                     module,
                     path,
@@ -111,7 +111,7 @@
             async changeValue(module, action) {
                 let items = this.items.filter(item => item.name == module)[0];
 
-                let resp = await this.$vx.post("ACL/all", {
+                let resp = await this.$vx.post("/ACL/all", {
                     usergroup_id: this.usergroup_id,
                     module,
                     action,
