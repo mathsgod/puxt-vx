@@ -40,6 +40,8 @@ return new class
         $rt->add("action");
         $rt->add("created_time");
         $rt->add("user_id", fn (EventLog $e) => $e->User());
+
+        
         return $rt;
     }
 };
