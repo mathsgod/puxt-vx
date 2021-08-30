@@ -7,6 +7,7 @@ use VX\UI\EL\DatePicker;
 use VX\UI\EL\Form;
 use VX\UI\EL\FormItem;
 use VX\UI\EL\Input;
+use VX\UI\EL\Select;
 
 class TableSearch extends HTMLElement
 {
@@ -33,7 +34,7 @@ class TableSearch extends HTMLElement
 
         $input->setAttribute("v-model", "table.search.$prop");
         $input->setAttribute("v-on:keyup.enter.native", 'table.onSearch');
-        $input->setAttribute("v-on:clear","table.onSearch");
+        $input->setAttribute("v-on:clear", "table.onSearch");
         $input->setAttribute("clearable", true);
 
 
@@ -57,13 +58,17 @@ class TableSearch extends HTMLElement
 
     public function addSelect(string $label, string $prop)
     {
-        $item = new FormItem;
-        $item->setLabel($label);
+        $this->form->append($formItem = new HTMLElement("el-form-item"));
+        $formItem->append($select = new Select);
+        $formItem->setAttribute("label", $label);
+
+        $select->setAttribute("v-model", "table.search.$prop");
+        $select->setAttribute("v-on:change", "table.onSearch");
+        return $select;
 
         //$input = $item->input($prop);
-        $input = $item->select($prop, [1 => "A", 2 => "B"]);
-        $input->setAttribute("v-on:change", 'table.onSearch');
+        //$input = $item->select($prop, [1 => "A", 2 => "B"]);
+        //$input->setAttribute("v-on:change", 'table.onSearch');
 
-        $this->append($item);
     }
 }

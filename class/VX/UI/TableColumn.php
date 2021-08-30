@@ -77,38 +77,31 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
         return $this;
     }
 
-    public function searchable(string $type = TableColumn::SEARCH_TYPE_TEXT)
+    public function searchable(string $type = TableColumn::SEARCH_TYPE_TEXT, callable $callback = null)
     {
         $node = $this->closest("vx-table");
         if ($node instanceof Table) {
             $node->setAttribute("searchable", true);
 
-            match ($type) {
-                self::SEARCH_TYPE_TEXT => $node->search->addInput($this->getAttribute("label"), $this->getAttribute("prop")),
-                self::SEARCH_TYPE_DATE => $node->search->addDate($this->getAttribute("label"), $this->getAttribute("prop")),
-                self::SEARCH_TYPE_SELECT => $node->search->addSelect($this->getAttribute("label"), $this->getAttribute("prop"))
-            };
+
+            switch ($type) {
+                case self::SEARCH_TYPE_SELECT:
+                    $select = $node->search->addSelect($this->getAttribute("label"), $this->getAttribute("prop"));
+
+                    if ($callback) {
+                        $callback($select);
+                    }
+                    break;
+
+                case self::SEARCH_TYPE_TEXT:
+                    $node->search->addInput($this->getAttribute("label"), $this->getAttribute("prop"));
+                    break;
+
+                case self::SEARCH_TYPE_DATE:
+                    $node->search->addDate($this->getAttribute("label"), $this->getAttribute("prop"));
+                    break;
+            }
         }
-
-        /*
-        search input in column
-        if (!$this->header) {
-            $this->header = new TableColumnHeader;
-            $this->header->setLabel($this->getAttribute("label"));
-
-            $this->append($this->header);
-            $this->setAttribute("label-class-name", "d-flex align-items-center");
-
-            $input = $this->header->addInput();
-
-            $prop = $this->getAttribute("prop");
-
-            $input->setAttribute("v-model", 'table.search.' . $prop);
-            //$input->setAttribute("v-on:keyup.enter.native", '');
-            //$input->setAttribute("v-on:clear", "table.onSearch");
-            $input->setAttribute("clearable", true);
-        }
-*/
 
         return $this;
     }

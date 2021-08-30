@@ -65,7 +65,7 @@ class Select extends FormItemElement
         return $group;
     }
 
-    public function option($source, string $label = "item", string $value = "value")
+    public function option(array|Traversable $source, string $label = "item", string $value = "value")
     {
         $data = [];
         if ($source instanceof Traversable) {
@@ -80,7 +80,6 @@ class Select extends FormItemElement
         } else {
             $data = $source;
         }
-
 
         $option = new Element("el-option");
         $this->append($option);

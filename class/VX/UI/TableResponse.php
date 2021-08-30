@@ -5,6 +5,7 @@ namespace VX\UI;
 use Closure;
 use JsonSerializable;
 use Laminas\Db\Sql\Where;
+use Laminas\Diactoros\CallbackStream;
 use VX;
 use VX\IModel;
 
@@ -19,6 +20,7 @@ class TableResponse implements JsonSerializable
     public $sort;
     public $search;
     public $filter;
+    public $search_callback = [];
 
     public function __construct(VX $vx, $query)
     {
@@ -66,6 +68,11 @@ class TableResponse implements JsonSerializable
         }
     }
 
+    public function addSearchCallback(string $prop, callable $callback)
+    {
+        $this->search_callback[$prop] = $callback;
+    }
+
     public function filteredSource()
     {
         $source = clone $this->source;
@@ -79,10 +86,16 @@ class TableResponse implements JsonSerializable
             foreach ($this->search as $name => $value) {
                 $col = $this->getColumn($name);
 
+
                 if (!$col) continue;
 
                 if ($value === null  || $value === "") continue;
 
+
+                if ($this->search_callback[$name]) {
+                    $this->search_callback[$name]($source->where, $value);
+                    continue;
+                }
 
 
                 if (is_array($value)) { //between
@@ -90,6 +103,7 @@ class TableResponse implements JsonSerializable
                         $where->between($name, $value[0], $value[1]);
                     });
                 } else {
+
                     $source->where(function (Where $where) use ($name, $value) {
                         $where->like($name, "%$value%");
                     });
