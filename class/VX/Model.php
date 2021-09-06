@@ -11,6 +11,13 @@ use ReflectionClass;
 class Model extends DBModel implements ResourceInterface, IModel
 {
 
+    public static function FromGlobal(): static
+    {
+        $vx = self::$_vx;
+        return $vx->object();
+    }
+
+    
     static $_event;
     public function setEventManager(EventManagerInterface $eventManager)
     {
