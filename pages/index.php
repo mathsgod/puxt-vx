@@ -129,7 +129,9 @@ return new class
             $dropdown = [];
 
             if (!$vx->view_as) {
-                $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view-as"];
+                if ($vx->user->isAdmin()) {
+                    $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view-as"];
+                }
             } else {
                 $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/cancel-view-as"];
             }
