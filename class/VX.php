@@ -6,11 +6,9 @@ use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
-use Laminas\Permissions\Acl\Resource\GenericResource;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-use VX\UI\RTableResponse;
 use PUXT\Context;
 use R\DB\Schema;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -323,9 +321,10 @@ class VX extends Context implements AdapterAwareInterface
                     throw new Exception("user not found");
                 }
 
-                if ($view_as = $this->req->getHeader("vx-view-as")[0]) {
+                
+                if ($view_as = $this->req->getHeaderLine("vx-view-as")) {
                     if ($this->user->isAdmin()) {
-                        if ($user = User::Load($this->user_id)) {
+                        if ($user = User::Load($view_as)) {
                             $this->view_as = $view_as;
                             $this->user_id = $view_as;
                             $this->user = $user;
