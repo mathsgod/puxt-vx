@@ -34,7 +34,7 @@ return new class
         ]);
         $form->setAction();
 
-        $form->add("Create new items select")->select("s1", ["a", "b", "c"])->setAttribute("allow-create",true);
+        $form->add("Create new items select")->select("s1", ["a", "b", "c"])->setAllowCreate(true);
 
         $form->add("Upload")->upload("upload1");
         $upload = $form->add("mutiple Upload")->upload("upload2");
