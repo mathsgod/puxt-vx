@@ -19,6 +19,16 @@ class FormItem extends HTMLElement
         $this->scope = $scope;
     }
 
+ /*    public function autocomplete(string $name)
+    {
+        $ac = new HTMLElement("el-autocomplete");
+        $ac->setAttribute("v-model", "scope.form.{$name}");
+
+        $ac->setAttribute(":fetch-sugestions","(a)=>")
+
+        return $ac;
+    } */
+
     public function upload(string $name)
     {
         $upload = new Upload;

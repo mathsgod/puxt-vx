@@ -13,11 +13,11 @@ return new class
     function post(VX $vx)
     {
 
-        
+
         outp($vx->_files);
         outp($vx->_post);
         die();
-        
+
         outp($vx->_post);
         outp($_FILES);
         outP($vx->req->getParsedBody());
@@ -33,6 +33,8 @@ return new class
             "upload2" => []
         ]);
         $form->setAction();
+
+        $form->add("Create new items select")->select("s1", ["a", "b", "c"])->setAttribute("allow-create",true);
 
         $form->add("Upload")->upload("upload1");
         $upload = $form->add("mutiple Upload")->upload("upload2");

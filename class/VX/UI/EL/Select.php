@@ -13,6 +13,28 @@ class Select extends FormItemElement
         parent::__construct("el-select");
     }
 
+    public function setAllowCreate(bool $value)
+    {
+        if ($value) {
+            $this->setAttribute("allow-create", $value);
+            $this->setFilterable(true);
+        } else {
+            $this->remove("allow-create");
+        }
+    }
+
+    public function setFilterable(bool $value)
+    {
+
+        if ($value) {
+            $this->setAttribute("filterable", true);
+        } else {
+            $this->removeAttribute("filterable");
+        }
+    }
+
+
+
     public function setClearable(bool $value)
     {
         if ($value) {
