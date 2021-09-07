@@ -50,6 +50,13 @@ class Table extends HTMLElement implements TranslatorAwareInterface
 
     public function setDefaultSort(string $prop, string $order)
     {
+        if ($order == "desc") {
+            $order = "descending";
+        }
+        if ($order == "asc") {
+            $order = "ascending";
+        }
+
         $this->setAttribute(":default-sort", json_encode(["prop" => $prop, "order" => $order]));
     }
 
