@@ -3,10 +3,7 @@
 use Firebase\JWT\JWT;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
-use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
-use VX\Translate;
-use VX\UI\EL\Transfer;
 use VX\User;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSource;

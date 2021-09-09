@@ -18,11 +18,11 @@ class Model extends DBModel implements ResourceInterface, IModel
     }
 
     
-    static $_event;
+    /* static $_event;
     public function setEventManager(EventManagerInterface $eventManager)
     {
         self::$_event = $eventManager;
-    }
+    } */
 
     static $_db;
     public static function __db()
