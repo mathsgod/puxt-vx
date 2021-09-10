@@ -10,7 +10,7 @@
                         <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
                             <div class="user-avatar-section">
                                 <div class="d-flex justify-content-start">
-                                    <img class="img-fluid rounded" src="http://localhost:8001/vx/images/user.png" height="104" width="104" alt="User avatar" />
+                                    <img class="img-fluid rounded" src="{{user.photo()}}" height="104" width="104" alt="User avatar" />
                                     <div class="d-flex flex-column ml-1">
                                         <div class="user-info mb-1">
                                             <h4 class="mb-0">{{user.first_name}} {{user.last_name}}</h4>

@@ -1,27 +1,53 @@
-{{tab|raw}}
+<div class="mb-2">
+    {{tab|raw}}
+</div>
+
 {{user_table|raw}}
 <?php
 
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-09-10 
+ */
+
 use VX\UI\Tabs;
+use VX\UserGroup;
 
-return ["get" => function (VX $vx) {
+return new class
+{
+    function get(VX $vx)
+    {
+
+        $tab = $vx->ui->createTab();
+        $tab->setType(Tabs::TYPE_PILLS);
+        $tab->add("Info", "view_info");
+        $this->tab = $tab;
 
 
-    $tab = $vx->ui->createTab();
-    $tab->setType(Tabs::TYPE_PILLS);
-    $tab->add("Info", "view_info");
-    $this->tab = $tab;
+        $ut = $vx->ui->createTable("user");
+        $ac = $ut->addActionColumn();
+        $ac->addView();
+        $ac->addEdit();
+        $ac->addDelete();
 
+        $ut->add("Username", "username");
+        $ut->add("First name", "first_name");
+        $ut->add("Last name", "last_name");
+        $ut->add("Email", "email");
 
-    $ut = $vx->ui->createRTable("user");
-    $ut->add("Username", "username");
+        $this->user_table = $ut;
+    }
 
-    $this->user_table = $ut;
-}, "entries" => [
-    "user" => function (VX $vx) {
-        $rt = $vx->ui->createRTableResponse();
-        $rt->source = $vx->object()->User();
+    function user(VX $vx)
+    {
+        $ug = UserGroup::FromGlobal();
+        $rt = $vx->ui->createTableResponse();
+        $rt->source = $ug->User();
+
+        $rt->add("username");
+        $rt->add("first_name");
+        $rt->add("last_name");
 
         return $rt;
     }
-]];
+};

@@ -3,7 +3,7 @@
         <!-- header media -->
         <div class="media mb-2">
             <a href="javascript:void(0);" class="mr-25">
-                <img :src="user._photo" class="rounded mr-50" alt="profile image" height="80" width="80" />
+                <img :src="user.photo" class="rounded mr-50" alt="profile image" height="80" width="80" v-if="user.photo" />
             </a>
             <!-- upload and reset button -->
             <div class="media-body mt-75 ml-1">
@@ -86,14 +86,16 @@
                     let file = upload.files[0];
                     let fd = new FormData();
                     fd.append("file", file);
-                    let resp = await this.$vx.post("/User/change-photo", fd);
-                    console.log(resp);
+                    let resp = await this.$vx.post("change-photo", fd);
+                    await this.reloadPhoto()
                 }
             },
 
             async reloadPhoto() {
-                let resp = (await this.$vx.get("setting-general")).data;
-                this.user.photo = resp.user.photo;
+                let {
+                    data
+                } = await this.$vx.get("setting-general");
+                this.user.photo = data.user.photo;
             }
         }
     });
@@ -112,7 +114,7 @@ return new class
     {
         $user = $vx->user;
         return ["user" => [
-            "_photo" => $user->photo(),
+            "photo" => $user->photo(),
             "user_id" => $user->user_id,
             "username" => $user->username,
             "first_name" => $user->first_name,

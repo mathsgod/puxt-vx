@@ -2,7 +2,7 @@
     <el-card :header="$t('Biometric authentication')">
         <el-switch v-model="on_off" :active-text="$t('Activate biometric authentication on this device')" @change="changeActivate"></el-switch>
         <el-divider></el-divider>
-        <el-button @click="register">Register</el-button>
+        <el-button @click="register" icon="el-icon-plus">Register</el-button>
 
         <el-table :data="items" size="mini">
             <el-table-column width="50" v-slot="scope">
