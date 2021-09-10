@@ -1,14 +1,20 @@
-<vx-card>
+<el-card>
     {{view|raw}}
-</vx-card>
+</el-card>
 <?php
-return ["get" => function (VX $vx) {
+/**
+ * Created by: Raymond Chong
+ * Date: 2021-09-10 
+ */
+return new class
+{
+    function get(VX $vx)
+    {
+        $view = $vx->ui->createView();
+        $view->add("Name", "name");
+        $view->add("Code", "code");
+        $view->add("Remark", "remark");
 
-
-    $view = $vx->ui->createView();
-    $view->add("Name", "name");
-    //$view->add("Code", "code");
-    $view->add("Remark", "remark");
-
-    $this->view = $view;
-}];
+        $this->view = $view;
+    }
+};
