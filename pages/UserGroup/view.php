@@ -20,7 +20,7 @@ return new class
 
         $tab = $vx->ui->createTab();
         $tab->setType(Tabs::TYPE_PILLS);
-        $tab->add("Info", "view_info");
+        $tab->add("Info", "view-info");
         $this->tab = $tab;
 
 

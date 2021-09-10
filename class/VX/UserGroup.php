@@ -2,7 +2,6 @@
 
 namespace VX;
 
-use Laminas\Db\Sql\Predicate\PredicateSet;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 
