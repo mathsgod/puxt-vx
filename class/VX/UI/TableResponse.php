@@ -22,6 +22,7 @@ class TableResponse implements JsonSerializable
     public $filter;
     public $search_callback = [];
     public $sort_callback = [];
+    public $data_map;
 
     public function __construct(VX $vx, $query)
     {
@@ -161,6 +162,11 @@ class TableResponse implements JsonSerializable
         return $c;
     }
 
+    public function setDataMap(callable $map)
+    {
+        $this->data_map = $map;
+    }
+
     public function data()
     {
         $data = [];
@@ -172,6 +178,9 @@ class TableResponse implements JsonSerializable
             $source->offset($this->offset);
         }
 
+        if ($this->data_map) {
+            return collect($source)->map($this->data_map)->toArray();
+        }
 
         foreach ($source as $obj) {
 
