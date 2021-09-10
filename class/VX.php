@@ -321,7 +321,7 @@ class VX extends Context implements AdapterAwareInterface
                     throw new Exception("user not found");
                 }
 
-                
+
                 if ($view_as = $this->req->getHeaderLine("vx-view-as")) {
                     if ($this->user->isAdmin()) {
                         if ($user = User::Load($view_as)) {
@@ -595,7 +595,7 @@ class VX extends Context implements AdapterAwareInterface
                 }
             }
 
-            $modules[] = $module;
+            $modules[$name] = $module;
         }
 
         foreach (glob(dirname(__DIR__) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
@@ -605,10 +605,13 @@ class VX extends Context implements AdapterAwareInterface
                 $this->acl->addResource($name);
             }
 
-            $module = new Module($name);
+            if (!$module = $modules[$name]) {
+                $module = new Module($name);
+                $module->setTranslator($this->translator);
+                $module->setAcl($this->acl);
+            }
+
             $module->loadConfigFile($m . "/setting.yml");
-            $module->setTranslator($this->translator);
-            $module->setAcl($this->acl);
 
             foreach ($module->getFiles() as $file) {
                 if (!$this->acl->hasResource($file)) {
@@ -617,11 +620,11 @@ class VX extends Context implements AdapterAwareInterface
             }
 
 
-            $modules[] = $module;
+            $modules[$name] = $module;
         }
 
 
-        return $modules;
+        return array_values($modules);
     }
 
     public function postForm()
