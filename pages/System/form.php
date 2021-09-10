@@ -7,6 +7,8 @@
  */
 
 use Laminas\Diactoros\ServerRequestFactory;
+use VX\UI\EL\OptionGroup;
+use VX\UserGroup;
 
 return new class
 {
@@ -33,6 +35,19 @@ return new class
             "upload2" => []
         ]);
         $form->setAction();
+
+
+        $form->add("Select with group")->select("s2")->addOptionGroup(UserGroup::Query()->map(function ($ug) {
+            return [
+                "object" => $ug,
+                "label" => $ug->name,
+            ];
+        }), function (OptionGroup $og, $group) {
+            $ug = $group["object"];
+            foreach ($ug->User() as $user) {
+                $og->addOption($user->user_id, $user->__toString());
+            }
+        });
 
         $form->add("Create new items select")->select("s1", ["a", "b", "c"])->setAllowCreate(true);
 

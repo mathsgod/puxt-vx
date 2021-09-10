@@ -13,6 +13,21 @@ class Select extends FormItemElement
         parent::__construct("el-select");
     }
 
+    public function multiple()
+    {
+        $this->setMultiple(true);
+        return $this;
+    }
+
+    public function setMultiple(bool $value)
+    {
+        if ($value) {
+            $this->setAttribute("multiple", true);
+        } else {
+            $this->removeAttribute("multiple");
+        }
+    }
+
     public function setAllowCreate(bool $value)
     {
         if ($value) {
@@ -44,6 +59,35 @@ class Select extends FormItemElement
         }
     }
 
+
+
+    /**
+     * return new added option group
+     * @return iterable<OptionGroup> 
+     */
+    public function addOptionGroup(iterable $groups, ?callable $callback = null)
+    {
+        $ret = [];
+        foreach ($groups as $group) {
+            $option_group = new OptionGroup();
+            $option_group->setLabel($group["label"]);
+
+            $this->append($option_group);
+            if ($callback) {
+                $callback($option_group, $group);
+            }
+
+            $ret[] = $option_group;
+        }
+
+        return $ret;
+    }
+
+
+
+    /**
+     * @deprecated User addOptionGroup
+     */
     public function optionGroup(array $groups, string $key, $source, string $label = null, string $value = null)
     {
         if ($source instanceof  Traversable) {
