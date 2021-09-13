@@ -6,6 +6,7 @@ namespace VX\UI;
 use P\HTMLElement;
 use PHP\Util\QueryInterface;
 use Traversable;
+use VX\IModel;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 use VX\User;
@@ -40,10 +41,18 @@ class T extends HTMLElement implements TranslatorAwareInterface
         $data = $this->getAttribute(":data");
         $data = json_decode($data, true) ?? [];
 
-        foreach ($this->data as $i => $d) {
-            $data[$i] = $data[$i] ?? [];
-            if ($d->canReadBy($this->user)) {
-                $data[$i]["__view__"] = $d->uri("view");
+        if ($this->user) {
+            foreach ($this->data as $i => $d) {
+                $data[$i] = $data[$i] ?? [];
+                if ($d instanceof IModel) {
+                    if ($d->canReadBy($this->user)) {
+                        $data[$i]["__view__"] = $d->uri("view");
+                    }
+                    if ($d->canUpdateBy($this->user)) {
+                        $data[$i]["__update__"] = $d->uri("update");
+                    }
+
+                }
             }
         }
 
