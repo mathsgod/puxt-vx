@@ -5,6 +5,7 @@ namespace VX\UI;
 
 use P\HTMLElement;
 use PHP\Util\QueryInterface;
+use Traversable;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 use VX\User;
@@ -25,10 +26,10 @@ class T extends HTMLElement implements TranslatorAwareInterface
         $this->user = $user;
     }
 
-    public function setData($data)
+    public function setData(iterable $data)
     {
         $this->data = $data;
-        if ($this->data instanceof QueryInterface) {
+        if ($this->data instanceof Traversable) {
             $this->data = iterator_to_array($this->data);
         }
     }
