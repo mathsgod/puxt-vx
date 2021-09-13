@@ -69,6 +69,33 @@ class T extends HTMLElement implements TranslatorAwareInterface
         return $column;
     }
 
+    public function addExpand(string $label = "", ?string $scope = "scope")
+    {
+
+        $column = new TableColumn;
+        $column->setAttribute("type", "expand");
+        $column->setAttribute("label", $label);
+
+        $this->append($column);
+
+        return $column;
+    }
+    
+    public function addProp(string $prop){
+        $data = $this->getAttribute(":data");
+        $data = json_decode($data, true) ?? [];
+
+        $dd = [];
+        foreach ($this->data as $d) {
+            $dd[] = var_get($d, $prop);
+        }
+
+        foreach ($dd as $i => $d) {
+            $data[$i][$prop] = $dd[$i];
+        }
+
+        $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
 
     public function add(string $label, string $prop)
     {
