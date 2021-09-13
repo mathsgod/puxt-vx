@@ -9,6 +9,7 @@ use Traversable;
 use VX\IModel;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
+use VX\UI\EL\TableColumn;
 use VX\User;
 
 class T extends HTMLElement implements TranslatorAwareInterface
@@ -49,9 +50,8 @@ class T extends HTMLElement implements TranslatorAwareInterface
                         $data[$i]["__view__"] = $d->uri("view");
                     }
                     if ($d->canUpdateBy($this->user)) {
-                        $data[$i]["__update__"] = $d->uri("update");
+                        $data[$i]["__update__"] = $d->uri("ae");
                     }
-
                 }
             }
         }
@@ -72,9 +72,9 @@ class T extends HTMLElement implements TranslatorAwareInterface
 
     public function add(string $label, string $prop)
     {
-        $col = new TColumn();
-        $col->setAttribute("label", $label);
-        $col->setAttribute("prop", $prop);
+        $col = new TableColumn;
+        $col->setLabel($label);
+        $col->setProp($prop);
         $this->append($col);
 
         $data = $this->getAttribute(":data");
