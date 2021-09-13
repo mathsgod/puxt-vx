@@ -5,12 +5,24 @@ namespace VX\UI;
 
 use P\HTMLElement;
 use PHP\Util\QueryInterface;
+use VX\TranslatorAwareInterface;
+use VX\TranslatorAwareTrait;
+use VX\User;
 
-class T extends HTMLElement
+class T extends HTMLElement implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
+    protected $user;
+
     public function __construct()
     {
         parent::__construct("el-table");
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     public function setData($data)
@@ -20,6 +32,33 @@ class T extends HTMLElement
             $this->data = iterator_to_array($this->data);
         }
     }
+
+
+    public function addActionColumn()
+    {
+        $data = $this->getAttribute(":data");
+        $data = json_decode($data, true) ?? [];
+
+        foreach ($this->data as $i => $d) {
+            $data[$i] = $data[$i] ?? [];
+            if ($d->canReadBy($this->user)) {
+                $data[$i]["__view__"] = $d->uri("view");
+            }
+        }
+
+        $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
+
+        $this->append($column = new TableActionColumn);
+
+        $column->setAttribute("v-slot:default", "props");
+        $column->setTranslator($this->translator);
+
+        $column->setAttribute("width", "115");
+        $column->setAttribute("min-width", "115");
+
+        return $column;
+    }
+
 
     public function add(string $label, string $prop)
     {

@@ -87,7 +87,7 @@ class UI implements TranslatorAwareInterface
                 $form->setAttribute("method", "post");
             }
             $form->setAction($action);
-            
+
             $form->setSuccessUrl("/" . $this->vx->module->name);
         }
 
@@ -105,7 +105,9 @@ class UI implements TranslatorAwareInterface
     {
 
         $t = new UI\T;
+        $t->setTranslator($this->translator);
         $t->setData($data);
+        $t->setUser($this->vx->user);
 
         return $t;
     }
