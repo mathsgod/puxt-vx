@@ -36,5 +36,6 @@
     },
     "require-dev": {
         "mathsgod/puxt": "dev-main"
-    }
+    },
+    "license": "MIT"
 }
