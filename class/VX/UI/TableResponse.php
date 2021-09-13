@@ -5,7 +5,7 @@ namespace VX\UI;
 use Closure;
 use JsonSerializable;
 use Laminas\Db\Sql\Where;
-use Laminas\Diactoros\CallbackStream;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use VX;
 use VX\IModel;
 
@@ -178,8 +178,29 @@ class TableResponse implements JsonSerializable
             $source->offset($this->offset);
         }
 
-        if ($this->data_map) {
-            return collect($source)->map($this->data_map)->toArray();
+        if ($this->data_map instanceof Closure) {
+            foreach ($source as $obj) {
+
+
+                $d = $this->data_map->__invoke($obj);
+                if (is_object($d)) {
+                    $hydrator = new ObjectPropertyHydrator();
+                    $d = $hydrator->extract($d);
+                }
+
+                foreach ($this->columns as $column) {
+
+                    $prop = $column["prop"];
+                    $getter = $column["getter"];
+                    if ($getter instanceof Closure) {
+                        $d[$prop] = (string)call_user_func($getter, $obj);
+                    } else {
+                        $d[$prop] = var_get($obj, $getter);
+                    }
+                }
+                $data[] = $d;
+            }
+            return $data;
         }
 
         foreach ($source as $obj) {

@@ -280,6 +280,13 @@ class VX extends Context implements AdapterAwareInterface
             $this->$k = $v;
         }
 
+        $config = $this->config["VX"];
+        if ($config["table"]) {
+            foreach ($config["table"] as $k => $v) {
+                $r_class = new ReflectionClass($k);
+                $r_class->setStaticPropertyValue("_table", $v);
+            }
+        }
 
         $this->_files = [];
         foreach ($this->req->getUploadedFiles() as $name => $file) {
