@@ -18,6 +18,7 @@ use function Safe\file_get_contents;
  */
 class User extends Model implements RoleInterface
 {
+    public static $_table = "User";
     public function isSystemAccount()
     {
         return $this->user_id == 1 || $this->user_id == 2 || $this->user_id == 3;
