@@ -45,7 +45,7 @@ class Descriptions extends Element
         $this->setAttribute("size", $size);
     }
 
-    public function setBorder(int $border)
+    public function setBorder(bool $border)
     {
         if ($border) {
             $this->setAttribute("border", true);
