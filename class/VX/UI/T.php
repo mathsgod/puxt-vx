@@ -5,6 +5,7 @@ namespace VX\UI;
 use Closure;
 use P\HTMLElement;
 use PHP\Util\QueryInterface;
+use ReflectionFunction;
 use Traversable;
 use VX\IModel;
 use VX\TranslatorAwareInterface;
@@ -97,7 +98,7 @@ class T extends HTMLElement implements TranslatorAwareInterface
         $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
     }
 
-    public function add(string $label, string $prop)
+    public function add(string $label, string|callable $prop)
     {
         $name = $prop;
         if ($prop instanceof Closure) {
