@@ -38,7 +38,10 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
         if ($this->data) {
             $content = "";
             if ($field instanceof Closure) {
-                $content = call_user_func($field, $this->data) ?? "";
+                $content = $field($this->data) ?? "";
+                if (is_numeric($content)) {
+                    $content = (string)$content;
+                }
             } else {
                 $content = var_get($this->data, $field) ?? "";
             }
