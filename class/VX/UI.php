@@ -53,7 +53,7 @@ class UI implements TranslatorAwareInterface
         return $t;
     }
 
-    
+
     /**
      * @deprecated Use createDescriptions
      */
@@ -116,14 +116,24 @@ class UI implements TranslatorAwareInterface
         return $t;
     }
 
-    public function createTab()
+
+    public function createTabs()
     {
+
         $tab = new UI\Tabs;
 
 
         $tab->setBaseURL("/" . dirname($this->vx->request_uri));
 
         return $tab;
+    }
+
+    /**
+     * @deprecated Use createTabs
+     */
+    public function createTab()
+    {
+        return $this->createTabs();
     }
 
     public function createRTable(string $entry)

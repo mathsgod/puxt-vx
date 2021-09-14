@@ -43,12 +43,14 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
                 if ($content instanceof Stringable) {
                     $content = (string)$content;
                 }
-                if (is_numeric($content)) {
-                    $content = (string)$content;
-                }
             } else {
                 $content = var_get($this->data, $field) ?? "";
             }
+
+            if (is_numeric($content)) {
+                $content = (string)$content;
+            }
+
             $item->append($content);
         }
         return $item;
