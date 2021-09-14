@@ -25,7 +25,7 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
     public function template(callable $callback, string $scope = "scope")
     {
 
-        $template = new HTMLTemplateElement();
+        $template = new Template();
         $template->setAttribute("v-slot", $scope);
         $callback($template);
         $this->append($template);
