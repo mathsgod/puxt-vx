@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use Closure;
+use Stringable;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
@@ -39,6 +40,9 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
             $content = "";
             if ($field instanceof Closure) {
                 $content = $field($this->data) ?? "";
+                if ($content instanceof Stringable) {
+                    $content = (string)$content;
+                }
                 if (is_numeric($content)) {
                     $content = (string)$content;
                 }
