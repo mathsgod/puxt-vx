@@ -14,7 +14,7 @@ return new class
     {
 
         //delete all 
-        Translate::Query(["module" => $vx->_post["module"]])->delete()->execute();
+        Translate::Query(["module" => $vx->_post["module"]])->delete();
 
         foreach ($vx->_post["items"] as $item) {
             foreach ($item["value"] as $v) {
