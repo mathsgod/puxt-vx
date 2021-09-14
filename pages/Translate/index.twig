@@ -9,25 +9,26 @@
 
     <template>
 
-        <el-table :data="items" class="mb-1">
+        <el-table :data="items" class="mb-1" size="small">
             <el-table-column width="100">
                 <template v-slot:header="scope">
-                    <el-button icon="el-icon-plus" @click="addItem"></el-button>
+                    <el-button icon="el-icon-plus" @click="addItem" size="small"></el-button>
                 </template>
                 <template v-slot="scope">
-                    <el-button icon="el-icon-minus" @click="items=items.filter((i)=>i!=scope.row)"></el-button>
+                    <el-button icon="el-icon-minus" @click="items=items.filter((i)=>i!=scope.row)" size="small">
+                    </el-button>
                 </template>
 
             </el-table-column>
             <el-table-column label="Name" v-slot="scope">
-                <el-input v-model="scope.row.name"></el-input>
+                <el-input v-model="scope.row.name" size="small"></el-input>
             </el-table-column>
 
             <el-table-column v-slot="scope" label="Value">
                 <el-table :data="scope.row.value" :show-header="false">
                     <el-table-column v-slot="lang">
                         <el-tooltip effect="dark" :content="lang.row.language" placement="top-start">
-                            <el-input v-model="lang.row.value" :placeHolder="lang.row.language"></el-input>
+                            <el-input v-model="lang.row.value" :placeHolder="lang.row.language" size="small"></el-input>
                         </el-tooltip>
                     </el-table-column>
                 </el-table>
