@@ -46,6 +46,16 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
         return $this;
     }
 
+    /**
+     * sortable and searchable
+     */
+    public function ss()
+    {
+        $this->sortable();
+        $this->searchable();
+        return $this;
+    }
+
     public function sortable()
     {
         $this->setAttribute("sortable", "custom");
