@@ -155,4 +155,17 @@ class UI implements TranslatorAwareInterface
     {
         return new UI\TableResponse($this->vx, $this->vx->query);
     }
+
+    public function createDescriptions($object = null)
+    {
+        $d = new UI\Descriptions;
+        $d->setTranslator($this->translator);
+
+
+        if (is_null($object)) {
+            $object = $this->vx->object();
+        }
+        $d->setData($object);
+        return $d;
+    }
 }
