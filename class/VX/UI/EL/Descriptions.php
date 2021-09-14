@@ -56,7 +56,6 @@ class Descriptions extends Element
 
     public function addItem(string $label)
     {
-
         $item = new DescriptionsItem;
         $item->setLabel($label);
         $this->append($item);

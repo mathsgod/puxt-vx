@@ -10,7 +10,7 @@ return new class
 {
     function get(VX $vx)
     {
-        $view = $vx->ui->createView();
+        $view = $vx->ui->createDescriptions();
         $view->add("Name", "name");
         $view->add("Code", "code");
         $view->add("Remark", "remark");

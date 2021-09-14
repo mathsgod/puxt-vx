@@ -20,7 +20,6 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
         $this->setContentClassName("px-50");
     }
 
-
     public function setData($data)
     {
         $this->data = $data;

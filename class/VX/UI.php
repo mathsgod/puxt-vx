@@ -53,6 +53,10 @@ class UI implements TranslatorAwareInterface
         return $t;
     }
 
+    
+    /**
+     * @deprecated Use createDescriptions
+     */
     public function createView($object = null)
     {
         $view = new UI\View();
