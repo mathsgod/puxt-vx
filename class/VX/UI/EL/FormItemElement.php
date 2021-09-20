@@ -9,8 +9,9 @@ class FormItemElement extends Element
     public function required(string $message = null)
     {
         $node = $this->parentNode;
-        if ($node instanceof FormItem) {
-            $node->required($message);
+
+        if ($node->tagName == "el-form-item") {
+            $node->setAttribute("required", $message);
         }
         return $this;
     }
