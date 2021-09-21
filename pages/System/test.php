@@ -1,3 +1,4 @@
+{{a}}
 <?php
 
 /**
@@ -8,6 +9,7 @@ return new class
 {
     function get(VX $vx)
     {
+        sleep(3);
         $this->a = $vx->_get["a"];
     }
 };

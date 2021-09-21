@@ -34,6 +34,11 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->append($this->default);
     }
 
+    function setHeader(string $header)
+    {
+        $this->setAttribute("header", $header);
+    }
+
     public function setPagination(bool $pagination)
     {
         $this->setAttribute(":pagination", $pagination ? "true" : "false");
