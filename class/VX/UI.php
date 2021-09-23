@@ -14,6 +14,13 @@ class UI implements TranslatorAwareInterface
         $this->vx = $vx;
     }
 
+    public function createLink($obj){
+        if($obj instanceof IModel){
+
+        
+        }
+    }
+
     public function createTable(?string $entry = null)
     {
         $table = new Table;
