@@ -393,12 +393,15 @@ class VX extends Context implements AdapterAwareInterface
 
         //load from db
         $translator->addLoader("array", new ArrayLoader);
+        
         $a = [];
 
         foreach (Translate::Query(["module" => "", "language" => $locale]) as $t) {
             $a[$t->name] = $t->value;
         }
-
+        $translator->addResource("array",$a,$locale);
+        
+        
         return $translator;
     }
 
