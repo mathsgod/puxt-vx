@@ -2,7 +2,9 @@
 
 namespace VX;
 
+use Stringable;
 use VX;
+use VX\UI\Link;
 use VX\UI\Table;
 
 class UI implements TranslatorAwareInterface
@@ -14,11 +16,16 @@ class UI implements TranslatorAwareInterface
         $this->vx = $vx;
     }
 
-    public function createLink($obj){
-        if($obj instanceof IModel){
-
-        
+    public function createLink($obj, string $uri)
+    {
+        $link = new Link;
+        if ($obj instanceof IModel) {
+            if ($obj instanceof Stringable) {
+                $link->textContent = $obj->__toString();
+            }
+            $link->setTo($obj->uri($uri));
         }
+        return $link;
     }
 
     public function createTable(?string $entry = null)
