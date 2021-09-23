@@ -380,6 +380,17 @@ class VX extends Context implements AdapterAwareInterface
         $this->ui->setTranslator($this->translator);
     }
 
+    public function getModuleTranslate()
+    {
+        $a = [];
+        foreach (Translate::Query(["language" => $this->locale]) as $tran) {
+            if (!$tran->module) continue;
+            $a[$tran->module][$tran->name] = $tran->value;
+        }
+
+        return $a;
+    }
+
     public function getGlobalTranslator()
     {
         $locale = $this->locale;
@@ -393,15 +404,15 @@ class VX extends Context implements AdapterAwareInterface
 
         //load from db
         $translator->addLoader("array", new ArrayLoader);
-        
+
         $a = [];
 
         foreach (Translate::Query(["module" => "", "language" => $locale]) as $t) {
             $a[$t->name] = $t->value;
         }
-        $translator->addResource("array",$a,$locale);
-        
-        
+        $translator->addResource("array", $a, $locale);
+
+
         return $translator;
     }
 

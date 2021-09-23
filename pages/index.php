@@ -134,6 +134,8 @@ return new class
             $data["navbar"]["dropdown"] = $dropdown;
 
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
+            $data["i18n_module"]=$vx->getModuleTranslate();
+
 
             $data["locale"] = $vx->user->language;
 
