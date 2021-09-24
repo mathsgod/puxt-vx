@@ -23,7 +23,9 @@ class UI implements TranslatorAwareInterface
             if ($obj instanceof Stringable) {
                 $link->textContent = $obj->__toString();
             }
-            $link->setTo($obj->uri($uri));
+            //$link->setHref($obj->uri($uri));
+            $uri=$obj->uri($uri);
+            $link->setAttribute("v-on:click",'vx.$router.push(\''.$uri.'\')');
         }
         return $link;
     }

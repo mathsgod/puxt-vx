@@ -43,7 +43,7 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
                 $content = $field($this->data) ?? "";
                 if($content instanceof Element){
                     
-                
+                    
                 }elseif ($content instanceof Stringable) {
                     $content = (string)$content;
                 }
