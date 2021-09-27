@@ -17,7 +17,7 @@ class TableActionColumn extends TableColumn
         $node->append($tooltip = new HTMLElement("el-tooltip"));
         $tooltip->setAttribute("effect", "dark");
         $tooltip->setAttribute("content", $this->translator->trans("View"));
-        $tooltip->setAttribute("placement", "left");
+        $tooltip->setAttribute("placement", "top-start");
 
 
         $tooltip->append($icon = new Icon());
@@ -38,7 +38,7 @@ class TableActionColumn extends TableColumn
         $node->append($tooltip = new HTMLElement("el-tooltip"));
         $tooltip->setAttribute("effect", "dark");
         $tooltip->setAttribute("content", $this->translator->trans("Edit"));
-        $tooltip->setAttribute("placement", "top");
+        $tooltip->setAttribute("placement", "top-start");
 
 
         $tooltip->append($icon = new Icon());
@@ -59,7 +59,7 @@ class TableActionColumn extends TableColumn
         $node->append($tooltip = new HTMLElement("el-tooltip"));
         $tooltip->setAttribute("effect", "dark");
         $tooltip->setAttribute("content", $this->translator->trans("Delete"));
-        $tooltip->setAttribute("placement", "right");
+        $tooltip->setAttribute("placement", "top-start");
 
 
         $tooltip->append($icon = new Icon());
