@@ -84,7 +84,7 @@ class User extends Model implements RoleInterface
 
     private static function PasswordVerify(string $password, string $hash)
     {
-        $p = substr($password, 0, 2);
+        $p = substr($hash, 0, 2);
         if ($p == '$5' || $p == '$6') {
             $pass = "";
             $md5 = md5($password);
