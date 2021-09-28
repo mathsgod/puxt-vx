@@ -57,6 +57,9 @@ return new class
         $f->addDivider();
         $f->add("Show file manager")->switch("file_manager_show");
 
+        $f->addDivider();
+        $f->add("Custom css")->textarea("css");
+
         $this->form = $f;
     }
 };

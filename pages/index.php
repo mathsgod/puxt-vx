@@ -134,7 +134,7 @@ return new class
             $data["navbar"]["dropdown"] = $dropdown;
 
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
-            $data["i18n_module"]=$vx->getModuleTranslate();
+            $data["i18n_module"] = $vx->getModuleTranslate();
 
 
             $data["locale"] = $vx->user->language;
@@ -153,7 +153,10 @@ return new class
             "company-url" => $config["company_url"],
             "login" => [
                 "version" => $config["login_version"]
-            ]
+            ],
+            "css" => explode("\n", $config["css"]) ?? []
+
+
         ];
 
 
