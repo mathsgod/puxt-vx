@@ -112,9 +112,7 @@ return new class
                 "language" => $user->language ?? "en",
                 "style" => $user->style,
                 "default_page" => $user->default_page ?? "/Dashboard",
-                "usergroup" => collect($user->UserGroup()->toArray())->map(function ($o) {
-                    return $o->name;
-                })->join(","),
+                "usergroup" => $user->UserGroup()->map(fn ($o) => $o->name)->join(","),
                 "image" => $user->photo()
             ];
 
