@@ -48,6 +48,7 @@ return new class
             ]
         ];
 
+        $data["locale"] = "en";
         if ($logined) {
 
 
