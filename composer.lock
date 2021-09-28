@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5b56b4f6570b390972f59ab35e6a00a",
+    "content-hash": "99d4d389d100d002ba69eeb57455063a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -235,16 +235,16 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "4.3.0",
+            "version": "4.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "98f6d4024289ad3a8d7f3e63cab947ef6929dcdb"
+                "reference": "5630e192948b466d418608ecce697465d20260af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/98f6d4024289ad3a8d7f3e63cab947ef6929dcdb",
-                "reference": "98f6d4024289ad3a8d7f3e63cab947ef6929dcdb",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/5630e192948b466d418608ecce697465d20260af",
+                "reference": "5630e192948b466d418608ecce697465d20260af",
                 "shasum": ""
             },
             "require": {
@@ -295,7 +295,7 @@
             ],
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/4.3.0"
+                "source": "https://github.com/endroid/qr-code/tree/4.3.5"
             },
             "funding": [
                 {
@@ -303,7 +303,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-08-28T12:29:40+00:00"
+            "time": "2021-09-17T07:50:43+00:00"
         },
         {
             "name": "fgrosse/phpasn1",
@@ -498,37 +498,35 @@
         },
         {
             "name": "laminas/laminas-db",
-            "version": "2.12.0",
+            "version": "2.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-db.git",
-                "reference": "80cbba4e749f9eb7d8036172acb9ad41e8b6923f"
+                "reference": "cdabb4bfa669c2c0edb0cb4e014c15b41afd3fb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/80cbba4e749f9eb7d8036172acb9ad41e8b6923f",
-                "reference": "80cbba4e749f9eb7d8036172acb9ad41e8b6923f",
+                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/cdabb4bfa669c2c0edb0cb4e014c15b41afd3fb1",
+                "reference": "cdabb4bfa669c2c0edb0cb4e014c15b41afd3fb1",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-stdlib": "^3.3",
-                "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ~8.0.0"
+                "laminas/laminas-stdlib": "^3.6",
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
-            "replace": {
-                "zendframework/zend-db": "^2.11.0"
+            "conflict": {
+                "zendframework/zend-db": "*"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~1.0.0",
-                "laminas/laminas-eventmanager": "^3.3",
-                "laminas/laminas-hydrator": "^3.2 || ^4.0",
-                "laminas/laminas-servicemanager": "^3.3",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.3"
+                "laminas/laminas-coding-standard": "~2.2.1",
+                "laminas/laminas-eventmanager": "^3.4",
+                "laminas/laminas-hydrator": "^3.2 || ^4.3",
+                "laminas/laminas-servicemanager": "^3.7",
+                "phpunit/phpunit": "^9.5.5"
             },
             "suggest": {
                 "laminas/laminas-eventmanager": "Laminas\\EventManager component",
-                "laminas/laminas-hydrator": "(^3.2 || ^4.0) Laminas\\Hydrator component for using HydratingResultSets",
+                "laminas/laminas-hydrator": "(^3.2 || ^4.3) Laminas\\Hydrator component for using HydratingResultSets",
                 "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
             },
             "type": "library",
@@ -567,7 +565,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-02-22T22:27:56+00:00"
+            "time": "2021-09-21T18:59:44+00:00"
         },
         {
             "name": "laminas/laminas-hydrator",
@@ -833,16 +831,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "2.2.3",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "811bdc2d52a07eafbb6cb68a7b368b0668b362c8"
+                "reference": "499313f8b65f9a4dae1c779cd974d59a6fcf0f15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/811bdc2d52a07eafbb6cb68a7b368b0668b362c8",
-                "reference": "811bdc2d52a07eafbb6cb68a7b368b0668b362c8",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/499313f8b65f9a4dae1c779cd974d59a6fcf0f15",
+                "reference": "499313f8b65f9a4dae1c779cd974d59a6fcf0f15",
                 "shasum": ""
             },
             "require": {
@@ -898,7 +896,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/2.2.3"
+                "source": "https://github.com/thephpleague/flysystem/tree/2.3.0"
             },
             "funding": [
                 {
@@ -914,20 +912,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-18T19:59:31+00:00"
+            "time": "2021-09-22T06:09:19+00:00"
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3"
+                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
-                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/b38b25d7b372e9fddb00335400467b223349fd7e",
+                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e",
                 "shasum": ""
             },
             "require": {
@@ -958,7 +956,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.7.0"
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.8.0"
             },
             "funding": [
                 {
@@ -970,7 +968,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-18T20:58:21+00:00"
+            "time": "2021-09-25T08:23:19+00:00"
         },
         {
             "name": "league/uri",
@@ -1185,16 +1183,16 @@
         },
         {
             "name": "mathsgod/p-query",
-            "version": "3.0.2",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/p-query.git",
-                "reference": "b264caff3f018d7336121359f9bdec6405b4527c"
+                "reference": "745d35e4e1fdb487d9a43bb9ec825eb6316d9473"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/p-query/zipball/b264caff3f018d7336121359f9bdec6405b4527c",
-                "reference": "b264caff3f018d7336121359f9bdec6405b4527c",
+                "url": "https://api.github.com/repos/mathsgod/p-query/zipball/745d35e4e1fdb487d9a43bb9ec825eb6316d9473",
+                "reference": "745d35e4e1fdb487d9a43bb9ec825eb6316d9473",
                 "shasum": ""
             },
             "require": {
@@ -1226,9 +1224,9 @@
             "description": "Using jQuery liked method to parse html by using php",
             "support": {
                 "issues": "https://github.com/mathsgod/p-query/issues",
-                "source": "https://github.com/mathsgod/p-query/tree/3.0.2"
+                "source": "https://github.com/mathsgod/p-query/tree/3.1.1"
             },
-            "time": "2021-08-16T08:51:51+00:00"
+            "time": "2021-09-20T07:00:24+00:00"
         },
         {
             "name": "mathsgod/php-util",
@@ -1278,16 +1276,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.1.3",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "08587558e8d253e7f5c61dfb46a7eeeaff94b73e"
+                "reference": "8ac52b300ff90c9b42ee3ad517e2b1022d283e4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/08587558e8d253e7f5c61dfb46a7eeeaff94b73e",
-                "reference": "08587558e8d253e7f5c61dfb46a7eeeaff94b73e",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/8ac52b300ff90c9b42ee3ad517e2b1022d283e4d",
+                "reference": "8ac52b300ff90c9b42ee3ad517e2b1022d283e4d",
                 "shasum": ""
             },
             "require": {
@@ -1320,9 +1318,9 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.1.3"
+                "source": "https://github.com/mathsgod/r-db/tree/4.2.0"
             },
-            "time": "2021-09-09T08:56:42+00:00"
+            "time": "2021-09-13T09:20:31+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1951,24 +1949,25 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.2.1",
+            "version": "4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "fe665a03df4f056aa65af552a96e1976df8c8dae"
+                "reference": "fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/fe665a03df4f056aa65af552a96e1976df8c8dae",
-                "reference": "fe665a03df4f056aa65af552a96e1976df8c8dae",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df",
+                "reference": "fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df",
                 "shasum": ""
             },
             "require": {
                 "brick/math": "^0.8 || ^0.9",
                 "ext-json": "*",
-                "php": "^7.2 || ^8",
+                "php": "^7.2 || ^8.0",
                 "ramsey/collection": "^1.0",
-                "symfony/polyfill-ctype": "^1.8"
+                "symfony/polyfill-ctype": "^1.8",
+                "symfony/polyfill-php80": "^1.14"
             },
             "replace": {
                 "rhumsaa/uuid": "self.version"
@@ -2032,7 +2031,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.2.1"
+                "source": "https://github.com/ramsey/uuid/tree/4.2.3"
             },
             "funding": [
                 {
@@ -2044,7 +2043,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-11T01:06:55+00:00"
+            "time": "2021-09-25T23:10:38+00:00"
         },
         {
             "name": "spomky-labs/base64url",
@@ -3083,16 +3082,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.14.6",
+            "version": "v2.14.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "27e5cf2b05e3744accf39d4c68a3235d9966d260"
+                "reference": "8e202327ee1ed863629de9b18a5ec70ac614d88f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/27e5cf2b05e3744accf39d4c68a3235d9966d260",
-                "reference": "27e5cf2b05e3744accf39d4c68a3235d9966d260",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8e202327ee1ed863629de9b18a5ec70ac614d88f",
+                "reference": "8e202327ee1ed863629de9b18a5ec70ac614d88f",
                 "shasum": ""
             },
             "require": {
@@ -3102,7 +3101,7 @@
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
+                "symfony/phpunit-bridge": "^4.4.9|^5.0.9|^6.0"
             },
             "type": "library",
             "extra": {
@@ -3146,7 +3145,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v2.14.6"
+                "source": "https://github.com/twigphp/Twig/tree/v2.14.7"
             },
             "funding": [
                 {
@@ -3158,7 +3157,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-16T12:12:47+00:00"
+            "time": "2021-09-17T08:39:54+00:00"
         },
         {
             "name": "web-auth/cose-lib",
@@ -3436,33 +3435,30 @@
     "packages-dev": [
         {
             "name": "laminas/laminas-diactoros",
-            "version": "2.6.0",
+            "version": "2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "7d2034110ae18afe05050b796a3ee4b3fe177876"
+                "reference": "0c26ef1d95b6d7e6e3943a243ba3dc0797227199"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/7d2034110ae18afe05050b796a3ee4b3fe177876",
-                "reference": "7d2034110ae18afe05050b796a3ee4b3fe177876",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/0c26ef1d95b6d7e6e3943a243ba3dc0797227199",
+                "reference": "0c26ef1d95b6d7e6e3943a243ba3dc0797227199",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ~8.0.0",
+                "php": "^7.3 || ~8.0.0 || ~8.1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
             },
             "conflict": {
-                "phpspec/prophecy": "<1.9.0"
+                "phpspec/prophecy": "<1.9.0",
+                "zendframework/zend-diactoros": "*"
             },
             "provide": {
                 "psr/http-factory-implementation": "1.0",
                 "psr/http-message-implementation": "1.0"
-            },
-            "replace": {
-                "zendframework/zend-diactoros": "^2.2.1"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -3534,7 +3530,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-05-18T14:41:54+00:00"
+            "time": "2021-09-22T03:54:36+00:00"
         },
         {
             "name": "mathsgod/html",
@@ -3743,7 +3739,9 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^8.0"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }
