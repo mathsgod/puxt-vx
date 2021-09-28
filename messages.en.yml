@@ -6,3 +6,5 @@ UserGroup: User group
 UserLog: User log
 FileManager: File manager
 mail-test: Mail test
+vx-table-message: Showing {0} to {1} of {2} entries
+vx-per-page: Per page

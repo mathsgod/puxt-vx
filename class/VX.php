@@ -361,6 +361,12 @@ class VX extends Context implements AdapterAwareInterface
             $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
         }
 
+        //en
+        if (file_exists($this->vx_root . "/messages.en.yml")) {
+            $translator->addLoader("yaml", new YamlFileLoader);
+            $translator->addResource('yaml', $this->vx_root . "/messages.en.yml", "en");
+        }
+
 
         //load from db
         $translator->addLoader("array", new ArrayLoader);
@@ -400,6 +406,12 @@ class VX extends Context implements AdapterAwareInterface
         if (file_exists($this->vx_root . "/messages.$locale.yml")) {
             $translator->addLoader("yaml", new YamlFileLoader);
             $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
+        }
+
+
+        if (file_exists($this->vx_root . "/messages.en.yml")) {
+            $translator->addLoader("yaml", new YamlFileLoader);
+            $translator->addResource('yaml', $this->vx_root . "/messages.en.yml", "en");
         }
 
         //load from db

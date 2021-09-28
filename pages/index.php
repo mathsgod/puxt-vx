@@ -133,6 +133,7 @@ return new class
 
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
             $data["i18n_module"] = $vx->getModuleTranslate();
+            $data["i18n_en"] = $vx->getGlobalTranslator()->getCatalogue("en")->all()["messages"];
 
 
             $data["locale"] = $vx->user->language;

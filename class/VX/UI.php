@@ -121,7 +121,7 @@ class UI implements TranslatorAwareInterface
         return $form;
     }
 
-    public function createT($data)
+    public function createT(iterable $data)
     {
 
         $t = new UI\T;

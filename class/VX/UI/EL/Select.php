@@ -49,6 +49,11 @@ class Select extends FormItemElement
     }
 
 
+    public function clearable(bool $value = true)
+    {
+        $this->setClearable($value);
+        return $this;
+    }
 
     public function setClearable(bool $value)
     {

@@ -42,11 +42,11 @@ return new class
 
         $form->add("Join date")->date("join_date")->required();
 
-        $form->add("Status")->select("status", User::STATUS)->required();
+        $select = $form->add("Status")->select("status", User::STATUS)->clearable(false)->required();
 
         $form->add("Expiry date")->date("expiry_date");
 
-        $form->add("Language")->select("language", $vx->config["VX"]["language"])->required();
+        $form->add("Language")->select("language", $vx->config["VX"]["language"])->clearable(false)->required();
 
         $form->add("Default page")->input("default_page");
 

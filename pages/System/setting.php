@@ -49,7 +49,7 @@ return new class
         $f->add("Login version")->select("login_version", ["v1" => "v1", "v2" => "v2"]);
         $f->addDivider();
 
-        $f->add("2 step verification")->switch("two_step_verification");
+        $f->add("2 Step verification")->switch("two_step_verification");
         $r = $f->add("Biometric authentication");
         $r->switch("biometric_authentication");
         $r->helpBlock("Only https can use Biometric authentication");

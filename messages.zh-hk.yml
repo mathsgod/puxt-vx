@@ -104,3 +104,5 @@ Reload: 重新載入
 Rename: 重新命名
 Database: 資料庫
 Charset: 字元編碼
+vx-table-message: 顯示 {0} 至 {1} 共 {2} 項資料
+vx-per-page: 每頁顯示
