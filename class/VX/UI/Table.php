@@ -53,6 +53,10 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         }
     }
 
+
+    /**
+     * @param string $order desc | asc
+     */
     public function setDefaultSort(string $prop, string $order)
     {
         if ($order == "desc") {

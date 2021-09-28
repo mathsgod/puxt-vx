@@ -68,7 +68,7 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
         return $this;
     }
 
-    public function filterable(Traversable|array $value)
+    public function filterable(iterable $value)
     {
         if ($value instanceof Traversable) {
             $value = iterator_to_array($value);

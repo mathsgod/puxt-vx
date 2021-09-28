@@ -39,9 +39,9 @@ return new class
         $rt->add("class");
         $rt->add("action");
         $rt->add("created_time");
-        $rt->add("user_id", fn (EventLog $e) => $e->User());
+        $rt->add("user_id", fn (EventLog $e) => $e->User()?->__toString());
 
-        
+
         return $rt;
     }
 };
