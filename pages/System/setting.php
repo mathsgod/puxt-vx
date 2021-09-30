@@ -49,8 +49,8 @@ return new class
         $f->add("Login version")->select("login_version", ["v1" => "v1", "v2" => "v2"]);
 
 
-        $f->add("Reply to email")->email("reply_to");
-        
+        $f->add("Email from")->email("mail_from");
+
         $f->addDivider();
 
         $f->add("2 Step verification")->switch("two_step_verification");
