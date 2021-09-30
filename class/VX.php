@@ -495,8 +495,8 @@ class VX extends Context implements AdapterAwareInterface
     public function getMailer()
     {
         $mailer = new Mailer();
-        if ($reply_to = $this->config["VX"]["reply_to"]) {
-            $mailer->setFrom($reply_to);
+        if ($mail_from = $this->config["VX"]["mail_from"]) {
+            $mailer->setFrom($mail_from);
         }
         return $mailer;
     }
