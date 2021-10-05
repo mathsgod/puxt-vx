@@ -45,6 +45,10 @@
                 </el-select>
             </el-form-item>
 
+            <el-form-item label="Description border">
+                <el-checkbox v-model="form.description_border"></el-checkbox>
+            </el-form-item>
+
 
             <button type="submit" class="btn btn-primary mt-1 mr-1" @click.prevent="save" v-text="$t('Save changes')"></button>
 

@@ -2695,16 +2695,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v5.3.7",
+            "version": "v5.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6"
+                "reference": "6e69f3551c1a3356cf6ea8d019bf039a0f8b6886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6",
-                "reference": "4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/6e69f3551c1a3356cf6ea8d019bf039a0f8b6886",
+                "reference": "6e69f3551c1a3356cf6ea8d019bf039a0f8b6886",
                 "shasum": ""
             },
             "require": {
@@ -2770,7 +2770,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v5.3.7"
+                "source": "https://github.com/symfony/translation/tree/v5.3.9"
             },
             "funding": [
                 {
@@ -3533,6 +3533,73 @@
             "time": "2021-09-22T03:54:36+00:00"
         },
         {
+            "name": "laminas/laminas-httphandlerrunner",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-httphandlerrunner.git",
+                "reference": "4d337cde83e6b901a4443b0ab5c3b97cbaa46413"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/4d337cde83e6b901a4443b0ab5c3b97cbaa46413",
+                "reference": "4d337cde83e6b901a4443b0ab5c3b97cbaa46413",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ~8.0.0 || ~8.1.0",
+                "psr/http-message": "^1.0",
+                "psr/http-message-implementation": "^1.0",
+                "psr/http-server-handler": "^1.0"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "~2.3.0",
+                "laminas/laminas-diactoros": "^2.8.0",
+                "phpunit/phpunit": "^9.5.9",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "vimeo/psalm": "^4.10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "config-provider": "Laminas\\HttpHandlerRunner\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\HttpHandlerRunner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Execute PSR-15 RequestHandlerInterface instances and emit responses they generate.",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "components",
+                "laminas",
+                "mezzio",
+                "psr-15",
+                "psr-7"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-httphandlerrunner/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-httphandlerrunner/issues",
+                "rss": "https://github.com/laminas/laminas-httphandlerrunner/releases.atom",
+                "source": "https://github.com/laminas/laminas-httphandlerrunner"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2021-09-22T09:27:36+00:00"
+        },
+        {
             "name": "mathsgod/html",
             "version": "1.0.14",
             "source": {
@@ -3627,18 +3694,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/puxt.git",
-                "reference": "13828c1b73a2304a69d6af3fb4a34695fb076839"
+                "reference": "44f7331fb0652447af9d9abe8f68683a9bf152cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/13828c1b73a2304a69d6af3fb4a34695fb076839",
-                "reference": "13828c1b73a2304a69d6af3fb4a34695fb076839",
+                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/44f7331fb0652447af9d9abe8f68683a9bf152cf",
+                "reference": "44f7331fb0652447af9d9abe8f68683a9bf152cf",
                 "shasum": ""
             },
             "require": {
+                "laminas/laminas-httphandlerrunner": "^2.1",
                 "mathsgod/html": "^1.0",
                 "mathsgod/php-psr7": "^2.0",
                 "php": "^7.3 || ~8.0.0",
+                "psr/http-server-middleware": "^1.0",
                 "twig/extensions": "^1.5",
                 "twig/twig": "^2.12"
             },
@@ -3667,9 +3736,9 @@
             "description": "PHP framework",
             "support": {
                 "issues": "https://github.com/mathsgod/puxt/issues",
-                "source": "https://github.com/mathsgod/puxt/tree/main"
+                "source": "https://github.com/mathsgod/puxt/tree/1.12.0"
             },
-            "time": "2021-08-26T08:39:13+00:00"
+            "time": "2021-10-04T07:07:53+00:00"
         },
         {
             "name": "twig/extensions",
