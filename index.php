@@ -24,11 +24,14 @@ return function ($options) {
 
     $this->puxt->hook('ready', function (App $puxt) use ($vx, $schema) {
         $puxt->response = $puxt->response
-            ->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"])
             ->withHeader("Access-Control-Allow-Credentials", "true")
             ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as")
             ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
             ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
+
+        if ($_SERVER["HTTP_ORIGIN"]) {
+            $puxt->response = $puxt->response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
+        }
 
         Model::$_vx = $vx;
 
