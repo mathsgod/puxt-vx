@@ -196,6 +196,10 @@ class UI implements TranslatorAwareInterface
             $d->setBorder(true);
         }
 
+        if ($user->style["description_size"]) {
+            $d->setSize($user->style["description_size"]);
+        }
+
 
         if (is_null($object)) {
             $object = $this->vx->object();

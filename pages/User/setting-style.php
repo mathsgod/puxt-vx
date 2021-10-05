@@ -45,8 +45,19 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="Description border">
+            <el-divider>Description</el-divider>
+
+            <el-form-item label="Border">
                 <el-checkbox v-model="form.description_border"></el-checkbox>
+            </el-form-item>
+
+            <el-form-item label="Size">
+                <el-select v-model="form.description_size" clearable>
+                    <el-option value="large" label="large"></el-option>
+                    <el-option value="medium " label="medium"></el-option>
+                    <el-option value="small" label="small"></el-option>
+                    <el-option value="mini" label="mini"></el-option>
+                </el-select>
             </el-form-item>
 
 
