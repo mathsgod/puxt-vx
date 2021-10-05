@@ -24,8 +24,8 @@ class UI implements TranslatorAwareInterface
                 $link->textContent = $obj->__toString();
             }
             //$link->setHref($obj->uri($uri));
-            $uri=$obj->uri($uri);
-            $link->setAttribute("v-on:click",'vx.$router.push(\''.$uri.'\')');
+            $uri = $obj->uri($uri);
+            $link->setAttribute("v-on:click", 'vx.$router.push(\'' . $uri . '\')');
         }
         return $link;
     }
@@ -190,6 +190,11 @@ class UI implements TranslatorAwareInterface
     {
         $d = new UI\Descriptions;
         $d->setTranslator($this->translator);
+
+        $user = $this->vx->user;
+        if ($user->style["description_border"]) {
+            $d->setBorder(true);
+        }
 
 
         if (is_null($object)) {
