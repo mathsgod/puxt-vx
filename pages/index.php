@@ -14,6 +14,7 @@ return new class
     {
         $refresh_token = $vx->_post["refresh_token"];
         $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
+        throw new Exception("error");
         if ($payload["type"] == "refresh_token") {
 
             $token = JWT::encode([
@@ -135,10 +136,7 @@ return new class
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
             $data["i18n_module"] = $vx->getModuleTranslate();
             $data["i18n_en"] = $vx->getGlobalTranslator()->getCatalogue("en")->all()["messages"];
-
-
             $data["locale"] = $vx->user->language;
-
             $data["file_upload_max_size"] = FileManager::FormatBytes($vx->getFileUploadMaxSize());
         }
 
@@ -155,11 +153,7 @@ return new class
                 "version" => $config["login_version"]
             ],
             "css" => explode("\n", $config["css"]) ?? []
-
-
         ];
-
-
 
         return $data;
     }

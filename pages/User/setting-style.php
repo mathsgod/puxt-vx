@@ -1,7 +1,8 @@
 <template id="v-style">
     <el-card :header="$t('Style')">
         <el-form label-width="auto">
-            <el-form-item label="Form size">
+            <el-divider>Form</el-divider>
+            <el-form-item label="Size">
                 <el-select v-model="form.form_size" clearable>
                     <el-option value="large" label="large"></el-option>
                     <el-option value="medium" label="medium"></el-option>
@@ -10,33 +11,10 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="List view size">
-                <el-select v-model="form.rtable_size" clearable>
-                    <el-option value="large" label="large"></el-option>
-                    <el-option value="medium" label="medium"></el-option>
-                    <el-option value="small" label="small"></el-option>
-                    <el-option value="mini" label="mini"></el-option>
-                </el-select>
-            </el-form-item>
+    
 
-            <el-form-item label="List view small table">
-                <el-checkbox v-model="form.rtable_small_table"></el-checkbox>
-            </el-form-item>
-
-            <el-form-item label="Table size">
-                <el-select v-model="form.table_size" clearable>
-                    <el-option value="large" label="large"></el-option>
-                    <el-option value="medium " label="medium"></el-option>
-                    <el-option value="small" label="small"></el-option>
-                    <el-option value="mini" label="mini"></el-option>
-                </el-select>
-            </el-form-item>
-
-            <el-form-item label="Table border">
-                <el-switch v-model="form.table_border"></el-switch>
-            </el-form-item>
-
-            <el-form-item label="Button size">
+            <el-divider>Button</el-divider>
+            <el-form-item label="Size">
                 <el-select v-model="form.button_size" clearable>
                     <el-option value="large" label="large"></el-option>
                     <el-option value="medium " label="medium"></el-option>
@@ -45,11 +23,21 @@
                 </el-select>
             </el-form-item>
 
-            <el-divider>Description</el-divider>
+            <el-divider>Table</el-divider>
+            <el-form-item label="Size">
+                <el-select v-model="form.table_size" clearable>
+                    <el-option value="large" label="large"></el-option>
+                    <el-option value="medium " label="medium"></el-option>
+                    <el-option value="small" label="small"></el-option>
+                    <el-option value="mini" label="mini"></el-option>
+                </el-select>
+            </el-form-item>
 
             <el-form-item label="Border">
-                <el-checkbox v-model="form.description_border"></el-checkbox>
+                <el-switch v-model="form.table_border"></el-switch>
             </el-form-item>
+
+            <el-divider>Description</el-divider>
 
             <el-form-item label="Size">
                 <el-select v-model="form.description_size" clearable>
@@ -58,6 +46,9 @@
                     <el-option value="small" label="small"></el-option>
                     <el-option value="mini" label="mini"></el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="Border">
+                <el-switch v-model="form.description_border"></el-switch>
             </el-form-item>
 
 
