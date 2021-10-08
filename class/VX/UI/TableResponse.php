@@ -139,7 +139,7 @@ class TableResponse implements JsonSerializable
             $sort[$ss[0]] = ($ss[1] == "descending") ? "desc" : "asc";
 
             if ($callback = $this->sort_callback[$ss[0]]) {
-                $callback($source);
+                $callback($source, $sort[$ss[0]]);
                 return $source;
             }
 
