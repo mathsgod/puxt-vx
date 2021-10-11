@@ -62,7 +62,7 @@ class TableResponse implements JsonSerializable
             $this->add("__delete__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canDeleteBy($vx->user)) {
-                        return $obj->uri("");
+                        return $obj->uri();
                     }
                 }
                 return false;
