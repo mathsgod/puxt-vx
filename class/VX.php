@@ -4,6 +4,8 @@ use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
+use Laminas\Db\Sql\Predicate\Predicate;
+use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
 use League\Flysystem\FileAttributes;
@@ -372,10 +374,11 @@ class VX extends Context implements AdapterAwareInterface
         $translator->addLoader("array", new ArrayLoader);
         $a = [];
 
-        foreach (Translate::Query(["module" => "", "language" => $locale]) as $t) {
+        foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
+            $w->expression("module is null or module=''",[]);
+        }) as $t) {
             $a[$t->name] = $t->value;
         }
-
 
         foreach (Translate::Query(["module" => $this->module->name, "language" => $locale]) as $t) {
             $a[$t->name] = $t->value;
@@ -419,7 +422,9 @@ class VX extends Context implements AdapterAwareInterface
 
         $a = [];
 
-        foreach (Translate::Query(["module" => "", "language" => $locale]) as $t) {
+        foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
+            $w->expression("module is null or module=''",[]);
+        }) as $t) {
             $a[$t->name] = $t->value;
         }
         $translator->addResource("array", $a, $locale);
