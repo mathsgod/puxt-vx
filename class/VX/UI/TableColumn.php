@@ -62,6 +62,12 @@ class TableColumn extends HTMLElement implements TranslatorAwareInterface
         return $this;
     }
 
+    function minWidth(string $width)
+    {
+        $this->setAttribute("min-width", $width);
+        return $this;
+    }
+
     public function width(string $width)
     {
         $this->setAttribute("width", $width);
