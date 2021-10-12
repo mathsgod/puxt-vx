@@ -11,4 +11,9 @@ class InputXlsx extends HTMLElement
     {
         parent::__construct("vx-input-xlsx");
     }
+
+    function setSchema(array $schema)
+    {
+        $this->setAttribute(":schema", json_encode($schema, JSON_UNESCAPED_UNICODE));
+    }
 }

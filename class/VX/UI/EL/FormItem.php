@@ -167,12 +167,16 @@ class FormItem extends HTMLElement
         return $input;
     }
 
-    public function inputXlsx(string $name)
+    public function inputXlsx(string $name, array $schema = [])
     {
         $input = new InputXlsx;
         $input->setAttribute("v-model", $this->scope . $name);
         $this->append($input);
         $this->setAttribute("prop", $name);
+
+        if ($schema) {
+            $input->setSchema($schema);
+        }
         return $input;
     }
 
