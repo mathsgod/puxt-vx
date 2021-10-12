@@ -17,13 +17,17 @@ class Table extends HTMLElement
         parent::__construct("el-table");
     }
 
+    /**
+     * size of Table
+     * medium / small / mini
+     */
     function setSize(string $size)
     {
         $this->setAttribute("size", $size);
     }
 
 
-    public function setData(array|Traversable $data)
+    public function setData(iterable $data)
     {
         if ($data instanceof Traversable) {
             $data = iterator_to_array($data);

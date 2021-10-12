@@ -2,13 +2,11 @@
 
 namespace VX\UI;
 
-use P\HTMLElement;
-use P\HTMLTemplateElement;
 use Traversable;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
-class TableColumn extends HTMLElement implements TranslatorAwareInterface
+class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 

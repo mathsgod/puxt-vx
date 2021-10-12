@@ -10,10 +10,9 @@ use Traversable;
 use VX\IModel;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
-use VX\UI\EL\TableColumn;
 use VX\User;
 
-class T extends HTMLElement implements TranslatorAwareInterface
+class T extends EL\Table implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
@@ -81,8 +80,9 @@ class T extends HTMLElement implements TranslatorAwareInterface
 
         return $column;
     }
-    
-    public function addProp(string $prop){
+
+    public function addProp(string $prop)
+    {
         $data = $this->getAttribute(":data");
         $data = json_decode($data, true) ?? [];
 

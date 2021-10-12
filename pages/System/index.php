@@ -13,13 +13,12 @@
  * Date: 2021-07-30 
  */
 
-use VX\UI\EL\Table;
 
 return new class
 {
     function get(VX $vx)
     {
-        $table = new Table;
+
 
         $data = [];
         foreach ($_SERVER as $name => $value) {
@@ -28,10 +27,10 @@ return new class
                 "value" => $value
             ];
         }
-        $table->setData($data);
-        $table->setSize(Table::SIZE_SMALL);
-        $table->addColumn("Name", "name")->width("200");
-        $table->addColumn("Value", "value");
+        $table = $vx->ui->createT($data);
+        $table->setSize("small");
+        $table->add("Name", "name")->width("200");
+        $table->add("Value", "value");
         $this->server = $table;
     }
 };
