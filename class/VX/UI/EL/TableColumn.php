@@ -4,6 +4,7 @@ namespace VX\UI\EL;
 
 use P\HTMLElement;
 use P\HTMLTemplateElement;
+use Traversable;
 
 class TableColumn extends HTMLElement
 {
@@ -149,8 +150,11 @@ class TableColumn extends HTMLElement
      * an array of data filtering options. For each element in this array, text and value are required
      * Array[{ text, value }]
      */
-    function setFilters(array $filters)
+    function setFilters(iterable $filters)
     {
+        if ($filters instanceof Traversable) {
+            $filters = iterator_to_array($filters);
+        }
         $this->setAttribute(":filters", json_encode($filters, JSON_UNESCAPED_UNICODE));
     }
 

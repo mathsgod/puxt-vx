@@ -56,32 +56,27 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 
     public function sortable()
     {
-        $this->setAttribute("sortable", "custom");
+        $this->setAttribute("sortable", true);
         return $this;
     }
 
     function minWidth(string $width)
     {
-        $this->setAttribute("min-width", $width);
+        $this->setMinWidth($width);
         return $this;
     }
 
     public function width(string $width)
     {
-        $this->setAttribute("width", $width);
+        $this->setWidth($width);
         return $this;
     }
 
     public function filterable(iterable $value)
     {
-        if ($value instanceof Traversable) {
-            $value = iterator_to_array($value);
-        }
-        $this->setAttribute(":filters", json_encode($value));
-
+        $this->setFilters($value);
         $prop = $this->getAttribute("prop");
         $this->setAttribute("column-key", $prop);
-
         return $this;
     }
 
@@ -123,7 +118,7 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 
     public function fixed()
     {
-        $this->setAttribute(":fixed", "true");
+        $this->setFixed(true);
         return $this;
     }
 
