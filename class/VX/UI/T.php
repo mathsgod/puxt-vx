@@ -18,24 +18,10 @@ class T extends EL\Table implements TranslatorAwareInterface
 
     protected $user;
 
-    public function __construct()
-    {
-        parent::__construct("el-table");
-    }
-
     public function setUser(User $user)
     {
         $this->user = $user;
     }
-
-    public function setData(iterable $data)
-    {
-        $this->data = $data;
-        if ($this->data instanceof Traversable) {
-            $this->data = iterator_to_array($this->data);
-        }
-    }
-
 
     public function addActionColumn()
     {

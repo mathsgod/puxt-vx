@@ -2,7 +2,6 @@
 
 namespace VX\UI\EL;
 
-use iterable;
 use P\HTMLElement;
 use P\HTMLTemplateElement;
 use Traversable;
@@ -24,11 +23,10 @@ class Table extends HTMLElement
      */
     function setData(iterable $data)
     {
-        if ($data instanceof iterable) {
+        if ($data instanceof Traversable) {
             $data = iterator_to_array($data);
         }
         $this->setAttribute(":data", json_encode($data, JSON_UNESCAPED_UNICODE));
-        return $this;
     }
 
     /**
