@@ -4,9 +4,7 @@ namespace VX\UI;
 
 use Closure;
 use P\HTMLElement;
-use PHP\Util\QueryInterface;
 use ReflectionFunction;
-use Traversable;
 use VX\IModel;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
