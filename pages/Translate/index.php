@@ -6,7 +6,6 @@
  */
 
 use VX\Translate;
-use VX\UI\EL\Transfer;
 
 return new class
 {
