@@ -14,7 +14,6 @@ return new class
     {
         $refresh_token = $vx->_post["refresh_token"];
         $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
-        throw new Exception("error");
         if ($payload["type"] == "refresh_token") {
 
             $token = JWT::encode([
@@ -25,10 +24,7 @@ return new class
             ], $vx->config["VX"]["jwt"]["secret"]);
             return ["access_token" => $token];
         }
-
-        return ["error" => [
-            "message" => "error when renew access token"
-        ]];
+        throw new Exception("error when renew access token");
     }
 
     public function get(VX $vx)
