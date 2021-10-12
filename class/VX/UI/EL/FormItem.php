@@ -5,6 +5,7 @@ namespace VX\UI\EL;
 use P\CustomEvent;
 use P\HTMLElement;
 use VX\FileManager;
+use VX\UI\InputXlsx;
 
 class FormItem extends HTMLElement
 {
@@ -19,7 +20,7 @@ class FormItem extends HTMLElement
         $this->scope = $scope;
     }
 
- /*    public function autocomplete(string $name)
+    /*    public function autocomplete(string $name)
     {
         $ac = new HTMLElement("el-autocomplete");
         $ac->setAttribute("v-model", "scope.form.{$name}");
@@ -161,6 +162,15 @@ class FormItem extends HTMLElement
         $input->setAttribute("name", $name);
         $input->setAttribute("v-model", $this->scope . $name);
 
+        $this->append($input);
+        $this->setAttribute("prop", $name);
+        return $input;
+    }
+
+    public function inputXlsx(string $name)
+    {
+        $input = new InputXlsx;
+        $input->setAttribute("v-model", $this->scope . $name);
         $this->append($input);
         $this->setAttribute("prop", $name);
         return $input;
