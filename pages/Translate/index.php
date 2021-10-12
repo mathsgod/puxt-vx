@@ -5,13 +5,13 @@
  * Date: 2021-07-22 
  */
 
+use Psr\Http\Message\ResponseInterface;
 use VX\Translate;
 
 return new class
 {
-    function post(VX $vx)
+    function post(VX $vx, ResponseInterface $resp)
     {
-
         //delete all 
         Translate::Query(["module" => $vx->_post["module"]])->delete();
 
@@ -26,8 +26,8 @@ return new class
                 $t->save();
             }
         }
-
-        http_response_code(204);
+        
+        return $resp->withStatus(204);
     }
 
     function getData(VX $vx)
