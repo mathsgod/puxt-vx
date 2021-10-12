@@ -27,7 +27,6 @@
  */
 
 use P\HTMLTemplateElement;
-use R\DB\Column;
 use R\DB\Table as DBTable;
 use VX\UI\EL\Button;
 use VX\UI\EL\Table;
@@ -36,9 +35,6 @@ return new class
 {
     function get(VX $vx)
     {
-        $table = new Table;
-        $table->setSize($table::SIZE_MINI);
-
         $t = collect($vx->getDB()->getTables())->map(function (DBTable $t) {
             return [
                 "name" => $t->name,
@@ -46,7 +42,8 @@ return new class
             ];
         });
 
-        $table->setData($t);
+        $table = $vx->ui->createT($t);
+        $table->setSize("mini");
 
         $column = $table->addColumn();
         $column->setType("expand");
@@ -81,7 +78,8 @@ return new class
         });
 
 
-        $table->addColumn("Name", "name")->sortable();
+        $col = $table->addColumn("Name", "name");
+        $col->setSortable(true);
 
         $this->table = $table;
 
