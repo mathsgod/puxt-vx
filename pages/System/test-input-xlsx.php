@@ -19,6 +19,13 @@ return new class
 
         $form->add("xlsx")->inputXlsx("xlsx");
 
+
+        $form->add("xlsx2")->inputXlsx("xlsx", [
+            "EMAIL" => [
+                "prop" => "email"
+            ]
+        ]);
+
         $form->setAction("");
         $this->form = $form;
     }
