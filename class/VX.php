@@ -197,10 +197,12 @@ class VX extends Context implements AdapterAwareInterface
         $acl->addResource("login");
         $acl->addResource("logout");
         $acl->addResource("cancel-view-as");
+        $acl->addResource("error");
         $acl->allow(null, "index");
         $acl->allow(null, "login");
         $acl->allow(null, "logout");
         $acl->allow(null, "cancel-view-as");
+        $acl->allow(null, "error");
 
 
         $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "/class");
@@ -375,7 +377,7 @@ class VX extends Context implements AdapterAwareInterface
         $a = [];
 
         foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
-            $w->expression("module is null or module=''",[]);
+            $w->expression("module is null or module=''", []);
         }) as $t) {
             $a[$t->name] = $t->value;
         }
@@ -423,7 +425,7 @@ class VX extends Context implements AdapterAwareInterface
         $a = [];
 
         foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
-            $w->expression("module is null or module=''",[]);
+            $w->expression("module is null or module=''", []);
         }) as $t) {
             $a[$t->name] = $t->value;
         }

@@ -201,18 +201,21 @@ return function ($options) {
             die();
         }
 
+        try {
+            //check permission
+            if (!$vx->getAcl()->isAllowed($vx->user, $path)) {
 
-
-
-        //check permission
-        if (!$vx->getAcl()->isAllowed($vx->user, $path)) {
-
-            if ($vx->logined) {
-                http_response_code(403);
-            } else {
-                http_response_code(401);
+                if ($vx->logined) {
+                    http_response_code(403);
+                } else {
+                    http_response_code(401);
+                }
+                exit();
             }
-            exit();
+        } catch (Exception $e) {
+
+            $puxt->response = $puxt->response->withStatus(404, $e->getMessage());
+            return;
         }
 
         $globs = glob("pages/" . $path . ".*");
