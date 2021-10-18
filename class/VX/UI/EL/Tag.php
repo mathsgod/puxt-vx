@@ -12,7 +12,8 @@ class Tag extends HTMLElement
     }
 
     /**
-     * success / info / warning / danger
+     * component type
+     * @param string $type success / info / warning / danger
      */
     function setType(string $type)
     {
@@ -20,7 +21,40 @@ class Tag extends HTMLElement
     }
 
     /**
-     * medium / small / mini
+     * whether Tag can be removed
+     */
+    function setClosable(bool $closable)
+    {
+        $this->setAttribute("closable", $closable);
+    }
+
+    /**
+     * whether to disable animations
+     */
+    function setDisableTransitions(bool $disable)
+    {
+        $this->setAttribute("disable-transitions", $disable);
+    }
+
+    /**
+     * whether Tag has a highlighted border
+     */
+    function setHit(bool $hit)
+    {
+        $this->setAttribute("hit", $hit);
+    }
+
+    /**
+     * background color of the Tag
+     */
+    function setColor(string $color)
+    {
+        $this->setAttribute("color", $color);
+    }
+
+    /**
+     * tag size
+     * @param string $size medium / small / mini
      */
     function setSize(string $size)
     {
@@ -28,7 +62,8 @@ class Tag extends HTMLElement
     }
 
     /**
-     * dark / light / plain
+     * component theme
+     * @param string $effect dark / light / plain
      */
     function setEffect(string $effect)
     {
