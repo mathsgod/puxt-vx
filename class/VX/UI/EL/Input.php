@@ -214,4 +214,46 @@ class Input extends FormItemElement
     {
         $this->setAttribute("validate-event", $validate_event);
     }
+
+    //-- Event --
+
+    /**
+     * triggers when Input blurs
+     */
+    function onBlur(string $script)
+    {
+        $this->setAttribute("v-on:blur", $script);
+    }
+
+    /**
+     * triggers when Input focuses
+     */
+    function onFocus(string $script)
+    {
+        $this->setAttribute("v-on:focus", $script);
+    }
+
+    /**
+     * triggers only when the input box loses focus or the user presses Enter
+     */
+    function onChange(string $script)
+    {
+        $this->setAttribute("v-on:change", $script);
+    }
+
+    /**
+     * triggers when the Input value change
+     */
+    function onInput(string $script)
+    {
+        $this->setAttribute("v-on:input", $script);
+    }
+
+    /**
+     * triggers when the Input is cleared by clicking the clear button
+     */
+    function onClear(string $script)
+    {
+        $this->setAttribute("v-on:clear", $script);
+    }
 }
