@@ -8,7 +8,7 @@ use Traversable;
 
 class Select extends FormItemElement
 {
-    public function __construct()
+    function __construct()
     {
         parent::__construct("el-select");
     }
@@ -19,15 +19,17 @@ class Select extends FormItemElement
         return $this;
     }
 
+    /**
+     * whether multiple-select is activated
+     */
     public function setMultiple(bool $value)
     {
-        if ($value) {
-            $this->setAttribute("multiple", true);
-        } else {
-            $this->removeAttribute("multiple");
-        }
+        $this->setAttribute("multiple", $value);
     }
 
+    /**
+     * whether creating new items is allowed. To use this, filterable must be true
+     */
     public function setAllowCreate(bool $value)
     {
         if ($value) {
