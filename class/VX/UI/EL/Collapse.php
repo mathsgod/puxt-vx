@@ -11,6 +11,11 @@ class Collapse extends HTMLElement
         parent::__construct("el-collapse");
     }
 
+    function setAccordion(bool $accordion)
+    {
+        $this->setAttribute("accordion", $accordion);
+    }
+
     function addItem()
     {
         $item = new CollapseItem;
