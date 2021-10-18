@@ -3,6 +3,7 @@
 namespace VX\UI\EL;
 
 use P\Element;
+use P\HTMLTemplateElement;
 
 class Descriptions extends Element
 {
@@ -60,5 +61,21 @@ class Descriptions extends Element
         $item->setLabel($label);
         $this->append($item);
         return $item;
+    }
+
+    public function setExtraTemplate(callable $callable)
+    {
+        //remove old extra template if exist
+
+        foreach ($this->children as $child) {
+            if ($child->hasAttribute("v-slot:extra")) {
+                $child->remove();
+            }
+        }
+
+        $template = new HTMLTemplateElement();
+        $template->setAttribute("v-slot:extra", true);
+        $this->append($template);
+        $callable($template);
     }
 }

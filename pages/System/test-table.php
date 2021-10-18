@@ -1,4 +1,5 @@
 {{table|raw}}
+{{table}}
 
 <?php
 /**
@@ -14,7 +15,8 @@ return new class
     function get(VX $vx)
     {
         $table = new Table;
-        $table->border()->stripe();
+        $table->setBorder(true);
+        $table->setStripe(true);
         $table->setData(User::Query()->map(function ($r) {
             return [
                 "username" => $r->username,
@@ -22,7 +24,8 @@ return new class
             ];
         }));
 
-        $table->addColumn("username", "username")->sortable();
+        $col = $table->addColumn("username", "username");
+        $col->setSortable(true);
         $table->addColumn("first name", "firstname");
 
         $this->table = $table;
