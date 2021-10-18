@@ -1,16 +1,4 @@
 <vue>
-    <el-dropdown split-button type="primary">
-        Dropdown List
-        <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
-            <el-dropdown-item>Action 4</el-dropdown-item>
-            <el-dropdown-item>Action 5</el-dropdown-item>
-        </el-dropdown-menu>
-    </el-dropdown>
-</vue>
-<vue>
     {{dd|raw}}
 </vue>
 
@@ -42,7 +30,15 @@ return new class
 
             $item = $ddm->addItem();
             $item->append("item2");
+            $item->setDivided(true);
+
+            $item = $ddm->addItem();
+            $item->append("goto user");
+            $item->setCommand("/User");
         });
+
+        $dd->onCommand('$router.push($event)');
+
 
 
         $this->dd = $dd;

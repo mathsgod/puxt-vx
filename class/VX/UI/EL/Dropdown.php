@@ -105,4 +105,13 @@ class Dropdown extends HTMLElement
         $this->append($ddm);
         $callable($ddm);
     }
+
+    /**
+     * triggers when a dropdown item is clicked
+     * the command dispatched from the dropdown item
+     */
+    function onCommand(string $command)
+    {
+        $this->setAttribute("v-on:command", $command);
+    }
 }
