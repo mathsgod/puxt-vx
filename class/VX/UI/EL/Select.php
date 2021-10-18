@@ -22,7 +22,7 @@ class Select extends FormItemElement
     /**
      * whether multiple-select is activated
      */
-    public function setMultiple(bool $value)
+    function setMultiple(bool $value)
     {
         $this->setAttribute("multiple", $value);
     }
@@ -30,7 +30,7 @@ class Select extends FormItemElement
     /**
      * whether creating new items is allowed. To use this, filterable must be true
      */
-    public function setAllowCreate(bool $value)
+    function setAllowCreate(bool $value)
     {
         if ($value) {
             $this->setAttribute("allow-create", $value);
@@ -40,16 +40,30 @@ class Select extends FormItemElement
         }
     }
 
-    public function setFilterable(bool $value)
+    /**
+     * whether Select is disabled
+     */
+    function setDisabled(bool $disabled)
     {
-
-        if ($value) {
-            $this->setAttribute("filterable", true);
-        } else {
-            $this->removeAttribute("filterable");
-        }
+        $this->setAttribute("disabled", $disabled);
     }
 
+    /**
+     * unique identity key name for value, required when value is an object
+     */
+    function setValueKey(string $value_key)
+    {
+        $this->setAttribute("value-key", $value_key);
+    }
+
+    /**
+     * size of Input
+     * @param string $size large/small/mini
+     */
+    function setSize(string $size)
+    {
+        $this->setAttribute("size", $size);
+    }
 
     public function clearable(bool $value = true)
     {
@@ -57,16 +71,184 @@ class Select extends FormItemElement
         return $this;
     }
 
-    public function setClearable(bool $value)
+    /**
+     * whether select can be cleared
+     */
+    function setClearable(bool $clearable)
     {
-        if ($value) {
-            $this->setAttribute("clearable", true);
-        } else {
-            $this->removeAttribute("clearable");
-        }
+        $this->setAttribute("clearable", $clearable);
     }
 
 
+    /**
+     * whether to collapse tags to a text when multiple selecting
+     */
+    function setCollapseTags(bool $collapse_tags)
+    {
+        $this->setAllowCreate("collapse-tags", $collapse_tags);
+    }
+
+    /**
+     * maximum number of options user can select when multiple is true. No limit when set to 0
+     */
+    function setMultipleLimit(int $limit)
+    {
+        $this->setAttribute(":multiple-limit", $limit);
+    }
+
+    /**
+     * the name attribute of select input
+     */
+    function setName(string $name)
+    {
+        $this->setAttribute("name", $name);
+    }
+
+    /**
+     * the autocomplete attribute of select input
+     */
+    function setAutocomplete(string $autocomplete)
+    {
+        $this->setAttribute("autocomplete", $autocomplete);
+    }
+
+    /**
+     * 	placeholder
+     */
+    function setPlaceholder(string $placeholder)
+    {
+        $this->setAttribute("placeholder", $placeholder);
+    }
+
+    /**
+     * 	whether Select is filterable
+     */
+    function setFilterable(bool $filterable)
+    {
+        $this->setAttribute("filterable", $filterable);
+    }
+
+    /**
+     * whether options are loaded from server
+     */
+    function setRemote(string $remote)
+    {
+        $this->setAttribute("remote", $remote);
+    }
+
+    /**
+     * displayed text while loading data from server
+     */
+    function setLoadingText(string $text)
+    {
+        $this->setAttribute("loading-text", $text);
+    }
+
+    /**
+     * displayed text when no data matches the filtering query, you can also use slot empty
+     */
+    function setNoMatchText(string $text)
+    {
+        $this->setAttribute("no-match-text", $text);
+    }
+
+    /**
+     * displayed text when there is no options, you can also use slot empty
+     */
+    function setNoDataText(string $text)
+    {
+        $this->setAttribute("no-data-text", $text);
+    }
+
+    /**
+     * custom class name for Select's dropdown
+     */
+    function setPopperClass(string $class)
+    {
+        $this->setAttribute("popper-class", $class);
+    }
+
+    /**
+     * when multiple and filter is true, whether to reserve current keyword after selecting an option
+     */
+    function setReserveKeyword(bool $reserve_keyword)
+    {
+        $this->setAttribute("reserve-keyword", $reserve_keyword);
+    }
+
+    /**
+     * select first matching option on enter key. Use with filterable or remote
+     */
+    function setDefaultFirstOption(bool $default_first_option)
+    {
+        $this->setAttribute("default-first-option", $default_first_option);
+    }
+
+    /**
+     * whether to append the popper menu to body. If the positioning of the popper is wrong, you can try to set this prop to false
+     */
+    function setPopperAppendToBody(bool $popper_append_to_body)
+    {
+        $this->setAttribute("popper-append-to-body", $popper_append_to_body);
+    }
+
+    /**
+     * for non-filterable Select, this prop decides if the option menu pops up when the input is focused
+     */
+    function setAutomaticDropdown(bool $automatic_dropdown)
+    {
+        $this->setAttribute("automatic-dropdown", $automatic_dropdown);
+    }
+
+    //--- EVENT ---
+
+    /**
+     * triggers when the selected value changes
+     */
+    function onChange(string $script)
+    {
+        $this->setAttribute("v-on:change", $script);
+    }
+
+    /**
+     * triggers when the dropdown appears/disappears
+     */
+    function onVisibleChange(string $script)
+    {
+        $this->setAttribute("v-on:visible-change", $script);
+    }
+
+    /**
+     * triggers when a tag is removed in multiple mode
+     */
+    function onRemoveTag(string $script)
+    {
+        $this->setAttribute("v-on:remove-tag", $script);
+    }
+
+    /**
+     * triggers when the clear icon is clicked in a clearable Select
+     */
+    function onClear(string $script)
+    {
+        $this->setAttribute("v-on:clear", $script);
+    }
+
+    /**
+     * triggers when Input blurs
+     */
+    function onBlur(string $script)
+    {
+        $this->setAttribute("v-on:blur", $script);
+    }
+
+    /**
+     * triggers when Input focuses
+     */
+    function onFocus(string $script)
+    {
+        $this->setAttribute("v-on:focus", $script);
+    }
 
     /**
      * return new added option group
