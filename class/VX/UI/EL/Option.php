@@ -36,4 +36,12 @@ class Option extends Element
             $this->setAttribute(":label", $label);
         }
     }
+
+    /**
+     * whether option is disabled
+     */
+    function setDisabled(bool $disabled)
+    {
+        $this->setAttribute("disabled", $disabled);
+    }
 }
