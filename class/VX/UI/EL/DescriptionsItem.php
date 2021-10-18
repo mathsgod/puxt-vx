@@ -7,13 +7,15 @@ use P\HTMLTemplateElement;
 
 class DescriptionsItem extends Element
 {
-
-    public function __construct()
+    function __construct()
     {
         parent::__construct("el-descriptions-item");
     }
 
-    public function setLabel(string $label)
+    /**
+     * label text
+     */
+    function setLabel(string $label)
     {
         $this->setAttribute("label", $label);
     }
@@ -21,26 +23,56 @@ class DescriptionsItem extends Element
     /**
      * colspan of column
      */
-    public function setSpan(int $span)
+    function setSpan(int $span)
     {
         $this->setAttribute(":span", $span);
     }
 
-
-    public function setContentClassName(string $class)
-    {
-        $this->setAttribute("content-class-name", $class);
-    }
-
-    public function setLabelClassName(string $class)
+    /**
+     * custom label class name
+     */
+    function setLabelClassName(string $class)
     {
         $this->setAttribute("label-class-name", $class);
     }
 
+    /**
+     * custom content class name
+     */
+    function setContentClassName(string $class)
+    {
+        $this->setAttribute("content-class-name", $class);
+    }
+
+    /**
+     * custom label style
+     */
+    function setLabelStyle(array $style)
+    {
+        $this->setAttribute(":label-style", json_encode($style, JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * custom content style
+     */
+    function setContentStyle(array $style)
+    {
+        $this->setAttribute(":content-style", json_encode($style, JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * custom label
+     */
     public function setLabelTemplate(callable $callable)
     {
+        foreach ($this->children as $child) {
+            if ($child->hasAttribute("v-slot:label")) {
+                $child->remove();
+            }
+        }
+
         $template = new HTMLTemplateElement;
-        $template->setAttribute("slot", "label");
+        $template->setAttribute("v-slot:label", true);
         $this->append($template);
         $callable($template);
     }
