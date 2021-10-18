@@ -75,6 +75,4 @@ class Autocomplete extends HTMLElement
     {
         $this->setAttribute("placement", $placement);
     }
-
-    
 }
