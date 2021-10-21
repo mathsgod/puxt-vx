@@ -1,13 +1,18 @@
 {% verbatim %}
 <div id="div1">
+
     <el-card :header="$t('Permissions')">
         <p>Permission according to roles</p>
 
-        <el-form>
+        <el-form inline>
             <el-form-item :label="$t('User group')">
                 <el-select v-model="usergroup_id" clearable>
                     <el-option v-for="ug in UserGroup" :value="ug.usergroup_id" :label="ug.name" :key="ug.usergroup_id"></el-option>
                 </el-select>
+            </el-form-item>
+
+            <el-form-item v-if="usergroup_id">
+                <el-button @click="exportXlsx">Export</el-button>
             </el-form-item>
         </el-form>
 
@@ -96,8 +101,10 @@
             }
         },
         methods: {
+            exportXlsx() {
+                window.self.location = vx.endpoint + "ACL/all?usergroup_id=" + this.usergroup_id + "&_entry=getXlsx&_token=" + vx.accessToken;
+            },
             async changePathValue(module, path, value, checked) {
-
                 let resp = await this.$vx.post("/ACL/all", {
                     usergroup_id: this.usergroup_id,
                     module,
@@ -106,7 +113,6 @@
                     checked: checked,
                     type: "path"
                 });
-
             },
             async changeValue(module, action) {
                 let items = this.items.filter(item => item.name == module)[0];
@@ -129,8 +135,73 @@ use VX\ACL;
 use VX\Module;
 use VX\UserGroup;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
+
 return new class
 {
+
+    function getXlsx(VX $vx)
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->fromArray(["Module", "URL", "Full control", "Create", "Read", "Write", "Delete", "Allow", "Deny"]);
+        $sheet->getColumnDimensionByColumn(1)->setWidth(15);
+        $sheet->getColumnDimensionByColumn(2)->setWidth(25);
+        $sheet->freezePane("A2");
+
+        $ret = $this->getACL($vx);
+
+        $row = 2;
+        foreach ($ret as $r) {
+            $d = [];
+            $d[] = $r["name"];
+            $d[] = "";
+            $d[] = $r["all"]["value"] ? "✓" : "";
+            $d[] = $r["create"]["value"] ? "✓" : "";
+            $d[] = $r["read"]["value"] ? "✓" : "";
+            $d[] = $r["update"]["value"] ? "✓" : "";
+            $d[] = $r["delete"]["value"] ? "✓" : "";
+
+            $sheet->fromArray($d, null, "A$row");
+            $sheet->getStyle("C$row:G$row")->getProtection()->setLocked(Protection::PROTECTION_UNPROTECTED);
+            $sheet->getStyle("C$row:G$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            $row++;
+
+            foreach ($r["files"] as $f) {
+                $d = [];
+                $d[] = "";
+                $d[] = $f["name"];
+                $d[] = "";
+                $d[] = "";
+                $d[] = "";
+                $d[] = "";
+                $d[] = "";
+                $d[] = $f["allow"]["checked"] ? "✓" : "";
+                $d[] = $f["deny"]["checked"] ? "✓" : "";
+
+                $sheet->fromArray($d, null, "A$row");
+                $sheet->getStyle("H$row:I$row")->getProtection()->setLocked(Protection::PROTECTION_UNPROTECTED);
+                $sheet->getStyle("H$row:I$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+
+                $row++;
+            }
+        }
+
+        $sheet->getProtection()->setSheet(true);
+
+        $filename = "acl.xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save("php://output");
+        die();
+    }
+
     function post(VX $vx)
     {
         $post = $vx->_post;
