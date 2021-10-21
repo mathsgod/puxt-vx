@@ -137,6 +137,7 @@ use VX\UserGroup;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Protection;
 
 return new class
@@ -166,8 +167,11 @@ return new class
             $d[] = $r["delete"]["value"] ? "✓" : "";
 
             $sheet->fromArray($d, null, "A$row");
+
+
             $sheet->getStyle("C$row:G$row")->getProtection()->setLocked(Protection::PROTECTION_UNPROTECTED);
             $sheet->getStyle("C$row:G$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("H$row:I$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB("eeeeee");
 
             $row++;
 
@@ -186,6 +190,7 @@ return new class
                 $sheet->fromArray($d, null, "A$row");
                 $sheet->getStyle("H$row:I$row")->getProtection()->setLocked(Protection::PROTECTION_UNPROTECTED);
                 $sheet->getStyle("H$row:I$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle("C$row:G$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB("eeeeee");
 
 
                 $row++;
