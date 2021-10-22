@@ -9,6 +9,24 @@
         <router-link to="/System/test-progress">Progress</router-link>
 
     </div>
+
+    <?php
+
+    use VX\UI\EL\Alert;
+
+    $alert = new Alert();
+    $alert->setTitle("alert title");
+    $alert->setDescription("alert description");
+    echo $alert;
+    ?>
+
+    <?php
+
+    $alert = new Alert();
+    $alert->setTitle("alert title");
+    $alert->setDescription("alert description");
+    echo $alert;
+    ?>
 </vue>
 
 <?php
