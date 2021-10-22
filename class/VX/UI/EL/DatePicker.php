@@ -49,7 +49,7 @@ class DatePicker extends  FormItemElement
      */
     function setEditable(bool $editable)
     {
-        $this->setAttribute("editable", $editable);
+        $this->setAttribute(":editable", json_encode($editable));
     }
 
     /**
@@ -57,7 +57,7 @@ class DatePicker extends  FormItemElement
      */
     function clearable(bool $clearable)
     {
-        $this->setAttribute("clearable", $clearable);
+        $this->setAttribute(":clearable", json_encode($clearable));
     }
 
     /**
