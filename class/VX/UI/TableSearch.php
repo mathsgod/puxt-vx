@@ -17,9 +17,9 @@ class TableSearch extends HTMLElement
     {
 
         parent::__construct("template");
-        $this->form = new HTMLElement("el-form");
+        $this->form = new Form;
         $this->form->setAttribute(":size", "table.size");
-        $this->form->setAttribute(":inline", "true");
+        $this->form->setInline(true);
         $this->form->setAttribute("v-on:submit.native.prevent", true);
         $this->form->classList->add("ml-2 mr-2");
 
