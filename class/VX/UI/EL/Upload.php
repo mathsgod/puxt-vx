@@ -99,6 +99,13 @@ class Upload extends HTMLElement
     function setListType(string $type){
         $this->setAttribute("list-type",$type);
     }
+    
+    /**
+     * whether to auto upload file
+     */
+    function setAutoUpload(bool $auto_upload){
+        $this->setAttribute("auto-upload",$auto_upload);
+    }
 
     /**
      * whether to disable upload

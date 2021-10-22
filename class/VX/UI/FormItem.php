@@ -319,6 +319,7 @@ class FormItem extends EL\FormItem
     function upload(string $name)
     {
         $upload = new Upload;
+        
         $upload->setAttribute(":file-list", "scope.form.{$name}");
         $upload->setAttribute("action", "");
         $upload->setAttribute(":auto-upload", "false");
