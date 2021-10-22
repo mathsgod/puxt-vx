@@ -241,10 +241,20 @@ class VX extends Context implements AdapterAwareInterface
             }
 
             if ($a->action) {
-                if ($a->action == "all") {
-                    $acl->allow("ug-{$a->usergroup_id}", $a->module);
-                } else {
-                    $acl->allow("ug-{$a->usergroup_id}", $a->module, $a->action);
+                if($a->usergroup_id){{
+                    if ($a->action == "all") {
+                        $acl->allow("ug-{$a->usergroup_id}", $a->module);
+                    } else {
+                        $acl->allow("ug-{$a->usergroup_id}", $a->module, $a->action);
+                    }
+                }
+
+                if($a->user_id){
+                    if ($a->action == "all") {
+                        $acl->allow("u-{$a->user_id}", $a->module);
+                    } else {
+                        $acl->allow("u-{$a->user_id}", $a->module, $a->action);
+                    }
                 }
                 continue;
             }
@@ -253,10 +263,20 @@ class VX extends Context implements AdapterAwareInterface
                 $acl->addResource($a->module . "/" . $a->path, $a->module);
             }
 
-            if ($a->value == "allow") {
-                $acl->allow("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
-            } elseif ($a->value == "deny") {
-                $acl->deny("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+            if($a->usergroup_id){
+                if ($a->value == "allow") {
+                    $acl->allow("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+                } elseif ($a->value == "deny") {
+                    $acl->deny("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+                }
+            }
+
+            if($a->user_id){
+                if ($a->value == "allow") {
+                    $acl->allow("u-{$a->user_id}", $a->module . "/" . $a->path);
+                } elseif ($a->value == "deny") {
+                    $acl->deny("u-{$a->user_id}", $a->module . "/" . $a->path);
+                } 
             }
         }
 
