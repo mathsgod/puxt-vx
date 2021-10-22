@@ -69,6 +69,9 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->setAttribute(":default-sort", json_encode(["prop" => $prop, "order" => $order]));
     }
 
+    /**
+     * @param string $size small / mini / medium / large
+     */
     public function setSize(string $size)
     {
         $this->setAttribute("size", $size);
