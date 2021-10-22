@@ -161,7 +161,7 @@ class FormItem extends EL\FormItem
         $c->setAttribute("v-model", $this->scope . $name);
 
         $this->append($c);
-        $this->setProp("prop", $name);
+        $this->setProp($name);
 
         return $c;
     }
@@ -175,7 +175,7 @@ class FormItem extends EL\FormItem
         $dt->setType("datetime");
 
         $this->append($dt);
-        $this->setProp("prop", $name);
+        $this->setProp($name);
 
         return $dt;
     }
@@ -186,7 +186,7 @@ class FormItem extends EL\FormItem
         $cb->setAttribute("v-model", $this->scope . $name);
 
         $this->append($cb);
-        $this->setProp("prop", $name);
+        $this->setProp($name);
         return $cb;
     }
 
@@ -330,7 +330,7 @@ class FormItem extends EL\FormItem
 
         //$upload->append()//
         $this->append($upload);
-        $this->setAttribute("prop", $name);
+        $this->setProp($name);
 
         return $upload;
     }
