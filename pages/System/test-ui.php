@@ -1,4 +1,32 @@
 <vue>
+    <el-card class="mb-2">
+        <?php
+
+        use VX\UI\EL\Collapse;
+
+        $collapse = new Collapse;
+        $collapse->setAccordion(true);
+        $item = $collapse->addItem();
+
+        $item->setTitle("Alert test");
+
+        use VX\UI\EL\Alert;
+
+        $alert = new Alert();
+        $alert->classList->add("mb-1");
+        $alert->setShowIcon(true);
+        $alert->setType("success");
+        $alert->setTitle("alert title");
+        $alert->setDescription("alert description");
+        $item->append($alert);
+
+
+        echo $collapse;
+
+
+
+        ?>
+    </el-card>
 
     <div class="d-flex flex-column">
         <router-link to="/System/test-table">Table</router-link>
@@ -9,24 +37,6 @@
         <router-link to="/System/test-progress">Progress</router-link>
 
     </div>
-
-    <?php
-
-    use VX\UI\EL\Alert;
-
-    $alert = new Alert();
-    $alert->setTitle("alert title");
-    $alert->setDescription("alert description");
-    echo $alert;
-    ?>
-
-    <?php
-
-    $alert = new Alert();
-    $alert->setTitle("alert title");
-    $alert->setDescription("alert description");
-    echo $alert;
-    ?>
 </vue>
 
 <?php
