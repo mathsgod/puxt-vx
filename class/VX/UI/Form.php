@@ -38,7 +38,7 @@ class Form extends HTMLElement implements TranslatorAwareInterface
 
     public function add(string $label)
     {
-        $item = new EL\FormItem;
+        $item = new FormItem;
         $this->append($item);
 
         $item->setLabel($this->translator->trans($label));

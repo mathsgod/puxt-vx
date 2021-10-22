@@ -15,6 +15,75 @@ class FormItem extends HTMLElement
         $this->scope = "scope.form.";
     }
 
+    /**
+     * a key of model. In the use of validate and resetFields method, the attribute is required
+     */
+    function setProp(string $prop)
+    {
+        $this->setAttribute("prop", $prop);
+    }
+
+    /**
+     * label
+     */
+    function setLabel(string $label)
+    {
+        $this->setAttribute("label", $label);
+    }
+
+    /**
+     * width of label, e.g. '50px'. Width auto is supported.
+     */
+    function setLabelWidth(string $width)
+    {
+        $this->setAttribute("label-width", $width);
+    }
+
+    /**
+     * 	whether the field is required or not, will be determined by validation rules if omitted
+     */
+    function setRequired(bool $required)
+    {
+        $this->setAttribute("required", $required);
+    }
+
+    /**
+     * field error message, set its value and the field will validate error and show this message immediately
+     */
+    function setError(string $error)
+    {
+        $this->setAttribute("error", $error);
+    }
+
+    /**
+     * whether to show the error message
+     */
+    function setShowMessage(bool $show)
+    {
+        $this->setAttribute("show-message", $show);
+    }
+
+    /**
+     * inline style validate message
+     */
+    function setInlineMessage(bool $inline_message)
+    {
+        $this->setAttribute("inline-message", $inline_message);
+    }
+
+    /**
+     * control the size of components in this form-item
+     * @param string $size medium / small / mini
+     */
+    function setSize(string $size)
+    {
+        $this->setAttribute("size", $size);
+    }
+
+    
+
+
+
     public function setScope(string $scope)
     {
         $this->scope = $scope;
@@ -137,12 +206,6 @@ class FormItem extends HTMLElement
         return $this;
     }
 
-
-    public function setLabel(string $label)
-    {
-        $this->setAttribute("label", $label);
-        return $this;
-    }
 
     public function textarea(string $name)
     {
