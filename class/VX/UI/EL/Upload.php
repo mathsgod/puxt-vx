@@ -65,7 +65,7 @@ class Upload extends HTMLElement
      */
     function setShowFileList(bool $show)
     {
-        $this->setAttribute("show-file-list", $show);
+        $this->setAttribute(":show-file-list", json_encode($show));
     }
 
     /**
@@ -114,7 +114,7 @@ class Upload extends HTMLElement
      */
     function setAutoUpload(bool $auto_upload)
     {
-        $this->setAttribute("auto-upload", $auto_upload);
+        $this->setAttribute(":auto-upload", json_encode($auto_upload));
     }
 
     /**
