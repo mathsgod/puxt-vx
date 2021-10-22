@@ -74,7 +74,9 @@ return new class
             ]
         ])->filterable()->setTitles(["a", "b"]);
 
-        $form->add("Rate")->rate("rate1");
+        $rate = $form->add("Rate")->rate("rate1");
+        $rate->setShowText(true);
+        $rate->setShowScore(true);
 
         $form->add("Color Picker")->colorPicker('color1');
 
