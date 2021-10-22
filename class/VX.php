@@ -241,7 +241,7 @@ class VX extends Context implements AdapterAwareInterface
             }
 
             if ($a->action) {
-                if($a->usergroup_id){{
+                if($a->usergroup_id){
                     if ($a->action == "all") {
                         $acl->allow("ug-{$a->usergroup_id}", $a->module);
                     } else {
