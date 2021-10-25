@@ -16,6 +16,16 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
 class User extends Model implements RoleInterface
 {
     public static $_table = "User";
+
+    static function Load(int $id): ?static
+    {
+        $user = parent::Load($id);
+        if (!is_array($user->style)) {
+            $user->style = [];
+        }
+        return $user;
+    }
+
     public function isSystemAccount()
     {
         return $this->user_id == 1 || $this->user_id == 2 || $this->user_id == 3;
