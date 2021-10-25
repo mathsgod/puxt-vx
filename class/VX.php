@@ -35,6 +35,7 @@ use VX\UI;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+use VX\SystemValue;
 use VX\UserGroup;
 
 /**
@@ -68,6 +69,16 @@ class VX extends Context implements AdapterAwareInterface
         $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
+    }
+
+
+    function getSystemValue(string $name)
+    {
+        $sv = SystemValue::Query(["name" => $name, "language" => $this->user->language])->first();
+        if ($sv) {
+            return $sv->getValues();
+        }
+        return [];
     }
 
     public function getDB(): Schema
