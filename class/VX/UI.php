@@ -95,8 +95,10 @@ class UI implements TranslatorAwareInterface
         $form->setTranslator($this->translator);
 
         $user = $this->vx->user;
-        if ($user->style["form_size"]) {
-            $form->setAttribute("size", $user->style["form_size"]);
+        if (is_array($user->style)) {
+            if ($user->style["form_size"]) {
+                $form->setAttribute("size", $user->style["form_size"]);
+            }
         }
 
         if ($obj = $this->vx->object()) {
@@ -199,13 +201,16 @@ class UI implements TranslatorAwareInterface
         $d->setTranslator($this->translator);
 
         $user = $this->vx->user;
-        if ($user->style["description_border"]) {
-            $d->setBorder(true);
+        if (is_array($user->style)) {
+            if ($user->style["description_border"]) {
+                $d->setBorder(true);
+            }
+
+            if ($user->style["description_size"]) {
+                $d->setSize($user->style["description_size"]);
+            }
         }
 
-        if ($user->style["description_size"]) {
-            $d->setSize($user->style["description_size"]);
-        }
 
 
         if (is_null($object)) {
