@@ -70,6 +70,11 @@ class TableResponse implements JsonSerializable
         }
     }
 
+    function setSource(\R\DB\Query $source)
+    {
+        $this->source = $source;
+    }
+
     public function addSortCallback(string $prop, callable $callback)
     {
         $this->sort_callback[$prop] = $callback;
