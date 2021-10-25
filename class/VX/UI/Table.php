@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use VX;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
@@ -19,8 +20,10 @@ class Table extends HTMLElement implements TranslatorAwareInterface
     const SORT_ORDER_ASC = "ascending";
 
     public $search;
+    public $default;
 
     public $body;
+    public $vx;
     public function __construct()
     {
         parent::__construct("vx-table");
@@ -32,6 +35,11 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->default = new HTMLElement("template");
         $this->default->setAttribute("v-slot", "table");
         $this->append($this->default);
+    }
+
+    function setVX(VX $vx)
+    {
+        $this->vx = $vx;
     }
 
     function setHeader(string $header)
@@ -159,10 +167,9 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         if ($prop) {
             $column->setProp($prop);
         }
-
-
         return $column;
     }
+
 
     public function addExpand(string $label = "")
     {
@@ -178,5 +185,21 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->default->append($column);
 
         return $template;
+    }
+
+    function __toString()
+    {
+
+        //generate metadata
+        $metadata = [];
+        foreach ($this->default->children as $child) {
+            $metadata["columns"][] = [
+                "prop" => $child->getAttribute("prop") ?? "",
+                "sortable" => $child->hasAttribute("sortable")
+            ];
+        }
+
+        $this->setAttribute("metadata", $this->vx->generateToken($this->vx->user, $metadata));
+        return parent::__toString();
     }
 }

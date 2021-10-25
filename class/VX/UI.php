@@ -35,6 +35,7 @@ class UI implements TranslatorAwareInterface
         $table = new Table;
 
         $table->setTranslator($this->translator);
+        $table->setVX($this->vx);
 
         if ($entry) {
             $query = $this->vx->req->getQueryParams();

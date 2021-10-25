@@ -52,13 +52,6 @@ return new class
             $rt->source->where(["status" => $vx->_get["t"]]);
         }
 
-        $rt->add("username");
-        $rt->add("first_name");
-        $rt->add("last_name");
-        $rt->add("phone");
-        $rt->add("email");
-        $rt->add("join_date");
-        $rt->add("language");
         $rt->add("name", fn (User $user) => $user->__toString());
         return $rt;
     }

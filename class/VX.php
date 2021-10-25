@@ -124,6 +124,22 @@ class VX extends Context implements AdapterAwareInterface
         return $server;
     }
 
+    function generateToken(User $user, array $data)
+    {
+        return JWT::encode([
+            "iat" => time(),
+            "exp" => time() + 3600,
+            "user_id" => $user->user_id,
+            "data" => $data
+        ], $this->config["VX"]["jwt"]["secret"]);
+    }
+
+    function jwtDecode(string $jwt)
+    {
+        $data =  JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        return json_decode(json_encode($data), true);
+    }
+
     public function generateAccessToken(User $user)
     {
         return JWT::encode([
@@ -241,7 +257,7 @@ class VX extends Context implements AdapterAwareInterface
             }
 
             if ($a->action) {
-                if($a->usergroup_id){
+                if ($a->usergroup_id) {
                     if ($a->action == "all") {
                         $acl->allow("ug-{$a->usergroup_id}", $a->module);
                     } else {
@@ -249,7 +265,7 @@ class VX extends Context implements AdapterAwareInterface
                     }
                 }
 
-                if($a->user_id){
+                if ($a->user_id) {
                     if ($a->action == "all") {
                         $acl->allow("u-{$a->user_id}", $a->module);
                     } else {
@@ -263,7 +279,7 @@ class VX extends Context implements AdapterAwareInterface
                 $acl->addResource($a->module . "/" . $a->path, $a->module);
             }
 
-            if($a->usergroup_id){
+            if ($a->usergroup_id) {
                 if ($a->value == "allow") {
                     $acl->allow("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
                 } elseif ($a->value == "deny") {
@@ -271,12 +287,12 @@ class VX extends Context implements AdapterAwareInterface
                 }
             }
 
-            if($a->user_id){
+            if ($a->user_id) {
                 if ($a->value == "allow") {
                     $acl->allow("u-{$a->user_id}", $a->module . "/" . $a->path);
                 } elseif ($a->value == "deny") {
                     $acl->deny("u-{$a->user_id}", $a->module . "/" . $a->path);
-                } 
+                }
             }
         }
 

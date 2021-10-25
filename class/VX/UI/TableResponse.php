@@ -36,6 +36,13 @@ class TableResponse implements JsonSerializable
         $this->search = json_decode($vx->_get["search"], true);
         $this->filter = json_decode($vx->_get["filter"], true);
 
+        $this->metadata = $vx->jwtDecode($vx->_get["metadata"])["data"];
+
+        //base on the columns of metadata
+        foreach ($this->metadata["columns"] as $column) {
+            $this->add($column["prop"]);
+        }
+
         if ($vx->_get["show_view"] == "true") {
             $this->add("__view__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
