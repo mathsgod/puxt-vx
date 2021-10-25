@@ -36,14 +36,20 @@ class TableResponse implements JsonSerializable
         $this->search = json_decode($vx->_get["search"], true);
         $this->filter = json_decode($vx->_get["filter"], true);
 
+
         $this->metadata = $vx->jwtDecode($vx->_get["metadata"])["data"];
+
 
         //base on the columns of metadata
         foreach ($this->metadata["columns"] as $column) {
             $this->add($column["prop"]);
         }
 
-        if ($vx->_get["show_view"] == "true") {
+        $columns = $this->metadata["columns"];
+        $props = array_column($columns, "prop");
+
+
+        if (in_array("__view__", $props)) {
             $this->add("__view__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canReadBy($vx->user)) {
@@ -54,7 +60,7 @@ class TableResponse implements JsonSerializable
             });
         }
 
-        if ($vx->_get["show_update"] == "true") {
+        if (in_array("__update__", $props)) {
             $this->add("__update__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canUpdateBy($vx->user)) {
@@ -65,7 +71,7 @@ class TableResponse implements JsonSerializable
             });
         }
 
-        if ($vx->_get["show_delete"] == "true") {
+        if (in_array("__delete__", $props)) {
             $this->add("__delete__", function ($obj) use ($vx) {
                 if ($obj instanceof IModel) {
                     if ($obj->canDeleteBy($vx->user)) {

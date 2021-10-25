@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use P\MutationObserver;
 use VX;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
@@ -35,6 +36,15 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->default = new HTMLElement("template");
         $this->default->setAttribute("v-slot", "table");
         $this->append($this->default);
+
+        $observer = new MutationObserver(function ($records) {
+            $this->generateMetadata();
+        });
+
+        $observer->observe($this, [
+            "childList" => true,
+            "subtree" => true
+        ]);
     }
 
     function setVX(VX $vx)
@@ -91,7 +101,7 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $this->setAttribute("show-update", true);
         $this->setAttribute("show-delete", true);
 
-        $this->default->append($column = new TableActionColumn);
+        $this->default->appendChild($column = new TableActionColumn);
         $column->setAttribute("v-slot:default", "props");
         $column->setTranslator($this->translator);
 
@@ -160,13 +170,15 @@ class Table extends HTMLElement implements TranslatorAwareInterface
     {
         $column = new TableColumn;
         $column->setTranslator($this->translator);
-        $this->default->append($column);
 
         $column->setLabel($label);
 
         if ($prop) {
             $column->setProp($prop);
         }
+
+        $this->default->appendChild($column);
+
         return $column;
     }
 
@@ -187,19 +199,36 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         return $template;
     }
 
-    function __toString()
+    private function generateMetadata()
     {
-
         //generate metadata
         $metadata = [];
         foreach ($this->default->children as $child) {
+
+            if ($child instanceof TableActionColumn) {
+                $metadata["columns"][] = [
+                    "prop" => "__view__"
+                ];
+
+                $metadata["columns"][] = [
+                    "prop" => "__update__"
+                ];
+
+                $metadata["columns"][] = [
+                    "prop" => "__delete__"
+                ];
+                continue;
+            }
+
+
             $metadata["columns"][] = [
                 "prop" => $child->getAttribute("prop") ?? "",
                 "sortable" => $child->hasAttribute("sortable")
             ];
         }
 
+
+
         $this->setAttribute("metadata", $this->vx->generateToken($this->vx->user, $metadata));
-        return parent::__toString();
     }
 }

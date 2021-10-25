@@ -8,7 +8,7 @@ class TableActionColumn extends TableColumn
 {
     public function addView()
     {
-        $this->append($node = new HTMLElement("router-link"));
+        $this->appendChild($node = new HTMLElement("router-link"));
         $node->style->color = "inherit";
         $node->classList->add("mx-25", "px-25");
         $node->setAttribute("v-if", "props.row.__view__");
