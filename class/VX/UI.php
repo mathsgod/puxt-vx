@@ -45,14 +45,15 @@ class UI implements TranslatorAwareInterface
         }
 
         $user = $this->vx->user;
-        if ($user->style["table_size"]) {
-            $table->setSize($user->style["table_size"]);
-        }
+        if (is_array($user->style)) {
+            if ($user->style["table_size"]) {
+                $table->setSize($user->style["table_size"]);
+            }
 
-        if ($user->style["table_border"] !== null) {
-            $table->setBorder($user->style["table_border"]);
+            if ($user->style["table_border"] !== null) {
+                $table->setBorder($user->style["table_border"]);
+            }
         }
-
 
         return $table;
     }
