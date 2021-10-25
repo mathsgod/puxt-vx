@@ -181,7 +181,7 @@ class UI implements TranslatorAwareInterface
         return new UI\RTableResponse($this->vx, $this->vx->query);
     }
 
-    public function createTableResponse(?\R\DB\Query $source)
+    public function createTableResponse(\R\DB\Query $source = null)
     {
         $resp = new UI\TableResponse($this->vx, $this->vx->query);
         if ($source) {
