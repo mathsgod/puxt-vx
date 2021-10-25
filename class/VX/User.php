@@ -12,6 +12,7 @@ use Laminas\Permissions\Acl\Role\RoleInterface;
  * @property string $last_name
  * @property string $email
  * @property string $username
+ * @property array $style
  */
 class User extends Model implements RoleInterface
 {
