@@ -148,7 +148,8 @@ return new class
             "login" => [
                 "version" => $config["login_version"]
             ],
-            "css" => explode("\n", $config["css"]) ?? []
+            "css" => explode("\n", $config["css"]) ?? [],
+            "js" => explode("\n", $config["js"]) ?? []
         ];
 
         return $data;
