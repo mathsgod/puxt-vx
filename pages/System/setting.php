@@ -64,7 +64,7 @@ return new class
         $f->addDivider();
         $f->add("Custom css")->textarea("css");
 
-        $f->add("Custom css")->textarea("js");
+        $f->add("Custom js")->textarea("js");
 
         $this->form = $f;
     }
