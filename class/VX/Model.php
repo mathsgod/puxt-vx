@@ -105,6 +105,7 @@ class Model extends DBModel implements ResourceInterface, IModel
     {
         $key = $this->_key();
 
+
         if (!$this->$key) { //insert
             if (property_exists($this, "created_time")) {
                 $this->created_time = date("Y-m-d H:i:s");

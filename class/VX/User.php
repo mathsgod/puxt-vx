@@ -22,10 +22,20 @@ class User extends Model implements RoleInterface
     {
         $user = parent::Load($id);
         if (!is_array($user->style)) {
-            $user->style = [];
+            $user->style = json_decode($user->style);
         }
         return $user;
     }
+
+    function save()
+    {
+        $attr = self::__attribute("style");
+        if ($attr["Type"] != "json") {
+            $this->style = json_encode($this->style, JSON_UNESCAPED_UNICODE);
+        }
+        return parent::save();
+    }
+
 
     public function isSystemAccount()
     {

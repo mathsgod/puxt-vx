@@ -108,7 +108,7 @@ return new class
                 "first_name" => $user->first_name,
                 "last_name" => $user->last_name,
                 "language" => $user->language ?? "en",
-                "style" => is_string($user->style) ? json_decode($user->style) : $user->style,
+                "style" => $user->style,
                 "default_page" => $user->default_page ?? "/Dashboard",
                 "usergroup" => $user->UserGroup()->map(fn ($o) => $o->name)->join(","),
                 "image" => $user->photo()
