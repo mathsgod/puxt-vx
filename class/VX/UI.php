@@ -16,6 +16,14 @@ class UI implements TranslatorAwareInterface
         $this->vx = $vx;
     }
 
+    function createMenu()
+    {
+        $menu = new UI\Menu;
+        $menu->setMode("horizontal");
+        $menu->setAttribute("router", true);
+        return $menu;
+    }
+
     public function createLink($obj, string $uri)
     {
         $link = new Link;
