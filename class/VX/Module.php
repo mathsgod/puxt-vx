@@ -150,6 +150,9 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             }
         }
         foreach ($this->menu as $m) {
+            if (!$this->acl->isAllowed($user, substr($m["link"], 1))) {
+                continue;
+            }
             $mm = new ModuleMenu($m);
             $mm->setTranslator($this->translator);
             $links[] = $mm->getMenuLinkByUser($user);

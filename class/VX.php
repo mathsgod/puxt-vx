@@ -307,13 +307,14 @@ class VX extends Context implements AdapterAwareInterface
             }
         }
 
-        if ($this->module) {
-            if (!$acl->hasResource($this->module)) {
-                $acl->addResource($this->module);
+        foreach ($this->getModules() as $module) {
+            if (!$acl->hasResource($module)) {
+                $acl->addResource($module);
             }
-            foreach ($this->module->getFiles() as $file) {
+
+            foreach ($module->getFiles() as $file) {
                 if (!$acl->hasResource($file)) {
-                    $acl->addResource($file, $this->module);
+                    $acl->addResource($file, $module);
                 }
             }
         }
@@ -671,49 +672,30 @@ class VX extends Context implements AdapterAwareInterface
         foreach (glob($this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
             $name = basename($m);
 
-            if (!$this->acl->hasResource($name)) {
-                $this->acl->addResource($name);
-            }
-
             $module = new Module($name);
             $module->loadConfigFile($m . "/setting.yml");
             $module->setTranslator($this->translator);
-            $module->setAcl($this->acl);
-
-            foreach ($module->getFiles() as $file) {
-                if (!$this->acl->hasResource($file)) {
-                    $this->acl->addResource($file, $module);
-                }
-            }
-
             $modules[$name] = $module;
         }
 
         foreach (glob(dirname(__DIR__) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
             $name = basename($m);
 
-            if (!$this->acl->hasResource($name)) {
-                $this->acl->addResource($name);
-            }
-
             if (!$module = $modules[$name]) {
                 $module = new Module($name);
                 $module->setTranslator($this->translator);
-                $module->setAcl($this->acl);
             }
 
             $module->loadConfigFile($m . "/setting.yml");
 
-            foreach ($module->getFiles() as $file) {
-                if (!$this->acl->hasResource($file)) {
-                    $this->acl->addResource($file, $module);
-                }
-            }
-
-
             $modules[$name] = $module;
         }
 
+        if ($this->acl) {
+            foreach ($modules as $module) {
+                $module->setAcl($this->acl);
+            }
+        }
 
         return array_values($modules);
     }
