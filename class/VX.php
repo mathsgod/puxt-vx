@@ -568,11 +568,30 @@ class VX extends Context implements AdapterAwareInterface
         if (!$this->config["VX"]["two_step_verification"]) return false;
         //check white list
 
-        $this->config["VX"]["2-step verification white list"];
+        $whitelist = $this->config["VX"]["two_step_verification_whitelist"];
+
+        $client_ip = $_SERVER["REMOTE_ADDR"];
 
 
+        if ($whitelist) {
+            $whitelist = explode(",", $whitelist);
+            $whitelist = array_map("trim", $whitelist);
+            $whitelist = array_map("strtolower", $whitelist);
+            $whitelist = array_filter($whitelist);
 
-        return false;
+            foreach ($whitelist as $ip) {
+                $cx = explode("/", $ip);
+                if (sizeof($cx) == 1) {
+                    $cx[1] = "255.255.255.255";
+                }
+                $res = ip2long($cx[0]) & ip2long($cx[1]);
+                $res2 = ip2long($client_ip) & ip2long($cx[1]);
+                if ($res == $res2) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
@@ -592,15 +611,17 @@ class VX extends Context implements AdapterAwareInterface
         try {
             $user = User::Login($username, $password);
 
-            if ($user->need2Step($_SERVER["REMOTE_ADDR"])) {
-                if (!$code) {
-                    throw new Exception("code required", 400);
-                }
-                if ($user->secret) {
-                }
-                $g = new GoogleAuthenticator();
-                if (!$g->checkCode($user->secret, $code)) {
-                    throw new Exception("code incorrect");
+            if ($this->isNeed2Step()) {
+                if ($user->need2Step($_SERVER["REMOTE_ADDR"])) {
+                    if (!$code) {
+                        throw new Exception("code required", 400);
+                    }
+                    if ($user->secret) {
+                    }
+                    $g = new GoogleAuthenticator();
+                    if (!$g->checkCode($user->secret, $code)) {
+                        throw new Exception("code incorrect");
+                    }
                 }
             }
 
