@@ -250,6 +250,16 @@ class Select extends FormItemElement
         $this->setAttribute("v-on:focus", $script);
     }
 
+
+    function addOption(string $value, string $label = null)
+    {
+        $option=new Option();
+        $option->setValue($value);
+        $option->setLabel($label);
+        $this->append($option);
+        return $option;
+    }
+
     /**
      * return new added option group
      * @return iterable<OptionGroup> 
