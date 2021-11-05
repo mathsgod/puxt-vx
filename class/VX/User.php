@@ -114,7 +114,10 @@ class User extends Model implements RoleInterface
     }
 
     const STATUS = ["Active", "Inactive"];
-    public static function Login(string $username, string $password)
+    /**
+     * loing with username and password, thow exception if fail
+     */
+    public static function Login(string $username, string $password):self
     {
         $user = self::Query([
             "username" => $username,

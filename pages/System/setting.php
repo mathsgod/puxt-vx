@@ -50,10 +50,14 @@ return new class
 
 
         $f->add("Email from")->email("mail_from");
+        
+
+        $f->addDivider("2 step verification");
+        $f->add("2 Step verification")->switch("two_step_verification");
+        $f->add("White list")->input("two_step_verification_whitelist");
 
         $f->addDivider();
 
-        $f->add("2 Step verification")->switch("two_step_verification");
         $r = $f->add("Biometric authentication");
         $r->switch("biometric_authentication");
         $r->helpBlock("Only https can use Biometric authentication");

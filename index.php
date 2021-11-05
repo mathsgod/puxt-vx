@@ -25,7 +25,7 @@ return function ($options) {
     $this->puxt->hook('ready', function (App $puxt) use ($vx, $schema) {
         $puxt->response = $puxt->response
             ->withHeader("Access-Control-Allow-Credentials", "true")
-            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as")
+            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
             ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
             ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
 

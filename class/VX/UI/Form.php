@@ -3,6 +3,7 @@
 namespace VX\UI;
 
 use P\HTMLElement;
+use P\MutationObserver;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
@@ -17,6 +18,14 @@ class Form extends HTMLElement implements TranslatorAwareInterface
     {
         parent::__construct("vx-form");
         $this->setAttribute("v-slot:default", "scope");
+
+        $mu = new MutationObserver(function () {
+        });
+
+        $mu->observe($this, [
+            "childList" => true,
+            "subtree" => true
+        ]);
     }
 
     public function setAction(string $url = "")

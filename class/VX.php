@@ -563,8 +563,20 @@ class VX extends Context implements AdapterAwareInterface
         return $this->getModule($ps[0]);
     }
 
+    function isNeed2Step()
+    {
+        if (!$this->config["VX"]["two_step_verification"]) return false;
+        //check white list
 
-    public function login(string $username, string $password, ?string $code = null): ?User
+        $this->config["VX"]["2-step verification white list"];
+
+
+
+        return false;
+    }
+
+
+    function login(string $username, string $password, ?string $code = null): ?User
     {
 
         if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
