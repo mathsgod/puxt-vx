@@ -6,11 +6,11 @@ use Exception;
 
 class AuthLock extends Model
 {
-    public static function IsLockedIP(string $ip): bool
+    public static function IsLockedIP(string $ip, int $time): bool
     {
         return self::Query(["ip" => $ip])
             ->where("value>=3")
-            ->where("date_add(`time`,Interval 180 second) > now()")
+            ->where("date_add(`time`,Interval " . $time . " second) > now()")
             ->count() > 0;
     }
 
@@ -26,7 +26,7 @@ class AuthLock extends Model
     public static function LockIP(string $ip)
     {
 
-        return ;
+        return;
         $a = AuthLock::Query([
             "ip" => $ip
         ])->first();

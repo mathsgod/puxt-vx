@@ -26,6 +26,7 @@ return new class
         $config["two_step_verification"] = boolval($config["two_step_verification"]);
         $config["biometric_authentication"] = boolval($config["biometric_authentication"]);
         $config["file_manager_show"] = boolval($config["file_manager_show"]);
+        $config["authentication_lock"] = boolval($config["authentication_lock"]);
 
         $f = $vx->ui->createForm($config);
 
@@ -49,8 +50,14 @@ return new class
         $f->add("Login version")->select("login_version", ["v1" => "v1", "v2" => "v2"]);
 
 
+
         $f->add("Email from")->email("mail_from");
-        
+
+
+        $f->addDivider("Authentication failed lock");
+        $f->add("Authentication lock")->switch("authentication_lock");
+        $f->add("Lockout time (sec)")->inputNumber("authentication_lock_time");
+
 
         $f->addDivider("2 step verification");
         $f->add("2 Step verification")->switch("two_step_verification");

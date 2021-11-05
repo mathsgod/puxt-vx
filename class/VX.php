@@ -324,13 +324,17 @@ class VX extends Context implements AdapterAwareInterface
         return $this->acl;
     }
 
-    public function init(Context $context)
+    function init(Context $context)
     {
-
-
         foreach ($context as $k => $v) {
             $this->$k = $v;
         }
+
+        //set default config
+        $this->config["VX"]["authentication_lock"] = true;
+        $this->config["VX"]["authentication_lock_time"] = 180;
+
+
 
         $config = $this->config["VX"];
         if ($config["table"]) {
@@ -597,12 +601,16 @@ class VX extends Context implements AdapterAwareInterface
     // login with username, password and code, throw exception if failed
     function login(string $username, string $password, ?string $code = null): User
     {
+        $ip = $_SERVER['REMOTE_ADDR'];
 
-        if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
-            throw new Exception("IP locked 180 seconds", 403);
+
+        if ($this->config["VX"]["authentication_lock"]) {
+            $time = $this->config["VX"]["authentication_lock_time"];
+            if (AuthLock::IsLockedIP($ip, $time)) {
+                throw new Exception("IP locked $time seconds", 403);
+            }
         }
 
-        $ip = $_SERVER['REMOTE_ADDR'];
         $ul = UserLog::Create();
         $ul->login_dt = date("Y-m-d H:i:s");
         $ul->ip = $ip;
@@ -612,7 +620,7 @@ class VX extends Context implements AdapterAwareInterface
             $user = User::Login($username, $password);
 
             if ($this->isNeed2Step()) {
-                if ($user->need2Step($_SERVER["REMOTE_ADDR"])) {
+                if ($user->need2Step($ip)) {
                     if (!$code) {
                         throw new Exception("code required", 400);
                     }
