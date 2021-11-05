@@ -198,14 +198,6 @@ class TableResponse implements JsonSerializable
 
         if ($this->data_map instanceof Closure) {
             foreach ($source as $obj) {
-
-
-                $d = $this->data_map->__invoke($obj);
-                if (is_object($d)) {
-                    $hydrator = new ObjectPropertyHydrator();
-                    $d = $hydrator->extract($d);
-                }
-
                 foreach ($this->columns as $column) {
 
                     $prop = $column["prop"];
@@ -216,6 +208,16 @@ class TableResponse implements JsonSerializable
                         $d[$prop] = var_get($obj, $getter);
                     }
                 }
+
+                $dmap = $this->data_map->__invoke($obj);
+                if (is_object($dmap)) {
+                    $hydrator = new ObjectPropertyHydrator();
+                    $dmap = $hydrator->extract($dmap);
+                }
+                foreach($dmap as $k=>$v){
+                    $d[$k] = $v;
+                }
+                
                 $data[] = $d;
             }
             return $data;
