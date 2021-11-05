@@ -594,8 +594,8 @@ class VX extends Context implements AdapterAwareInterface
         return true;
     }
 
-
-    function login(string $username, string $password, ?string $code = null): ?User
+    // login with username, password and code, throw exception if failed
+    function login(string $username, string $password, ?string $code = null): User
     {
 
         if (AuthLock::IsLockedIP($_SERVER["REMOTE_ADDR"])) {
