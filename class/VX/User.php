@@ -22,7 +22,7 @@ class User extends Model implements RoleInterface
     {
         $user = parent::Load($id);
         if (!is_array($user->style)) {
-            $user->style = json_decode($user->style);
+            $user->style = json_decode($user->style,true);
         }
         return $user;
     }
