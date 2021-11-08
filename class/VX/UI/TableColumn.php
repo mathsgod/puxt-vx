@@ -2,9 +2,10 @@
 
 namespace VX\UI;
 
-use Traversable;
+use P\Element;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
+
 
 class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 {
@@ -127,5 +128,17 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
         //$this->setAttribute(':cell-style', json_encode(["white-space" => "nowrap"]));
 
         return $this;
+    }
+
+    function addLink(string $href, string $content)
+    {
+        $link = new Element("router-link");
+        $this->template(function (Template $template) use ($href, $content, $link) {
+
+            $link->setAttribute(":to", "scope.row." . $href);
+            $link->setAttribute("v-text", "scope.row." . $content);
+            $template->append($link);
+        });
+        return $link;
     }
 }
