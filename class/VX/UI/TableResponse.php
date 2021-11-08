@@ -83,6 +83,14 @@ class TableResponse implements JsonSerializable
         }
     }
 
+    function setData(\R\DB\Query $source)
+    {
+        $this->source = $source;
+    }
+
+    /**
+     * @deprecated use setData
+     */
     function setSource(\R\DB\Query $source)
     {
         $this->source = $source;
