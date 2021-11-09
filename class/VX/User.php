@@ -63,7 +63,7 @@ class User extends Model implements RoleInterface
 
     public function removeMyFavorite(string $path)
     {
-        return $this->MyFavorite->filter(["path" => $path])->delete()->execute();
+        return $this->MyFavorite->where(["path" => $path])->delete();
     }
 
     public function addMyFavorite(string $label, string $path)
