@@ -5,6 +5,18 @@ namespace VX;
 class SystemValue extends Model
 {
 
+    static function Get(string $name, string $lang = "en"): ?self
+    {
+        return self::Query(
+            [
+                "language" => $lang,
+                "name" => $name
+            ]
+        )->first();
+    }
+
+
+
     function getValues(): array
     {
         // test json
