@@ -10,7 +10,7 @@ use Webauthn\PublicKeyCredentialSource;
 
 return new class
 {
-    public function renew_access_token(VX $vx)
+    function renew_access_token(VX $vx)
     {
         $refresh_token = $vx->_post["refresh_token"];
         $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
@@ -27,7 +27,7 @@ return new class
         throw new Exception("error when renew access token");
     }
 
-    public function get(VX $vx)
+    function get(VX $vx)
     {
 
         $logined = $vx->logined;
@@ -155,34 +155,34 @@ return new class
         return $data;
     }
 
-    public function forgotPassword(VX $vx)
+    function forgotPassword(VX $vx)
     {
         $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
         return ["data" => true];
     }
 
-    public function resetPassword(VX $vx)
+    function resetPassword(VX $vx)
     {
         $vx->resetPassword($vx->_post["password"], $vx->_post["token"]);
         return ["data" => true];
     }
 
 
-    public function setNavbarColor(VX $vx)
+    function setNavbarColor(VX $vx)
     {
         $user = $vx->user;
         $user->style["navbar_color"] = $vx->_post["color"];
         $user->save();
     }
 
-    public function setNavbarType(VX $vx)
+    function setNavbarType(VX $vx)
     {
         $user = $vx->user;
         $user->style["navbar_type"] = $vx->_post["type"];
         $user->save();
     }
 
-    public function setLanguage(VX $vx)
+    function setLanguage(VX $vx)
     {
         if ($user = $vx->user) {
             $user->language = $vx->_post["language"];
@@ -191,40 +191,40 @@ return new class
         }
     }
 
-    public function setFooterType(VX $vx)
+    function setFooterType(VX $vx)
     {
         $user = $vx->user;
         $user->style["footer_type"] = $vx->_post["type"];
         $user->save();
     }
 
-    public function setCollapsible(VX $vx)
+    function setCollapsible(VX $vx)
     {
         $user = $vx->user;
         $user->style["collapsible"] = $vx->_post["collapsible"];
         $user->save();
     }
 
-    public function setLayout(VX $vx)
+    function setLayout(VX $vx)
     {
         $user = $vx->user;
         $user->style["layout"] = $vx->_post["layout"];
         $user->save();
     }
 
-    public function addMyFavorite(VX $vx)
+    function addMyFavorite(VX $vx)
     {
         $user = $vx->user;
         $user->addMyFavorite($vx->_post["label"], $vx->_post["path"]);
     }
 
-    public function removeMyFavorite(VX $vx)
+    function removeMyFavorite(VX $vx)
     {
         $user = $vx->user;
         $user->removeMyFavorite($vx->_post["path"]);
     }
 
-    public function authAssertion(VX $vx)
+    function authAssertion(VX $vx)
     {
         $server = $vx->getWebAuthnServer();
         $server->setSecuredRelyingPartyId(["localhost"]);
@@ -250,7 +250,7 @@ return new class
         ];
     }
 
-    public function authRequestOptions(VX $vx)
+    function authRequestOptions(VX $vx)
     {
 
         $source = new PublicKeyCredentialSourceRepository();
