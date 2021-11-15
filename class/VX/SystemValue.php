@@ -5,14 +5,14 @@ namespace VX;
 class SystemValue extends Model
 {
 
-    static function Get(string $name, string $lang = "en"): ?self
+    static function Values(string $name, string $lang = "en")
     {
         return self::Query(
             [
                 "language" => $lang,
                 "name" => $name
             ]
-        )->first();
+        )->first()?->getValues();
     }
 
 
