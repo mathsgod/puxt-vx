@@ -178,17 +178,24 @@ class Table extends HTMLElement implements TranslatorAwareInterface
 
         $column->setLabel($label);
 
-        if ($prop) {
-            $column->setProp($prop);
-        }
 
+        if ($prop) {
+
+            if ($prop instanceof Closure) {
+                $column->template($prop);
+            } else {
+                $column->setProp($prop);
+            }
+        }
+        
         $this->default->appendChild($column);
 
         return $column;
     }
 
 
-    public function addExpand(string $label = "", ?callable $callback, string $scope = "scope")
+
+    public function addExpand(string $label = "", ?callable $callback = null, string $scope = "scope")
     {
 
         $column = new TableColumn;
