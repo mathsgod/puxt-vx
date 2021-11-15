@@ -2,7 +2,9 @@
 
 namespace VX\UI;
 
+use Closure;
 use P\HTMLElement;
+use P\HTMLTemplateElement;
 use P\MutationObserver;
 use VX;
 use VX\TranslatorAwareInterface;
@@ -166,7 +168,10 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         return $template;
     }
 
-    public function add(string $label, ?string $prop = null)
+    /**
+     * @param null|string|callable $prop
+     */
+    public function add(string $label, $prop = null)
     {
         $column = new TableColumn;
         $column->setTranslator($this->translator);
@@ -183,18 +188,27 @@ class Table extends HTMLElement implements TranslatorAwareInterface
     }
 
 
-    public function addExpand(string $label = "")
+    public function addExpand(string $label = "", ?callable $callback, string $scope = "scope")
     {
 
         $column = new TableColumn;
         $column->setAttribute("type", "expand");
         $column->setAttribute("label", $label);
 
+        $this->default->append($column);
+
+        if ($callback instanceof Closure) {
+            $template = new HTMLTemplateElement;
+            $template->setAttribute("v-slot:default", $scope);
+            $column->appendChild($template);
+            $callback($template);
+            return;
+        }
+
         $template = new HTMLElement("template");
         $template->setAttribute("v-slot:default", "props");
         $column->append($template);
 
-        $this->default->append($column);
 
         return $template;
     }
