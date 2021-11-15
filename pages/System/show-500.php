@@ -8,6 +8,7 @@ return new class
 {
     function get(VX $vx)
     {
-        http_response_code(500);
+
+        throw new Exception('500 Error', 500);
     }
 };
