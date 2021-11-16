@@ -15,7 +15,7 @@ class Dialog extends HTMLElement
     function activiator(callable $callback)
     {
         $template = new HTMLTemplateElement;
-        $template->setAttribute(":v-slot:activiator", "{on}");
+        $template->setAttribute("v-slot:activator", "{on}");
         $this->append($template);
         $callback($template);
         return $this;
@@ -24,5 +24,10 @@ class Dialog extends HTMLElement
     function setWidth(string $width)
     {
         $this->setAttribute("width", $width);
+    }
+
+    function setTitle(string $title)
+    {
+        $this->setAttribute("title", $title);
     }
 }
