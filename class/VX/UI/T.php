@@ -147,7 +147,7 @@ class T extends EL\Table implements TranslatorAwareInterface
         $data = json_decode($data, true) ?? [];
 
         $dd = [];
-        foreach ($this->data as $d) {
+        foreach ($this->_data as $d) {
             $dd[] = $call($d);
         }
 
