@@ -21,6 +21,12 @@ class T extends EL\Table implements TranslatorAwareInterface
         $this->user = $user;
     }
 
+    function setData(iterable $data)
+    {
+        $this->_data = $data;
+        return parent::setData($data);
+    }
+
     public function addActionColumn()
     {
         $data = $this->getAttribute(":data");
@@ -98,10 +104,9 @@ class T extends EL\Table implements TranslatorAwareInterface
         $data = $this->getAttribute(":data");
         $data = json_decode($data, true) ?? [];
 
-
         $dd = [];
 
-        foreach ($this->data as $d) {
+        foreach ($this->_data as $d) {
 
             if ($prop instanceof Closure) {
                 $dd[] = $prop($d);
