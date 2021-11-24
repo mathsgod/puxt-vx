@@ -23,7 +23,7 @@
         "twig/twig": "^2.12",
         "phpmailer/phpmailer": "^6.5",
         "laminas/laminas-permissions-acl": "^2.8",
-        "mathsgod/r-db": "^4.0",
+        "mathsgod/r-db": "^4.4",
         "psr/http-server-middleware": "^1.0",
         "laminas/laminas-hydrator": "^4.3",
         "phpoffice/phpspreadsheet": "^1.18"

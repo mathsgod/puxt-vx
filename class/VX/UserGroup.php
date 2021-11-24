@@ -4,9 +4,13 @@ namespace VX;
 
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserGroup extends Model implements RoleInterface
 {
+    #[Assert\NotBlank]
+    public $name;
+
     public function getRoleId()
     {
         return "ug-" . $this->usergroup_id;

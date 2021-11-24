@@ -2,6 +2,7 @@
 
 use PUXT\App;
 use R\DB\Schema;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Parser;
 use VX\Model;
 use VX\Config;
@@ -17,6 +18,10 @@ return function ($options) {
 
     $db_config = $this->puxt->config["database"];
     $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
+    $validator = Validation::createValidatorBuilder()
+        ->enableAnnotationMapping()
+        ->getValidator();
+    $schema->setDefaultValidator($validator);
 
     $vx = new VX();
     $vx->setDbAdapter($schema->getDbAdatpter());
@@ -101,7 +106,7 @@ return function ($options) {
         //--- REST ---
         //get
         if (
-            $vx->req->getMethod() == "GET"
+            $vx->request->getMethod() == "GET"
             && $module
             && $vx->object_id
             && (($module->name . "/" . $vx->object_id) == $org_path)
@@ -124,8 +129,8 @@ return function ($options) {
 
         //create
         if (
-            $vx->req->getMethod() == "POST"
-            && strstr($vx->req->getHeader("Content-Type")[0], "application/json")
+            $vx->request->getMethod() == "POST"
+            && strstr($vx->request->getHeader("Content-Type")[0], "application/json")
             && $module
             && !$vx->object_id
             && $module->name == $org_path
@@ -135,30 +140,19 @@ return function ($options) {
                 exit();
             }
 
-            try {
+            $obj = $module->createObject();
+            $obj->bind($vx->request->getParsedBody());
+            $obj->save();
 
-                $obj = $module->createObject();
-                $obj->bind($vx->req->getParsedBody());
-                $obj->save();
-                $id = $obj->_id();
-                http_response_code(201);
-                header("Content-Location: " . $obj->uri());
-                exit();
-            } catch (Exception $e) {
-
-                $result = ["error" => [
-                    "message" => $e->getMessage()
-                ]];
-
-                header("Content-Type: application/json");
-                echo json_encode($result, JSON_UNESCAPED_UNICODE);
-                exit();
-            }
+            $id = $obj->_id();
+            http_response_code(201);
+            header("Content-Location: " . $obj->uri());
+            exit();
         }
 
         if (
-            $vx->req->getMethod() == "PATCH"
-            && strstr($vx->req->getHeader("Content-Type")[0], "application/json")
+            $vx->request->getMethod() == "PATCH"
+            && strstr($vx->request->getHeader("Content-Type")[0], "application/json")
             && $vx->object_id
             && (($module->name . "/" . $vx->object_id) == $org_path)
         ) {
@@ -173,7 +167,7 @@ return function ($options) {
                 exit();
             }
 
-            $obj->bind($vx->req->getParsedBody());
+            $obj->bind($vx->request->getParsedBody());
             $obj->save();
 
             header("Content-Location: " . $obj->uri());
@@ -181,7 +175,7 @@ return function ($options) {
             exit();
         }
 
-        if ($vx->req->getMethod() == "DELETE") {
+        if ($vx->request->getMethod() == "DELETE") {
 
             if (!$vx->logined) {
                 http_response_code(401);

@@ -5,6 +5,7 @@ namespace VX;
 use Exception;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @property int $user_id
@@ -18,11 +19,26 @@ class User extends Model implements RoleInterface
 {
     public static $_table = "User";
 
+    #[Assert\NotBlank]
+    public $username;
+
+    #[Assert\NotBlank]
+    public $first_name;
+
+    #[Assert\NotBlank]
+    public $email;
+
+    #[Assert\NotBlank]
+    public $join_date;
+
+    #[Assert\Choice([0, 1])]
+    public $status;
+
     static function Load(int $id): ?static
     {
         $user = parent::Load($id);
         if (!is_array($user->style)) {
-            $user->style = json_decode($user->style,true);
+            $user->style = json_decode($user->style, true);
         }
         return $user;
     }
@@ -117,7 +133,7 @@ class User extends Model implements RoleInterface
     /**
      * loing with username and password, thow exception if fail
      */
-    public static function Login(string $username, string $password):self
+    public static function Login(string $username, string $password): self
     {
         $user = self::Query([
             "username" => $username,

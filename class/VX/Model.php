@@ -2,6 +2,7 @@
 
 namespace VX;
 
+use Exception;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
@@ -17,7 +18,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         return $vx->object();
     }
 
-    
+
     /* static $_event;
     public function setEventManager(EventManagerInterface $eventManager)
     {
@@ -103,6 +104,7 @@ class Model extends DBModel implements ResourceInterface, IModel
 
     public function save()
     {
+
         $key = $this->_key();
 
 
@@ -123,6 +125,7 @@ class Model extends DBModel implements ResourceInterface, IModel
             $ret = parent::save();
             self::$_vx->trigger("after_update", $this);
         }
+
         return $ret;
     }
 
