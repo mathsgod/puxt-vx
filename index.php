@@ -25,33 +25,34 @@ return function ($options) {
         http_response_code(200);
         exit;
     }
-    
+
 
     $vx = new VX($this->puxt);
 
-
+    $u = $vx->getModule("User");
 
     $router = new Router();
     foreach ($vx->getModules() as $module) {
         foreach ($module->getRouterMap() as $map) {
-
             $handler = $map["handler"];
-            $router->map($map['method'], "/vx/" . $map['path'], function (ServerRequestInterface $request) use ($vx, $handler) {
+
+            $router->map($map['method'], "/vx/" . $map['path'], function (ServerRequestInterface $request, array $args) use ($vx, $handler) {
+
                 return $vx->process($request, $handler);
             });
         }
     }
-    
+
 
     $router->map("GET", "/vx/", function (ServerRequestInterface $request) use ($vx) {
         return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/index.php"));
     });
 
-    $router->map("POST", "/vx/login", function (ServerRequestInterface $request) use ($vx) {
-        return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/login.php"));
+    $router->map("POST", "/vx/", function (ServerRequestInterface $request) use ($vx) {
+        return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/index.php"));
     });
 
-    $router->map("GET", "/vx/login", function (ServerRequestInterface $request) use ($vx) {
+    $router->map("POST", "/vx/login", function (ServerRequestInterface $request) use ($vx) {
         return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/login.php"));
     });
 

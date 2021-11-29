@@ -84,8 +84,25 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
-        //load all modules
+        $this->processModules();
 
+
+
+        $db_config = $puxt->config["database"];
+        $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
+
+
+        $validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
+        $schema->setDefaultValidator($validator);
+
+        $this->setDbAdapter($schema->getDbAdatpter());
+        Model::SetSchema($schema);
+    }
+
+    private function processModules()
+    {
         //system module
         $modules = [];
         foreach (glob($this->vx_root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
@@ -102,19 +119,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         foreach ($modules as $module) {
             $this->modules[] = new Module($this, $module);
         }
-
-
-        $db_config = $puxt->config["database"];
-        $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
-
-
-        $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
-            ->getValidator();
-        $schema->setDefaultValidator($validator);
-
-        $this->setDbAdapter($schema->getDbAdatpter());
-        Model::SetSchema($schema);
     }
 
     function getUserIdByToken(string $token)
@@ -148,7 +152,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
 
         return $response;
     }
-
 
     private function processTranslator()
     {

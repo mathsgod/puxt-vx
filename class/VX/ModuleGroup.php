@@ -26,6 +26,7 @@ class ModuleGroup implements TranslatorAwareInterface
     public function add(Module $module)
     {
         $this->child[] = $module;
+        $module->setTranslator($this->translator);
         $this->sequence = min($this->sequence, $module->sequence);
     }
 

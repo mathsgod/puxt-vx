@@ -66,21 +66,62 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                     $this->files[$path] = new ModuleFile($this, $this->name . "/" . $path, $b . DIRECTORY_SEPARATOR . $path);
                 }
             }
+
+            //load config 
+            if (file_exists($b . DIRECTORY_SEPARATOR . "setting.yml")) {
+                $config = Yaml::parseFile($b . DIRECTORY_SEPARATOR . "setting.yml");
+                if (isset($config["class"])) {
+                    $this->class = $config["class"];
+                }
+                if (isset($config["icon"])) {
+                    $this->icon = $config["icon"];
+                }
+                if (isset($config["group"])) {
+                    $this->group = $config["group"];
+                }
+                if (isset($config["sequence"])) {
+                    $this->sequence = $config["sequence"];
+                }
+                if (isset($config["hide"])) {
+                    $this->hide = $config["hide"];
+                }
+            }
         }
+
+
 
         $this->files = array_values($this->files);
     }
 
+    private function getModuleFile(string $path)
+    {
+        foreach ($this->files as $file) {
+            if ($file->path == $path) {
+                return $file;
+            }
+        }
+    }
+
     function getRouterMap()
     {
+
+
         $map = [];
+
+        if ($module_file = $this->getModuleFile($this->name . "/index")) {
+            $map[] = [
+                "method" => "GET",
+                "path" => $this->name,
+                "handler" => $module_file
+            ];
+        }
+
+
         foreach ($this->files as $file) {
             $map[] = [
                 "method" => "GET",
                 "path" => $file->path,
-                "handler" => function (RequestInterface $request, array $args) use ($file) {
-                    return $file->handle($request);
-                }
+                "handler" => $file
             ];
         }
 
@@ -193,5 +234,20 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             $links[] = $mm->getMenuLinkByUser($user);
         }
         return $links;
+    }
+
+    function __debugInfo()
+    {
+        return [
+            "name" => $this->name,
+            "class" => $this->class,
+            "icon" => $this->icon,
+            "group" => $this->group,
+            "sequence" => $this->sequence,
+            "hide" => $this->hide,
+            "show_create" => $this->show_create,
+            "menu" => $this->menu,
+            "files" => $this->files
+        ];
     }
 }
