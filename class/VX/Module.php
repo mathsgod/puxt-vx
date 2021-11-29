@@ -5,7 +5,12 @@ namespace VX;
 use Exception;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use League\Flysystem\FileAttributes;
+use League\Flysystem\StorageAttributes;
+use League\Route\Router;
+use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Yaml\Yaml;
+use VX;
 
 class Module implements TranslatorAwareInterface, ResourceInterface
 {
@@ -24,15 +29,65 @@ class Module implements TranslatorAwareInterface, ResourceInterface
      */
     public $acl;
 
-    public function __construct(string $name, ?array $config = [])
+    /**
+     * @var ModuleFile[] $files
+     */
+    public $files = [];
+
+    public $vx;
+
+    public function __construct(VX $vx, string $name)
     {
+        $this->vx = $vx;
         $this->name = $name;
         $this->class = $name;
 
-        foreach ($config as $k => $v) {
-            $this->$k = $v;
+        // load all system files
+        $base[] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name;
+        $base[] = getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name;
+
+        foreach ($base as $b) {
+
+            if (file_exists($b)) {
+                $adapter = new \League\Flysystem\Local\LocalFilesystemAdapter($b);
+                $fs = new \League\Flysystem\Filesystem($adapter);
+                $files = $fs->listContents('/', true)->filter(function (StorageAttributes $attributes) {
+                    return $attributes->isFile();
+                })->filter(function (FileAttributes $attributes) {
+                    $ext = pathinfo($attributes->path(), PATHINFO_EXTENSION);
+                    return $ext == "php" || $ext == "twig";
+                })->toArray();
+
+                foreach ($files as $file) {
+
+                    $ext = pathinfo($file["path"], PATHINFO_EXTENSION);
+                    $path = substr($file["path"], 0, - (strlen($ext) + 1));
+
+                    $this->files[$path] = new ModuleFile($this, $this->name . "/" . $path, $b . DIRECTORY_SEPARATOR . $path);
+                }
+            }
         }
+
+        $this->files = array_values($this->files);
     }
+
+    function getRouterMap()
+    {
+        $map = [];
+        foreach ($this->files as $file) {
+            $map[] = [
+                "method" => "GET",
+                "path" => $file->path,
+                "handler" => function (RequestInterface $request, array $args) use ($file) {
+                    return $file->handle($request);
+                }
+            ];
+        }
+
+        return $map;
+    }
+
+
 
     public function getResourceId()
     {
@@ -49,27 +104,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
      */
     public function getFiles()
     {
-
-        $files = [];
-
-
-        $path = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . "*";
-        foreach (glob($path) as $file) {
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if ($ext != "php" && $ext != "twig") continue;
-            $filename = pathinfo($file, PATHINFO_FILENAME);
-            $files[$filename] = new ModuleFile($this, $file);
-        }
-
-        $path = getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . "*";
-        foreach (glob($path) as $file) {
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if ($ext != "php" && $ext != "twig") continue;
-            $filename = pathinfo($file, PATHINFO_FILENAME);
-            $files[$filename] = new ModuleFile($this, $file);
-        }
-
-        return array_values($files);
+        return $this->files;
     }
 
     public function loadConfigFile(string $filename)

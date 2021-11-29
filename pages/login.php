@@ -12,6 +12,7 @@ return new class
     {
         return ["login page"];
     }
+
     function post(VX $vx)
     {
 
@@ -24,6 +25,7 @@ return new class
             "iat" => time(),
             "exp" => time() + 3600,
             "user_id" => $user->user_id
+
         ], $vx->config["VX"]["jwt"]["secret"]);
 
         $refresh_token = JWT::encode([

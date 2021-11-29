@@ -29,7 +29,7 @@ return new class
 
     function get(VX $vx)
     {
-
+        
         $logined = $vx->logined;
         $data = [
             "logined" => $logined,
@@ -45,10 +45,11 @@ return new class
             ]
         ];
 
+
         $data["locale"] = "en";
         if ($logined) {
 
-
+            
             //fav
             $data["favs"] = [];
             foreach ($vx->user->MyFavorite() as $fav) {
@@ -74,10 +75,10 @@ return new class
                 $group_icons[$name] = $group["icon"];
             }
 
-
             $modules = $vx->getModules();
 
             $menu = new VX\Menu();
+            $menu->setACL($vx->getAcl());
             $menu->setTranslator($vx->getTranslator());
             $menu->setGroupIcon($group_icons);
 
@@ -91,7 +92,6 @@ return new class
 
                 $menu->addModule($m);
             }
-
 
             $data["menus"] = $menu->getMenuByUser($vx->user);
 

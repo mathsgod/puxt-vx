@@ -4,24 +4,31 @@ use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
-use Laminas\Db\Sql\Predicate\Predicate;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use PUXT\App;
 use PUXT\Context;
 use R\DB\Schema;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\ACL as VXACL;
 use VX\AuthLock;
+use VX\Config;
 use VX\EventLog;
 use VX\IModel;
 use VX\Mailer;
@@ -43,7 +50,7 @@ use VX\UserGroup;
  * @property int $user_id
  * @property Module $module
  */
-class VX extends Context implements AdapterAwareInterface
+class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
 {
 
     use AdapterAwareTrait;
@@ -63,14 +70,175 @@ class VX extends Context implements AdapterAwareInterface
     public $locale;
     public $db;
 
-    public function __construct()
+    private $modules = [];
+    private $puxt;
+
+    public function __construct(App $puxt)
     {
+
+        $this->puxt = $puxt;
+        $this->root = $puxt->root;
+        $this->config = $puxt->config;
         $this->res = new Response;
         $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
+
+        //load all modules
+
+        //system module
+        $modules = [];
+        foreach (glob($this->vx_root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
+            $modules[] = basename($m);
+        }
+
+        //user module
+        foreach (glob(getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
+            $modules[] = basename($m);
+        }
+
+        $modules = array_values(array_unique($modules));
+
+        foreach ($modules as $module) {
+            $this->modules[] = new Module($this, $module);
+        }
+
+
+        $db_config = $puxt->config["database"];
+        $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
+
+
+        $validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
+        $schema->setDefaultValidator($validator);
+
+        $this->setDbAdapter($schema->getDbAdatpter());
+        Model::SetSchema($schema);
     }
 
+    function getUserIdByToken(string $token)
+    {
+        $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        return $token->user_id;
+    }
+
+    function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $this->processConfig();
+        $this->processAuthorization($request);
+        $this->processTranslator();
+
+
+
+        $this->_get = $_GET;
+        $this->_post = $request->getParsedBody();
+
+        $request = $request->withAttribute("context", $this);
+
+        $response = $handler->handle($request);
+        if ($_SERVER["HTTP_ORIGIN"]) {
+            $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
+        }
+        $response = $response
+            ->withHeader("Access-Control-Allow-Credentials", "true")
+            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
+            ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
+            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
+
+        return $response;
+    }
+
+
+    private function processTranslator()
+    {
+        $locale = $this->user->language ?? "en";
+        $this->locale = $locale;
+        //translator
+        $translator = new Translator($locale);
+        $translator->setFallbackLocales(["en"]);
+
+        if (file_exists($this->vx_root . "/messages.$locale.yml")) {
+            $translator->addLoader("yaml", new YamlFileLoader);
+            $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
+        }
+
+        //en
+        if (file_exists($this->vx_root . "/messages.en.yml")) {
+            $translator->addLoader("yaml", new YamlFileLoader);
+            $translator->addResource('yaml', $this->vx_root . "/messages.en.yml", "en");
+        }
+
+
+        //load from db
+        $translator->addLoader("array", new ArrayLoader);
+        $a = [];
+
+        foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
+            $w->expression("module is null or module=''", []);
+        }) as $t) {
+            $a[$t->name] = $t->value;
+        }
+
+        foreach (Translate::Query(["module" => $this->module->name, "language" => $locale]) as $t) {
+            $a[$t->name] = $t->value;
+        }
+        $translator->addResource("array", $a, $locale);
+
+        $this->translator = $translator;
+        $this->ui->setTranslator($this->translator);
+    }
+
+    private function processConfig()
+    {
+        $parser = new Parser;
+        foreach ($parser->parseFile($this->vx_root . "/default.config.yml") as $k => $v) {
+            $this->config["VX"][$k] = $v;
+        }
+
+        foreach (Config::Query() as $config) {
+            $this->config["VX"][$config->name] = $config->value;
+        }
+    }
+
+    private function processAuthorization(ServerRequestInterface $request)
+    {
+        //authorization
+
+        $this->user_id = 2;
+
+        $query = $request->getQueryParams();
+        if ($query["_token"]) {
+            $token = $query["_token"];
+        } else {
+            $authorization = $request->getHeaderLine("Authorization");
+            if ($authorization) {
+                $authorization = explode(" ", $authorization);
+                if (count($authorization) == 2) {
+                    $token = $authorization[1];
+                }
+            }
+        }
+
+        if ($token) {
+            if ($user_id = $this->getUserIdByToken($token)) {
+                $this->user_id = $user_id;
+                $this->logined = true;
+            }
+        }
+
+        $this->user = User::Get($this->user_id);
+    }
+
+    public function getModule(string $name): ?Module
+    {
+        foreach ($this->modules as $module) {
+            if ($module->name == $name) {
+                return $module;
+            }
+        }
+        return null;
+    }
 
     function getSystemValue(string $name)
     {
@@ -203,7 +371,6 @@ class VX extends Context implements AdapterAwareInterface
     {
         if ($this->acl) return $this->acl;
 
-
         //acl
         $acl = new Acl;
 
@@ -307,6 +474,7 @@ class VX extends Context implements AdapterAwareInterface
             }
         }
 
+
         foreach ($this->getModules() as $module) {
             if (!$acl->hasResource($module)) {
                 $acl->addResource($module);
@@ -326,6 +494,7 @@ class VX extends Context implements AdapterAwareInterface
 
     function init(Context $context)
     {
+        return;
         foreach ($context as $k => $v) {
             $this->$k = $v;
         }
@@ -345,7 +514,7 @@ class VX extends Context implements AdapterAwareInterface
         }
 
         $this->_files = [];
-        foreach ($this->req->getUploadedFiles() as $name => $file) {
+        foreach ($this->request->getUploadedFiles() as $name => $file) {
 
             if (is_array($file)) {
                 $this->_files[$name] = $file;
@@ -404,43 +573,6 @@ class VX extends Context implements AdapterAwareInterface
         $path = $context->route->path;
         $p = explode("/", $path)[0];
         $this->module = $this->getModule($p);
-
-
-        $locale = $this->user->language ?? "en";
-        $this->locale = $locale;
-        //translator
-        $translator = new Translator($locale);
-        $translator->setFallbackLocales(["en"]);
-
-        if (file_exists($this->vx_root . "/messages.$locale.yml")) {
-            $translator->addLoader("yaml", new YamlFileLoader);
-            $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
-        }
-
-        //en
-        if (file_exists($this->vx_root . "/messages.en.yml")) {
-            $translator->addLoader("yaml", new YamlFileLoader);
-            $translator->addResource('yaml', $this->vx_root . "/messages.en.yml", "en");
-        }
-
-
-        //load from db
-        $translator->addLoader("array", new ArrayLoader);
-        $a = [];
-
-        foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
-            $w->expression("module is null or module=''", []);
-        }) as $t) {
-            $a[$t->name] = $t->value;
-        }
-
-        foreach (Translate::Query(["module" => $this->module->name, "language" => $locale]) as $t) {
-            $a[$t->name] = $t->value;
-        }
-        $translator->addResource("array", $a, $locale);
-
-        $this->translator = $translator;
-        $this->ui->setTranslator($this->translator);
     }
 
     public function getModuleTranslate()
@@ -681,64 +813,12 @@ class VX extends Context implements AdapterAwareInterface
         return null;
     }
 
-    public function getModule(string $name)
-    {
-
-        if (file_exists($this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $name)) {
-            $config = [];
-            if (file_exists($setting = $this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . "setting.yml")) {
-                $config = Yaml::parseFile($setting);
-            }
-
-            return new Module($name, $config);
-        }
-
-        if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $name)) {
-            $config = [];
-            if (file_exists($setting = dirname(__DIR__) . "/pages/$name/setting.yml")) {
-                $config = Yaml::parseFile($setting);
-            }
-
-            return new Module($name, $config);
-        }
-    }
-
     /**
      * @return Module[]
      */
     public function getModules()
     {
-
-        $modules = [];
-        foreach (glob($this->root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
-            $name = basename($m);
-
-            $module = new Module($name);
-            $module->loadConfigFile($m . "/setting.yml");
-            $module->setTranslator($this->translator);
-            $modules[$name] = $module;
-        }
-
-        foreach (glob(dirname(__DIR__) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR) as $m) {
-            $name = basename($m);
-
-            if (!$module = $modules[$name]) {
-                $module = new Module($name);
-                $module->setTranslator($this->translator);
-            }
-
-            $module->loadConfigFile($m . "/setting.yml");
-
-            $modules[$name] = $module;
-        }
-
-        if ($this->acl) {
-            foreach ($modules as $module) {
-                $module->setAcl($this->acl);
-            }
-        }
-
-        return array_values($modules);
+        return $this->modules;
     }
 
     public function postForm()
@@ -778,5 +858,10 @@ class VX extends Context implements AdapterAwareInterface
         if ($name == "before_delete") {
             EventLog::LogDelete($obj, $this->user);
         }
+    }
+
+    function getRequestHandler(string $file)
+    {
+        return  new \PUXT\RequestHandler($file);
     }
 }

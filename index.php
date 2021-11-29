@@ -1,33 +1,186 @@
 <?php
 
+use Complex\Exception;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ServerRequest;
+use League\Flysystem\DirectoryAttributes;
+use League\Flysystem\FileAttributes;
+use League\Flysystem\StorageAttributes;
+use League\Route\Router;
+use Psr\Http\Message\ServerRequestInterface;
 use PUXT\App;
 use R\DB\Schema;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Parser;
 use VX\Model;
 use VX\Config;
-use VX\EventLog;
+use VX\Module;
 use VX\TwigI18n;
+use VX\User;
+use VX\UserGroup;
 
 return function ($options) {
-
-    if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
-        header("HTTP/1.1 200 OK");
-        exit();
+    if ($this->puxt->request->getMethod() == "OPTIONS") {
+        http_response_code(200);
+        exit;
     }
+    
 
-    $db_config = $this->puxt->config["database"];
-    $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
-    $validator = Validation::createValidatorBuilder()
-        ->enableAnnotationMapping()
-        ->getValidator();
-    $schema->setDefaultValidator($validator);
+    $vx = new VX($this->puxt);
 
-    $vx = new VX();
-    $vx->setDbAdapter($schema->getDbAdatpter());
-    Model::SetSchema($schema);
 
-    $this->puxt->hook('ready', function (App $puxt) use ($vx, $schema) {
+
+    $router = new Router();
+    foreach ($vx->getModules() as $module) {
+        foreach ($module->getRouterMap() as $map) {
+
+            $handler = $map["handler"];
+            $router->map($map['method'], "/vx/" . $map['path'], function (ServerRequestInterface $request) use ($vx, $handler) {
+                return $vx->process($request, $handler);
+            });
+        }
+    }
+    
+
+    $router->map("GET", "/vx/", function (ServerRequestInterface $request) use ($vx) {
+        return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/index.php"));
+    });
+
+    $router->map("POST", "/vx/login", function (ServerRequestInterface $request) use ($vx) {
+        return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/login.php"));
+    });
+
+    $router->map("GET", "/vx/login", function (ServerRequestInterface $request) use ($vx) {
+        return $vx->process($request, $vx->getRequestHandler($vx->vx_root . "/pages/login.php"));
+    });
+
+
+    $this->puxt->setRouter($router);
+    return;
+
+
+
+    $this->puxt->hook('ready', function (App $puxt) use ($vx) {
+
+
+        $vx->init($puxt->context);
+
+        outp($vx->getModules());
+        die();
+
+        $restHandler = function (ServerRequestInterface $requeset) {
+        };
+
+        $pageHandler = function (ServerRequestInterface $request) {
+        };
+
+        //
+
+        $getRouterMap = function (string $base) use ($restHandler, $pageHandler) {
+            $adapter = new \League\Flysystem\Local\LocalFilesystemAdapter($base);
+            $fs = new \League\Flysystem\Filesystem($adapter);
+
+            $dirs = $fs->listContents('/')->filter(function (StorageAttributes $attributes) {
+                return $attributes->isDir();
+            })->toArray();
+
+            $map = [];
+            foreach ($dirs as $dir) {
+
+                $module = new Module($dir->path());
+
+                $map[$dir->path()]["GET"] = $restHandler;
+                $map[$dir->path()]["POST"] = $restHandler;
+                $map[$dir->path()]["DELETE"] = $restHandler;
+                $map[$dir->path()]["PATCH"] = $restHandler;
+
+                if (
+                    $fs->fileExists($dir->path() . DIRECTORY_SEPARATOR . "index.php") ||
+                    $fs->fileExists($dir->path() . DIRECTORY_SEPARATOR . "index.html") ||
+                    $fs->fileExists($dir->path() . DIRECTORY_SEPARATOR . "index.twig")
+                ) {
+
+                    $map[$dir->path() . "/"]["GET"] = $pageHandler;
+                }
+
+
+                $files = $fs->listContents($dir->path(), true)->filter(function (StorageAttributes $attributes) {
+                    return $attributes->isFile();
+                })->filter(function (FileAttributes $attributes) {
+                    $path = $attributes->path();
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    return $ext == "php" || $ext == "html" || $ext == "twig";
+                })->toArray();
+
+                //group files
+                $group_files = [];
+                foreach ($files as $file) {
+                    $path = $file->path();
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $path = substr($path, 0, - (strlen($ext) + 1));
+                    $group_files[$path] = $file;
+                }
+
+                foreach ($group_files as $path => $file) {
+                    //remove dir from path
+                    $path = substr($path, strlen($dir->path()) + 1);
+
+                    $map[$dir->path() . "/" . $path]["GET"] = $pageHandler;
+                }
+            }
+
+            //root files
+
+            $adapter = new \League\Flysystem\Local\LocalFilesystemAdapter($base);
+            $fs = new \League\Flysystem\Filesystem($adapter);
+
+            $files = $fs->listContents('/')->filter(function (StorageAttributes $attributes) {
+                return $attributes->isFile();
+            })->filter(function (FileAttributes $attributes) {
+                $path = $attributes->path();
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                return $ext == "php" || $ext == "html" || $ext == "twig";
+            })->map(function (FileAttributes $attributes) {
+                return [
+                    "path" => $attributes->path(),
+                ];
+            })->toArray();
+            foreach ($files as $file) {
+                $path = $file["path"];
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                $path = substr($path, 0, - (strlen($ext) + 1));
+                $map[$path] = [
+                    "path" => $path,
+                    "base" => $base
+                ];
+            }
+
+
+            return $map;
+        };
+
+        //$map = $getRouterMap($this->puxt->root . DIRECTORY_SEPARATOR . "pages");
+        $map = $getRouterMap(__DIR__ . DIRECTORY_SEPARATOR . "pages");
+
+        $map = array_merge($map, $getRouterMap($this->puxt->root . DIRECTORY_SEPARATOR . "pages"));
+
+        outp($map);
+        die();
+        $router = new Router();
+
+
+
+        $router->map("GET", "/vx/", function (ServerRequestInterface $request) {
+
+            $response = (new ResponseFactory)->createResponse();
+            $response = $response->withBody(new PHP\Psr7\StringStream("<h1>VX</h1>"));
+            return $response;
+        });
+        $puxt->setRouter($router);
+
+        return;
+
         $puxt->response = $puxt->response
             ->withHeader("Access-Control-Allow-Credentials", "true")
             ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
@@ -115,17 +268,13 @@ return function ($options) {
             $obj = $module->getObject($vx->object_id);
 
             if (!$obj->canReadBy($vx->user)) {
-                http_response_code(403);
-                die();
+                throw new Exception("Forbidden", 403);
             }
-
-
             header("Content-Type: application/json");
             header("Content-Location: " . $obj->uri());
             echo json_encode($obj, JSON_UNESCAPED_UNICODE);
             exit();
         }
-
 
         //create
         if (
@@ -136,8 +285,7 @@ return function ($options) {
             && $module->name == $org_path
         ) {
             if (!$vx->logined) {
-                http_response_code(401);
-                exit();
+                throw new Exception("Unauthorized", 401);
             }
 
             $obj = $module->createObject();
@@ -157,14 +305,13 @@ return function ($options) {
             && (($module->name . "/" . $vx->object_id) == $org_path)
         ) {
             if (!$vx->logined) {
-                http_response_code(401);
-                exit();
+                throw new Exception("Unauthorized", 401);
             }
+
             $obj = $module->getObject($vx->object_id);
 
             if (!$obj->canUpdateBy($vx->user)) {
-                http_response_code(403);
-                exit();
+                throw new Exception("Forbidden", 403);
             }
 
             $obj->bind($vx->request->getParsedBody());
@@ -178,90 +325,46 @@ return function ($options) {
         if ($vx->request->getMethod() == "DELETE") {
 
             if (!$vx->logined) {
-                http_response_code(401);
-                exit();
+                throw new Exception("Unauthorized", 401);
             }
 
             if ($obj = $vx->object()) {
                 if (!$obj->canDeleteBy($vx->user)) {
-                    http_response_code(403);
-                    exit();
+                    throw new Exception("Forbidden", 403);
                 }
                 $obj->delete();
                 http_response_code(204);
+                exit;
             } else {
-                http_response_code(404);
+                throw new Exception("Not Found", 404);
             }
-            die();
         }
 
-        try {
+        if ($vx->getAcl()->hasResource($path)) {
             //check permission
             if (!$vx->getAcl()->isAllowed($vx->user, $path)) {
-
                 if ($vx->logined) {
-                    http_response_code(403);
+                    throw new Exception("Forbidden", 403);
                 } else {
-                    http_response_code(401);
+                    throw new Exception("Unauthorized", 401);
                 }
-                exit();
             }
-        } catch (Exception $e) {
 
-            $puxt->response = $puxt->response->withStatus(404, $e->getMessage());
-            return;
+            $globs = glob("pages/" . $path . ".*");
+            if (count($globs)) {
+                return;
+            }
+            $this->puxt->config["dir"]["pages"] = "vendor/mathsgod/puxt-vx/pages";
         }
-
-        $globs = glob("pages/" . $path . ".*");
-
-        if (count($globs)) {
-            return;
-        }
-        $this->puxt->config["dir"]["pages"] = "vendor/mathsgod/puxt-vx/pages";
     });
 
     $this->puxt->hook("render:before", function ($page) use ($vx) {
 
-        $data = [];
-        if (is_object($page->stub)) {
-            $p = [];
-        } else {
-            $p = $page->stub["page"];
-        }
-
-
-        $basename = basename($page->context->route->path);
-        if ($basename == "ae" && !$p) {
-            if ($obj = $page->context->object()) {
-
-                if ($obj->_id()) {
-                    $p["header"] = ["title" => "Edit"];
-                } else {
-                    $p["header"] = ["title" => "Add"];
-                }
-            }
-        }
-
         $content = $page->render("");
 
-        if (strstr($vx->req->getHeaderLine("accept"), "*/*") && $content) {
+        if (strstr($vx->request->getHeaderLine("accept"), "*/*") && $content) {
             echo $content;
             die();
         }
-
-
-        /*         if (!is_array($content) && $content) {
-            $data["type"] = "page";
-
-            $p["content"] = $content;
-            $data["body"] = $p;
-        }
-
-        if ($data) {
-            header("Content-type: application/json; charset=utf-8");
-            echo json_encode([$data], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-            exit();
-        }
- */
     });
 };
