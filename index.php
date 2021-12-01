@@ -1,19 +1,9 @@
 <?php
 
-use Complex\Exception;
-use Laminas\Diactoros\ResponseFactory;
-use League\Flysystem\FileAttributes;
-use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\RouteGroup;
 use League\Route\Router;
 use Psr\Http\Message\ServerRequestInterface;
-use PUXT\App;
-use Symfony\Component\Yaml\Parser;
-use VX\Model;
-use VX\Config;
-use VX\Module;
-use VX\TwigI18n;
 
 return function ($options) {
     if ($this->puxt->request->getMethod() == "OPTIONS") {
@@ -22,6 +12,8 @@ return function ($options) {
     }
 
     $vx = new VX($this->puxt);
+
+ 
 
     $router = new Router();
     $router->middleware($vx);
@@ -84,58 +76,14 @@ return function ($options) {
         return $handler->handle($request);
     });
 
+    $router->map("GET",  $vx->base_path . "error", function (ServerRequestInterface $request) use ($vx) {
+        $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
+        $request = $request->withAttribute("twig", $twig);
+
+        $handler = $vx->getRequestHandler($vx->vx_root . "/pages/error");
+        return $handler->handle($request);
+    });
+
 
     $this->puxt->setRouter($router);
-    return;
-
-
-
-    $this->puxt->hook('ready', function (App $puxt) use ($vx) {
-
-
-
-
-        return;
-
-        Model::$_vx = $vx;
-
-        $vx->init($puxt->context);
-
-        $i18n = new TwigI18n;
-        $i18n->setTranslator($vx->getTranslator());
-        $puxt->addExtension($i18n);
-
-
-        $puxt->context = $vx;
-
-        $vx->db = $schema;
-
-
-        $parser = new Parser();
-        foreach ($parser->parseFile(__DIR__ . "/default.config.yml") as $k => $v) {
-            $vx->config["VX"][$k] = $v;
-        }
-
-        foreach (Config::Query() as $config) {
-            $vx->config["VX"][$config->name] = $config->value;
-        }
-
-        $path = $puxt->context->route->path;
-        $org_path = $puxt->context->route->path;
-
-        if ($path == "") {
-            $path = "index";
-        }
-
-        if (substr($path, -1) == "/") {
-            $path .= "index";
-        } else {
-            if (is_dir("pages" . DIRECTORY_SEPARATOR . $path) || is_dir(__DIR__ . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $path)) {
-                $path .= "/index";
-            }
-        }
-
-
-        $vx->request_uri = $path;
-    });
 };

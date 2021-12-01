@@ -102,6 +102,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         $schema->setDefaultValidator($validator);
 
         $this->setDbAdapter($schema->getDbAdatpter());
+        $this->db = $schema;
         Model::SetSchema($schema);
     }
 

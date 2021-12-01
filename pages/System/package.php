@@ -10,8 +10,7 @@ return new class
 {
     function get(VX $vx)
     {
-
-        $table = $vx->ui->createT($this->data());
+        $table = $vx->ui->createT(iterator_to_array($this->data()));
         $table->add("Name", "name")->sortable();
         $table->add("Version", "version")->sortable();
         $this->table = $table;
@@ -19,7 +18,6 @@ return new class
 
     function data()
     {
-
         foreach (Composer\InstalledVersions::getInstalledPackages() as $package) {
             yield [
                 "name" => $package,

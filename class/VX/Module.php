@@ -93,7 +93,12 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 if (isset($config["show_create"])) {
                     $this->show_create = $config["show_create"];
                 }
+
+                if(isset($config["menu"])){
+                    $this->menu = $config["menu"];
+                }
             }
+
         }
 
 
