@@ -13,9 +13,10 @@ return function ($options) {
 
     $vx = new VX($this->puxt);
 
- 
+
 
     $router = new Router();
+    $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
     $router->middleware($vx);
 
     $base = substr($vx->base_path, 0, -1);
@@ -50,6 +51,8 @@ return function ($options) {
                 });
             }
         }
+
+        
     });
 
 
@@ -83,6 +86,8 @@ return function ($options) {
         $handler = $vx->getRequestHandler($vx->vx_root . "/pages/error");
         return $handler->handle($request);
     });
+
+
 
 
     $this->puxt->setRouter($router);
