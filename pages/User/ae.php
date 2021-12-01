@@ -79,7 +79,7 @@ return new class
 
     function patch(VX $vx)
     {
-        $obj = $vx->object();
+        $obj = User::FromGlobal();
         $obj->bind($vx->_post);
         $obj->save();
 
