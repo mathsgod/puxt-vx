@@ -94,11 +94,10 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                     $this->show_create = $config["show_create"];
                 }
 
-                if(isset($config["menu"])){
+                if (isset($config["menu"])) {
                     $this->menu = $config["menu"];
                 }
             }
-
         }
 
 
@@ -217,21 +216,26 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         }
 
 
-        foreach ($this->files as $file) {
-            $map[] = [
-                "method" => "GET",
-                "path" => $this->name . "/" . $file->path,
-                "handler" => $file,
-                "file" => $file->file
-            ];
+        $methods = ["GET", "POST", "PATCH", "DELETE"];
+        foreach ($methods as $method) {
+            foreach ($this->files as $file) {
+                $map[] = [
+                    "method" => $method,
+                    "path" => $this->name . "/" . $file->path,
+                    "handler" => $file,
+                    "file" => $file->file
+                ];
 
-            $map[] = [
-                "method" => "GET",
-                "path" => $this->name . "/{id:number}/" . $file->path,
-                "handler" => $file,
-                "file" => $file->file
-            ];
+                $map[] = [
+                    "method" => $method,
+                    "path" => $this->name . "/{id:number}/" . $file->path,
+                    "handler" => $file,
+                    "file" => $file->file
+                ];
+            }
         }
+
+
 
         return $map;
     }

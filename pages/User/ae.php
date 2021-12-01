@@ -9,8 +9,7 @@ return new class
 {
     function get(VX $vx)
     {
-
-        $obj = $vx->object();
+        $obj = User::FromGlobal();
         if (!$obj->user_id) {
             $obj->join_date = date("Y-m-d");
             $obj->_usergroup_id = [3];
@@ -59,27 +58,23 @@ return new class
 
         $form->setAction($obj->uri("ae"));
 
+        $form->setSuccessUrl("/User");
         $this->form = $form;
     }
 
     function post(VX $vx)
     {
-
-        $obj = $vx->postForm();
+        $obj = User::FromGlobal();
+        $obj->bind($vx->_post);
+        $obj->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
+        $obj->save();
 
         $post = $vx->_post;
-
-        foreach ($obj->UserGroup() as $ug) {
-            $ug->removeUser($obj);
-        }
 
         foreach ($post["_usergroup_id"] as $uid) {
             $ug = UserGroup::Load($uid);
             $ug->addUser($obj);
         }
-
-        $vx->res->redirect($obj->uri("view"));
-        $vx->res->code(201);
     }
 
     function patch(VX $vx)
