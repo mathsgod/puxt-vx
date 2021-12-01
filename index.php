@@ -3,6 +3,7 @@
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\RouteGroup;
 use League\Route\Router;
+use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 
 return function ($options) {
@@ -13,6 +14,15 @@ return function ($options) {
 
     $vx = new VX($this->puxt);
 
+    $config = $this->puxt->config["VX"];
+
+    if ($logger_config = $config["logger"]) {
+        $logger = new Logger("vx");
+        foreach ($logger_config as $log) {
+            $logger->pushHandler(new \Monolog\Handler\StreamHandler($log["path"], $log["level"]));
+        }
+        $vx->setLogger($logger);
+    }
 
 
     $router = new Router();
@@ -51,8 +61,6 @@ return function ($options) {
                 });
             }
         }
-
-        
     });
 
 

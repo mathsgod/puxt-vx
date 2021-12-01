@@ -10,10 +10,13 @@ use Laminas\Permissions\Acl\AclInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use League\Route\Http\Exception\UnauthorizedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use PUXT\App;
 use PUXT\Context;
 use R\DB\Schema;
@@ -51,9 +54,10 @@ use VX\UserGroup;
  * @property int $user_id
  * @property Module $module
  */
-class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
+class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface
 {
 
+    use LoggerAwareTrait;
     use AdapterAwareTrait;
     public $user;
     public $user_id;
@@ -83,6 +87,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         $this->base_path = $puxt->base_path;
         $this->root = $puxt->root;
         $this->config = $puxt->config;
+
+        $this->config["VX"]["authentication_lock"] = true;
+        $this->config["VX"]["authentication_lock_time"] = 180;
+
+        $config = $this->config["VX"];
+        if ($config["table"]) {
+            foreach ($config["table"] as $k => $v) {
+                $r_class = new ReflectionClass($k);
+                $r_class->setStaticPropertyValue("_table", $v);
+            }
+        }
+
+
+
         $this->res = new Response;
         $this->ui = new UI($this);
         Model::$_vx = $this;
@@ -128,14 +146,37 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
 
     function getUserIdByToken(string $token)
     {
-        $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        try {
+            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        } catch (Exception $e) {
+            throw new UnauthorizedException();
+        }
+
         return $token->user_id;
     }
 
     function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->request = $request;
+        if ($this->logger) {
+            $this->logger->info("Request: " . $request->getUri()->getPath());
+        }
 
+        $this->_files = [];
+        foreach ($request->getUploadedFiles() as $name => $file) {
+            if (is_array($file)) {
+                $this->_files[$name] = $file;
+                continue;
+            }
+
+            if ($file->getClientMediaType() == "application/json" && $name == "vx") {
+                $this->_post = json_decode($file->getStream()->getContents(), true);
+                continue;
+            }
+            $this->_files[$name] = $file;
+        }
+
+
+        $this->request = $request;
 
         $this->processConfig();
         $this->processAuthorization($request);
@@ -512,89 +553,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
 
         $this->acl = $acl;
         return $this->acl;
-    }
-
-    function init(Context $context)
-    {
-        return;
-        foreach ($context as $k => $v) {
-            $this->$k = $v;
-        }
-
-        //set default config
-        $this->config["VX"]["authentication_lock"] = true;
-        $this->config["VX"]["authentication_lock_time"] = 180;
-
-
-
-        $config = $this->config["VX"];
-        if ($config["table"]) {
-            foreach ($config["table"] as $k => $v) {
-                $r_class = new ReflectionClass($k);
-                $r_class->setStaticPropertyValue("_table", $v);
-            }
-        }
-
-        $this->_files = [];
-        foreach ($this->request->getUploadedFiles() as $name => $file) {
-
-            if (is_array($file)) {
-                $this->_files[$name] = $file;
-                continue;
-            }
-
-            if ($file->getClientMediaType() == "application/json" && $name == "vx") {
-                $this->_post = json_decode($file->getStream()->getContents(), true);
-                continue;
-            }
-            $this->_files[$name] = $file;
-        }
-
-
-
-        //        $auth = $context->req->getHeader("Authorization");
-
-        $token = $this->req->getHeader("Authorization")[0];
-        if ($token) {
-            $jwt = explode("Bearer ", $token)[1];
-        }
-
-        if ($this->req->getQueryParams()["_token"]) {
-            $jwt = $this->req->getQueryParams()["_token"];
-        }
-
-        $this->user_id = 2;
-        if ($jwt) {
-            try {
-                $data = (array)JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-                if ($user = User::Load($data["user_id"])) {
-                    $this->user = $user;
-                    $this->user_id = $user->user_id;
-                    $this->logined = true;
-                } else {
-                    throw new Exception("user not found");
-                }
-
-
-                if ($view_as = $this->req->getHeaderLine("vx-view-as")) {
-                    if ($this->user->isAdmin()) {
-                        if ($user = User::Load($view_as)) {
-                            $this->view_as = $view_as;
-                            $this->user_id = $view_as;
-                            $this->user = $user;
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                $this->user = User::Load($this->user_id);
-            }
-        } else {
-            $this->user = User::Load($this->user_id);
-        }
-
-        $path = $context->route->path;
-        $p = explode("/", $path)[0];
-        $this->module = $this->getModule($p);
     }
 
     public function getModuleTranslate()
