@@ -2,20 +2,17 @@
 
 namespace VX;
 
-use Laminas\Diactoros\ResponseFactory;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use PUXT\Loader;
-use VX;
 
 class ModuleFile implements ResourceInterface, RequestHandlerInterface
 {
     public string $path;
     public string $file;
 
-    public function __construct(Module $module, string $path, string $file)
+    public function __construct(Module $module, string $path, string  $file)
     {
         $this->module = $module;
         $this->path = $path;
@@ -24,7 +21,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
 
     function getResourceId()
     {
-        return $this->path;
+        return $this->module->name . "/" . $this->path;
     }
 
     function handle(ServerRequestInterface $request): ResponseInterface
@@ -38,7 +35,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
     {
         return [
             'path' => $this->path,
-            'file' => $this->file,
+            'file' => $this->file
         ];
     }
 }

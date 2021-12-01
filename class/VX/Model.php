@@ -70,6 +70,11 @@ class Model extends DBModel implements ResourceInterface, IModel
         return self::$_vx->getAcl()->isAllowed($user, $this, "update");
     }
 
+    public function canCreateBy(User $user): bool
+    {
+        return self::$_vx->getAcl()->isAllowed($user, $this, "create");
+    }
+
     public function createdBy(): ?User
     {
         if ($this->created_by) {

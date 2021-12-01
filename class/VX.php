@@ -43,6 +43,7 @@ use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\SystemValue;
+use VX\TwigI18n;
 use VX\UserGroup;
 
 /**
@@ -73,10 +74,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
     private $modules = [];
     private $puxt;
 
+    public $base_path;
+
     public function __construct(App $puxt)
     {
 
         $this->puxt = $puxt;
+        $this->base_path = $puxt->base_path;
         $this->root = $puxt->root;
         $this->config = $puxt->config;
         $this->res = new Response;
@@ -84,7 +88,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
-        $this->processModules();
+        $this->loadModules();
 
 
 
@@ -101,7 +105,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         Model::SetSchema($schema);
     }
 
-    private function processModules()
+    private function loadModules()
     {
         //system module
         $modules = [];
@@ -129,18 +133,21 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
 
     function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $this->request = $request;
+
+
         $this->processConfig();
         $this->processAuthorization($request);
         $this->processTranslator();
 
-
-
         $this->_get = $_GET;
         $this->_post = $request->getParsedBody();
 
-        $request = $request->withAttribute("context", $this);
+        $request = $request->withAttribute("context", $this)
+            ->withAttribute("user", $this->user);
 
         $response = $handler->handle($request);
+
         if ($_SERVER["HTTP_ORIGIN"]) {
             $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
         }
@@ -231,6 +238,17 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
         }
 
         $this->user = User::Get($this->user_id);
+
+        if ($view_as = $request->getHeaderLine("vx-view-as")) {
+            if ($this->user->isAdmin()) {
+                $view_as = intval($view_as);
+                if ($user = User::Get($view_as)) {
+                    $this->view_as = $view_as;
+                    $this->user_id = $view_as;
+                    $this->user = $user;
+                }
+            }
+        }
     }
 
     public function getModule(string $name): ?Module
@@ -683,6 +701,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
             $loader = new FilesystemLoader([$this->root, $this->vx_root]);
         }
         $twig = new Environment($loader);
+
+
+        $i18n = new TwigI18n;
+        $i18n->setTranslator($this->translator);
+        $twig->addExtension($i18n);
+
         return $twig;
     }
 
@@ -865,6 +889,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface
 
     function getRequestHandler(string $file)
     {
-        return  new \PUXT\RequestHandler($file);
+        return new \PUXT\RequestHandler($file);
     }
 }

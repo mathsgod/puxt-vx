@@ -46,7 +46,7 @@ class UI implements TranslatorAwareInterface
         $table->setVX($this->vx);
 
         if ($entry) {
-            $query = $this->vx->req->getQueryParams();
+            $query = $this->vx->request->getQueryParams();
             $query["_entry"] = $entry;
             $remote = "/" .    $this->vx->request_uri . "?" . http_build_query($query);
 

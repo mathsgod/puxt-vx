@@ -29,7 +29,9 @@ return new class
 
     function get(VX $vx)
     {
-        
+   /*      $m=$vx->getModule("User");
+        outp($m);
+        die; */
         $logined = $vx->logined;
         $data = [
             "logined" => $logined,
@@ -48,8 +50,6 @@ return new class
 
         $data["locale"] = "en";
         if ($logined) {
-
-            
             //fav
             $data["favs"] = [];
             foreach ($vx->user->MyFavorite() as $fav) {

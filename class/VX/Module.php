@@ -3,12 +3,17 @@
 namespace VX;
 
 use Exception;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
+use League\Route\Http\Exception\ForbiddenException;
+use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Yaml\Yaml;
 use VX;
 
@@ -55,7 +60,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                     return $attributes->isFile();
                 })->filter(function (FileAttributes $attributes) {
                     $ext = pathinfo($attributes->path(), PATHINFO_EXTENSION);
-                    return $ext == "php" || $ext == "twig";
+                    return $ext == "php" || $ext == "twig" || $ext == "html";
                 })->toArray();
 
                 foreach ($files as $file) {
@@ -63,13 +68,13 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                     $ext = pathinfo($file["path"], PATHINFO_EXTENSION);
                     $path = substr($file["path"], 0, - (strlen($ext) + 1));
 
-                    $this->files[$path] = new ModuleFile($this, $this->name . "/" . $path, $b . DIRECTORY_SEPARATOR . $path);
+                    $this->files[$path] = new ModuleFile($this, $path, $b . DIRECTORY_SEPARATOR . $path);
                 }
             }
 
             //load config 
-            if (file_exists($b . DIRECTORY_SEPARATOR . "setting.yml")) {
-                $config = Yaml::parseFile($b . DIRECTORY_SEPARATOR . "setting.yml");
+            if (file_exists($setting = $b . DIRECTORY_SEPARATOR . "setting.yml")) {
+                $config = Yaml::parseFile($setting);
                 if (isset($config["class"])) {
                     $this->class = $config["class"];
                 }
@@ -84,6 +89,9 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 }
                 if (isset($config["hide"])) {
                     $this->hide = $config["hide"];
+                }
+                if (isset($config["show_create"])) {
+                    $this->show_create = $config["show_create"];
                 }
             }
         }
@@ -102,17 +110,104 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         }
     }
 
+
     function getRouterMap()
     {
-
-
         $map = [];
 
-        if ($module_file = $this->getModuleFile($this->name . "/index")) {
+        //rest
+        $map[] = [
+            "method" => "GET",
+            "path" => $this->name . "/{id:number}",
+            "handler" => function (ServerRequestInterface $request, array $args) {
+                $user = $request->getAttribute("user");
+                $object = $this->getObject($args["id"]);
+                if (!$object) {
+                    throw new NotFoundException();
+                }
+                if (!$object->canReadBy($user)) {
+                    throw new ForbiddenException();
+                }
+                return new JsonResponse($object);
+            }
+        ];
+
+        $map[] = [
+            "method" => "POST",
+            "path" => $this->name,
+            "handler" => function (ServerRequestInterface $request, array $args) {
+                if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
+                    $user = $request->getAttribute("user");
+
+                    $object = $this->createObject();
+                    if (!$object->canCreateBy($user)) {
+                        throw new ForbiddenException();
+                    }
+
+                    $data = $request->getParsedBody();
+                    $object->bind($data);
+                    $object->save($data);
+
+                    $response = (new Response())->withStatus(201);
+                    return $response->withHeader("Content-Location", $object->uri());
+                }
+                throw new NotFoundException();
+            }
+        ];
+
+        $map[] = [
+            "method" => "PATCH",
+            "path" => $this->name . "/{id:number}",
+            "handler" => function (ServerRequestInterface $request, array $args) {
+                if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
+                    $user = $request->getAttribute("user");
+                    $object = $this->getObject($args["id"]);
+
+                    if (!$object) {
+                        throw new NotFoundException();
+                    }
+                    if (!$object->canUpdateBy($user)) {
+                        throw new ForbiddenException();
+                    }
+
+                    $data = $request->getParsedBody();
+
+                    $object->bind($data);
+                    $object->save($data);
+                    $response = (new Response())->withStatus(204);
+                    return $response->withHeader("Content-Location", $object->uri());
+                }
+                throw new NotFoundException();
+            }
+        ];
+
+
+        $map[] = [
+            "method" => "DELETE",
+            "path" => $this->name . "/{id:number}",
+            "handler" => function (ServerRequestInterface $request, array $args) {
+                $user = $request->getAttribute("user");
+                $object = $this->getObject($args["id"]);
+                if (!$object) {
+                    throw new NotFoundException();
+                }
+                if (!$object->canDeleteBy($user)) {
+                    throw new ForbiddenException();
+                }
+
+                $object->delete();
+                return (new Response())->withStatus(204);
+            }
+        ];
+
+
+
+        if ($module_file = $this->getModuleFile("index")) {
             $map[] = [
                 "method" => "GET",
                 "path" => $this->name,
-                "handler" => $module_file
+                "handler" => $module_file,
+                "file" => $module_file->file
             ];
         }
 
@@ -120,8 +215,16 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         foreach ($this->files as $file) {
             $map[] = [
                 "method" => "GET",
-                "path" => $file->path,
-                "handler" => $file
+                "path" => $this->name . "/" . $file->path,
+                "handler" => $file,
+                "file" => $file->file
+            ];
+
+            $map[] = [
+                "method" => "GET",
+                "path" => $this->name . "/{id:number}/" . $file->path,
+                "handler" => $file,
+                "file" => $file->file
             ];
         }
 
@@ -166,10 +269,10 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         return new $class;
     }
 
-    public function getObject(int $id): IModel
+    public function getObject(int $id): ?IModel
     {
         $class = $this->class;
-        return $class::Load($id);
+        return $class::Get($id);
     }
 
     public function getMenuItemByUser(User $user): array
