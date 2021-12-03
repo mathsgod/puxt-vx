@@ -7,6 +7,8 @@ use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
+use League\Event\EventDispatcherAware;
+use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
@@ -19,12 +21,10 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use PUXT\App;
 use PUXT\Context;
-use R\DB\Event\BeforeInsert;
 use R\DB\Schema;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
@@ -56,9 +56,10 @@ use VX\UserGroup;
  * @property int $user_id
  * @property Module $module
  */
-class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface
+class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface, EventDispatcherAware
 {
 
+    use EventDispatcherAwareBehavior;
     use LoggerAwareTrait;
     use AdapterAwareTrait;
     public $user;
@@ -81,7 +82,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     private $puxt;
 
     public $base_path;
-    private $dispatcher;
 
     public function __construct(App $puxt)
     {
@@ -124,8 +124,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->db = $schema;
         Model::SetSchema($schema);
 
-        $this->dispatcher = $this->db->eventDispatcher();
-        $this->dispatcher->subscribeListenersFrom(new ListenserSubscriber($this));
+        $this->db->useEventDispatcher($this->eventDispatcher());
+        $this->eventDispatcher()->subscribeListenersFrom(new ListenserSubscriber($this));
     }
 
     private function loadModules()

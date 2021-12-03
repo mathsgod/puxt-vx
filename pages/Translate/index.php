@@ -26,13 +26,17 @@ return new class
                 $t->save();
             }
         }
-        
+
         return $resp->withStatus(204);
     }
 
     function getData(VX $vx)
     {
-        return ["modules" => $vx->getModules(), "languages" => array_keys($vx->config["VX"]["language"])];
+        $modules = [];
+        foreach ($vx->getModules() as $module) {
+            $modules[] = ["name" => $module->name];
+        }
+        return ["modules" => $modules, "languages" => array_keys($vx->config["VX"]["language"])];
     }
 
     function getTranslate(VX $vx)
