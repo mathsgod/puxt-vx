@@ -10,7 +10,7 @@ use VX\Translate;
 
 return new class
 {
-    function post(VX $vx, ResponseInterface $resp)
+    function post(VX $vx)
     {
         //delete all 
         Translate::Query(["module" => $vx->_post["module"]])->delete();
@@ -26,8 +26,6 @@ return new class
                 $t->save();
             }
         }
-
-        return $resp->withStatus(204);
     }
 
     function getData(VX $vx)
