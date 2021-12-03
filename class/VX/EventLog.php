@@ -18,7 +18,7 @@ class EventLog extends Model
         $el->action = 'Insert';
         $el->target = $obj;
         $el->id = $obj->_id();
-       // $el->save();
+        $el->save();
     }
 
     private static function FindDifferent(array $source, array $target)
@@ -55,7 +55,7 @@ class EventLog extends Model
         $el->source = $org;
         $el->target = $obj;
         $el->id = $id;
-        
+
 
         //$el->different = self::FindDifferent((array)$org, (array)$obj);
 

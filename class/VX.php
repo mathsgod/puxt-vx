@@ -19,6 +19,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use PUXT\App;
 use PUXT\Context;
+use R\DB\Event\BeforeInsert;
 use R\DB\Schema;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
@@ -34,6 +35,7 @@ use VX\AuthLock;
 use VX\Config;
 use VX\EventLog;
 use VX\IModel;
+use VX\ListenserSubscriber;
 use VX\Mailer;
 use VX\Model;
 use VX\Module;
@@ -79,6 +81,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     private $puxt;
 
     public $base_path;
+    private $dispatcher;
 
     public function __construct(App $puxt)
     {
@@ -109,19 +112,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->loadModules();
 
 
+        $this->loadDB();
+    }
 
-        $db_config = $puxt->config["database"];
+    private function loadDB()
+    {
+        $db_config = $this->puxt->config["database"];
         $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
-
-
-        $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
-            ->getValidator();
-        $schema->setDefaultValidator($validator);
 
         $this->setDbAdapter($schema->getDbAdatpter());
         $this->db = $schema;
         Model::SetSchema($schema);
+
+        $this->dispatcher = $this->db->eventDispatcher();
+        $this->dispatcher->subscribeListenersFrom(new ListenserSubscriber($this));
     }
 
     private function loadModules()
@@ -815,35 +819,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $obj->save();
         }
         return $obj;
-    }
-
-    public function trigger(string $name, $obj)
-    {
-        if ($name == "before_insert") {
-            if (property_exists($obj, "created_by")) {
-                $obj->created_by = $this->user_id;
-            }
-            return;
-        }
-
-        if ($name == "after_insert") {
-            EventLog::LogInsert($obj, $this->user);
-        }
-
-        if ($name == "before_update") {
-            if (property_exists($obj, "updated_by")) {
-                $obj->created_by = $this->user_id;
-            }
-
-            EventLog::LogUpdate($obj, $this->user);
-        }
-
-        if ($name == "after_update") {
-        }
-
-        if ($name == "before_delete") {
-            EventLog::LogDelete($obj, $this->user);
-        }
     }
 
     function getRequestHandler(string $file)

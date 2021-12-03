@@ -18,22 +18,10 @@ class Model extends DBModel implements ResourceInterface, IModel
         return $vx->object();
     }
 
-
-    /* static $_event;
-    public function setEventManager(EventManagerInterface $eventManager)
-    {
-        self::$_event = $eventManager;
-    } */
-
     static $_db;
     public static function __db()
     {
         return self::$_db;
-    }
-
-    public function getEventManager()
-    {
-        return self::$_event;
     }
 
     /**
@@ -53,7 +41,6 @@ class Model extends DBModel implements ResourceInterface, IModel
         $r = new ReflectionClass(static::class);
         return $r->getShortName();
     }
-
 
     public function canDeleteBy(User $user): bool
     {
@@ -105,41 +92,6 @@ class Model extends DBModel implements ResourceInterface, IModel
         }
 
         return "/" . $uri;
-    }
-
-    public function save()
-    {
-
-        $key = $this->_key();
-
-
-        if (!$this->$key) { //insert
-            if (property_exists($this, "created_time")) {
-                $this->created_time = date("Y-m-d H:i:s");
-            }
-
-            self::$_vx->trigger("before_insert", $this);
-            $ret = parent::save();
-            self::$_vx->trigger("after_insert", $this);
-        } else {
-            if (property_exists($this, "updated_time")) {
-                $this->updated_time = date("Y-m-d H:i:s");
-            }
-
-            self::$_vx->trigger("before_update", $this);
-            $ret = parent::save();
-            self::$_vx->trigger("after_update", $this);
-        }
-
-        return $ret;
-    }
-
-    public function delete()
-    {
-        self::$_vx->trigger("before_delete", $this);
-        $ret = parent::delete();
-        self::$_vx->trigger("after_delete", $this);
-        return $ret;
     }
 
     public function __call($function, $args)
