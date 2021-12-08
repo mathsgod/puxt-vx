@@ -18,8 +18,7 @@ return new class
         $ext = pathinfo($name, PATHINFO_EXTENSION);
 
         if (in_array($ext, FileManager::$DisallowExt)) {
-            http_response_code(400);
-            return ["error" => ["message" => "extension not allow"]];
+            throw new Exception("File extension not allowed", 400);
         }
 
 
@@ -27,9 +26,22 @@ return new class
         try {
             $fs->write($vx->_post["path"] . "/" . $file->getClientFilename(), $file->getStream()->getContents());
         } catch (Exception $e) {
-            http_response_code(400);
-
-            return ["error" => ["message" => $e->getMessage()]];
+            throw new Exception($e->getMessage(), 400);
         }
+
+
+        $path = str_replace(DIRECTORY_SEPARATOR, "/", $vx->_post["path"]);
+
+
+        if ($path != "") {
+            $path .= "/";
+        }
+
+        return [
+            "data" => [
+                "name" => $name,
+                "path" => $path . $name
+            ]
+        ];
     }
 };
