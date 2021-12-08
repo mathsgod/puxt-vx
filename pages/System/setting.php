@@ -54,12 +54,12 @@ return new class
         $f->add("Email from")->email("mail_from");
 
 
-        $f->addDivider("Authentication failed lock");
+        $f->addDivider("Authentication failed lock")->setContentPosition("left");
         $f->add("Authentication lock")->switch("authentication_lock");
         $f->add("Lockout time (sec)")->inputNumber("authentication_lock_time");
 
 
-        $f->addDivider("2 step verification");
+        $f->addDivider("2 step verification")->setContentPosition("left");
         $f->add("2 Step verification")->switch("two_step_verification");
         $f->add("White list")->input("two_step_verification_whitelist");
 
@@ -69,7 +69,7 @@ return new class
         $r->switch("biometric_authentication");
         $r->helpBlock("Only https can use Biometric authentication");
 
-        $f->addDivider();
+        $f->addDivider("File manager")->setContentPosition("left");
         $f->add("Show file manager")->switch("file_manager_show");
 
         $f->addDivider();
