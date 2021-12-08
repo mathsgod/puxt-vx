@@ -34,7 +34,7 @@ return function ($options) {
     $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
     $router->middleware($vx);
 
-    $router->addPatternMatcher("any", "[a-zA-Z0-9/]+");
+    $router->addPatternMatcher("any", "[a-zA-Z0-9\%\./]+");
 
 
     $base = substr($vx->base_path, 0, -1);
@@ -80,7 +80,7 @@ return function ($options) {
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
         $fm = $vx->getFileManager();
         $file = $args["file"];
-        //$file .= ".txt";
+        $file=urldecode($file);
 
         if ($fm->fileExists($file)) {
             $response = (new ResponseFactory())->createResponse();
@@ -90,6 +90,7 @@ return function ($options) {
             return $response;
         }
     });
+
 
     $router->map("GET", $vx->base_path . "img/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
         echo $args["file"];
