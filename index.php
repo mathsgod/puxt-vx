@@ -1,9 +1,14 @@
 <?php
 
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ServerRequest;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\RouteGroup;
 use League\Route\Router;
 use Monolog\Logger;
+use PHP\Psr7\Stream;
+use PHP\Psr7\StringStream;
 use Psr\Http\Message\ServerRequestInterface;
 
 return function ($options) {
@@ -29,6 +34,9 @@ return function ($options) {
     $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
     $router->middleware($vx);
 
+    $router->addPatternMatcher("any", "[a-zA-Z0-9/]+");
+
+
     $base = substr($vx->base_path, 0, -1);
 
     $router->group($base, function (RouteGroup $route) use ($vx) {
@@ -47,7 +55,7 @@ return function ($options) {
                 $path = str_replace("@", ":", $path);
 
                 $route->map($map['method'],  $path, function (ServerRequestInterface $request, array $args) use ($vx, $handler, $file, $path, $module) {
-                    $context = $request->getAttribute("test",new stdClass);
+                    $context = $request->getAttribute("test", new stdClass);
                     $context->params = $args;
                     $request = $request->withAttribute("test", $context);
 
@@ -67,6 +75,34 @@ return function ($options) {
                 });
             }
         }
+    });
+
+    $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
+        $fm = $vx->getFileManager();
+        $file = $args["file"];
+        //$file .= ".txt";
+
+        if ($fm->fileExists($file)) {
+            $response = (new ResponseFactory())->createResponse();
+
+            $response = $response->withHeader("Content-Type", $fm->mimeType($file));
+            $response = $response->withBody(new Stream($fm->readStream($file)));
+            return $response;
+        }
+    });
+
+    $router->map("GET", $vx->base_path . "img/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
+        echo $args["file"];
+        die();
+        $response = new HtmlResponse($args["slug"]);
+        return $response;
+        $response = $response
+            ->withHeader("Access-Control-Allow-Credentials", "true")
+            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
+            ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
+            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location")
+            ->withHeader("Access-Control-Allow-Origin", "*");
+        return $response;
     });
 
 
