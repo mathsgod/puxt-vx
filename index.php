@@ -44,7 +44,13 @@ return function ($options) {
                     continue;
                 }
 
+                $path = str_replace("@", ":", $path);
+
                 $route->map($map['method'],  $path, function (ServerRequestInterface $request, array $args) use ($vx, $handler, $file, $path, $module) {
+                    $context = $request->getAttribute("test",new stdClass);
+                    $context->params = $args;
+                    $request = $request->withAttribute("test", $context);
+
                     $resource_id = $handler->getResourceId();
                     if (!$vx->getAcl()->isAllowed($vx->user, $resource_id)) {
                         throw new ForbiddenException();

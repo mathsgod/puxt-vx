@@ -4,8 +4,6 @@
  * Created by: Raymond Chong
  * Date: 2021-07-22 
  */
-
-use Psr\Http\Message\ResponseInterface;
 use VX\Translate;
 
 return new class
