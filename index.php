@@ -4,6 +4,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
 use League\Route\Http\Exception\ForbiddenException;
+use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
 use Monolog\Logger;
@@ -80,7 +81,7 @@ return function ($options) {
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
         $fm = $vx->getFileManager();
         $file = $args["file"];
-        $file=urldecode($file);
+        $file = urldecode($file);
 
         if ($fm->fileExists($file)) {
             $response = (new ResponseFactory())->createResponse();
@@ -89,10 +90,11 @@ return function ($options) {
             $response = $response->withBody(new Stream($fm->readStream($file)));
             return $response;
         }
+        throw new NotFoundException();
     });
 
 
-    $router->map("GET", $vx->base_path . "img/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
+    $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
         echo $args["file"];
         die();
         $response = new HtmlResponse($args["slug"]);
