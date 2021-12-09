@@ -95,17 +95,10 @@ return function ($options) {
 
 
     $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
-        echo $args["file"];
-        die();
-        $response = new HtmlResponse($args["slug"]);
-        return $response;
-        $response = $response
-            ->withHeader("Access-Control-Allow-Credentials", "true")
-            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
-            ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
-            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location")
-            ->withHeader("Access-Control-Allow-Origin", "*");
-        return $response;
+        $glide = League\Glide\ServerFactory::create([
+            "source" => $vx->getFileManager()
+        ]);
+        return  $glide->getImageResponse($args["file"], $request->getQueryParams());
     });
 
 

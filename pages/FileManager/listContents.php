@@ -88,8 +88,7 @@ return new class
                 "extension" => pathinfo($filename, PATHINFO_EXTENSION),
                 "mime_type" => $fs->mimeType($attr->path()),
                 "owner" => fileowner($attr->path()),
-                "permission" => fileperms($attr->path())
-
+                "permission" => fileperms($attr->path()),
             ];
         })->toArray();
 
