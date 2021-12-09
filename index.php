@@ -1,15 +1,16 @@
 <?php
 
+use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Stream;
+use League\Glide\Responses\PsrResponseFactory;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
 use Monolog\Logger;
-use PHP\Psr7\Stream;
-use PHP\Psr7\StringStream;
 use Psr\Http\Message\ServerRequestInterface;
 
 return function ($options) {
@@ -35,8 +36,7 @@ return function ($options) {
     $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
     $router->middleware($vx);
 
-    $router->addPatternMatcher("any", "[a-zA-Z0-9\%\./]+");
-
+    $router->addPatternMatcher("any", "[a-zA-Z0-9_\(\)\'\%\./]+");
 
     $base = substr($vx->base_path, 0, -1);
 
@@ -96,8 +96,14 @@ return function ($options) {
 
     $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
         $glide = League\Glide\ServerFactory::create([
-            "source" => $vx->getFileManager()
+
+            "source" => $vx->getFileManager(),
+            "cache" => dirname($vx->root) . DIRECTORY_SEPARATOR . "cache",
+            "response" => new PsrResponseFactory(new Response(), function ($stream) {
+                return new Stream($stream);
+            }),
         ]);
+
         return  $glide->getImageResponse($args["file"], $request->getQueryParams());
     });
 
