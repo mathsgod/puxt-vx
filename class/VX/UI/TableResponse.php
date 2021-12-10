@@ -81,6 +81,8 @@ class TableResponse implements JsonSerializable
                 return false;
             });
         }
+
+        $this->setDataMap(fn ($o) => $o);
     }
 
     function setData(\R\DB\Query $source)
@@ -222,10 +224,10 @@ class TableResponse implements JsonSerializable
                     $hydrator = new ObjectPropertyHydrator();
                     $dmap = $hydrator->extract($dmap);
                 }
-                foreach($dmap as $k=>$v){
+                foreach ($dmap as $k => $v) {
                     $d[$k] = $v;
                 }
-                
+
                 $data[] = $d;
             }
             return $data;
