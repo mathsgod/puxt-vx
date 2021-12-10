@@ -70,7 +70,8 @@ return function ($options) {
                     $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file)));
                     $request = $request->withAttribute("twig", $twig);
 
-                    $vx->request_uri = $path;
+                    $vx->request_uri = $request->getUri()->getPath();
+                    $vx->request_uri = substr($vx->request_uri, strlen($vx->base_path));
 
                     return $handler->handle($request);
                 });
