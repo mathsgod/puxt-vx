@@ -35,7 +35,8 @@ class User extends Model implements RoleInterface
     #[Assert\Choice([0, 1])]
     public $status;
 
-    static function Load($id): ?static
+
+    static function Load($id): static
     {
         $user = parent::Load($id);
         if (!is_array($user->style)) {
