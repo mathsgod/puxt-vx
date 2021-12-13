@@ -6,6 +6,7 @@ use Exception;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @property int $user_id
@@ -34,7 +35,7 @@ class User extends Model implements RoleInterface
     #[Assert\Choice([0, 1])]
     public $status;
 
-    static function Load(int $id): ?static
+    static function Load($id): ?static
     {
         $user = parent::Load($id);
         if (!is_array($user->style)) {
