@@ -13,12 +13,19 @@ return [
     ],
 
     "VX" => [
-        "jwt"=>[
-            "secret"=>"hostlink secret key"
+        "jwt" => [
+            "secret" => "hostlink secret key"
         ],
         "language" => [
             "en" => "English",
             "zh-hk" => "中文"
+        ], "file_mamanger" => [
+            [
+                "type" => "hostlink-storage",
+                "name" => "storage",
+                "token" => "hostlink storage token",
+                "endpoint" => "http://storage.hostlink.com/",
+            ]
         ]
     ]
 

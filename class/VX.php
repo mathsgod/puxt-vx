@@ -406,32 +406,49 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         ], $this->config["VX"]["jwt"]["secret"]);
     }
 
-    public function getFileManager()
+    public function getFileManager(int $index = 0)
     {
-        $root = $this->root . DIRECTORY_SEPARATOR . "uploads";
-        if ($this->config["VX"]["file_manager"]["root"]) {
-            $root = $this->config["VX"]["file_manager"]["root"];
+        $fm_config = $this->config["VX"]["file_manager"][$index];
+
+        if (!$fm_config) {
+            $fm_config = $this->config["VX"]["file_manager"];
+            $fm_config["type"] = "local";
         }
 
-        $visibility = [
-            'file' => [
-                'public' => 0640,
-                'private' => 0640,
-            ],
-            'dir' => [
-                'public' => 0777,
-                'private' => 0777,
-            ],
-        ];
+        if ($fm_config["type"] == "local") {
 
-        if ($this->config["VX"]["file_manager"]["visibility"]) {
-            $visibility = $this->config["VX"]["file_manager"]["visibility"];
+            $root = $this->root . DIRECTORY_SEPARATOR . "uploads";
+            if ($fm_config["root"]) {
+                $root = $fm_config["root"];
+            }
+
+            $visibility = [
+                'file' => [
+                    'public' => 0640,
+                    'private' => 0640,
+                ],
+                'dir' => [
+                    'public' => 0777,
+                    'private' => 0777,
+                ],
+            ];
+
+            if ($fm_config["visibility"]) {
+                $visibility = $fm_config["visibility"];
+            }
+            $visibilityConverter = PortableVisibilityConverter::fromArray($visibility);
+
+            $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($root, $visibilityConverter);
+            $fs = new League\Flysystem\Filesystem($adapter);
+            return $fs;
         }
-        $visibilityConverter = PortableVisibilityConverter::fromArray($visibility);
 
-        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($root, $visibilityConverter);
-        $fs = new League\Flysystem\Filesystem($adapter);
-        return $fs;
+        if ($fm_config["type"] == "hostlink-storage") {
+
+            $adapter = new HL\Storage\Adapter($fm_config["token"], $fm_config["endpoint"]);
+            $fs = new League\Flysystem\Filesystem($adapter);
+            return $fs;
+        }
     }
 
     public function getAcl(): AclInterface

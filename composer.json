@@ -39,7 +39,8 @@
         ]
     },
     "require-dev": {
-        "mathsgod/puxt": "dev-main"
+        "mathsgod/puxt": "dev-main",
+        "hostlink/hostlink-storage-adapter": "^1.0"
     },
     "license": "MIT"
 }
