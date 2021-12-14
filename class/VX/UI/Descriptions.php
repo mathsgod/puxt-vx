@@ -49,6 +49,14 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
                 }
             } else {
                 $content = var_get($this->data, $field) ?? "";
+
+                
+                if ($content === true) {
+                    $content = "✔";
+                }
+                if ($content === false) {
+                    $content = "";
+                }
             }
 
             if (is_numeric($content)) {
