@@ -36,8 +36,8 @@ return function ($options) {
     $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
     $router->middleware($vx);
 
-    $router->addPatternMatcher("any", "[a-zA-Z0-9_\(\)\'\%\./]+");
-
+    $router->addPatternMatcher("any", ".+");
+    
     $base = substr($vx->base_path, 0, -1);
 
     $router->group($base, function (RouteGroup $route) use ($vx) {
