@@ -269,11 +269,13 @@ return new class
 
     function getACL(VX $vx)
     {
-        $usergroup = new UserGroup($vx->query["usergroup_id"]);
+        $usergroup = UserGroup::Get($vx->_get["usergroup_id"]);
+
         $ret = [];
         $acl = $vx->getAcl();
 
         foreach ($vx->getModules() as $module) {
+
             $r = [];
             $r["name"] = $module->name;
 
@@ -298,26 +300,25 @@ return new class
                 "disabled" => $this->getACLPreset($usergroup, $module, "delete")
             ];
 
-
-
             $r["files"] = [];
 
             foreach ($module->getFiles() as $file) {
                 $r["files"][] = [
-                    "name" => $file->name,
+                    "name" => $file->path,
                     "allow" => [
-                        "checked" => $this->getACLPathValue($usergroup, $module, $file->name, "allow"),
-                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->name, "allow")
+                        "checked" => $this->getACLPathValue($usergroup, $module, $file->path, "allow"),
+                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->path, "allow")
                     ],
                     "deny" => [
-                        "checked" => $this->getACLPathValue($usergroup, $module, $file->name, "deny"),
-                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->name, "deny")
+                        "checked" => $this->getACLPathValue($usergroup, $module, $file->path, "deny"),
+                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->path, "deny")
                     ]
                 ];
             }
 
             $ret[] = $r;
         }
+
         return $ret;
     }
 

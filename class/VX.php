@@ -406,7 +406,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         ], $this->config["VX"]["jwt"]["secret"]);
     }
 
-    public function getFileManager(int $index = 0)
+    function getFileSystem(int $index = 0)
     {
         $fm_config = $this->config["VX"]["file_manager"][$index];
 
@@ -449,6 +449,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $fs = new League\Flysystem\Filesystem($adapter);
             return $fs;
         }
+    }
+
+    /**
+     * @deprecated use getFileSystem instead
+     */
+    public function getFileManager(int $index = 0)
+    {
+        return $this->getFileSystem($index);
     }
 
     public function getAcl(): AclInterface
