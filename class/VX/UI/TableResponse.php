@@ -225,7 +225,11 @@ class TableResponse implements JsonSerializable
                     $dmap = $hydrator->extract($dmap);
                 }
                 foreach ($dmap as $k => $v) {
-                    $d[$k] = $v;
+                    if ($v === true) {
+                        $d[$k] = "✔";
+                    } else {
+                        $d[$k] = $v;
+                    }
                 }
 
                 $data[] = $d;
