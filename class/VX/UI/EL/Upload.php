@@ -130,7 +130,7 @@ class Upload extends HTMLElement
      */
     function setLimit(int $limit)
     {
-        $this->setAccept(":limit", $limit);
+        $this->setAttribute(":limit", $limit);
     }
 
     /**
