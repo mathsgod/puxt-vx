@@ -165,20 +165,32 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $this->logger->info("Request: " . $request->getUri()->getPath());
         }
 
+       
         $this->_files = [];
-        foreach ($request->getUploadedFiles() as $name => $file) {
-            if (is_array($file)) {
+
+        if (strpos($request->getHeaderLine("Content-Type"), "multipart/form-data") !== false) {
+
+            foreach ($request->getUploadedFiles() as $name => $file) {
+                if (is_array($file)) {
+                    $this->_files[$name] = $file;
+                    continue;
+                }
+
+                if ($file->getClientMediaType() == "application/json" && $name == "vx") {
+
+                    $this->_post = json_decode($file->getStream()->getContents(), true);
+                    continue;
+                }
                 $this->_files[$name] = $file;
-                continue;
             }
 
-            if ($file->getClientMediaType() == "application/json" && $name == "vx") {
-                $this->_post = json_decode($file->getStream()->getContents(), true);
-                continue;
+            foreach ($this->_files as $name => $file) {
+
+                $this->_post[$name] = $file;
             }
-            $this->_files[$name] = $file;
+        } else {
+            $this->_post = $request->getParsedBody();
         }
-
 
         $this->request = $request;
 
@@ -187,7 +199,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->processTranslator();
 
         $this->_get = $_GET;
-        $this->_post = $request->getParsedBody();
+        
 
         $request = $request->withAttribute("context", $this)
             ->withAttribute("user", $this->user);
