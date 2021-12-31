@@ -8,6 +8,7 @@ use VX\FileManager;
 use VX\UI\EL\_Switch;
 use VX\UI\EL\Button;
 use VX\UI\EL\Checkbox;
+use VX\UI\EL\CheckboxGroup;
 use VX\UI\EL\ColorPicker;
 use VX\UI\EL\DatePicker;
 use VX\UI\EL\Input;
@@ -178,6 +179,16 @@ class FormItem extends EL\FormItem
         $this->setProp($name);
 
         return $dt;
+    }
+
+    function checkboxGroup(string $name)
+    {
+        $group = new CheckboxGroup;
+        $group->setAttribute("v-model", $this->scope . $name);
+
+        $this->append($group);
+        $this->setProp($name);
+        return $group;
     }
 
     function checkbox(string $name)
