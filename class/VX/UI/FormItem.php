@@ -172,7 +172,7 @@ class FormItem extends EL\FormItem
         $dt = new DatePicker;
         $dt->setName($name);
         $dt->setAttribute("v-model", $this->scope . $name);
-        $dt->setValueFormat("value-format", "yyyy-MM-dd HH:mm:ss");
+        $dt->setValueFormat("yyyy-MM-dd HH:mm:ss");
         $dt->setType("datetime");
 
         $this->append($dt);
