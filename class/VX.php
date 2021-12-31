@@ -168,6 +168,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
        
         $this->_files = [];
 
+        $has_vx = false;
+
         if (strpos($request->getHeaderLine("Content-Type"), "multipart/form-data") !== false) {
 
             foreach ($request->getUploadedFiles() as $name => $file) {
@@ -177,6 +179,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
                 }
 
                 if ($file->getClientMediaType() == "application/json" && $name == "vx") {
+                    $has_vx = true;
 
                     $this->_post = json_decode($file->getStream()->getContents(), true);
                     continue;
@@ -188,7 +191,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
                 $this->_post[$name] = $file;
             }
-        } else {
+        }
+
+        if (!$has_vx) {
             $this->_post = $request->getParsedBody();
         }
 
