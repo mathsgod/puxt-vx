@@ -38,6 +38,7 @@
 
                         if (status == 200) {
                             this.$message.success("Password updated");
+                            this.$vx.$router.push("view");
                         }
                     }
                 });
