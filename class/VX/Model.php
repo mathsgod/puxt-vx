@@ -65,7 +65,7 @@ class Model extends DBModel implements ResourceInterface, IModel
     public function createdBy(): ?User
     {
         if ($this->created_by) {
-            return User::Load($this->created_by);
+            return User::Get($this->created_by);
         }
         return null;
     }
@@ -73,7 +73,7 @@ class Model extends DBModel implements ResourceInterface, IModel
     public function updatedBy(): ?User
     {
         if ($this->updated_by) {
-            return User::Load($this->updated_by);
+            return User::Get($this->updated_by);
         }
         return null;
     }
