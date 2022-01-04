@@ -87,7 +87,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     {
 
         $this->puxt = $puxt;
-        $this->base_path = $puxt->base_path;
+        $this->base_path = $puxt->base_path . "api/";
         $this->root = $puxt->root;
         $this->config = $puxt->config;
 
@@ -165,7 +165,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $this->logger->info("Request: " . $request->getUri()->getPath());
         }
 
-       
+
         $this->_files = [];
 
         $has_vx = false;
@@ -204,7 +204,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->processTranslator();
 
         $this->_get = $_GET;
-        
+
 
         $request = $request->withAttribute("context", $this)
             ->withAttribute("user", $this->user);
