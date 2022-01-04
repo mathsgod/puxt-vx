@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d225d5e"],{e5a9:function(t,n,e){"use strict";e.r(n);e("4de4");var s,o,d={render:function(t){var n=this.$slots.default.filter((function(t){if(t.componentOptions)return"vx-card-body"==t.componentOptions.tag})),e=[];return 0==n.length?e.push(t("vx-card-body",this.$slots.default)):e=this.$slots.default,t("div",{class:{card:!0}},e)}},l=d,u=e("2877"),a=Object(u["a"])(l,s,o,!1,null,null,null);n["default"]=a.exports}}]);
+//# sourceMappingURL=chunk-2d225d5e.662e487e.js.map
