@@ -1,4 +1,3 @@
 {
-    "endpoint": "api/",
-    "endpoint2":"https://raymond3.hostlink.com.hk/vx/"
+    "endpoint": "/api/"
 }
