@@ -322,7 +322,7 @@ class FormItem extends EL\FormItem
         $input->setAttribute("accept", join(", ", FileManager::LookupMimeType("image")));
 
         if ($this->_vx->config["VX"]["tinymce"]["api_key"]) {
-            $input->setAttribute("api_key", $this->_vx->config["VX"]["tinymce"]["api_key"]);
+            $input->setAttribute("api-key", $this->_vx->config["VX"]["tinymce"]["api_key"]);
         }
 
         $this->append($input);
