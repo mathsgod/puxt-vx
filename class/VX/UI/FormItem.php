@@ -26,11 +26,12 @@ class FormItem extends EL\FormItem
 {
 
     public $scope = "scope.form.";
-    protected $vx;
+    protected $_vx;
 
     public function __construct(VX $vx)
     {
-        $this->vx = $vx;
+        $this->_vx = $vx;
+        parent::__construct();
     }
 
     function setScope(string $scope)
@@ -320,8 +321,8 @@ class FormItem extends EL\FormItem
         $input->setAttribute("v-model", $this->scope . $name);
         $input->setAttribute("accept", join(", ", FileManager::LookupMimeType("image")));
 
-        if ($this->vx->coinfig["VX"]["tinymce"]["api_key"]) {
-            $input->setAttribute("api_key", $this->vx->coinfig["VX"]["tinymce"]["api_key"]);
+        if ($this->_vx->config["VX"]["tinymce"]["api_key"]) {
+            $input->setAttribute("api_key", $this->_vx->config["VX"]["tinymce"]["api_key"]);
         }
 
         $this->append($input);

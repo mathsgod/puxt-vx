@@ -16,7 +16,7 @@ class Form extends HTMLElement implements TranslatorAwareInterface
     private $_data;
 
 
-    protected $vx;
+    protected $_vx;
 
     public function __construct(VX $vx)
     {
@@ -31,7 +31,7 @@ class Form extends HTMLElement implements TranslatorAwareInterface
             "subtree" => true
         ]);
 
-        $this->vx = $vx;
+        $this->_vx = $vx;
     }
 
     public function setAction(string $url = "")
@@ -53,7 +53,7 @@ class Form extends HTMLElement implements TranslatorAwareInterface
 
     public function add(string $label)
     {
-        $item = new FormItem($this->vx);
+        $item = new FormItem($this->_vx);
         $this->append($item);
 
         $item->setLabel($this->translator->trans($label));
