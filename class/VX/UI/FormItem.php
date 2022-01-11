@@ -4,6 +4,7 @@ namespace VX\UI;
 
 use P\CustomEvent;
 use P\HTMLElement;
+use VX;
 use VX\FileManager;
 use VX\UI\EL\_Switch;
 use VX\UI\EL\Button;
@@ -25,6 +26,12 @@ class FormItem extends EL\FormItem
 {
 
     public $scope = "scope.form.";
+    protected $vx;
+
+    public function __construct(VX $vx)
+    {
+        $this->vx = $vx;
+    }
 
     function setScope(string $scope)
     {
@@ -312,6 +319,11 @@ class FormItem extends EL\FormItem
         $input = new HTMLElement("vx-tinymce");
         $input->setAttribute("v-model", $this->scope . $name);
         $input->setAttribute("accept", join(", ", FileManager::LookupMimeType("image")));
+
+        if ($this->vx->coinfig["VX"]["tinymce"]["api_key"]) {
+            $input->setAttribute("api_key", $this->vx->coinfig["VX"]["tinymce"]["api_key"]);
+        }
+
         $this->append($input);
         $this->setProp($name);
         return $input;

@@ -100,7 +100,7 @@ class UI implements TranslatorAwareInterface
 
     public function createForm($data = null)
     {
-        $form = new UI\Form;
+        $form = new UI\Form($this->vx);
         $form->setTranslator($this->translator);
 
         $user = $this->vx->user;
