@@ -63,6 +63,10 @@ class Descriptions extends EL\Descriptions  implements TranslatorAwareInterface
                 $content = (string)$content;
             }
 
+            if(is_array($content)){
+                $content=implode(", ",$content);
+            }
+
             $item->append($content);
         }
         return $item;
