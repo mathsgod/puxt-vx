@@ -321,9 +321,13 @@ class FormItem extends EL\FormItem
         $input->setAttribute("v-model", $this->scope . $name);
         $input->setAttribute("accept", join(", ", FileManager::LookupMimeType("image")));
 
-        if ($this->_vx->config["VX"]["tinymce"]["api_key"]) {
-            $input->setAttribute("api-key", $this->_vx->config["VX"]["tinymce"]["api_key"]);
+        if ($this->_vx->config["VX"]["tinymce"]["api-key"]) {
+            $input->setAttribute("api-key", $this->_vx->config["VX"]["tinymce"]["api-key"]);
         }
+        if ($this->_vx->config["VX"]["tinymce"]["base-url"]) {
+            $input->setAttribute("base-url", $this->_vx->config["VX"]["tinymce"]["base-url"]);
+        }
+
 
         $this->append($input);
         $this->setProp($name);
