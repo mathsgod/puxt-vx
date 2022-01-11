@@ -91,7 +91,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->root = $puxt->root;
         $this->config = $puxt->config;
 
-        if ($this->config["base_path"]) {
+        if ($this->config["VX"]["base_path"]) {
             $this->base_path = $this->config["VX"]["base_path"];
         }
 
