@@ -91,6 +91,10 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->root = $puxt->root;
         $this->config = $puxt->config;
 
+        if ($this->config["base_path"]) {
+            $this->base_path = $this->config["VX"]["base_path"];
+        }
+
         $this->config["VX"]["authentication_lock"] = true;
         $this->config["VX"]["authentication_lock_time"] = 180;
 
