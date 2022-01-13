@@ -2,6 +2,7 @@
 
 namespace VX\UI;
 
+use Closure;
 use P\CustomEvent;
 use P\HTMLElement;
 use VX;
@@ -253,7 +254,11 @@ class FormItem extends EL\FormItem
                 if ($display_member === null) {
                     $label = (string)$v;
                 } else {
-                    $label = var_get($v, $display_member);
+                    if ($display_member instanceof Closure) {
+                        $label = $display_member($v);
+                    } else {
+                        $label = var_get($v, $display_member);
+                    }
                 }
                 $option->setLabel($label);
             }
