@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card profile-header mb-2">
                 <!-- profile cover photo -->
-                <img class="card-img-top" src="/images/profile/user-uploads/timeline.jpg" alt="User Profile Image">
+                <img class="card-img-top" src="images/profile/user-uploads/timeline.jpg" alt="User Profile Image">
                 <!--/ profile cover photo -->
 
                 <div class="position-relative">
