@@ -665,8 +665,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function resetPassword(string $password, string $token)
     {
-        $payload = (array)JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-        $user = User::Load($payload["user_id"]);
+        $payload = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        $user = User::Load($payload->user_id);
+
+        if (md5($user->password) != $payload->data->hash) {
+            throw new Exception("Reset link is invalid");
+        }
+
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         $user->save();
     }
@@ -680,7 +685,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + 3600,
-            "user_id" => $user->user_id
+            "user_id" => $user->user_id,
+            "hash" => md5($user->password)
         ], $this->config["VX"]["jwt"]["secret"]);
 
         $reset_link = $this->config["VX"]["vx_url"] . "/reset-password?token=" . $token;
