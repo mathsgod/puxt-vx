@@ -668,7 +668,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $payload = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
         $user = User::Load($payload->user_id);
 
-        if (md5($user->password) != $payload->data->hash) {
+        if (md5($user->password) != $payload->hash) {
             throw new Exception("Reset link is invalid");
         }
 
