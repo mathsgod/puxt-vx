@@ -15,7 +15,7 @@ return new class
     function  post(VX $vx)
     {
 
-        $files = $vx->req->getUploadedFiles();
+        $files = $vx->request->getUploadedFiles();
 
         $file = $files["file"];
 
