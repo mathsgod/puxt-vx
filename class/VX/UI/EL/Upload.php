@@ -81,7 +81,7 @@ class Upload extends HTMLElement
      */
     function setAccept(string $accept)
     {
-        $this->setAccept("accept", $accept);
+        $this->setAttribute("accept", $accept);
     }
 
     /**
