@@ -42,35 +42,12 @@ return function ($options) {
 
     $router->group($base, function (RouteGroup $route) use ($vx) {
         foreach ($vx->getModules() as $module) {
-            foreach ($module->getRouterMap() as $map) {
-                $handler = $map["handler"];
-                $file = $map["file"];
-                $path = $map["path"];
-
-
-                if ($handler instanceof \Closure) {
-                    $route->map($map["method"], $path, $handler);
-                    continue;
-                }
-
-                $path = str_replace("@", ":", $path);
-
-                $route->map($map['method'],  $path, function (ServerRequestInterface $request, array $args) use ($vx, $handler, $file, $path, $module) {
-
-                    $vx->object_id = $args["id"];
-                    $vx->module = $module;
-
-                    $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file)));
-                    $request = $request->withAttribute("twig", $twig);
-
-                    return $handler->handle($request);
-                });
-            }
+            $module->setupRoute($route);
         }
     });
 
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
-        $fm = $vx->getFileManager();
+        $fm = $vx->getFileSystem();
         $file = $args["file"];
         $file = urldecode($file);
 
@@ -88,7 +65,7 @@ return function ($options) {
     $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
         $glide = League\Glide\ServerFactory::create([
 
-            "source" => $vx->getFileManager(),
+            "source" => $vx->getFileSystem(),
             "cache" => dirname($vx->root) . DIRECTORY_SEPARATOR . "cache",
             "response" => new PsrResponseFactory(new Response(), function ($stream) {
                 return new Stream($stream);

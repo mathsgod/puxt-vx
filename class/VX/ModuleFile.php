@@ -4,6 +4,7 @@ namespace VX;
 
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,13 +34,14 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
         $user = $request->getAttribute("user");
         $acl = $request->getAttribute("acl");
 
-        if (!$user instanceof User) {
+        if (!$user instanceof RoleInterface) {
             throw new BadRequestException();
         }
 
         if (!$acl instanceof AclInterface) {
             throw new BadRequestException();
         }
+
 
         if (!$acl->isAllowed($user, $this->getResourceId())) {
             throw new ForbiddenException();

@@ -14,6 +14,7 @@ use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
+use League\Route\RouteCollectionInterface;
 use League\Route\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -118,144 +119,157 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         }
     }
 
+    function setupRoute(RouteCollectionInterface $route)
+    {
+
+        $route->get($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
+            $user = $request->getAttribute("user");
+            $object = $this->getObject($args["id"]);
+            if (!$object) {
+                throw new NotFoundException();
+            }
+            if (!$object->canReadBy($user)) {
+                throw new ForbiddenException();
+            }
+            return new JsonResponse($object);
+        });
+
+
+        $route->post($this->name, function (ServerRequestInterface $request, array $args) {
+            if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
+                $user = $request->getAttribute("user");
+
+                $object = $this->createObject();
+                if (!$object->canCreateBy($user)) {
+                    throw new ForbiddenException();
+                }
+
+                $data = $request->getParsedBody();
+                $object->bind($data);
+                $object->save($data);
+
+                $response = (new Response())->withStatus(201);
+                return $response->withHeader("Content-Location", $object->uri());
+            }
+            throw new NotFoundException();
+        });
+
+        $route->patch($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
+            if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
+                $user = $request->getAttribute("user");
+                $object = $this->getObject($args["id"]);
+
+                if (!$object) {
+                    throw new NotFoundException();
+                }
+                if (!$object->canUpdateBy($user)) {
+                    throw new ForbiddenException();
+                }
+
+                $data = $request->getParsedBody();
+
+                $object->bind($data);
+                $object->save($data);
+                $response = (new Response())->withStatus(204);
+                return $response->withHeader("Content-Location", $object->uri());
+            }
+            throw new NotFoundException();
+        });
+
+        $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
+            $user = $request->getAttribute("user");
+            $object = $this->getObject($args["id"]);
+            if (!$object) {
+                throw new NotFoundException();
+            }
+            if (!$object->canDeleteBy($user)) {
+                throw new ForbiddenException();
+            }
+
+            $object->delete();
+            return new EmptyResponse();
+        });
+
+        $route->get($this->name, function (ServerRequestInterface $request, array $args) {
+            if (strstr($request->getHeaderLine("Accept"), "application/json")) {
+                $query = $request->getQueryParams();
+
+                if (!$query["fields"]) {
+                    throw new BadRequestException();
+                }
+
+                $fields = explode(",", $query["fields"]);
+                $class = $this->class;
+                $q = $class::Query();
+
+                $hydrator = new ObjectPropertyHydrator;
+                $hydrator->addFilter("fields", function ($property) use ($fields) {
+                    return in_array($property, $fields);
+                });
+
+                $data = [];
+                foreach ($q as $o) {
+                    if ($o instanceof Model) {
+                        if ($o->canReadBy($request->getAttribute("user"))) {
+                            $data[] = $hydrator->extract($o);
+                        }
+                    }
+                }
+
+                return new JsonResponse($data);
+            }
+
+            if ($module_file = $this->getModuleFile("index")) {
+                $this->vx->module = $this;
+
+                $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($module_file->file)));
+                $request = $request->withAttribute("twig", $twig);
+
+
+                return $module_file->handle($request);
+            }
+
+            throw new NotFoundException();
+        });
+
+        $methods = ["GET", "POST", "PATCH", "DELETE"];
+        foreach ($methods as $method) {
+            foreach ($this->files as $file) {
+                $that = $this;
+
+                $path = $this->name . "/" . $file->path;
+                $path = str_replace("@", ":", $path);
+                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that) {
+                    $this->vx->module = $that;
+
+                    $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
+                    $request = $request->withAttribute("twig", $twig);
+
+                    return $file->handle($request);
+                });
+
+
+                $path = $this->name . "/{id:number}/" . $file->path;
+                $path = str_replace("@", ":", $path);
+
+                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $path) {
+
+                    $this->vx->object_id = $args["id"];
+                    $this->vx->module = $that;
+
+                    $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
+                    $request = $request->withAttribute("twig", $twig);
+
+                    return $file->handle($request);
+                });
+            }
+        }
+    }
+
 
     function getRouterMap()
     {
         $map = [];
-
-        //rest
-        $map[] = [
-            "method" => "GET",
-            "path" => $this->name . "/{id:number}",
-            "handler" => function (ServerRequestInterface $request, array $args) {
-                $user = $request->getAttribute("user");
-                $object = $this->getObject($args["id"]);
-                if (!$object) {
-                    throw new NotFoundException();
-                }
-                if (!$object->canReadBy($user)) {
-                    throw new ForbiddenException();
-                }
-                return new JsonResponse($object);
-            }
-        ];
-
-        $map[] = [
-            "method" => "POST",
-            "path" => $this->name,
-            "handler" => function (ServerRequestInterface $request, array $args) {
-                if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
-                    $user = $request->getAttribute("user");
-
-                    $object = $this->createObject();
-                    if (!$object->canCreateBy($user)) {
-                        throw new ForbiddenException();
-                    }
-
-                    $data = $request->getParsedBody();
-                    $object->bind($data);
-                    $object->save($data);
-
-                    $response = (new Response())->withStatus(201);
-                    return $response->withHeader("Content-Location", $object->uri());
-                }
-                throw new NotFoundException();
-            }
-        ];
-
-        $map[] = [
-            "method" => "PATCH",
-            "path" => $this->name . "/{id:number}",
-            "handler" => function (ServerRequestInterface $request, array $args) {
-                if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
-                    $user = $request->getAttribute("user");
-                    $object = $this->getObject($args["id"]);
-
-                    if (!$object) {
-                        throw new NotFoundException();
-                    }
-                    if (!$object->canUpdateBy($user)) {
-                        throw new ForbiddenException();
-                    }
-
-                    $data = $request->getParsedBody();
-
-                    $object->bind($data);
-                    $object->save($data);
-                    $response = (new Response())->withStatus(204);
-                    return $response->withHeader("Content-Location", $object->uri());
-                }
-                throw new NotFoundException();
-            }
-        ];
-
-
-
-        $map[] = [
-            "method" => "DELETE",
-            "path" => $this->name . "/{id:number}",
-            "handler" => function (ServerRequestInterface $request, array $args) {
-                $user = $request->getAttribute("user");
-                $object = $this->getObject($args["id"]);
-                if (!$object) {
-                    throw new NotFoundException();
-                }
-                if (!$object->canDeleteBy($user)) {
-                    throw new ForbiddenException();
-                }
-
-                $object->delete();
-                return new EmptyResponse();
-            }
-        ];
-
-        $map[] = [
-            "method" => "GET",
-            "path" => $this->name,
-            "handler" => function (ServerRequestInterface $request, array $args) {
-                if (strstr($request->getHeaderLine("Accept"), "application/json")) {
-                    $query = $request->getQueryParams();
-
-                    if (!$query["fields"]) {
-                        throw new BadRequestException();
-                    }
-
-                    $fields = explode(",", $query["fields"]);
-                    $class = $this->class;
-                    $q = $class::Query();
-
-                    $hydrator = new ObjectPropertyHydrator;
-                    $hydrator->addFilter("fields", function ($property) use ($fields) {
-                        return in_array($property, $fields);
-                    });
-
-                    $data = [];
-                    foreach ($q as $o) {
-                        if ($o instanceof Model) {
-                            if ($o->canReadBy($request->getAttribute("user"))) {
-                                $data[] = $hydrator->extract($o);
-                            }
-                        }
-                    }
-
-                    return new JsonResponse($data);
-                }
-
-                if ($module_file = $this->getModuleFile("index")) {
-                    $this->vx->module = $this;
-
-                    $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($module_file->file)));
-                    $request = $request->withAttribute("twig", $twig);
-
-
-                    return $module_file->handle($request);
-                }
-
-                throw new NotFoundException();
-            }
-        ];
-
-
 
 
         $methods = ["GET", "POST", "PATCH", "DELETE"];
