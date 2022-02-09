@@ -169,6 +169,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $this->logger->info("Request: " . $request->getUri()->getPath());
         }
 
+        $uri_path = $request->getUri()->getPath();
+        $this->request_uri = substr($uri_path, strlen($this->base_path));
+
 
         $this->_files = [];
 
@@ -210,8 +213,10 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->_get = $_GET;
 
 
-        $request = $request->withAttribute("context", $this)
-            ->withAttribute("user", $this->user);
+        $request = $request
+            ->withAttribute("context", $this)
+            ->withAttribute("user", $this->user)
+            ->withAttribute("acl", $this->getAcl());
 
         $response = $handler->handle($request);
 

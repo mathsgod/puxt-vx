@@ -2,7 +2,10 @@
 
 namespace VX;
 
+use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use League\Route\Http\Exception\BadRequestException;
+use League\Route\Http\Exception\ForbiddenException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -26,6 +29,21 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
 
     function handle(ServerRequestInterface $request): ResponseInterface
     {
+
+        $user = $request->getAttribute("user");
+        $acl = $request->getAttribute("acl");
+
+        if (!$user instanceof User) {
+            throw new BadRequestException();
+        }
+
+        if (!$acl instanceof AclInterface) {
+            throw new BadRequestException();
+        }
+
+        if (!$acl->isAllowed($user, $this->getResourceId())) {
+            throw new ForbiddenException();
+        }
 
         $loader = $this->module->vx->getRequestHandler($this->file);
         return $loader->handle($request);

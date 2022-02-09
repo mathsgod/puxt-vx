@@ -37,7 +37,7 @@ return function ($options) {
     $router->middleware($vx);
 
     $router->addPatternMatcher("any", ".+");
-    
+
     $base = substr($vx->base_path, 0, -1);
 
     $router->group($base, function (RouteGroup $route) use ($vx) {
@@ -56,22 +56,12 @@ return function ($options) {
                 $path = str_replace("@", ":", $path);
 
                 $route->map($map['method'],  $path, function (ServerRequestInterface $request, array $args) use ($vx, $handler, $file, $path, $module) {
-                    $context = $request->getAttribute("test", new stdClass);
-                    $context->params = $args;
-                    $request = $request->withAttribute("test", $context);
 
-                    $resource_id = $handler->getResourceId();
-                    if (!$vx->getAcl()->isAllowed($vx->user, $resource_id)) {
-                        throw new ForbiddenException();
-                    }
                     $vx->object_id = $args["id"];
                     $vx->module = $module;
 
                     $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file)));
                     $request = $request->withAttribute("twig", $twig);
-
-                    $vx->request_uri = $request->getUri()->getPath();
-                    $vx->request_uri = substr($vx->request_uri, strlen($vx->base_path));
 
                     return $handler->handle($request);
                 });

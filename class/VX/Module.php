@@ -4,6 +4,7 @@ namespace VX;
 
 use Exception;
 use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
@@ -14,6 +15,7 @@ use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use R\DB\Query;
 use Symfony\Component\Yaml\Yaml;
 use VX;
 
@@ -186,6 +188,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         ];
 
 
+
         $map[] = [
             "method" => "DELETE",
             "path" => $this->name . "/{id:number}",
@@ -200,7 +203,37 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 }
 
                 $object->delete();
-                return (new Response())->withStatus(204);
+                return new EmptyResponse();
+            }
+        ];
+
+        $map[] = [
+            "method" => "GET",
+            "path" => $this->name,
+            "handler" => function (ServerRequestInterface $request, array $args) {
+                if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
+
+                    $query = $request->getQueryParams();
+                    $fields = explode($query["fields"], ",");
+                    $class = $this->class;
+                    $q = $class::Query();
+                    if ($q instanceof Query) {
+                        $q->columns($fields);
+                        return new JsonResponse($q->toArray());
+                    }
+                }
+
+                if ($module_file = $this->getModuleFile("index")) {
+                    $this->vx->module = $this;
+
+                    $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($module_file->file)));
+                    $request = $request->withAttribute("twig", $twig);
+
+
+                    return $module_file->handle($request);
+                }
+
+                throw new NotFoundException();
             }
         ];
 
@@ -214,6 +247,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 "file" => $module_file->file
             ];
         }
+
 
 
         $methods = ["GET", "POST", "PATCH", "DELETE"];
