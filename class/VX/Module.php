@@ -6,10 +6,12 @@ use Exception;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
+use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
@@ -211,16 +213,32 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             "method" => "GET",
             "path" => $this->name,
             "handler" => function (ServerRequestInterface $request, array $args) {
-                if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
-
+                if (strstr($request->getHeaderLine("Accept"), "application/json")) {
                     $query = $request->getQueryParams();
-                    $fields = explode($query["fields"], ",");
+
+                    if (!$query["fields"]) {
+                        throw new BadRequestException();
+                    }
+
+                    $fields = explode(",", $query["fields"]);
                     $class = $this->class;
                     $q = $class::Query();
-                    if ($q instanceof Query) {
-                        $q->columns($fields);
-                        return new JsonResponse($q->toArray());
+
+                    $hydrator = new ObjectPropertyHydrator;
+                    $hydrator->addFilter("fields", function ($property) use ($fields) {
+                        return in_array($property, $fields);
+                    });
+
+                    $data = [];
+                    foreach ($q as $o) {
+                        if ($o instanceof Model) {
+                            if ($o->canReadBy($request->getAttribute("user"))) {
+                                $data[] = $hydrator->extract($o);
+                            }
+                        }
                     }
+
+                    return new JsonResponse($data);
                 }
 
                 if ($module_file = $this->getModuleFile("index")) {
@@ -237,16 +255,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             }
         ];
 
-
-
-        if ($module_file = $this->getModuleFile("index")) {
-            $map[] = [
-                "method" => "GET",
-                "path" => $this->name,
-                "handler" => $module_file,
-                "file" => $module_file->file
-            ];
-        }
 
 
 
