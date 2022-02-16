@@ -1,4 +1,4 @@
-{{form|raw}}
+{{menu|raw}}
 <?php
 
 /**
@@ -9,8 +9,11 @@ return new class
 {
     function get(VX $vx)
     {
-        $form = $vx->ui->createForm([]);
+        $menu = $vx->ui->createMenu();
+        $menu->add("Edit", "/User/1/ae");
+        $this->menu = $menu;
+        /*    $form = $vx->ui->createForm([]);
         $form->add("Name")->input("name")->required();
-        $this->form = $form;
+        $this->form = $form; */
     }
 };
