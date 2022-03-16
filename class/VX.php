@@ -475,6 +475,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $fs = new League\Flysystem\Filesystem($adapter);
             return $fs;
         }
+
+        if ($fm_config["type"] == "aws s3") {
+            $s3client = new \Aws\S3\S3Client($fm_config["client"]);
+            $fs = new \League\Flysystem\AwsS3V3\AwsS3V3Adapter($s3client, $fm_config["bucket"]);
+            return $fs;
+        }
     }
 
     /**
