@@ -125,8 +125,6 @@ class UI implements TranslatorAwareInterface
                 $form->setAttribute("method", "post");
             }
             $form->setAction($action);
-
-            $form->setSuccessUrl("/" . $this->vx->module->name);
         }
 
         if ($data) {
