@@ -122,7 +122,15 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     private function loadDB()
     {
         $db_config = $this->puxt->config["database"];
-        $schema = new Schema($db_config["database"], $db_config["hostname"], $db_config["username"], $db_config["password"]);
+        $schema = new Schema(
+            $db_config["database"],
+            $db_config["hostname"],
+            $db_config["username"],
+            $db_config["password"],
+            $db_config["charset"] ?? "utf8mb4",
+            $db_config["port"] ?? 3306,
+            $db_config["options"]
+        );
 
         $this->setDbAdapter($schema->getDbAdatpter());
         $this->db = $schema;
@@ -474,6 +482,21 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $adapter = new HL\Storage\Adapter($fm_config["token"], $fm_config["endpoint"]);
             $fs = new League\Flysystem\Filesystem($adapter);
             return $fs;
+        }
+
+        if ($fm_config["type"] == "aws s3") {
+            $s3client = new \Aws\S3\S3Client($fm_config["client"]);
+            $adapter = new \League\Flysystem\AwsS3V3\AwsS3V3Adapter(
+                $s3client,
+                $fm_config["bucket"],
+                $fm_config["prefix"] ?? "",
+                new League\Flysystem\AwsS3V3\PortableVisibilityConverter(
+                    // Optional default for directories
+                    League\Flysystem\Visibility::PRIVATE // or ::PRIVATE
+                )
+            );
+
+            return new League\Flysystem\Filesystem($adapter);
         }
     }
 
