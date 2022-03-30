@@ -116,6 +116,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
 
         $this->loadDB();
+
+        $this->useEventDispatcher($puxt->eventDispatcher());
     }
 
     private function loadDB()
