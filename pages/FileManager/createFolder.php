@@ -8,9 +8,8 @@ return new class
 {
     function post(VX $vx)
     {
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
 
-        
         $fs->createDirectory($vx->_post["path"]);
 
         $path = $vx->_post["path"];

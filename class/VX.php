@@ -33,7 +33,6 @@ use Twig\Loader\LoaderInterface;
 use VX\ACL as VXACL;
 use VX\AuthLock;
 use VX\Config;
-use VX\EventLog;
 use VX\IModel;
 use VX\ListenserSubscriber;
 use VX\Mailer;

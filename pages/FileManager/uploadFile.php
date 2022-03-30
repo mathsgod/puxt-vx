@@ -6,6 +6,7 @@
  */
 
 use VX\FileManager;
+use VX\FileManger\Event\BeforeUploadFile;
 
 return new class
 {
@@ -21,14 +22,16 @@ return new class
             throw new Exception("File extension not allowed", 400);
         }
 
+        $event = new BeforeUploadFile($file);
+        $vx->eventDispatcher()->dispatch($event);
+        $file = $event->target;
+        $fs = $vx->getFileSystem();
 
-        $fs = $vx->getFileManager();
         try {
             $fs->write($vx->_post["path"] . "/" . $file->getClientFilename(), $file->getStream()->getContents());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), 400);
         }
-
 
         $path = str_replace(DIRECTORY_SEPARATOR, "/", $vx->_post["path"]);
 
