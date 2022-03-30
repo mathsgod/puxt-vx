@@ -21,6 +21,9 @@ return function ($options) {
 
     $vx = new VX($this->puxt);
 
+    $this->puxt->vx = $vx;
+
+
     $config = $this->puxt->config["VX"];
 
     if ($logger_config = $config["logger"]) {
