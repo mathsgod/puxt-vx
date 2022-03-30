@@ -6,7 +6,7 @@
  */
 
 use VX\FileManager;
-use VX\FileManger\Event\BeforeUploadFile;
+use VX\FileManager\Event\BeforeUploadFile;
 
 return new class
 {

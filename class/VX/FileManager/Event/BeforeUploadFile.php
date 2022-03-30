@@ -1,6 +1,6 @@
 <?php
 
-namespace VX\FileManger\Event;
+namespace VX\FileManager\Event;
 
 use Psr\Http\Message\UploadedFileInterface;
 
