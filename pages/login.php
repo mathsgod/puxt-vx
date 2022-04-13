@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Laminas\Diactoros\Response\EmptyResponse;
 
 /**
  * Created by: Raymond Chong
@@ -35,9 +36,9 @@ return new class
             "user_id" => $user->user_id
         ], $vx->config["VX"]["jwt"]["secret"]);
 
-        return [
-            "access_token" => $token,
-            "refresh_token" => $refresh_token
-        ];
+        $response = new EmptyResponse(200);
+        $response = $response->withAddedHeader("Set-Cookie", "access_token=" . $token . "; httponly");
+        $response = $response->withAddedHeader("Set-Cookie", "refresh_token=" . $refresh_token . "; path=/api/refresh; httponly");
+        return $response;
     }
 };

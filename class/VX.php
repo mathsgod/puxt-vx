@@ -302,8 +302,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         if ($query["_token"]) {
             $token = $query["_token"];
         } else {
+
             $authorization = $request->getHeaderLine("Authorization");
-            if ($authorization) {
+
+            if ($_COOKIE["access_token"]) {
+                $token = $_COOKIE["access_token"];
+            } elseif ($authorization) {
                 $authorization = explode(" ", $authorization);
                 if (count($authorization) == 2) {
                     $token = $authorization[1];

@@ -29,9 +29,6 @@ return new class
 
     function get(VX $vx)
     {
-   /*      $m=$vx->getModule("User");
-        outp($m);
-        die; */
         $logined = $vx->logined;
         $data = [
             "logined" => $logined,
