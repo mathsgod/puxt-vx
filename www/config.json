@@ -1,4 +1,4 @@
 {
-    "endpoint2": "/api/",
-    "endpoint": "http://localhost:8001/api/"
+    "endpoint": "/api/"
+    //"endpoint": "http://localhost:8001/api/"
 }
