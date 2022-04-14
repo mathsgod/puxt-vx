@@ -94,6 +94,18 @@ return function ($options) {
         return $handler->handle($request);
     });
 
+    $router->map("POST",  $vx->base_path . "logout", function (ServerRequestInterface $request) use ($vx) {
+        return $vx->getRequestHandler($vx->vx_root . "/pages/logout")->handle($request);
+    });
+
+
+    $router->map("GET",  $vx->base_path . "refresh", function (ServerRequestInterface $request) use ($vx) {
+        $handler =  $vx->getRequestHandler($vx->vx_root . "/pages/refresh");
+        return $handler->handle($request);
+    });
+
+
+
     $router->map("GET", $vx->base_path . "cancel-view-as", function (ServerRequestInterface $request) use ($vx) {
         $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
         $request = $request->withAttribute("twig", $twig);
