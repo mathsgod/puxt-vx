@@ -6,15 +6,15 @@ return [
     ],
 
     "database" => [
-        "hostname" => "127.0.0.1",
-        "username" => "root",
-        "password" => "111111",
-        "database" => "raymond",
+        "hostname" => "",
+        "username" => "",
+        "password" => "",
+        "database" => "",
     ],
 
     "VX" => [
-        "jwt"=>[
-            "secret"=>"hostlink secret key"
+        "jwt" => [
+            "secret" => ""
         ],
         "language" => [
             "en" => "English",
