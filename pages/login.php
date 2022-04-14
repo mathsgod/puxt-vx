@@ -36,9 +36,17 @@ return new class
             "user_id" => $user->user_id
         ], $vx->config["VX"]["jwt"]["secret"]);
 
+
+        $access_token_string = "access_token=" . $token . "; SameSite=Strict; HttpOnly";
+        $refresh_token_string = "refresh_token=" . $refresh_token . "; SameSite=Strict; HttpOnly";
+        if ($vx->request->getUri()->getScheme() == "https") {
+            $access_token_string .= "; Secure";
+            $refresh_token_string .= "; Secure";
+        }
+
         $response = new EmptyResponse(200);
-        $response = $response->withAddedHeader("Set-Cookie", "access_token=" . $token . "; SameSite=Lax; HttpOnly");
-        $response = $response->withAddedHeader("Set-Cookie", "refresh_token=" . $refresh_token . "; path=/api/renew-token; SameSite=Lax; HttpOnly");
+        $response = $response->withAddedHeader("Set-Cookie", $access_token_string);
+        $response = $response->withAddedHeader("Set-Cookie", $refresh_token_string);
         return $response;
     }
 };
