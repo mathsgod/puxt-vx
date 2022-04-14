@@ -38,7 +38,7 @@ return new class
 
 
         $access_token_string = "access_token=" . $token . "; SameSite=Strict; HttpOnly";
-        $refresh_token_string = "refresh_token=" . $refresh_token . "; SameSite=Strict; HttpOnly";
+        $refresh_token_string = "refresh_token=" . $refresh_token . "; path=/api/renew-token; SameSite=Strict; HttpOnly";
         if ($vx->request->getUri()->getScheme() == "https") {
             $access_token_string .= "; Secure";
             $refresh_token_string .= "; Secure";
