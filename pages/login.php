@@ -37,8 +37,8 @@ return new class
         ], $vx->config["VX"]["jwt"]["secret"]);
 
         $response = new EmptyResponse(200);
-        $response = $response->withAddedHeader("Set-Cookie", "access_token=" . $token . "; httponly");
-        $response = $response->withAddedHeader("Set-Cookie", "refresh_token=" . $refresh_token . "; path=/api/renew-token; httponly");
+        $response = $response->withAddedHeader("Set-Cookie", "access_token=" . $token . "; SameSite=Lax; HttpOnly");
+        $response = $response->withAddedHeader("Set-Cookie", "refresh_token=" . $refresh_token . "; path=/api/renew-token; SameSite=Lax; HttpOnly");
         return $response;
     }
 };
