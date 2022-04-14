@@ -10,23 +10,6 @@ use Webauthn\PublicKeyCredentialSource;
 
 return new class
 {
-    function renew_access_token(VX $vx)
-    {
-        $refresh_token = $vx->_post["refresh_token"];
-        $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
-        if ($payload["type"] == "refresh_token") {
-
-            $token = JWT::encode([
-                "type" => "access_token",
-                "iat" => time(),
-                "exp" => time() + 3600,
-                "user_id" => $payload["user_id"]
-            ], $vx->config["VX"]["jwt"]["secret"]);
-            return ["access_token" => $token];
-        }
-        throw new Exception("error when renew access token");
-    }
-
     function get(VX $vx)
     {
         $logined = $vx->logined;

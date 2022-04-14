@@ -27,12 +27,11 @@ return new class
         $config["biometric_authentication"] = boolval($config["biometric_authentication"]);
         $config["file_manager_show"] = boolval($config["file_manager_show"]);
         $config["authentication_lock"] = boolval($config["authentication_lock"]);
+        $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
 
         $f = $vx->ui->createForm($config);
 
-
         $f->add("VX URL")->input("vx_url");
-
 
         $r = $f->add("Company");
         $r->input("company");
@@ -52,6 +51,10 @@ return new class
 
 
         $f->add("Email from")->email("mail_from");
+
+        $f->addDivider("Login")->setContentPosition("left");
+        $f->add("Allow remember me")->checkbox("allow_remember_me");
+
 
 
         $f->addDivider("Authentication failed lock")->setContentPosition("left");
