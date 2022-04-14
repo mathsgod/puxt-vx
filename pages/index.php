@@ -128,6 +128,7 @@ return new class
             "login" => [
                 "version" => $config["login_version"]
             ],
+            "allow_remember_me" => boolval($config["allow_remember_me"]),
             "css" => explode("\n", $config["css"]) ?? [],
             "js" => explode("\n", $config["js"]) ?? []
         ];

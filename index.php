@@ -99,9 +99,8 @@ return function ($options) {
     });
 
 
-    $router->map("GET",  $vx->base_path . "refresh", function (ServerRequestInterface $request) use ($vx) {
-        $handler =  $vx->getRequestHandler($vx->vx_root . "/pages/refresh");
-        return $handler->handle($request);
+    $router->map("POST",  $vx->base_path . "renew-token", function (ServerRequestInterface $request) use ($vx) {
+        return $vx->getRequestHandler($vx->vx_root . "/pages/renew-token")->handle($request);
     });
 
 

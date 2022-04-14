@@ -538,11 +538,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $acl->addResource("logout");
         $acl->addResource("cancel-view-as");
         $acl->addResource("error");
+        $acl->addResource("renew-token");
         $acl->allow(null, "index");
         $acl->allow(null, "login");
         $acl->allow(null, "logout");
         $acl->allow(null, "cancel-view-as");
         $acl->allow(null, "error");
+        $acl->allow(null, "renew-token");
+
 
 
         $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "/class");
