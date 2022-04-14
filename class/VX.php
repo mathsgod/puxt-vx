@@ -298,24 +298,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $this->user_id = 2;
 
-        $query = $request->getQueryParams();
-        if ($query["_token"]) {
-            $token = $query["_token"];
-        } else {
 
-            $authorization = $request->getHeaderLine("Authorization");
-
-            if ($_COOKIE["access_token"]) {
-                $token = $_COOKIE["access_token"];
-            } elseif ($authorization) {
-                $authorization = explode(" ", $authorization);
-                if (count($authorization) == 2) {
-                    $token = $authorization[1];
-                }
-            }
-        }
-
-        if ($token) {
+        if ($_COOKIE["access_token"]) {
+            $token = $_COOKIE["access_token"];
             if ($user_id = $this->getUserIdByToken($token)) {
                 $this->user_id = $user_id;
                 $this->logined = true;
