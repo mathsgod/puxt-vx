@@ -21,24 +21,9 @@ return new class
         $user = $vx->login($data["username"], $data["password"], $data["code"]);
 
 
-        $token = JWT::encode([
-            "type" => "access_token",
-            "iat" => time(),
-            "exp" => time() + 3600,
-            "user_id" => $user->user_id
 
-        ], $vx->config["VX"]["jwt"]["secret"]);
-
-        $refresh_token = JWT::encode([
-            "type" => "refresh_token",
-            "iat" => time(),
-            "exp" => time() + 3600 * 24, //1 day
-            "user_id" => $user->user_id
-        ], $vx->config["VX"]["jwt"]["secret"]);
-
-
-        $access_token_string = "access_token=" . $token . "; SameSite=Strict; HttpOnly";
-        $refresh_token_string = "refresh_token=" . $refresh_token . "; path=/api/renew-token; SameSite=Strict; HttpOnly";
+        $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; SameSite=Strict; HttpOnly";
+        $refresh_token_string = "refresh_token=" . $vx->generateRefreshToken($user) . "; path=" . $vx->base_path . "renew-token; SameSite=Strict; HttpOnly";
         if ($vx->request->getUri()->getScheme() == "https") {
             $access_token_string .= "; Secure";
             $refresh_token_string .= "; Secure";

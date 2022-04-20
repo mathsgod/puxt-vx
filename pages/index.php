@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
 use VX\PublicKeyCredentialSourceRepository;
@@ -222,13 +223,20 @@ return new class
             json_encode($vx->_post),
             PublicKeyCredentialRequestOptions::createFromArray($user->credential_request_options),
             $userEntity,
-            $vx->req
+            $vx->request
         );
 
-        return [
-            "access_token" => $vx->generateAccessToken($user),
-            "refresh_token" => $vx->generateRefreshToken($user)
-        ];
+        $access_token_string = "access_token=" . $vx->generateAccessToken($user) . "; SameSite=Strict; HttpOnly";
+        $refresh_token_string = "refresh_token=" . $vx->generateRefreshToken($user) . "; path=" . $vx->base_path . "renew-token; SameSite=Strict; HttpOnly";
+        if ($vx->request->getUri()->getScheme() == "https") {
+            $access_token_string .= "; Secure";
+            $refresh_token_string .= "; Secure";
+        }
+
+        $response = new EmptyResponse(200);
+        $response = $response->withAddedHeader("Set-Cookie", $access_token_string);
+        $response = $response->withAddedHeader("Set-Cookie", $refresh_token_string);
+        return $response;
     }
 
     function authRequestOptions(VX $vx)
