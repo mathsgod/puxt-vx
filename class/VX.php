@@ -299,7 +299,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->user_id = 2;
 
 
-        if ($_COOKIE["access_token"]) {
+        if ($_COOKIE["access_token"] && !$_COOKIE["refresh_token"]) {
             $token = $_COOKIE["access_token"];
             if ($user_id = $this->getUserIdByToken($token)) {
                 $this->user_id = $user_id;
