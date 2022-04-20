@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Response\EmptyResponse;
 use Ramsey\Uuid\Uuid;
 use VX\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialCreationOptions;
@@ -20,7 +21,7 @@ return new class
         $publicKeyCredentialSource = $server->loadAndCheckAttestationResponse(
             json_encode($vx->_post),
             $publicKeyCredentialCreationOptions,
-            $vx->req
+            $vx->request
         );
 
         //$repo->saveCredentialSource($publicKeyCredentialSource);
@@ -32,8 +33,7 @@ return new class
             "credential" => $publicKeyCredentialSource->jsonSerialize()
         ];
 
-
         $user->save();
-        http_response_code(204);
+        return new EmptyResponse();
     }
 };
