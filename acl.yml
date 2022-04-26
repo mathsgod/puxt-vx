@@ -2,6 +2,10 @@ path:
   auth:
     login: [Users,Power Users,Guests]
     logout: [Users,Power Users,Guests]
+    request-option: [Users,Power Users,Guests]
+    renew-token: [Users,Power Users,Guests]
+    assertion: [Users,Power Users,Guests]
+
   User:
     view: [Users,Power Users]
     profile: [Users,Power Users]

@@ -20,8 +20,6 @@ return new class
         $data = $vx->_post;
         $user = $vx->login($data["username"], $data["password"], $data["code"]);
 
-
-
         $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
         $refresh_token_string = "refresh_token=" . $vx->generateRefreshToken($user) . "; path=" . $vx->base_path . "auth/renew-token; SameSite=Strict; HttpOnly";
         if ($vx->request->getUri()->getScheme() == "https") {
