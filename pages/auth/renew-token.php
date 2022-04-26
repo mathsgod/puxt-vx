@@ -13,16 +13,20 @@ return new class
         }
 
         $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
-        if ($payload["type"] == "refresh_token") {
-            $token = JWT::encode([
-                "type" => "access_token",
-                "iat" => time(),
-                "exp" => time() + 3600,
-                "user_id" => $payload["user_id"]
-            ], $vx->config["VX"]["jwt"]["secret"]);
 
+        if ($payload["type"] == "refresh_token") {
+
+            if ($vx->user->isGuest()) {
+                throw new Exception("error when renew access token");
+            }
             $resp = new EmptyResponse(200);
-            $resp = $resp->withAddedHeader("Set-Cookie", "access_token=" . $token . "; httponly");
+
+            $access_token_string = "access_token=" . $vx->generateAccessToken($vx->user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
+            if ($vx->request->getUri()->getScheme() == "https") {
+                $access_token_string .= "; Secure";
+            }
+
+            $resp = $resp->withAddedHeader("Set-Cookie", $access_token_string);
             return $resp;
         }
         throw new Exception("error when renew access token");

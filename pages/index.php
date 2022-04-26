@@ -130,9 +130,15 @@ return new class
                 "version" => $config["login_version"]
             ],
             "allow_remember_me" => boolval($config["allow_remember_me"]),
-            "css" => explode("\n", $config["css"]) ?? [],
-            "js" => explode("\n", $config["js"]) ?? []
+            "css" => [],
+            "js" => [],
+
         ];
+
+        if ($logined) {
+            $data["config"]["css"] = explode("\n", $config["css"]) ?? [];
+            $data["config"]["js"] = explode("\n", $config["js"]) ?? [];
+        }
 
         return $data;
     }
@@ -205,8 +211,4 @@ return new class
         $user = $vx->user;
         $user->removeMyFavorite($vx->_post["path"]);
     }
-
-    
-
- 
 };
