@@ -357,8 +357,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
 
         if (count($submenu)) {
             $data["submenu"] = $submenu;
-
-            if ($this->acl->isAllowed($user, $this->name . "/index")) {
+            if ($this->acl->hasResource($this->name . "/index") && $this->acl->isAllowed($user, $this->name . "/index")) {
                 array_unshift($data["submenu"], [
                     "label" => $this->translator->trans("List"),
                     "icon" => "fa fa-list",
@@ -366,7 +365,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 ]);
             }
         } else {
-            if ($this->acl->isAllowed($user, $this->name . "/index")) {
+            if ($this->acl->hasResource($this->name . "/index") && $this->acl->isAllowed($user, $this->name . "/index")) {
                 $data["link"] = "/" . $this->name;
             } else {
                 return [];

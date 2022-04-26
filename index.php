@@ -89,20 +89,7 @@ return function ($options) {
         return $handler->handle($request);
     });
 
-    $router->map("POST",  $vx->base_path . "login", function (ServerRequestInterface $request) use ($vx) {
-        $handler =  $vx->getRequestHandler($vx->vx_root . "/pages/login");
-        return $handler->handle($request);
-    });
-
-    $router->map("POST",  $vx->base_path . "logout", function (ServerRequestInterface $request) use ($vx) {
-        return $vx->getRequestHandler($vx->vx_root . "/pages/logout")->handle($request);
-    });
-
-
-    $router->map("POST",  $vx->base_path . "renew-token", function (ServerRequestInterface $request) use ($vx) {
-        return $vx->getRequestHandler($vx->vx_root . "/pages/renew-token")->handle($request);
-    });
-
+ 
 
 
     $router->map("GET", $vx->base_path . "cancel-view-as", function (ServerRequestInterface $request) use ($vx) {
