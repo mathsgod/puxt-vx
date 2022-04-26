@@ -2,9 +2,11 @@ path:
   auth:
     login: [Users,Power Users,Guests]
     logout: [Users,Power Users,Guests]
-    request-option: [Users,Power Users,Guests]
+    request-options: [Users,Power Users,Guests]
     renew-token: [Users,Power Users,Guests]
     assertion: [Users,Power Users,Guests]
+    register: [Users,Power Users]
+    register-options: [Users,Power Users]
 
   User:
     view: [Users,Power Users]
