@@ -2,6 +2,7 @@
 
 use Firebase\JWT\JWT;
 use Laminas\Diactoros\Response\EmptyResponse;
+use VX\User;
 
 return new class
 {
@@ -12,11 +13,12 @@ return new class
             throw new Exception("no refresh token");
         }
 
-        $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
+        $payload = JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
 
-        if ($payload["type"] == "refresh_token") {
+        if ($payload->type == "refresh_token") {
             $resp = new EmptyResponse(200);
-            $access_token_string = "access_token=" . $vx->generateAccessToken($vx->user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
+            $user = User::Get($payload->user_id);
+            $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
             if ($vx->request->getUri()->getScheme() == "https") {
                 $access_token_string .= "; Secure";
             }
