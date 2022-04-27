@@ -15,12 +15,7 @@ return new class
         $payload = (array)JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
 
         if ($payload["type"] == "refresh_token") {
-
-            if ($vx->user->isGuest()) {
-                throw new Exception("error when renew access token");
-            }
             $resp = new EmptyResponse(200);
-
             $access_token_string = "access_token=" . $vx->generateAccessToken($vx->user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
             if ($vx->request->getUri()->getScheme() == "https") {
                 $access_token_string .= "; Secure";

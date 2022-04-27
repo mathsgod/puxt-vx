@@ -3,7 +3,7 @@
         <el-table-column label="Username" prop="username" sortable></el-table-column>
         <el-table-column label="First name" prop="first_name" sortable></el-table-column>
         <el-table-column label="Last name" prop="last_name" sortable></el-table-column>
-        <el-table-column label="Usergroup" prop="usergroup"></el-table-column>
+        <el-table-column label="Usergroup" prop="usergroup" sortable></el-table-column>
         <el-table-column label="View as">
             <template slot-scope="scope">
                 <el-button @click="viewAs(scope.row)" size="small">View as </el-button>
