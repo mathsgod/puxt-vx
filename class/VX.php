@@ -22,6 +22,7 @@ use Psr\Log\LoggerAwareTrait;
 use PUXT\App;
 use PUXT\Context;
 use R\DB\Schema;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -47,7 +48,6 @@ use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\SystemValue;
-use VX\TwigI18n;
 use VX\UserGroup;
 
 /**
@@ -737,11 +737,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $loader = new FilesystemLoader([$this->root, $this->vx_root]);
         }
         $twig = new Environment($loader);
-
-
-        $i18n = new TwigI18n;
-        $i18n->setTranslator($this->translator);
-        $twig->addExtension($i18n);
+        $twig->addExtension(new TranslationExtension($this->translator));
 
         return $twig;
     }
