@@ -91,10 +91,6 @@ class DatePicker extends  FormItemElement
     function setType(string $type)
     {
         $this->setAttribute("type", $type);
-        if ($type == "year" || $type == "month") {
-            $this->removeAttribute("value-format");
-            $this->removeAttribute("format");
-        }
     }
 
     /**

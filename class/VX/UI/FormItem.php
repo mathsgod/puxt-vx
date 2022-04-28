@@ -157,6 +157,28 @@ class FormItem extends EL\FormItem
         return $date;
     }
 
+    function yearPicker(string $name)
+    {
+        $date = new DatePicker();
+        $date->setName($name);
+        $date->setAttribute("v-model", $this->scope . $name);
+        $date->setType("year");
+        $this->append($date);
+        $this->setProp($name);
+        return $date;
+    }
+
+    function monthPicker(string $name)
+    {
+        $date = new DatePicker();
+        $date->setName($name);
+        $date->setAttribute("v-model", $this->scope . $name);
+        $date->setType("month");
+        $this->append($date);
+        $this->setProp($name);
+        return $date;
+    }
+
     /**
      * alias for datePicker
      */
