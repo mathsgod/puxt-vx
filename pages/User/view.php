@@ -32,35 +32,35 @@
                                 <div class="d-flex flex-wrap">
                                     <div class="user-info-title">
                                         <i data-feather="user" class="mr-1"></i>
-                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Username'|t}}</span>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Username'|trans}}</span>
                                     </div>
                                     <p class="card-text mb-0">{{user.username}}</p>
                                 </div>
                                 <div class="d-flex flex-wrap my-50">
                                     <div class="user-info-title">
                                         <i data-feather="check" class="mr-1"></i>
-                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Status'|t}}</span>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Status'|trans}}</span>
                                     </div>
                                     <p class="card-text mb-0">{{user.status()}}</p>
                                 </div>
                                 <div class="d-flex flex-wrap my-50">
                                     <div class="user-info-title">
                                         <i data-feather="star" class="mr-1"></i>
-                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'User group'|t}}</span>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'User group'|trans}}</span>
                                     </div>
                                     <p class="card-text mb-0">{{usergroup}}</p>
                                 </div>
                                 <div class="d-flex flex-wrap my-50">
                                     <div class="user-info-title">
                                         <i data-feather="flag" class="mr-1"></i>
-                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Phone'|t}}</span>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Phone'|trans}}</span>
                                     </div>
                                     <p class="card-text mb-0">{{user.phone}}</p>
                                 </div>
                                 <div class="d-flex flex-wrap">
                                     <div class="user-info-title">
                                         <i data-feather="phone" class="mr-1"></i>
-                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Address'|t}}</span>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Address'|trans}}</span>
                                     </div>
                                     <p class="card-text mb-0">{{user.addr1}}</p>
                                     <p class="card-text mb-0">{{user.addr2}}</p>
@@ -111,18 +111,18 @@
             <!-- User Permissions -->
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">{{'Permissions'|t}}</h4>
+                    <h4 class="card-title">{{'Permissions'|trans}}</h4>
                 </div>
-                <p class="card-text ml-2">{{'Permission according to roles'|t}}</p>
+                <p class="card-text ml-2">{{'Permission according to roles'|trans}}</p>
                 <div class="table-responsive">
                     <table class="table table-striped table-borderless">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{'Module'|t}}</th>
-                                <th>{{'Read'|t}}</th>
-                                <th>{{'Write'|t}}</th>
-                                <th>{{'Create'|t}}</th>
-                                <th>{{'Delete'|t}}</th>
+                                <th>{{'Module'|trans}}</th>
+                                <th>{{'Read'|trans}}</th>
+                                <th>{{'Write'|trans}}</th>
+                                <th>{{'Create'|trans}}</th>
+                                <th>{{'Delete'|trans}}</th>
                             </tr>
                         </thead>
                         <tbody>
