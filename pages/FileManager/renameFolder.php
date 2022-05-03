@@ -12,7 +12,7 @@ return new class
         $base = dirname($vx->_post["path"]);
         $target = $base . DIRECTORY_SEPARATOR . $vx->_post["name"];
 
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
         $fs->move($vx->_post["path"], $target);
 
         return [

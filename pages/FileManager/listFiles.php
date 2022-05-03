@@ -16,7 +16,7 @@ return new class
     {
         $type = FileManager::LookupMimeType($vx->_get["type"]);
 
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
         $parent = $vx->_get["path"] ?? "/";
 
         return $fs->listContents($parent, true)->filter(function (StorageAttributes $attr) use ($fs, $type) {

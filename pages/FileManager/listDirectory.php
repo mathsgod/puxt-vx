@@ -12,7 +12,7 @@ return new class
 
     function get(VX $vx)
     {
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
 
         $parent = $vx->_get["path"] ?? "/";
         $ret = $fs->listContents($parent)->filter(function (StorageAttributes $attr) {

@@ -20,7 +20,7 @@ return new class
             throw new Exception("extension not allow");
         }
 
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
         $fs->move($vx->_post["path"], $target);
     }
 };
