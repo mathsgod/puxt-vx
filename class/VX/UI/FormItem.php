@@ -339,6 +339,11 @@ class FormItem extends EL\FormItem
         $input->setAttribute("v-model", $this->scope . $name);
         $this->append($input);
         $this->setProp($name);
+
+
+        if ($this->_vx->config["VX"]["file_manager_preview"]) {
+            $input->setAttribute("preview", "");
+        }
         return $input;
     }
 
