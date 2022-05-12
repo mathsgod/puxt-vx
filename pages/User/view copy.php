@@ -1,78 +1,93 @@
-
-
-<section class="app-user-view-account">
+<link rel="stylesheet" type="text/css" href="/css/pages/app-user.css">
+<section class="app-user-view">
+    <!-- User Card & Plan Starts -->
     <div class="row">
-        <!-- User Sidebar -->
-        <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
-            <!-- User Card -->
-            <div class="card">
+        <!-- User Card starts-->
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            <div class="card user-card">
                 <div class="card-body">
-                    <div class="user-avatar-section">
-                        <div class="d-flex align-items-center flex-column">
-                            <img class="img-fluid rounded mt-3 mb-2" src="{{user.photo()}}" height="110" width="110" alt="User avatar" />
-                            <div class="user-info text-center">
-                                <h4>{{user.first_name}} {{user.last_name}}</h4>
-                                {% for ug in usergroups %}
-                                <span class="badge bg-light-secondary">{{ug}}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <h4 class="fw-bolder border-bottom pb-50 mb-1">Details</h4>
-                    <div class="info-container">
-                        <ul class="list-unstyled">
-                            <li class="mb-75">
-                                <span class="fw-bolder me-25">Username:</span>
-                                <span>{{user.username}}</span>
-                            </li>
-                            <li class="mb-75">
-                                <span class="fw-bolder me-25">Email:</span>
-                                <span>{{user.email}}</span>
-                            </li>
-                            <li class="mb-75">
-                                <span class="fw-bolder me-25">Phone:</span>
-                                <span>{{user.phone}}</span>
-                            </li>
-                            <li class="mb-75">
-                                <span class="fw-bolder me-25">Status:</span>
-                                {% if  user.status==0 %}
-                                <span class="badge bg-light-success">
-                                    Active
-                                </span>
-                                {% else %}
-                                <span class="badge bg-light-danger">
-                                    Inactive
-                                </span>
-                                {% endif %}
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg">
+                            <div class="user-avatar-section">
+                                <div class="d-flex justify-content-start">
+                                    <img class="img-fluid rounded" src="{{user.photo()}}" height="104" width="104" alt="User avatar" />
+                                    <div class="d-flex flex-column ml-1">
+                                        <div class="user-info mb-1">
+                                            <h4 class="mb-0">{{user.first_name}} {{user.last_name}}</h4>
+                                            <span class="card-text">{{user.email}}</span>
+                                        </div>
+                                        <div class="d-flex flex-wrap">
+                                            {% if can_change_password %}
+                                            <router-link to="/User/{{user.user_id}}/change-password" class="btn btn-primary">Change password</router-link -->
+                                            {% endif %}
 
-                            </li>
-                            <li class="mb-75">
-                                <span class="fw-bolder me-25">Role:</span>
-                                <span>{{usergroup}}</span>
-                            </li>
-                        </ul>
-                        <div class="d-flex justify-content-center pt-2">
-                            {% if can_change_password %}
-                            <router-link to="/User/{{user.user_id}}/change-password" class="btn btn-primary">Change password</router-link>
-                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-xl-6 col-lg-12 mt-2 mt-xl-0">
+                            <div class="user-info-wrapper">
+                                <div class="d-flex flex-wrap">
+                                    <div class="user-info-title">
+                                        <i data-feather="user" class="mr-1"></i>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Username'|trans}}</span>
+                                    </div>
+                                    <p class="card-text mb-0">{{user.username}}</p>
+                                </div>
+                                <div class="d-flex flex-wrap my-50">
+                                    <div class="user-info-title">
+                                        <i data-feather="check" class="mr-1"></i>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Status'|trans}}</span>
+                                    </div>
+                                    <p class="card-text mb-0">{{user.status()}}</p>
+                                </div>
+                                <div class="d-flex flex-wrap my-50">
+                                    <div class="user-info-title">
+                                        <i data-feather="star" class="mr-1"></i>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'User group'|trans}}</span>
+                                    </div>
+                                    <p class="card-text mb-0">{{usergroup}}</p>
+                                </div>
+                                <div class="d-flex flex-wrap my-50">
+                                    <div class="user-info-title">
+                                        <i data-feather="flag" class="mr-1"></i>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Phone'|trans}}</span>
+                                    </div>
+                                    <p class="card-text mb-0">{{user.phone}}</p>
+                                </div>
+                                <div class="d-flex flex-wrap">
+                                    <div class="user-info-title">
+                                        <i data-feather="phone" class="mr-1"></i>
+                                        <span class="card-text user-info-title font-weight-bold mb-0">{{'Address'|trans}}</span>
+                                    </div>
+                                    <p class="card-text mb-0">{{user.addr1}}</p>
+                                    <p class="card-text mb-0">{{user.addr2}}</p>
+                                    <p class="card-text mb-0">{{user.addr3}}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /User Card -->
-
         </div>
-        <!--/ User Sidebar -->
-
-        <!-- User Content -->
-        <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
+        <!-- /User Card Ends-->
 
 
-            <!-- Activity Timeline -->
+    </div>
+    <!-- User Card & Plan Ends -->
+
+    <!-- User Timeline & Permissions Starts -->
+    <div class="row">
+        <!-- information starts -->
+        <div class="col-md-6">
             <div class="card">
-                <h4 class="card-header">User Activity Timeline</h4>
-                <div class="card-body pt-1">
-                    <ul class="timeline ms-50">
+                <div class="card-header">
+                    <h4 class="card-title mb-2">User Timeline</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="timeline">
                         {% for item in timeline %}
                         <li class="timeline-item">
                             <span class="timeline-point timeline-point-{{item.type}} timeline-point-indicator"></span>
@@ -85,15 +100,20 @@
                             </div>
                         </li>
                         {% endfor %}
-       
                     </ul>
                 </div>
             </div>
-            <!-- /Activity Timeline -->
+        </div>
+        <!-- information Ends -->
 
+        <!-- User Permissions Starts -->
+        <div class="col-md-6">
+            <!-- User Permissions -->
             <div class="card">
-                <h4 class="card-header">{{'Permissions'|trans}}</h4>
-
+                <div class="card-header">
+                    <h4 class="card-title">{{'Permissions'|trans}}</h4>
+                </div>
+                <p class="card-text ml-2">{{'Permission according to roles'|trans}}</p>
                 <div class="table-responsive">
                     <table class="table table-striped table-borderless">
                         <thead class="thead-light">
@@ -156,25 +176,24 @@
                     </table>
                 </div>
             </div>
-            <!-- /Activity Timeline -->
-
+            <!-- /User Permissions -->
         </div>
-        <!--/ User Content -->
-
+        <!-- User Permissions Ends -->
     </div>
+    <!-- User Timeline & Permissions Ends -->
+
+    <vx-card>
+        <vx-card-body class="p-0">
+            {{userlog_table|raw}}
+        </vx-card-body>
+    </vx-card>
 </section>
-
-{{userlog_table|raw}}
-
-
-
 
 <?php
 
 use Carbon\Carbon;
 use VX\EventLog;
 use VX\UI\TableColumn;
-use VX\User;
 use VX\UserLog;
 
 /**
@@ -186,17 +205,12 @@ return new class
     function get(VX $vx)
     {
 
-        $this->user = User::FromGlobal();
+        $this->user = $vx->object();
         $this->can_change_password = $this->user->canChangePasswordBy($vx->user);
 
         $this->usergroup = collect($this->user->UserGroup())->map(function ($o) {
             return $o->name;
         })->join(", ");
-
-        $this->usergroups = collect($this->user->UserGroup())->map(function ($o) {
-            return $o->name;
-        })->toArray();
-
 
         $rt = $vx->ui->createTable("userlog");
         $rt->setDefaultSort("userlog_id", "descending");
@@ -230,7 +244,7 @@ return new class
 
             $this->permission[$module->name] = $p;
         }
-
+       
         // timeline
         $this->timeline = [];
         $els = EventLog::Query(["user_id" => $this->user->user_id])->order(["eventlog_id" => "desc"])->limit(10);

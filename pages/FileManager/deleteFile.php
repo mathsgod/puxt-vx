@@ -10,7 +10,7 @@ return new class
     {
         $file = $vx->_post["path"];
 
-        $fs = $vx->getFileSystem();
+        $fs = $vx->getFileManager();
         $fs->delete($file);
     }
 };

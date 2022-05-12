@@ -13,7 +13,7 @@ return new class
 {
     function get(VX $vx)
     {
-        $fs = $vx->getFileSystem();
+        $fs = $vx->getFileManager();
         $ret = $fs->listContents("", true)->filter(function (StorageAttributes $attr) use ($fs) {
             return $attr->isFile();
         })->map(function (FileAttributes $attr) use ($fs) {

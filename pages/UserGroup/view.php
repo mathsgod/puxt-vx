@@ -1,8 +1,15 @@
 <div class="mb-2">
+    <el-card>
     {{tab|raw}}
+    </el-card>
+    
+
 </div>
 
-{{user_table|raw}}
+<div>
+    {{user_table|raw}}
+</div>
+
 <?php
 
 /**
@@ -18,9 +25,9 @@ return new class
     function get(VX $vx)
     {
 
-        $tab = $vx->ui->createTab();
-        $tab->setType(Tabs::TYPE_PILLS);
-        $tab->add("Info", "view-info");
+        $tab = $vx->ui->createTabs();
+        //$tab->setType(Tabs::TYPE_PILLS);
+        $tab->add("Information", "view-info");
         $this->tab = $tab;
 
 

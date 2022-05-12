@@ -10,7 +10,7 @@ class TableActionColumn extends TableColumn
     {
         $this->appendChild($node = new HTMLElement("router-link"));
         $node->style->color = "inherit";
-        $node->classList->add("mx-25", "px-25");
+        $node->classList->add("mx-1", "px-1");
         $node->setAttribute("v-if", "props.row.__view__");
         $node->setAttribute(":to", "props.row.__view__");
 
@@ -31,7 +31,7 @@ class TableActionColumn extends TableColumn
     {
         $this->append($node = new HTMLElement("router-link"));
         $node->style->color = "inherit";
-        $node->classList->add("mx-25", "px-25");
+        $node->classList->add("mx-1", "px-1");
         $node->setAttribute("v-if", "props.row.__update__");
         $node->setAttribute(":to", "props.row.__update__");
 
@@ -52,7 +52,7 @@ class TableActionColumn extends TableColumn
     {
         $this->append($node = new HTMLElement("a"));
 
-        $node->classList->add("mx-25", "px-25");
+        $node->classList->add("mx-1", "px-1");
         $node->setAttribute("v-if", "props.row.__delete__");
         $node->setAttribute("v-on:click", "table.delete(props.row.__delete__)");
 

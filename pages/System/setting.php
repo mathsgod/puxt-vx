@@ -6,7 +6,6 @@
  * Date: 2021-07-05 
  */
 
-use Laminas\Diactoros\Response\EmptyResponse;
 use VX\Config;
 
 return new class
@@ -18,8 +17,7 @@ return new class
             $config->value = $value;
             $config->save();
         }
-
-        return new EmptyResponse();
+        http_response_code(204);
     }
 
     function get(VX $vx)
@@ -30,7 +28,6 @@ return new class
         $config["file_manager_show"] = boolval($config["file_manager_show"]);
         $config["authentication_lock"] = boolval($config["authentication_lock"]);
         $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
-        $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
 
         $f = $vx->ui->createForm($config);
 
@@ -77,7 +74,6 @@ return new class
 
         $f->addDivider("File manager")->setContentPosition("left");
         $f->add("Show file manager")->switch("file_manager_show");
-        $f->add("Show preview")->switch("file_manager_preview");
 
         $f->addDivider();
         $f->add("Custom css")->textarea("css");

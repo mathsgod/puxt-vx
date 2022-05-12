@@ -21,21 +21,11 @@ return new class
             $deep = true;
         }
 
-        $fs = $vx->getFileSystem();
+        $fs = $vx->getFileManager();
 
         $folders = $fs->listContents($vx->_get["path"] ?? "/", $deep)->filter(function (StorageAttributes $attr) {
             return $attr->isDir();
         });
-
-
-        //filter out path itself
-        $path = $vx->_get["path"];
-        $folders = $folders->filter(function (DirectoryAttributes $attr) use ($path) {
-            return $attr->path() != $path;
-        });
-
-
-
 
         if ($search) {
             $folders = $folders->filter(function (DirectoryAttributes $attr) use ($search) {

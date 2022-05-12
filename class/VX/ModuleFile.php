@@ -10,6 +10,7 @@ use League\Route\Http\Exception\ForbiddenException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use PUXT\VueRequestHandler;
 
 class ModuleFile implements ResourceInterface, RequestHandlerInterface
 {
@@ -45,6 +46,17 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
 
         if (!$acl->isAllowed($user, $this->getResourceId())) {
             throw new ForbiddenException();
+        }
+
+        if ($request->getMethod() == "GET") {
+
+            //check accept header has text/vue
+            $accept = $request->getHeaderLine("Accept");
+            if (strpos($accept, "text/vue") !== false && file_exists($this->file . ".vue")) {
+
+                $handler = new VueRequestHandler($this->file . ".vue");
+                return $handler->handle($request);
+            }
         }
 
         $loader = $this->module->vx->getRequestHandler($this->file);

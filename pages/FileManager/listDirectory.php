@@ -21,7 +21,7 @@ return new class
         })->map(function (StorageAttributes $attr) use ($parent) {
 
             return [
-                "label" => basename($attr->path()),
+                "name" => basename($attr->path()),
                 "path" => $attr->path(),
                 "location" => $parent
             ];
