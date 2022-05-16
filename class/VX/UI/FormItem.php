@@ -83,6 +83,7 @@ class FormItem extends EL\FormItem
     function timePicker(string $name)
     {
         $timePicker = new TimePicker;
+        $timePicker->classList->add("w-100");
         $timePicker->setAttribute("v-model", $this->scope . $name);
         $this->append($timePicker);
         $this->setProp($name);
@@ -160,6 +161,7 @@ class FormItem extends EL\FormItem
     function datePicker(string $name)
     {
         $date = new DatePicker();
+        $date->classList->add("w-100");
         $date->setName($name);
         $date->setAttribute("v-model", $this->scope . $name);
         $date->setValueFormat("yyyy-MM-dd");
@@ -172,6 +174,7 @@ class FormItem extends EL\FormItem
     function yearPicker(string $name)
     {
         $date = new DatePicker();
+        $date->classList->add("w-100");
         $date->setName($name);
         $date->setAttribute("v-model", $this->scope . $name);
         $date->setType("year");
@@ -183,6 +186,7 @@ class FormItem extends EL\FormItem
     function monthPicker(string $name)
     {
         $date = new DatePicker();
+        $date->classList->add("w-100");
         $date->setName($name);
         $date->setAttribute("v-model", $this->scope . $name);
         $date->setType("month");
