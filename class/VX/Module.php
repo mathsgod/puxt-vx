@@ -65,7 +65,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                     return $attributes->isFile();
                 })->filter(function (FileAttributes $attributes) {
                     $ext = pathinfo($attributes->path(), PATHINFO_EXTENSION);
-                    return $ext == "php" || $ext == "twig" || $ext == "html";
+                    return $ext == "php" || $ext == "twig" || $ext == "html" || $ext == "vue";
                 })->toArray();
 
                 foreach ($files as $file) {
