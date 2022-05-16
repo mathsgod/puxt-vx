@@ -35,6 +35,18 @@ class FormItem extends EL\FormItem
         parent::__construct();
     }
 
+    function setCol(int $col)
+    {
+        //remove exists col class
+        foreach ($this->classList->values() as $class) {
+            if (strstr($class, "col-") !== false) {
+                $this->classList->remove($class);
+            }
+        }
+        $this->classList->add("col-12");
+        $this->classList->add("col-lg-" . $col);
+    }
+
     function setScope(string $scope)
     {
         $this->scope = $scope;

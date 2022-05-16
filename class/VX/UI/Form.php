@@ -54,7 +54,10 @@ class Form extends HTMLElement implements TranslatorAwareInterface
     public function add(string $label)
     {
         $item = new FormItem($this->_vx);
+        $item->setCol(6);
+
         $this->append($item);
+
 
         $item->setLabel($this->translator->trans($label));
         $item->addEventListener("prop_added", function ($e) {
