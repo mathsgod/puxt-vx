@@ -51,10 +51,14 @@ class Form extends HTMLElement implements TranslatorAwareInterface
     }
 
 
-    public function add(string $label)
+    public function add(string $label, array $options = [])
     {
         $item = new FormItem($this->_vx);
-        $item->setCol(6);
+        if ($options["col"]) {
+            $item->setCol($options["col"]);
+        } else {
+            $item->setCol(6);
+        }
 
         $this->append($item);
 

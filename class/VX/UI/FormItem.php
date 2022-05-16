@@ -258,6 +258,7 @@ class FormItem extends EL\FormItem
     function select(string $name, $data_source = null, $display_member = null, $value_member = null)
     {
         $select = new Select;
+        $select->classList->add("w-100");
         $select->setAttribute("v-model", $this->scope . $name);
         $select->setFilterable(true);
         $select->setClearable(true);
