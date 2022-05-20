@@ -178,6 +178,7 @@ class FormItem extends EL\FormItem
         $date->setName($name);
         $date->setAttribute("v-model", $this->scope . $name);
         $date->setType("year");
+        $date->setValueFormat("yyyy");
         $this->append($date);
         $this->setProp($name);
         return $date;
