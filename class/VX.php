@@ -84,6 +84,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function __construct(App $puxt)
     {
+        $this->useEventDispatcher($puxt->eventDispatcher());
 
         $this->puxt = $puxt;
         $this->base_path = $puxt->base_path . "api/";
@@ -105,8 +106,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
 
-
-
         $this->res = new Response;
         $this->ui = new UI($this);
         Model::$_vx = $this;
@@ -116,8 +115,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
 
         $this->loadDB();
-
-        $this->useEventDispatcher($puxt->eventDispatcher());
     }
 
     private function loadDB()
