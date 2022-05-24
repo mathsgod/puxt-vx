@@ -3,7 +3,7 @@
 namespace VX;
 
 use League\Event\ListenerRegistry;
-use League\Event\ListenerSubscriber;
+use League\Event\ListenerSubscriber as EventListenerSubscriber;
 use R\DB\Event\AfterDelete;
 use R\DB\Event\AfterInsert;
 use R\DB\Event\AfterUpdate;
@@ -11,7 +11,7 @@ use R\DB\Event\BeforeInsert;
 use R\DB\Event\BeforeUpdate;
 use VX;
 
-class ListenserSubscriber implements ListenerSubscriber
+class ListenerSubscriber implements EventListenerSubscriber
 {
     private $vx;
     function __construct(VX $vx)

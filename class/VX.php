@@ -35,7 +35,7 @@ use VX\ACL as VXACL;
 use VX\AuthLock;
 use VX\Config;
 use VX\IModel;
-use VX\ListenserSubscriber;
+use VX\ListenerSubscriber;
 use VX\Mailer;
 use VX\Model;
 use VX\Module;
@@ -138,7 +138,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         Model::SetSchema($schema);
 
         $this->db->useEventDispatcher($this->eventDispatcher());
-        $this->eventDispatcher()->subscribeListenersFrom(new ListenserSubscriber($this));
+        $this->eventDispatcher()->subscribeListenersFrom(new ListenerSubscriber($this));
     }
 
     private function loadModules()
