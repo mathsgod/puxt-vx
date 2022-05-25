@@ -25,11 +25,11 @@ class ListenerSubscriber implements EventListenerSubscriber
         $acceptor->subscribeTo(BeforeInsert::class, function (BeforeInsert $event) use ($vx) {
             $target = $event->target;
 
-            if (property_exists($target, "created_time")) {
-                $target->created_time = date("Y-m-d H:i:s");
+            if ($target->__isset("created_time")) {
+                $target->created_time = date("Y-m-d");
             }
 
-            if (property_exists($target, "created_by")) {
+            if ($target->__isset("created_by")) {
                 $target->created_by = $vx->user_id;
             }
         });
@@ -38,11 +38,11 @@ class ListenerSubscriber implements EventListenerSubscriber
         $acceptor->subscribeTo(BeforeUpdate::class, function (BeforeUpdate $event) use ($vx) {
             $target = $event->target;
 
-            if (property_exists($target, "updated_time")) {
+            if ($target->__isset("updated_time")) {
                 $target->updated_time = date("Y-m-d H:i:s");
             }
 
-            if (property_exists($target, "updated_by")) {
+            if ($target->__isset("updated_by")) {
                 $target->updated_by = $vx->user_id;
             }
         });
