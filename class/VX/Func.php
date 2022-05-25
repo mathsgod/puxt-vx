@@ -3,6 +3,7 @@
 namespace VX;
 
 use Exception;
+use R\DB\ModelInterface;
 
 class Func
 {
@@ -41,7 +42,15 @@ class Func
         }
 
         if (is_object($obj)) {
-            if (in_array($func, array_keys(get_object_vars($obj)))) {
+
+
+            if ($obj instanceof ModelInterface) {
+                $fields = $obj->__fields();
+            } else {
+                $fields = array_keys(get_object_vars($obj));
+            }
+
+            if (in_array($func, $fields)) {
                 return $obj->$func;
             } elseif (function_exists($func)) {
                 return $func($obj);
