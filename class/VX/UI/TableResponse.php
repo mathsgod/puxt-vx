@@ -220,10 +220,6 @@ class TableResponse implements JsonSerializable
                 }
 
                 $dmap = $this->data_map->__invoke($obj);
-                if (is_object($dmap)) {
-                    $hydrator = new ObjectPropertyHydrator();
-                    $dmap = $hydrator->extract($dmap);
-                }
                 foreach ($dmap as $k => $v) {
                     if ($v === true) {
                         $d[$k] = "✔";
