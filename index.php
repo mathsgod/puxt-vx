@@ -14,6 +14,8 @@ use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 
 return function ($options) {
+
+
     if ($this->puxt->request->getMethod() == "OPTIONS") {
         http_response_code(200);
         exit;
@@ -89,7 +91,7 @@ return function ($options) {
         return $handler->handle($request);
     });
 
- 
+
 
 
     $router->map("GET", $vx->base_path . "cancel-view-as", function (ServerRequestInterface $request) use ($vx) {

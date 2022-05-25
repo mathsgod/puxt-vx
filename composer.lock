@@ -1996,16 +1996,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.8.2",
+            "version": "4.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "7836f436308a4c96236c83cb46b2767277a5afea"
+                "reference": "c7ddb5be6a10bdc857128685038264f7b0f49de7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/7836f436308a4c96236c83cb46b2767277a5afea",
-                "reference": "7836f436308a4c96236c83cb46b2767277a5afea",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/c7ddb5be6a10bdc857128685038264f7b0f49de7",
+                "reference": "c7ddb5be6a10bdc857128685038264f7b0f49de7",
                 "shasum": ""
             },
             "require": {
@@ -2043,9 +2043,9 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.8.2"
+                "source": "https://github.com/mathsgod/r-db/tree/4.8.3"
             },
-            "time": "2022-05-25T05:03:32+00:00"
+            "time": "2022-05-25T05:09:50+00:00"
         },
         {
             "name": "monolog/monolog",
