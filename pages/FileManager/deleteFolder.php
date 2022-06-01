@@ -8,7 +8,7 @@ return new class
 {
     function post(VX $vx)
     {
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
         $fs->deleteDirectory($vx->_post["path"]);
     }
 };

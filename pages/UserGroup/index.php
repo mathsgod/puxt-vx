@@ -45,7 +45,7 @@ return new class
 
     function getUserData(VX $vx)
     {
-        $ug = new UserGroup($vx->_get["usergroup_id"]);
+        $ug = UserGroup::Get($vx->_get["usergroup_id"]);
         $r = $vx->ui->createTableResponse();
         $r->source = $ug->User();
         $r->add("user_id");

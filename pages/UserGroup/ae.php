@@ -6,7 +6,7 @@ return new class
     {
         $form = $vx->ui->createForm();
         $form->add("Name")->input("name")->required();
-        $form->add("Remark")->textarea("remark");
+        $form->add("Remark", ["col" => 12])->textarea("remark");
         $this->form = $form;
     }
 };

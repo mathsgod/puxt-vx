@@ -35,6 +35,18 @@ class FormItem extends EL\FormItem
         parent::__construct();
     }
 
+    function setCol(int $col)
+    {
+        //remove exists col class
+        foreach ($this->classList->values() as $class) {
+            if (strstr($class, "col-") !== false) {
+                $this->classList->remove($class);
+            }
+        }
+        $this->classList->add("col-12");
+        $this->classList->add("col-lg-" . $col);
+    }
+
     function setScope(string $scope)
     {
         $this->scope = $scope;
@@ -53,7 +65,7 @@ class FormItem extends EL\FormItem
     function inputNumber(string $name)
     {
         $t = new InputNumber;
-        $t->setAttribute("v-model", $this->scope . $name);
+        $t->setAttribute("v-model.number", $this->scope . $name);
         $this->append($t);
         $this->setProp($name);
         return $t;
@@ -71,6 +83,7 @@ class FormItem extends EL\FormItem
     function timePicker(string $name)
     {
         $timePicker = new TimePicker;
+        $timePicker->classList->add("w-100");
         $timePicker->setAttribute("v-model", $this->scope . $name);
         $this->append($timePicker);
         $this->setProp($name);
@@ -80,6 +93,7 @@ class FormItem extends EL\FormItem
     function timeSelect(string $name)
     {
         $timeSelect = new TimeSelect;
+        $timeSelect->classList->add("w-100");
         $timeSelect->setAttribute("v-model", $this->scope . $name);
         $this->append($timeSelect);
         $this->setProp($name);
@@ -148,6 +162,7 @@ class FormItem extends EL\FormItem
     function datePicker(string $name)
     {
         $date = new DatePicker();
+        $date->classList->add("w-100");
         $date->setName($name);
         $date->setAttribute("v-model", $this->scope . $name);
         $date->setValueFormat("yyyy-MM-dd");
@@ -201,6 +216,7 @@ class FormItem extends EL\FormItem
     function dateTimePicker(string $name)
     {
         $dt = new DatePicker;
+        $dt->classList->add("w-100");
         $dt->setName($name);
         $dt->setAttribute("v-model", $this->scope . $name);
         $dt->setValueFormat("yyyy-MM-dd HH:mm:ss");
@@ -237,6 +253,7 @@ class FormItem extends EL\FormItem
     {
         $p = new HTMLElement("p");
         $p->classList->add("mb-0");
+        $p->classList->add("w-100");
         $p->textContent = $text;
         $this->append($p);
         return $p;

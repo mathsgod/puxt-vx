@@ -1,10 +1,14 @@
-<el-card>
-    <el-collapse>
-        <el-collapse-item title="SERVER">
-            {{server|raw}}
-        </el-collapse-item>
-    </el-collapse>
-</el-card>
+<q-card bordered flat>
+    <q-card-section>
+
+        <q-list>
+            <q-expansion-item label="SERVER">
+                {{server|raw}}
+            </q-expansion-item>
+        </q-list>
+
+    </q-card-section>
+</q-card>
 
 <?php
 

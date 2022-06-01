@@ -36,6 +36,8 @@ return new class
         ]);
         $form->setAction();
 
+        $form->add("Input", ["col" => 12])->input("input1");
+
 
         $form->add("Select with group")->select("s2")->addOptionGroup(UserGroup::Query()->map(function ($ug) {
             return [
@@ -89,15 +91,15 @@ return new class
 
         $form->add("Time Picker Range")->timePicker("time2")->setIsRange();
 
-
-
         $form->add("Time Select")->timeSelect("time3")->setStart("10:00");
         $form->add("File")->filemanager("file");
-        $tinymce = $form->add("tinymce")->tinymce("file2");
+
+        $tinymce = $form->add("tinymce", ["col" => 12])->tinymce("file2");
+        /*     
         $tinymce->setAttribute("api-key", "bfqasodzk1neqa8lmfym5h5x913j7u199hy7rm90a7p30ozn");
         $tinymce->setAttribute(":height", 300);
         $tinymce->setAttribute("base-url", "http://192.168.88.108:8001/vx/uploads/");
-
+ */
         //$form->add("text1")-
         $this->form = $form;
     }

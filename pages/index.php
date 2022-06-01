@@ -170,14 +170,6 @@ return new class
         $user->save();
     }
 
-    function setLanguage(VX $vx)
-    {
-        if ($user = $vx->user) {
-            $user->language = $vx->_post["language"];
-            $user->save();
-            http_response_code(204);
-        }
-    }
 
     function setFooterType(VX $vx)
     {

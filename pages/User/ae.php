@@ -1,5 +1,4 @@
 {{form|raw}}
-
 <?php
 
 use VX\User;
@@ -22,8 +21,13 @@ return new class
         }
 
         $form = $vx->ui->createForm($obj);
+        $form->classList->add("row");
 
-        $form->add("Username")->input("username")->required();
+        $fi=$form->add("Username");
+        
+        $fi->input("username")->required();
+        
+
         $form->add("First name")->input("first_name")->required();
         $form->add("Last name")->input("last_name");
 
@@ -32,6 +36,7 @@ return new class
             $form->add("Password")->password("password")->required();
         }
 
+        
         $form->add("Phone")->input("phone");
         $form->add("Email")->input("email")->required();
 
@@ -53,7 +58,10 @@ return new class
         if (!$vx->user->isAdmin()) {
             $ugs = collect($ugs)->filter(fn ($ug) => $ug->name != "Administrators");
         }
-        $form->add("User group")->multiSelect("_usergroup_id")->option($ugs, "name", "usergroup_id");
+        
+        $s=$form->add("User group");
+        
+        $s->multiSelect("_usergroup_id")->option($ugs, "name", "usergroup_id");
 
 
         $form->setAction($obj->uri("ae"));

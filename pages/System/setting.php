@@ -28,6 +28,7 @@ return new class
         $config["file_manager_show"] = boolval($config["file_manager_show"]);
         $config["authentication_lock"] = boolval($config["authentication_lock"]);
         $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
+        $config["authentication_lock_time"] = intval($config["authentication_lock_time"]);
 
         $f = $vx->ui->createForm($config);
 

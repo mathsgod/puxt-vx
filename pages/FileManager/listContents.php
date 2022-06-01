@@ -40,9 +40,10 @@ return new class
 
         $folders = $folders->map(function (StorageAttributes $attr) {
             $mtime = Carbon::createFromTimestamp($attr->lastModified());
+            $path = $attr->path();
             return [
-                "name" => basename($attr->path()),
-                "path" => $attr->path(),
+                "name" => basename($path),
+                "path" => str_replace(DIRECTORY_SEPARATOR, "/", $path),
                 "last_modified" => $mtime->format("Y-m-d"),
                 "last_modified_human" => (string)$mtime->diffForHumans(),
                 "size" => ""

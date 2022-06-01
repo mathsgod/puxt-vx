@@ -2,25 +2,7 @@
     {{table|raw}}
 </div>
 
-<script>
-    new Vue({
-        el: "#div1",
-        methods: {
-            onClick(name) {
-                alert('click ' + name + ", under construction");
-            },
-            onRemove(name, field) {
-                alert(`remove ${name} ${field}`);
-            }
-        }
-    })
-</script>
-
-
-
 <?php
-
-
 /**
  * Created by: Raymond Chong
  * Date: 2021-08-16 

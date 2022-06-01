@@ -3,8 +3,14 @@
 
 use VX\UserGroup;
 
-return [
-    "get" => function (VX $vx) {
+/**
+ * Created by: Raymond Chong
+ * Date: 2022-05-30 
+ */
+return new class
+{
+    function get(VX $vx)
+    {
         $rt = $vx->ui->createRTable("ds");
         $rt->addView();
         $rt->addEdit();
@@ -13,16 +19,15 @@ return [
         $rt->add("Code", "code")->ss();
         $rt->add("Num of user", "num_of_user");
         $this->table = $rt;
-    },
-    "entries" => [
-        "ds" => function (VX $vx) {
+    }
 
-            $rt = $vx->ui->createRTableResponse();
-            $rt->source = UserGroup::Query();
-            $rt->add("num_of_user", function ($o) {
-                return $o->User()->count();
-            });
-            return $rt;
-        }
-    ]
-];
+    function ds(VX $vx)
+    {
+        $rt = $vx->ui->createRTableResponse();
+        $rt->source = UserGroup::Query();
+        $rt->add("num_of_user", function ($o) {
+            return $o->User()->count();
+        });
+        return $rt;
+    }
+};

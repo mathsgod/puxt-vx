@@ -14,6 +14,12 @@ return new class
     {
         $file = $vx->request->getUploadedFiles()["file"];
 
+        if (!$file) {
+            throw new Exception("No file uploaded", 400);
+        }
+
+
+
 
         $name = $file->getClientFilename();
         $ext = pathinfo($name, PATHINFO_EXTENSION);

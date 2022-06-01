@@ -1,5 +1,12 @@
+<script setup>
+const a = Vue.ref(1);
+const f = () => {
+  alert("test");
+};
+</script>
 <template>
   <el-card>
+    {{ a }}
     <el-descriptions title="User Info" :column="1">
       <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
       <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
@@ -15,16 +22,14 @@
   </el-card>
 </template>
 <script>
-export default { 
+export default {
   data() {
     return {
       user: {},
     };
   },
   methods: {
-    async fetchUser() {
-      
-    },
+    async fetchUser() {},
   },
 };
 </script>

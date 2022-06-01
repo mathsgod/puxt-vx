@@ -1,16 +1,17 @@
-<el-card id="card1" class="mb-2">
-    {{view|raw}}
+<div>
+    <el-card id="card1" class="mb-2">
+        {{view|raw}}
 
 
-    <el-button @click="change">Change to utf8mb4</el-button>
+        <el-button @click="change">Change to utf8mb4</el-button>
 
-    <el-button @click="change_column">Change all column to table default</el-button>
-</el-card>
-
+        <el-button @click="change_column">Change all column to table default</el-button>
+    </el-card>
+</div>
 
 <script>
-    new Vue({
-        el: card1,
+    Vue.createApp({
+        el: "#card1",
         methods: {
             async change() {
                 let {
@@ -49,7 +50,10 @@
     })
 </script>
 
+<div>
 {{table|raw}}
+</div>
+
 <?php
 
 /**
@@ -120,7 +124,7 @@ return new class
     function get(VX $vx)
     {
         $data = $vx->getDB()->query("SELECT @@character_set_database, @@collation_database")->fetch();
-        $view = $vx->ui->createView($data);
+        $view = $vx->ui->createDescriptions($data);
         $view->add("Current database character set", "@@character_set_database");
         $view->add("Current database collation", "@@collation_database");
         $this->view = $view;

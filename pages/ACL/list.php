@@ -3,8 +3,14 @@
 
 use VX\ACL;
 
-return [
-    "get" => function (VX $vx) {
+/**
+ * Created by: Raymond Chong
+ * Date: 2022-06-01 
+ */
+return new class
+{
+    function get(VX $vx)
+    {
         $rt = $vx->ui->createRTable("ds");
         $rt->order("user_id", "desc");
 
@@ -20,14 +26,14 @@ return [
 
 
         $this->table = $rt;
-    },
-    "entries" => [
-        "ds" => function (VX $vx) {
+    }
 
-            $rt = $vx->ui->createRTableResponse();
-            $rt->source = ACL::Query();
-            $rt->add("usergroup_id", "UserGroup()");
-            return $rt;
-        }
-    ]
-];
+    function ds(VX $vx)
+    {
+
+        $rt = $vx->ui->createRTableResponse();
+        $rt->source = ACL::Query();
+        $rt->add("usergroup_id", "UserGroup()");
+        return $rt;
+    }
+};
