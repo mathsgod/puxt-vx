@@ -107,8 +107,8 @@ class Table extends HTMLElement implements TranslatorAwareInterface
         $column->setAttribute("v-slot:default", "props");
         $column->setTranslator($this->translator);
 
-        $column->setAttribute("width", "115");
-        $column->setAttribute("min-width", "115");
+        $column->setAttribute("width", "130");
+        $column->setAttribute("min-width", "130");
 
         return $column;
     }

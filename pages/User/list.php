@@ -20,7 +20,7 @@ return new class
         $table->add("", "avatar")->template(function (HTMLTemplateElement $template) {
 
             $av = new Avatar();
-            $av->setAttribute(":title", "scope.row.name");
+            $av->innerHTML = "{{scope.row.name}}";
             $template->innerHTML = $av;
         })->width("60");
 
@@ -52,7 +52,7 @@ return new class
             $rt->source->where(["status" => $vx->_get["t"]]);
         }
 
-        $rt->add("name", fn (User $user) => $user->__toString());
+        $rt->add("name", fn (User $user) => $user->getInitial());
         return $rt;
     }
 };

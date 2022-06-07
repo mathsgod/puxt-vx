@@ -1,3 +1,7 @@
+<script setup>
+let users = await vx.get("/User");
+console.log(users);
+</script>
 <template>
   <el-card :header="$t('Permissions')">
     <p>Permission according to roles</p>
@@ -116,12 +120,12 @@
 export default {
   data() {
     return {
+      UserGroup: [],
       usergroup_id: null,
       items: null,
     };
   },
   async created() {
-    //    console.log("Test");
     this.UserGroup = await vx.$get("/ACL/all?_entry=getUserGroup");
   },
   watch: {

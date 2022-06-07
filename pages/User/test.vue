@@ -8,8 +8,10 @@
   </div>
 </template>
 <script>
-
 export default {
+  beforeRouteEnter() {
+    console.log("before route enter");
+  },
   mounted() {
     //console.log(a);
   },

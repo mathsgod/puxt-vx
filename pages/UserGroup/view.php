@@ -1,9 +1,5 @@
 <div class="mb-2">
-    <el-card>
     {{tab|raw}}
-    </el-card>
-    
-
 </div>
 
 <div>
@@ -29,7 +25,6 @@ return new class
         //$tab->setType(Tabs::TYPE_PILLS);
         $tab->add("Information", "view-info");
         $this->tab = $tab;
-
 
         $ut = $vx->ui->createTable("user");
         $ac = $ut->addActionColumn();

@@ -26,6 +26,7 @@ class Tabs extends HTMLElement
         }
 
         $tab = new Tab();
+        $tab->setAttribute("name", $label);
         $tab->setAttribute("label", $label);
         $tab->setAttribute("link", $link);
         $this->appendChild($tab);

@@ -45,6 +45,18 @@ class User extends Model implements RoleInterface
         return $user;
     }
 
+    function getInitial(): string
+    {
+        $initial = "";
+        if ($this->first_name) {
+            $initial .= substr($this->first_name, 0, 1);
+        }
+        if ($this->last_name) {
+            $initial .= substr($this->last_name, 0, 1);
+        }
+        return strtoupper($initial);
+    }
+
     function save()
     {
         $attr = self::__attribute("style");

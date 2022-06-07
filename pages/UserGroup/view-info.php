@@ -1,6 +1,8 @@
-<el-card>
-    {{view|raw}}
-</el-card>
+<q-card flat bordered>
+    <q-card-section>
+        {{view|raw}}
+    </q-card-section>
+</q-card>
 <?php
 /**
  * Created by: Raymond Chong
