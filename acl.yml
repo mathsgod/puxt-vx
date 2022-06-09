@@ -10,6 +10,7 @@ path:
 
   User:
     view: [Users,Power Users]
+    avatar: [Users,Power Users]
     profile: [Users,Power Users]
     change-photo: [Users,Power Users]
     myfav: [Users,Power Users]
