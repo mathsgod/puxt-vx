@@ -44,7 +44,7 @@ window.colors = {
   if ($.fn.dataTable) {
     $.extend($.fn.dataTable.ext.classes, {
       sFilterInput: 'form-control',
-      sLengthSelect: 'custom-select form-control'
+      sLengthSelect: 'form-select'
     });
   }
 
@@ -52,7 +52,7 @@ window.colors = {
     var rtl;
     var compactMenu = false;
 
-    if ($body.hasClass('menu-collapsed')) {
+    if ($body.hasClass('menu-collapsed') || localStorage.getItem('menuCollapsed') === 'true') {
       compactMenu = true;
     }
 
@@ -68,7 +68,7 @@ window.colors = {
 
     // Navigation configurations
     var config = {
-      speed: 300 // set speed to expand / collpase menu
+      speed: 300 // set speed to expand / collapse menu
     };
     if ($.app.nav.initialized === false) {
       $.app.nav.init(config);
@@ -79,8 +79,12 @@ window.colors = {
     });
 
     // Tooltip Initialization
-    $('[data-toggle="tooltip"]').tooltip({
-      container: 'body'
+    // $('[data-bs-toggle="tooltip"]').tooltip({
+    //   container: 'body'
+    // });
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
     // Collapsible Card
@@ -116,7 +120,7 @@ window.colors = {
     $('a[data-action="reload"]').on('click', function () {
       var block_ele = $(this).closest('.card');
       var reloadActionOverlay;
-      if ($body.hasClass('dark-layout')) {
+      if ($html.hasClass('dark-layout')) {
         var reloadActionOverlay = '#10163a';
       } else {
         var reloadActionOverlay = '#fff';
@@ -196,11 +200,6 @@ window.colors = {
         }
       }
     }
-
-    //Custom File Input
-    $('.custom-file-input').on('change', function (e) {
-      $(this).siblings('.custom-file-label').html(e.target.files[0].name);
-    });
 
     /* Text Area Counter Set Start */
 
@@ -370,19 +369,21 @@ window.colors = {
       }, 50);
     }
 
+    // Save menu collapsed status in localstorage
+    if ($body.hasClass('menu-expanded') || $body.hasClass('menu-open')) {
+      localStorage.setItem('menuCollapsed', false);
+    } else {
+      localStorage.setItem('menuCollapsed', true);
+    }
+
     // Hides dropdown on click of menu toggle
-    // $('[data-toggle="dropdown"]').dropdown('hide');
+    // $('[data-bs-toggle="dropdown"]').dropdown('hide');
 
     return false;
   });
 
   // Add Children Class
   $('.navigation').find('li').has('ul').addClass('has-sub');
-
-  $('.carousel').carousel({
-    interval: 2000
-  });
-
   // Update manual scroller when window is resized
   $(window).resize(function () {
     $.app.menu.manualScroller.updateHeight();
@@ -426,7 +427,8 @@ window.colors = {
       $('#dropdown-flag .flag-icon').removeClass().addClass(selectedFlag);
     }
   } else {
-/*     i18next.use(window.i18nextXHRBackend).init(
+    /*
+    i18next.use(window.i18nextXHRBackend).init(
       {
         debug: false,
         fallbackLng: 'en',
@@ -439,7 +441,7 @@ window.colors = {
         // resources have been loaded
         jqueryI18next.init(i18next, $);
       }
-    ); */
+    );
 
     // change language according to data-language of dropdown item
     $('.dropdown-language .dropdown-item').on('click', function () {
@@ -455,6 +457,7 @@ window.colors = {
         $('.main-menu, .horizontal-menu-wrapper').localize();
       });
     });
+    */
   }
 
   /********************* Bookmark & Search ***********************/
@@ -508,12 +511,12 @@ window.colors = {
         arrList[i].firstChild.href +
         '>' +
         '<div class="d-flex justify-content-start align-items-center">' +
-        feather.icons[iconName].toSvg({ class: 'mr-75 ' + className }) +
+        feather.icons[iconName].toSvg({ class: 'me-75 ' + className }) +
         '<span>' +
-        arrList[i].firstChild.dataset.originalTitle +
+        arrList[i].firstChild.dataset.bsOriginalTitle +
         '</span>' +
         '</div>' +
-        feather.icons['star'].toSvg({ class: 'text-warning bookmark-icon float-right' }) +
+        feather.icons['star'].toSvg({ class: 'text-warning bookmark-icon float-end' }) +
         '</a>' +
         '</li>';
     }
@@ -608,7 +611,7 @@ window.colors = {
           $bookmarkhtmlList = '',
           $pageList =
             '<li class="d-flex align-items-center">' +
-            '<a href="javascript:void(0)">' +
+            '<a href="#">' +
             '<h6 class="section-label mt-75 mb-0">Pages</h6>' +
             '</a>' +
             '</li>',
@@ -632,7 +635,7 @@ window.colors = {
                 $arrList = '';
               // Loop to check if current seach value match with the bookmarks already there in navbar
               for (var j = 0; j < arrList.length; j++) {
-                if (data.listItems[i].name === arrList[j].firstChild.dataset.originalTitle) {
+                if (data.listItems[i].name === arrList[j].firstChild.dataset.bsOriginalTitle) {
                   activeClass = ' text-warning';
                   break;
                 } else {
@@ -640,7 +643,7 @@ window.colors = {
                 }
               }
 
-              $bookmarkIcon = feather.icons['star'].toSvg({ class: 'bookmark-icon float-right' + activeClass });
+              $bookmarkIcon = feather.icons['star'].toSvg({ class: 'bookmark-icon float-end' + activeClass });
             }
             // Search list item start with entered letters and create list
             if (data.listItems[i].name.toLowerCase().indexOf(value) == 0 && a < 5) {
@@ -657,7 +660,7 @@ window.colors = {
                 data.listItems[i].url +
                 '>' +
                 '<div class="d-flex justify-content-start align-items-center">' +
-                feather.icons[data.listItems[i].icon].toSvg({ class: 'mr-75 ' }) +
+                feather.icons[data.listItems[i].icon].toSvg({ class: 'me-75 ' }) +
                 '<span>' +
                 data.listItems[i].name +
                 '</span>' +
@@ -675,14 +678,14 @@ window.colors = {
                 $arrList = '';
               // Loop to check if current search value match with the bookmarks already there in navbar
               for (var j = 0; j < arrList.length; j++) {
-                if (data.listItems[i].name === arrList[j].firstChild.dataset.originalTitle) {
+                if (data.listItems[i].name === arrList[j].firstChild.dataset.bsOriginalTitle) {
                   activeClass = ' text-warning';
                 } else {
                   activeClass = '';
                 }
               }
 
-              $bookmarkIcon = feather.icons['star'].toSvg({ class: 'bookmark-icon float-right' + activeClass });
+              $bookmarkIcon = feather.icons['star'].toSvg({ class: 'bookmark-icon float-end' + activeClass });
             }
             // Search list item not start with letters and create list
             if (
@@ -703,7 +706,7 @@ window.colors = {
                 data.listItems[i].url +
                 '>' +
                 '<div class="d-flex justify-content-start align-items-center">' +
-                feather.icons[data.listItems[i].icon].toSvg({ class: 'mr-75 ' }) +
+                feather.icons[data.listItems[i].icon].toSvg({ class: 'me-75 ' }) +
                 '<span>' +
                 data.listItems[i].name +
                 '</span>' +
@@ -753,12 +756,12 @@ window.colors = {
               arrList[i].firstChild.href +
               '>' +
               '<div class="d-flex justify-content-start align-items-center">' +
-              feather.icons[iconName].toSvg({ class: 'mr-75 ' }) +
+              feather.icons[iconName].toSvg({ class: 'me-75 ' }) +
               '<span>' +
-              arrList[i].firstChild.dataset.originalTitle +
+              arrList[i].firstChild.dataset.bsOriginalTitle +
               '</span>' +
               '</div>' +
-              feather.icons['star'].toSvg({ class: 'text-warning bookmark-icon float-right' }) +
+              feather.icons['star'].toSvg({ class: 'text-warning bookmark-icon float-end' }) +
               '</a>' +
               '</li>';
           }
@@ -797,6 +800,7 @@ window.colors = {
       }
       if (bookmarkInput.hasClass('show')) {
         bookmarkInput.removeClass('show');
+        appContent.removeClass('show-overlay');
       }
     }
   });
@@ -814,7 +818,7 @@ window.colors = {
       $(this).removeClass('text-warning');
       var arrList = $('ul.nav.navbar-nav.bookmark-icons li');
       for (var i = 0; i < arrList.length; i++) {
-        if (arrList[i].firstChild.dataset.originalTitle == $(this).parent()[0].innerText) {
+        if (arrList[i].firstChild.dataset.bsOriginalTitle == $(this).parent()[0].innerText) {
           arrList[i].remove();
         }
       }
@@ -836,14 +840,14 @@ window.colors = {
         '<li class="nav-item d-none d-lg-block">' +
         '<a class="nav-link" href="' +
         $url +
-        '" data-toggle="tooltip" data-placement="top" title="" data-original-title="' +
+        '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="' +
         $name +
         '">' +
         feather.icons[iconName].toSvg({ class: 'ficon' }) +
         '</a>' +
         '</li>';
       $('ul.nav.bookmark-icons').append($listItem);
-      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-bs-toggle="tooltip"]').tooltip();
     }
   });
 
@@ -911,7 +915,7 @@ window.colors = {
       var scroll = $(window).scrollTop();
 
       if (scroll > 65) {
-        $('.horizontal-menu:not(.dark-layout) .header-navbar.navbar-fixed').css({
+        $('html:not(.dark-layout) .horizontal-menu .header-navbar.navbar-fixed').css({
           background: '#fff',
           'box-shadow': '0 4px 20px 0 rgba(0,0,0,.05)'
         });
@@ -919,77 +923,125 @@ window.colors = {
           background: '#161d31',
           'box-shadow': '0 4px 20px 0 rgba(0,0,0,.05)'
         });
-        $('.horizontal-menu:not(.dark-layout) .horizontal-menu-wrapper.header-navbar').css('background', '#fff');
-        $('.horizontal-menu.dark-layout .horizontal-menu-wrapper.header-navbar').css('background', '#161d31');
+        $('html:not(.dark-layout) .horizontal-menu .horizontal-menu-wrapper.header-navbar').css('background', '#fff');
+        $('.dark-layout .horizontal-menu .horizontal-menu-wrapper.header-navbar').css('background', '#161d31');
       } else {
-        $('.horizontal-menu:not(.dark-layout) .header-navbar.navbar-fixed').css({
+        $('html:not(.dark-layout) .horizontal-menu .header-navbar.navbar-fixed').css({
           background: '#f8f8f8',
           'box-shadow': 'none'
         });
-        $('.horizontal-menu.dark-layout .header-navbar.navbar-fixed').css({
+        $('.dark-layout .horizontal-menu .header-navbar.navbar-fixed').css({
           background: '#161d31',
           'box-shadow': 'none'
         });
-        $('.horizontal-menu:not(.dark-layout) .horizontal-menu-wrapper.header-navbar').css('background', '#fff');
-        $('.horizontal-menu.dark-layout .horizontal-menu-wrapper.header-navbar').css('background', '#161d31');
+        $('html:not(.dark-layout) .horizontal-menu .horizontal-menu-wrapper.header-navbar').css('background', '#fff');
+        $('.dark-layout .horizontal-menu .horizontal-menu-wrapper.header-navbar').css('background', '#161d31');
       }
     }
   });
 
   // Click event to scroll to top
   $('.scroll-top').on('click', function () {
-    $('html, body').animate({ scrollTop: 0 }, 1000);
+    $('html, body').animate({ scrollTop: 0 }, 75);
   });
 
-  $(window).on("load", () => {
-    function getCurrentLayout() {
-      var currentLayout = '';
-      if ($body.hasClass('dark-layout')) {
-        currentLayout = 'dark-layout';
-      } else if ($body.hasClass('bordered-layout')) {
-        currentLayout = 'bordered-layout';
-      } else {
-        currentLayout = '';
-      }
-      return currentLayout;
+  function getCurrentLayout() {
+    var currentLayout = '';
+    if ($html.hasClass('dark-layout')) {
+      currentLayout = 'dark-layout';
+    } else if ($html.hasClass('bordered-layout')) {
+      currentLayout = 'bordered-layout';
+    } else if ($html.hasClass('semi-dark-layout')) {
+      currentLayout = 'semi-dark-layout';
+    } else {
+      currentLayout = 'light-layout';
     }
+    return currentLayout;
+  }
 
-    // Navbar Dark / Light Layout Toggle Switch
-    /* $('.nav-link-style').on('click', function () {
-      var $this = $(this),
-        currentLayout = getCurrentLayout(),
-        mainMenu = $('.main-menu'),
-        navbar = $('.header-navbar'),
-        switchToLayout = '',
-        prevLayout = $this.attr('data-prev-layout');
+  // Get the data layout, for blank set to light layout
+  var dataLayout = $html.attr('data-layout') ? $html.attr('data-layout') : 'light-layout';
 
-      if (currentLayout === '' || currentLayout === 'bordered-layout') {
-        switchToLayout = 'dark-layout';
-        $this.attr('data-prev-layout', currentLayout);
+  // Navbar Dark / Light Layout Toggle Switch
+  $('.nav-link-style').on('click', function () {
+    var currentLayout = getCurrentLayout(),
+      switchToLayout = '',
+      prevLayout = localStorage.getItem(dataLayout + '-prev-skin', currentLayout);
+
+    // If currentLayout is not dark layout
+    if (currentLayout !== 'dark-layout') {
+      // Switch to dark
+      switchToLayout = 'dark-layout';
+    } else {
+      // Switch to light
+      // switchToLayout = prevLayout ? prevLayout : 'light-layout';
+      if (currentLayout === prevLayout) {
+        switchToLayout = 'light-layout';
       } else {
-        switchToLayout = prevLayout;
+        switchToLayout = prevLayout ? prevLayout : 'light-layout';
       }
-      $body.removeClass('dark-layout bordered-layout');
-      if (switchToLayout === 'dark-layout') {
-        $body.addClass('dark-layout');
-        mainMenu.removeClass('menu-light').addClass('menu-dark');
-        navbar.removeClass('navbar-light').addClass('navbar-dark');
-        $this.find('.ficon').replaceWith(feather.icons['sun'].toSvg({ class: 'ficon' }));
-      } else {
-        $body.addClass(prevLayout);
-        mainMenu.removeClass('menu-dark').addClass('menu-light');
-        navbar.removeClass('navbar-dark').addClass('navbar-light');
-        $this.find('.ficon').replaceWith(feather.icons['moon'].toSvg({ class: 'ficon' }));
-      }
+    }
+    // Set Previous skin in local db
+    localStorage.setItem(dataLayout + '-prev-skin', currentLayout);
+    // Set Current skin in local db
+    localStorage.setItem(dataLayout + '-current-skin', switchToLayout);
 
-      $('.horizontal-menu .header-navbar.navbar-fixed').css({
-        background: 'inherit',
-        'box-shadow': 'inherit'
-      });
-      $('.horizontal-menu .horizontal-menu-wrapper.header-navbar').css('background', 'inherit');
-    }); */
+    // Call set layout
+    setLayout(switchToLayout);
+
+    // ToDo: Customizer fix
+    $('.horizontal-menu .header-navbar.navbar-fixed').css({
+      background: 'inherit',
+      'box-shadow': 'inherit'
+    });
+    $('.horizontal-menu .horizontal-menu-wrapper.header-navbar').css('background', 'inherit');
   });
 
+  // Get current local storage layout
+  var currentLocalStorageLayout = localStorage.getItem(dataLayout + '-current-skin');
+
+  // Set layout on screen load
+  //? Comment it if you don't want to sync layout with local db
+  // setLayout(currentLocalStorageLayout);
+
+  function setLayout(currentLocalStorageLayout) {
+    var navLinkStyle = $('.nav-link-style'),
+      currentLayout = getCurrentLayout(),
+      mainMenu = $('.main-menu'),
+      navbar = $('.header-navbar'),
+      // Witch to local storage layout if we have else current layout
+      switchToLayout = currentLocalStorageLayout ? currentLocalStorageLayout : currentLayout;
+
+    $html.removeClass('semi-dark-layout dark-layout bordered-layout');
+
+    if (switchToLayout === 'dark-layout') {
+      $html.addClass('dark-layout');
+      mainMenu.removeClass('menu-light').addClass('menu-dark');
+      navbar.removeClass('navbar-light').addClass('navbar-dark');
+      navLinkStyle.find('.ficon').replaceWith(feather.icons['sun'].toSvg({ class: 'ficon' }));
+    } else if (switchToLayout === 'bordered-layout') {
+      $html.addClass('bordered-layout');
+      mainMenu.removeClass('menu-dark').addClass('menu-light');
+      navbar.removeClass('navbar-dark').addClass('navbar-light');
+      navLinkStyle.find('.ficon').replaceWith(feather.icons['moon'].toSvg({ class: 'ficon' }));
+    } else if (switchToLayout === 'semi-dark-layout') {
+      $html.addClass('semi-dark-layout');
+      mainMenu.removeClass('menu-dark').addClass('menu-light');
+      navbar.removeClass('navbar-dark').addClass('navbar-light');
+      navLinkStyle.find('.ficon').replaceWith(feather.icons['moon'].toSvg({ class: 'ficon' }));
+    } else {
+      $html.addClass('light-layout');
+      mainMenu.removeClass('menu-dark').addClass('menu-light');
+      navbar.removeClass('navbar-dark').addClass('navbar-light');
+      navLinkStyle.find('.ficon').replaceWith(feather.icons['moon'].toSvg({ class: 'ficon' }));
+    }
+    // Set radio in customizer if we have
+    if ($('input:radio[data-layout=' + switchToLayout + ']').length > 0) {
+      setTimeout(function () {
+        $('input:radio[data-layout=' + switchToLayout + ']').prop('checked', true);
+      });
+    }
+  }
 })(window, document, jQuery);
 
 // To use feather svg icons with different sizes
@@ -1012,7 +1064,7 @@ if (typeof jQuery.validator === 'function') {
         element.attr('type') === 'checkbox'
       ) {
         error.insertAfter(element.parent());
-      } else if (element.hasClass('custom-control-input')) {
+      } else if (element.hasClass('form-check-input')) {
         error.insertAfter(element.parent().siblings(':last'));
       } else {
         error.insertAfter(element);

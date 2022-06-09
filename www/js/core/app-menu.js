@@ -226,7 +226,7 @@
 
       // Dropdown submenu on small screen on click
       // --------------------------------------------------
-      $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function (event) {
+      $('ul.dropdown-menu [data-bs-toggle=dropdown]').on('click', function (event) {
         if ($(this).siblings('ul.dropdown-menu').length > 0) {
           event.preventDefault();
         }
@@ -536,6 +536,7 @@
         // If Dropdown Menu
         dropdownMenu.removeClass('dropdown').addClass('has-sub');
         dropdownMenu.find('a').removeClass('dropdown-toggle nav-link');
+        dropdownMenu.find('a').attr('data-bs-toggle', '');
         dropdownMenu.children('ul').find('a').removeClass('dropdown-item');
         dropdownMenu.find('ul').removeClass('dropdown-menu');
         dropdownSubMenu.removeClass().addClass('has-sub');
@@ -544,7 +545,7 @@
 
         // Dropdown submenu on small screen on click
         // --------------------------------------------------
-        $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function (event) {
+        $('ul.dropdown-menu [data-bs-toggle=dropdown]').on('click', function (event) {
           event.preventDefault();
           event.stopPropagation();
           $(this).parent().siblings().removeClass('open');
@@ -702,7 +703,7 @@
           // $(this).removeClass('hover');
         })
         .on('active.app.menu', 'li', function (e) {
-          //$(this).addClass('active'); 
+          $(this).addClass('active');
           e.stopPropagation();
         })
         .on('deactive.app.menu', 'li.active', function (e) {
@@ -967,6 +968,12 @@
       $.app.nav.container.find('.open').removeClass('open');
     }
   };
+
+  // On href=# click page refresh issue resolve
+  //? User should remove this code for their project to enable # click
+  $(document).on('click', 'a[href="#"]', function (e) {
+    e.preventDefault();
+  });
 })(window, document, jQuery);
 
 // We listen to the resize event
