@@ -894,6 +894,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     function getRequestHandler(string $file)
     {
-        return new \PUXT\RequestHandler($file);
+        return \PUXT\RequestHandler::Create($file);
     }
 }
