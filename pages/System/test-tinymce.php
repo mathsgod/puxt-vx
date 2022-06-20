@@ -19,7 +19,7 @@ return new class
 
     function get(VX $vx)
     {
-        $form = $vx->ui->createForm(["content" => ""]);
+        $form = $vx->ui->createForm(["content" => "<a><div>123</div></a>"]);
         $form->setAction();
 
 
