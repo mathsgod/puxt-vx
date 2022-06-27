@@ -72,7 +72,7 @@ return new class
         $post = $vx->_post;
 
         foreach ($post["_usergroup_id"] as $uid) {
-            $ug = UserGroup::Load($uid);
+            $ug = UserGroup::Get($uid);
             $ug->addUser($obj);
         }
     }
@@ -88,7 +88,7 @@ return new class
         }
 
         foreach ($vx->_post["_usergroup_id"] as $uid) {
-            $ug = UserGroup::Load($uid);
+            $ug = UserGroup::Get($uid);
             $ug->addUser($obj);
         }
 
