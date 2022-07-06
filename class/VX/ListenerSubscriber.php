@@ -26,7 +26,7 @@ class ListenerSubscriber implements EventListenerSubscriber
             $target = $event->target;
 
             if ($target->__isset("created_time")) {
-                $target->created_time = date("Y-m-d");
+                $target->created_time = date("Y-m-d H:i:s");
             }
 
             if ($target->__isset("created_by")) {
