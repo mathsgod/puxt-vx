@@ -1,3 +1,5 @@
+{{table|raw}}
+
 <?php
 
 use VX\UserGroup;
@@ -8,23 +10,19 @@ return new class
     function get(VX $vx)
     {
 
-        $table = $vx->ui->createTable();
+        $table = $vx->ui->createTable("data");
 
-        //     $table->addExpand()->append($this->getUserTable($vx));
+        $table->addExpand()->append($this->getUserTable($vx));
 
-        /* $action = $table->addActionColumn();
+        $action = $table->addActionColumn();
         $action->addView();
         $action->addEdit();
         $action->addDelete();
- */
+
         $table->add("Name", "name")->sortable()->searchable();
         $table->add("Code", "code")->sortable()->searchable();
         $table->add("Num of users", "num_of_user");
 
-        $table->setData(UserGroup::Query());
-
-
-        return $table;
         $this->table = $table;
     }
 

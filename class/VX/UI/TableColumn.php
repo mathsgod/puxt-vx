@@ -7,23 +7,20 @@ use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
 
-class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
+class TableColumn implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
     const SEARCH_TYPE_TEXT = "text";
     const SEARCH_TYPE_DATE = "date";
     const SEARCH_TYPE_SELECT = "select";
-    public $header;
 
-    public function __construct()
-    {
-        parent::__construct("el-table-column");
-    }
+    public string $label;
+    public string $prop;
+    public bool $searchable;
 
     public function template(callable $callback, string $scope = "scope")
     {
-
         $template = new Template();
         $template->setAttribute("v-slot", $scope);
         $callback($template);
@@ -34,15 +31,12 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 
     public function setLabel(string $label)
     {
-
-        $this->setAttribute("label", $this->translator ? $this->translator->trans($label) : $label);
-        return $this;
+        $this->label = $label;
     }
 
     public function setProp(string $prop)
     {
-        $this->setAttribute("prop", $prop);
-        return $this;
+        $this->prop = $prop;
     }
 
     /**
@@ -57,7 +51,7 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 
     public function sortable()
     {
-        $this->setAttribute("sortable", true);
+        $this->sortable = true;
         return $this;
     }
 
@@ -89,6 +83,10 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
 
     public function searchable(string $type = TableColumn::SEARCH_TYPE_TEXT, callable $callback = null)
     {
+        $this->searchable = true;
+
+        return;
+
         $node = $this->closest("vx-table");
         if ($node instanceof Table) {
             $node->setAttribute("searchable", true);

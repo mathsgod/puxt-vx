@@ -6,6 +6,7 @@
  * Date: 2021-07-05 
  */
 
+use Laminas\Diactoros\Response\EmptyResponse;
 use VX\Config;
 
 return new class
@@ -17,7 +18,7 @@ return new class
             $config->value = $value;
             $config->save();
         }
-        http_response_code(204);
+        return new EmptyResponse();
     }
 
     function get(VX $vx)
@@ -30,57 +31,42 @@ return new class
         $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
         $config["authentication_lock_time"] = intval($config["authentication_lock_time"]);
 
-        $f = $vx->ui->createForm($config);
-
-        $f->add("VX URL")->input("vx_url");
-
-        $r = $f->add("Company");
-        $r->input("company");
-        $r->helpBlock("company name");
 
 
-        $f->add("Company logo")->input("company_logo");
-        $f->add("Company url")->input("company_url");
+        //filter out the configs that are not in the form
+        $config = array_filter($config, function ($key) {
+            return in_array($key, [
+                "company",
+                "company_logo",
+                "company_logo_url",
+                "copyright_year",
+                "copyright_url",
+                "copyright_name",
+                "login_version",
+                "search-form",
+                "domain",
+                "two_step_verification",
+                "biometric_authentication",
+                "file_manager_show",
+                "authentication_lock",
+                "allow_remember_me",
+                "authentication_lock_time",
+                "smtp",
+                "smtp-username",
+                "smtp-password",
+                "smtp-post",
+                "smtp-auto-tls",
+                "return-path",
+                "password-length",
+                "log-save",
+                "development",
+                "file_manager_show",
+                "allow_rememeber_me"
+
+            ]);
+        }, ARRAY_FILTER_USE_KEY);
 
 
-        $f->add("Copyright name")->input("copyright_name");
-        $f->add("Copyright year")->input("copyright_year");
-        $f->add("Copyright url")->input("copyright_url");
-
-        $f->add("Login version")->select("login_version", ["v1" => "v1", "v2" => "v2"]);
-
-
-
-        $f->add("Email from")->email("mail_from");
-
-        $f->addDivider("Login")->setContentPosition("left");
-        $f->add("Allow remember me")->checkbox("allow_remember_me");
-
-
-
-        $f->addDivider("Authentication failed lock")->setContentPosition("left");
-        $f->add("Authentication lock")->switch("authentication_lock");
-        $f->add("Lockout time (sec)")->inputNumber("authentication_lock_time");
-
-
-        $f->addDivider("2 step verification")->setContentPosition("left");
-        $f->add("2 Step verification")->switch("two_step_verification");
-        $f->add("White list")->input("two_step_verification_whitelist");
-
-        $f->addDivider();
-
-        $r = $f->add("Biometric authentication");
-        $r->switch("biometric_authentication");
-        $r->helpBlock("Only https can use Biometric authentication");
-
-        $f->addDivider("File manager")->setContentPosition("left");
-        $f->add("Show file manager")->switch("file_manager_show");
-
-        $f->addDivider();
-        $f->add("Custom css")->textarea("css");
-
-        $f->add("Custom js")->textarea("js");
-
-        $this->form = $f;
+        return $config;
     }
 };

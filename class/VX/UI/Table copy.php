@@ -3,8 +3,6 @@
 namespace VX\UI;
 
 use Closure;
-use JsonSerializable;
-use Laminas\Hydrator\ObjectPropertyHydrator;
 use P\HTMLElement;
 use P\HTMLTemplateElement;
 use P\MutationObserver;
@@ -12,7 +10,7 @@ use VX;
 use VX\TranslatorAwareInterface;
 use VX\TranslatorAwareTrait;
 
-class Table implements TranslatorAwareInterface, JsonSerializable
+class TableCopy extends HTMLElement implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
@@ -27,116 +25,29 @@ class Table implements TranslatorAwareInterface, JsonSerializable
     public $search;
     public $default;
 
-    /**
-     *  @var TableColumn[] 
-     */
-    public $columns = [];
-    public $data = [];
-
-    /**
-     * @var \R\DB\Query $source
-     */
-    public $source;
-
-
     public $body;
     public $vx;
     public function __construct()
     {
+        parent::__construct("vx-table");
 
         $this->search = new TableSearch();
         $this->search->setAttribute("v-slot:search", "table");
-        //        $this->append($this->search);
+        $this->append($this->search);
 
-        //$this->default = new HTMLElement("template");
-        //$this->default->setAttribute("v-slot", "table");
-        //      $this->append($this->default);
+        $this->default = new HTMLElement("template");
+        $this->default->setAttribute("v-slot", "table");
+        $this->append($this->default);
 
         $observer = new MutationObserver(function ($records) {
             $this->generateMetadata();
         });
 
-        /*     $observer->observe($this, [
+        $observer->observe($this, [
             "childList" => true,
             "subtree" => true
-        ]); */
+        ]);
     }
-
-    public function data()
-    {
-        $data = [];
-        //$source = $this->orderedSource();
-        $source = $this->source;
-
-
-        if ($this->page && $this->per_page) {
-            $source->limit($this->per_page);
-            $source->offset($this->offset);
-        }
-
-
-        if ($this->data_map instanceof Closure) {
-            foreach ($source as $obj) {
-                foreach ($this->columns as $column) {
-
-                    $prop = $column["prop"];
-                    $getter = $column["getter"];
-                    if ($getter instanceof Closure) {
-                        $d[$prop] = call_user_func($getter, $obj);
-                    } else {
-                        $d[$prop] = var_get($obj, $getter);
-                    }
-                }
-
-                $dmap = $this->data_map->__invoke($obj);
-                if (is_object($dmap)) {
-                    $hydrator = new ObjectPropertyHydrator();
-                    $dmap = $hydrator->extract($dmap);
-                }
-                foreach ($dmap as $k => $v) {
-                    if ($v === true) {
-                        $d[$k] = "✔";
-                    } else {
-                        $d[$k] = $v;
-                    }
-                }
-
-                $data[] = $d;
-            }
-            return $data;
-        }
-
-        foreach ($source as $obj) {
-
-            $d = [];
-            foreach ($this->columns as $column) {
-                $prop = $column->prop;
-                $d[$prop] = var_get($obj, $prop);
-            }
-
-            $data[] = $d;
-        }
-        return $data;
-    }
-
-    function jsonSerialize(): mixed
-    {
-
-        //process data;
-
-
-
-        return [
-            "columns" => $this->columns,
-            "data" => $this->data()
-        ];
-    }
-
-    function setData(\R\DB\Query $data)
-    {
-        $this->source = $data;
-    }
-
 
     function setVX(VX $vx)
     {
@@ -145,7 +56,7 @@ class Table implements TranslatorAwareInterface, JsonSerializable
 
     function setHeader(string $header)
     {
-        $this->header = $header;
+        $this->setAttribute("header", $header);
     }
 
     public function setPagination(bool $pagination)
@@ -155,7 +66,11 @@ class Table implements TranslatorAwareInterface, JsonSerializable
 
     public function setBorder(bool $border)
     {
-        $this->border = $border;
+        if ($border) {
+            $this->setAttribute("border", true);
+        } else {
+            $this->removeAttribute("border");
+        }
     }
 
 
@@ -179,7 +94,7 @@ class Table implements TranslatorAwareInterface, JsonSerializable
      */
     public function setSize(string $size)
     {
-        $this->size = $size;
+        $this->setAttribute("size", $size);
     }
 
     public function addActionColumn()
@@ -272,8 +187,9 @@ class Table implements TranslatorAwareInterface, JsonSerializable
                 $column->setProp($prop);
             }
         }
+        
+        $this->default->appendChild($column);
 
-        $this->columns[] = $column;
         return $column;
     }
 

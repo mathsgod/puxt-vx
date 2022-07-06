@@ -117,4 +117,35 @@ class Model extends DBModel implements ResourceInterface, IModel
         }
         return parent::__call($function, $args);
     }
+
+    public function toArray(?array $fields = null): array
+    {
+        $key = self::_key();
+        $data = [];
+        $data[$key] = $this->$key;
+        foreach ($this->__fields() as $field) {
+
+            if ($fields && !in_array($field, $fields)) {
+                continue;
+            }
+
+            $data[$field] = $this->$field;
+        }
+
+
+        if (in_array("__canRead", $fields)) {
+            $data["__canRead"] = $this->canReadBy(self::$_vx->user);
+        }
+
+        if (in_array("__canUpdate", $fields)) {
+            $data["__canUpdate"] = $this->canUpdateBy(self::$_vx->user);
+        }
+
+        if (in_array("__canDelete", $fields)) {
+            $data["__canDelete"] = $this->canDeleteBy(self::$_vx->user);
+        }
+
+
+        return $data;
+    }
 }

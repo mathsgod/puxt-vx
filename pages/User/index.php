@@ -1,8 +1,21 @@
-<q-card flat bordered>
-    <q-card-section>
-        <vx-tabs>
-            <vx-tab name="Active" label="Active" link="list?t=0"></vx-tab>
-            <vx-tab name="Inactive" label="Inactive" link="list?t=1"></vx-tab>
-        </vx-tabs>
-    </q-card-section>
-</q-card>
+<?php
+
+/**
+ * Created by: Raymond Chong
+ * Date: 2022-06-21 
+ */
+
+use VX\User;
+
+return new class
+{
+    function get(VX $vx)
+    {
+        $table = $vx->ui->createTable();
+        $table->add("First name", "first_name")->sortable()->searchable();
+        $table->add("Last name", "last_name")->sortable()->searchable();
+
+        $table->setData(User::Query());
+        return $table;
+    }
+};

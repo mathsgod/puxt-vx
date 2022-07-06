@@ -23,12 +23,13 @@ path:
     setting-2step: [Power Users,Users]
     setting-style: [Power Users,Users]
     setting-bio-auth: [Power Users,Users]
-    ae: [Power Users]
+    add: [Power Users]
+    edit: [Power Users]
     index: [Power Users]
   UserGroup:
       index: [Power Users]
       list: [Power Users]
-      ae: [Power Users]
+      edit: [Power Users]
   
 action:
   create:

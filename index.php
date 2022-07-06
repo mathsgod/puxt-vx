@@ -12,7 +12,6 @@ use League\Route\RouteGroup;
 use League\Route\Router;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
-
 return function ($options) {
     if ($this->puxt->request->getMethod() == "OPTIONS") {
         http_response_code(200);
@@ -48,6 +47,13 @@ return function ($options) {
             $module->setupRoute($route);
         }
     });
+
+    $router->map("GET", $vx->base_path . "me", function (ServerRequestInterface $request, array $args) use ($vx) {
+        $handler = $vx->getRequestHandler($vx->vx_root . "/pages/me");
+        return $handler->handle($request);
+    });
+
+
 
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
         $fm = $vx->getFileSystem();
@@ -89,7 +95,7 @@ return function ($options) {
         return $handler->handle($request);
     });
 
- 
+
 
 
     $router->map("GET", $vx->base_path . "cancel-view-as", function (ServerRequestInterface $request) use ($vx) {

@@ -38,26 +38,12 @@ class UI implements TranslatorAwareInterface
         return $link;
     }
 
-    public function createTable(?string $entry = null)
+    public function createTable()
     {
         $table = new Table;
 
         $table->setTranslator($this->translator);
         $table->setVX($this->vx);
-
-        if ($entry) {
-            $query = $this->vx->request->getQueryParams();
-            $query["_entry"] = $entry;
-
-            $uri = $this->vx->request_uri;
-            if (strstr($uri, "/") == false) {
-                $uri .= "/index";
-            }
-
-            $remote = "/" .    $uri . "?" . http_build_query($query);
-
-            $table->setAttribute("remote", $remote);
-        }
 
         $user = $this->vx->user;
         if (is_array($user->style)) {

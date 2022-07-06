@@ -5,8 +5,6 @@ use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
 use League\Event\EventDispatcherAware;
@@ -107,18 +105,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
 
-
-
         $this->res = new Response;
         $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
         $this->loadModules();
-
-
         $this->loadDB();
-
         $this->useEventDispatcher($puxt->eventDispatcher());
     }
 
@@ -300,9 +293,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $this->user_id = 2;
 
+        if ($request->getUri()->getPath() == "/api/auth/login") {
+            $this->user = User::Get(2);
+            return;
+        }
 
         if ($_COOKIE["access_token"] && !$_COOKIE["refresh_token"]) {
             $token = $_COOKIE["access_token"];
+
             if ($user_id = $this->getUserIdByToken($token)) {
                 $this->user_id = $user_id;
                 $this->logined = true;
@@ -829,7 +827,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
             $ul->user_id = $user->user_id;
             $ul->result = "SUCCESS";
-            $ul->save();
+            //  $ul->save();
             AuthLock::ClearLockedIP($ip);
         } catch (Exception $e) {
 
@@ -840,7 +838,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             if ($user) {
                 $ul->user_id = $user->user_id;
                 $ul->result = "FAIL";
-                $ul->save();
+                //  $ul->save();
             }
             throw $e;
         }

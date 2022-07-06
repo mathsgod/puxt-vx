@@ -35,6 +35,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
         $user = $request->getAttribute("user");
         $acl = $request->getAttribute("acl");
 
+        
         if (!$user instanceof RoleInterface) {
             throw new BadRequestException();
         }
@@ -48,7 +49,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
             throw new ForbiddenException();
         }
 
-        if ($request->getMethod() == "GET") {
+/*         if ($request->getMethod() == "GET") {
 
             //check accept header has text/vue
             $accept = $request->getHeaderLine("Accept");
@@ -58,7 +59,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
                 return $handler->handle($request);
             }
         }
-
+ */
         $loader = $this->module->vx->getRequestHandler($this->file);
         return $loader->handle($request);
     }

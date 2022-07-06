@@ -25,10 +25,10 @@ menu:
     icon: fa fa-database
     menu: 
       Table:
-        link: /System/database
+        link: /System/database/table
         label: Table
         icon: fa fa-table
       Charset:
-        link: /System/database-charset
+        link: /System/database/charset
         label: Charset
         icon: fa fa-spell-check

@@ -18,9 +18,12 @@ use League\Route\RouteCollectionInterface;
 use League\Route\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use R\DB\Model;
+use R\DB\ModelInterface;
 use R\DB\Query;
 use Symfony\Component\Yaml\Yaml;
 use VX;
+use VX\Model as VXModel;
 
 class Module implements TranslatorAwareInterface, ResourceInterface
 {
@@ -65,7 +68,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                     return $attributes->isFile();
                 })->filter(function (FileAttributes $attributes) {
                     $ext = pathinfo($attributes->path(), PATHINFO_EXTENSION);
-                    return $ext == "php" || $ext == "twig" || $ext == "html" || $ext == "vue";
+                    return $ext == "php" || $ext == "twig" || $ext == "html";
                 })->toArray();
 
                 foreach ($files as $file) {
@@ -110,6 +113,96 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         $this->files = array_values($this->files);
     }
 
+    private function getQueryData(string $class, array $query, ServerRequestInterface $request)
+    {
+        $meta = [];
+        $meta["primary"] = $class::_key();
+
+        /** @var \R\DB\Query */
+        $q = $class::Query();
+
+        if ($filters = $query["filters"]) {
+
+            foreach ($filters as $field => $filter) {
+
+                foreach ($filter as $operator => $value) {
+                    if ($operator == '$eq') {
+                        $q->where->equalTo($field, $value);
+                    }
+
+                    if ($operator == '$contains') {
+                        $q->where->like($field, "%$value%");
+                    }
+                }
+            }
+        }
+
+        if ($sort = $query["sort"]) {
+            $order = [];
+            foreach ($sort as $s) {
+                $ss = explode(":", $s);
+
+                $order[$ss[0]] = $ss[1];
+            }
+            $q->order($order);
+        }
+
+        if ($pagination = $query["pagination"]) {
+            $paginator = $q->getPaginator();
+            $paginator->setCurrentPageNumber($pagination["page"]);
+            $paginator->setItemCountPerPage($pagination["pageSize"]);
+
+            $q = $paginator;
+
+            $meta["pagination"] = [
+                "page" => $paginator->getCurrentPageNumber(),
+                "pageSize" => $paginator->getItemCountPerPage(),
+                "total" => $paginator->getTotalItemCount()
+            ];
+        }
+
+        $data = [];
+        foreach ($q as $o) {
+            if ($o instanceof VXModel) {
+                if ($o->canReadBy($request->getAttribute("user"))) {
+                    $obj = $o->toArray($query["fields"] ?? []);
+                    if ($populate = $query["populate"]) {
+                        foreach ($populate as $target_module => $p) {
+                            $module = $this->vx->getModule($target_module);
+
+                            $target_class = $module->class;
+
+                            $target_key = $target_class::_key();
+
+                            $p["filters"] = $p["filters"] ?? [];
+
+                            if ($o->$target_key) { // many to one
+
+                                $p["filters"][$target_key]['$eq'] = $o->$target_key;
+                                $d = $this->getQueryData($module->class, $p, $request);
+                                $d["data"] = $d["data"][0];
+                            } else { //one to many
+
+                                $p["filters"][$meta["primary"]]['$eq'] = $o->{$meta["primary"]};
+                                $d = $this->getQueryData($module->class, $p, $request);
+                            }
+
+
+                            $obj[$target_module] = $d["data"];
+                        }
+                    }
+
+                    $data[] = $obj;
+                }
+            }
+        }
+
+        return  [
+            "data" => $data,
+            "meta" => $meta
+        ];
+    }
+
     private function getModuleFile(string $path)
     {
         foreach ($this->files as $file) {
@@ -131,7 +224,18 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             if (!$object->canReadBy($user)) {
                 throw new ForbiddenException();
             }
-            return new JsonResponse($object);
+            $meta = [];
+
+            if ($object instanceof Model) {
+                $meta["primaryKey"] = $object->_key();
+            }
+
+
+            $data = [];
+            $data["data"] = $object;
+            $data["meta"] = $meta;
+
+            return new JsonResponse($data);
         });
 
 
@@ -146,7 +250,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
 
                 $data = $request->getParsedBody();
                 $object->bind($data);
-                $object->save($data);
+                $object->save();
 
                 $response = (new Response())->withStatus(201);
                 return $response->withHeader("Content-Location", $object->uri());
@@ -191,45 +295,10 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         });
 
         $route->get($this->name, function (ServerRequestInterface $request, array $args) {
-            if (strstr($request->getHeaderLine("Accept"), "application/json")) {
-                $query = $request->getQueryParams();
-
-                if (!$query["fields"]) {
-                    throw new BadRequestException();
-                }
-
-                $fields = explode(",", $query["fields"]);
-                $class = $this->class;
-                $q = $class::Query();
-
-                $hydrator = new ObjectPropertyHydrator;
-                $hydrator->addFilter("fields", function ($property) use ($fields) {
-                    return in_array($property, $fields);
-                });
-
-                $data = [];
-                foreach ($q as $o) {
-                    if ($o instanceof Model) {
-                        if ($o->canReadBy($request->getAttribute("user"))) {
-                            $data[] = $hydrator->extract($o);
-                        }
-                    }
-                }
-
-                return new JsonResponse($data);
-            }
-
-            if ($module_file = $this->getModuleFile("index")) {
-                $this->vx->module = $this;
-
-                $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($module_file->file)));
-                $request = $request->withAttribute("twig", $twig);
-
-
-                return $module_file->handle($request);
-            }
-
-            throw new NotFoundException();
+            $query = $request->getQueryParams();
+            $data = $this->getQueryData($this->class, $query, $request);
+            $data["meta"]["model"] = $this->name;
+            return new JsonResponse($data);
         });
 
         $methods = ["GET", "POST", "PATCH", "DELETE"];
@@ -384,13 +453,13 @@ class Module implements TranslatorAwareInterface, ResourceInterface
 
 
         if ($this->show_create) {
-            if ($this->acl->isAllowed($user, $this->name . "/ae")) {
-                $link = [];
-                $link["label"] = $this->translator->trans("Add");
-                $link["icon"] = "fa fa-plus";
-                $link["link"] = "/" . $this->name . "/ae";
-                $links[] = $link;
-            }
+            //if ($this->acl->isAllowed($user, $this->name . "/add")) {
+            $link = [];
+            $link["label"] = $this->translator->trans("Add");
+            $link["icon"] = "fa fa-plus";
+            $link["link"] = "/" . $this->name . "/add";
+            $links[] = $link;
+            //}
         }
         foreach ($this->menu as $m) {
             if (!$this->acl->isAllowed($user, substr($m["link"], 1))) {
