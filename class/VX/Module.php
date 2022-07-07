@@ -116,7 +116,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
     private function getQueryData(string $class, array $query, ServerRequestInterface $request)
     {
         $meta = [];
-        $meta["primary"] = $class::_key();
+        $meta["primaryKey"] = $class::_key();
 
         /** @var \R\DB\Query */
         $q = $class::Query();
@@ -183,7 +183,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                                 $d["data"] = $d["data"][0];
                             } else { //one to many
 
-                                $p["filters"][$meta["primary"]]['$eq'] = $o->{$meta["primary"]};
+                                $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
                                 $d = $this->getQueryData($module->class, $p, $request);
                             }
 
@@ -252,8 +252,9 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 $object->bind($data);
                 $object->save();
 
-                $response = (new Response())->withStatus(201);
-                return $response->withHeader("Content-Location", $object->uri());
+                return new EmptyResponse(201, [
+                    "Content-Location" => $object->uri()
+                ]);
             }
             throw new NotFoundException();
         });
@@ -274,8 +275,9 @@ class Module implements TranslatorAwareInterface, ResourceInterface
 
                 $object->bind($data);
                 $object->save($data);
-                $response = (new Response())->withStatus(204);
-                return $response->withHeader("Content-Location", $object->uri());
+                return new EmptyResponse(204, [
+                    "Content-Location" => $object->uri()
+                ]);
             }
             throw new NotFoundException();
         });

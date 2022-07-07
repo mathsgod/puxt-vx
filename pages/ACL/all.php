@@ -137,7 +137,7 @@ return new class
         return UserGroup::Query()->toArray();
     }
 
-    function getACL(VX $vx)
+    function get(VX $vx)
     {
         $usergroup = UserGroup::Get($vx->_get["usergroup_id"]);
 

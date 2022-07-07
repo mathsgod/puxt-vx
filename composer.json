@@ -28,7 +28,8 @@
         "monolog/monolog": "^2.3",
         "mathsgod/r-db": "^4.5",
         "league/glide": "^2.1",
-        "twig/extra-bundle": "^3.3"
+        "twig/extra-bundle": "^3.3",
+        "laminas/laminas-diactoros": "^2.12"
     },
     "autoload": {
         "psr-4": {

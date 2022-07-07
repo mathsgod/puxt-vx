@@ -92,7 +92,7 @@ return new class
                 "style" => $user->style,
                 "default_page" => $user->default_page ?? "/Dashboard",
                 "usergroup" => $user->UserGroup()->map(fn ($o) => $o->name)->join(","),
-                "image" => $user->photo()
+                "image" => $user->uri("avatar")
             ];
 
             //nav dropdown
