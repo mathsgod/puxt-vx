@@ -126,6 +126,10 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
                     if ($operator == '$contains') {
                         $q->where->like($field, "%$value%");
                     }
+
+                    if($operator == '$in'){
+                        $q->where->in($field, $value);
+                    }
                 }
             }
         }
