@@ -58,6 +58,7 @@ return new class
 
             $modules = $vx->getModules();
 
+
             $menu = new VX\Menu();
             $menu->setACL($vx->getAcl());
             $menu->setTranslator($vx->getTranslator());
@@ -75,6 +76,7 @@ return new class
             }
 
             $data["menus"] = $menu->getMenuByUser($vx->user);
+
 
 
             //language 

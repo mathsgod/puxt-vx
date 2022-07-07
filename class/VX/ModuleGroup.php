@@ -2,11 +2,15 @@
 
 namespace VX;
 
-class ModuleGroup implements TranslatorAwareInterface
+class ModuleGroup implements TranslatorAwareInterface, MenuItemsInterface
 {
     use TranslatorAwareTrait;
 
     public $name;
+
+    /**
+     * @var MenuItemsInterface[]
+     */
     public $child = [];
 
     public $sequence = PHP_INT_MAX;
@@ -30,7 +34,7 @@ class ModuleGroup implements TranslatorAwareInterface
         $this->sequence = min($this->sequence, $module->sequence);
     }
 
-    public function getMenuItemByUser(User $user)
+    public function getMenuItemByUser(User $user): array
     {
         $data = [];
 

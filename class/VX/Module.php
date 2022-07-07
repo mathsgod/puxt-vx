@@ -3,29 +3,22 @@
 namespace VX;
 
 use Exception;
-use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
-use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteCollectionInterface;
-use League\Route\Router;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use R\DB\Model;
-use R\DB\ModelInterface;
-use R\DB\Query;
 use Symfony\Component\Yaml\Yaml;
 use VX;
 use VX\Model as VXModel;
 
-class Module implements TranslatorAwareInterface, ResourceInterface
+class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsInterface
 {
     use TranslatorAwareTrait;
 
@@ -428,19 +421,13 @@ class Module implements TranslatorAwareInterface, ResourceInterface
 
         if (count($submenu)) {
             $data["submenu"] = $submenu;
-            if ($this->acl->hasResource($this->name . "/index") && $this->acl->isAllowed($user, $this->name . "/index")) {
-                array_unshift($data["submenu"], [
-                    "label" => $this->translator->trans("List"),
-                    "icon" => "fa fa-list",
-                    "link" => "/" . $this->name
-                ]);
-            }
+            array_unshift($data["submenu"], [
+                "label" => $this->translator->trans("List"),
+                "icon" => "fa fa-list",
+                "link" => "/" . $this->name
+            ]);
         } else {
-            if ($this->acl->hasResource($this->name . "/index") && $this->acl->isAllowed($user, $this->name . "/index")) {
-                $data["link"] = "/" . $this->name;
-            } else {
-                return [];
-            }
+            $data["link"] = "/" . $this->name;
         }
 
 

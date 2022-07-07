@@ -8,6 +8,9 @@ class Menu implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
+    /**
+     * @var MenuItemInterface[]
+     */
     public $items = [];
     public $groups = [];
     public $icons = [];
@@ -47,6 +50,7 @@ class Menu implements TranslatorAwareInterface
     public function getMenuByUser(User $user)
     {
         $data = [];
+
         foreach ($this->getOrderedItems() as $item) {
             $menu = $item->getMenuItemByUser($user);
             if ($menu) {
