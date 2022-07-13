@@ -44,7 +44,7 @@
         },
         methods: {
             async save() {
-                let resp = await this.$vx.patch(`User/${this.user.user_id}`, this.user);
+                let resp = await this.$vx.patch(`/User/${this.user.user_id}`, this.user);
                 if (resp.status == 204) {
                     this.$message.success("User updated");
                 }
