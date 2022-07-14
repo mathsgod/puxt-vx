@@ -13,7 +13,16 @@ return new class
             throw new Exception("no refresh token");
         }
 
-        $payload = JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
+
+        try {
+            $payload = JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
+        } catch (Exception $e) {
+            //remove the cookie
+            $resp = new EmptyResponse(200);
+            $resp = $resp->withAddedHeader("Set-Cookie", "access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path={$vx->base_path}; SameSite=Strict; HttpOnly");
+            return $resp;
+        }
+
 
         if ($payload->type == "refresh_token") {
             $resp = new EmptyResponse(200);
