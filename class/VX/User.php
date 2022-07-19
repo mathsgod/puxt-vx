@@ -5,6 +5,7 @@ namespace VX;
 use Exception;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use League\Route\Http\Exception\BadRequestException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Yaml\Yaml;
 
@@ -135,20 +136,20 @@ class User extends Model implements RoleInterface
         ])->first();
 
         if (!$user) {
-            throw new Exception("user not found");
+            throw new Exception("User not found or incorrect password", 400);
         }
 
         //check password
         if (!self::PasswordVerify($password, $user->password)) {
-            throw new Exception("password error");
+            throw new Exception("User not found or incorrect password", 400);
         }
 
         if ($user->expiry_date && strtotime($user->expiry_date) < time()) {
-            throw new Exception("user expired");
+            throw new Exception("User account expired", 400);
         }
 
         if ($user->UserList->count() == 0) {
-            throw new Exception("no any user group");
+            throw new Exception("User has no user group", 400);
         }
 
         return $user;

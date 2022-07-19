@@ -80,12 +80,60 @@ return new class
             throw new BadRequestException("Old password is incorrect");
         }
 
+        //regexp check for password
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{12,}$/', $vx->_post["new_password"])) {
+            throw new BadRequestException("Password must be at least 12 characters long, include at least one uppercase character, at least one lowercase character, at least one special character or symbol, and at least one digit");
+        }
 
-        if ($user->canChangePasswordBy($vx->user)) {
-            $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
-            $user->save();
-        } else {
+        if (!$user->canChangePasswordBy($vx->user)) {
             throw new ForbiddenException("You are not allowed to change this user's password");
         }
+
+        $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
+        $user->save();
+    }
+
+    function getPasswordPolicy(VX $vx)
+    {
+        $rules = [];
+
+
+        if ($vx->config["VX"]["password policy"]["min length"]) {
+            $rules[] = [
+                "pattern" => "^.{" . $vx->config["VX"]["password policy"]["min length"] . ",}$",
+                "message" => "Password must be at least " . $vx->config["VX"]["password policy"]["min length"] . " characters long"
+            ];
+        }
+
+        if ($vx->config["VX"]["password policy"]["uppercase character"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*[A-Z])",
+                "message" => "Password must include at least one uppercase character"
+            ];
+        }
+
+
+        if ($vx->config["VX"]["password policy"]["lowercase character"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*[a-z])",
+                "message" => "Password must include at least one lowercase character"
+            ];
+        }
+
+        if ($vx->config["VX"]["password policy"]["special character"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*[#$@!%&*?])",
+                "message" => "Password must include at least one special character or symbol"
+            ];
+        }
+
+        if ($vx->config["VX"]["password policy"]["digit"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*\d)",
+                "message" => "Password must include at least one digit"
+            ];
+        }
+
+        return $rules;
     }
 };
