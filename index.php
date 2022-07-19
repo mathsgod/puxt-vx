@@ -13,11 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 return function ($options) {
 
-    if ($this->puxt->request->getMethod() == "OPTIONS") {
-        http_response_code(200);
-        exit;
-    }
-
     $vx = new VX($this->puxt);
 
     $this->puxt->vx = $vx;
@@ -47,7 +42,7 @@ return function ($options) {
             $module->setupRoute($route);
         }
     });
-
+   
 
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
 

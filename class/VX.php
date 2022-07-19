@@ -226,13 +226,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $response = $handler->handle($request);
 
-        if ($_SERVER["HTTP_ORIGIN"]) {
-            $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
-        }
         $response = $response
             ->withHeader("Access-Control-Allow-Credentials", "true")
             ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
-            ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
             ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
 
         return $response;
