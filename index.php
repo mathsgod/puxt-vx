@@ -1,12 +1,10 @@
 <?php
 
 use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Stream;
 use League\Glide\Responses\PsrResponseFactory;
-use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
@@ -14,7 +12,6 @@ use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 
 return function ($options) {
-
 
     if ($this->puxt->request->getMethod() == "OPTIONS") {
         http_response_code(200);
@@ -51,7 +48,14 @@ return function ($options) {
         }
     });
 
+
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
+
+        //B5 Broken Access Control 
+        if (!$vx->logined()) {
+            return new EmptyResponse(401);
+        }
+
         $fm = $vx->getFileSystem();
         $file = $args["file"];
         $file = urldecode($file);
@@ -68,6 +72,12 @@ return function ($options) {
 
 
     $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
+
+        //B5 Broken Access Control 
+        if (!$vx->logined()) {
+            return new EmptyResponse(401);
+        }
+
         $glide = League\Glide\ServerFactory::create([
 
             "source" => $vx->getFileSystem(),

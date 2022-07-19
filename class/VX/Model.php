@@ -117,4 +117,21 @@ class Model extends DBModel implements ResourceInterface, IModel
         }
         return parent::__call($function, $args);
     }
+
+
+    public function bind($rs)
+    {
+        if (is_object($rs)) {
+            $rs = get_object_vars($rs);
+        }
+
+        // B1 Super Admin Account Takeover
+        //remove primary key
+        $key = self::_key();
+        if (isset($rs[$key])) {
+            unset($rs[$key]);
+        }
+
+        return parent::bind($rs);
+    }
 }

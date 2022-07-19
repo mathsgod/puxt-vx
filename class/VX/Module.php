@@ -167,6 +167,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 }
 
                 $data = $request->getParsedBody();
+               
 
                 $object->bind($data);
                 $object->save($data);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8fa903230f6d68f4257b6d5bb35fff48",
+    "content-hash": "735ba5f94f3d942beb77b7e18a659062",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2097,16 +2097,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.9.5",
+            "version": "4.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "5eb9c836c5557d0bbb2812542ab222ad42f63dce"
+                "reference": "53b733659a384918682392244f4eedd570d567fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/5eb9c836c5557d0bbb2812542ab222ad42f63dce",
-                "reference": "5eb9c836c5557d0bbb2812542ab222ad42f63dce",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/53b733659a384918682392244f4eedd570d567fa",
+                "reference": "53b733659a384918682392244f4eedd570d567fa",
                 "shasum": ""
             },
             "require": {
@@ -2144,9 +2144,9 @@
             "description": "raymond framework db",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.9.5"
+                "source": "https://github.com/mathsgod/r-db/tree/4.11.1"
             },
-            "time": "2022-06-07T07:55:06+00:00"
+            "time": "2022-06-23T09:00:45+00:00"
         },
         {
             "name": "monolog/monolog",

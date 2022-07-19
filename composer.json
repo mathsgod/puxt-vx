@@ -26,7 +26,7 @@
         "laminas/laminas-hydrator": "^4.3",
         "phpoffice/phpspreadsheet": "^1.18",
         "monolog/monolog": "^2.3",
-        "mathsgod/r-db": "^4.8",
+        "mathsgod/r-db": "^4.11",
         "league/glide": "^2.1",
         "twig/extra-bundle": "^3.3",
         "laminas/laminas-diactoros": "^2.13"
