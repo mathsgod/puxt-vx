@@ -31,10 +31,16 @@
                             return;
                         }
                         let {
-                            status
+                            status,
+                            data
                         } = await this.$vx.post("change-password", {
                             password: this.form.new_password
                         });
+
+                        if (data.error) {
+                            this.$message.error(data.error.message);
+                            return;
+                        }
 
                         if (status == 200) {
                             this.$message.success("Password updated");
@@ -55,7 +61,9 @@
  * Date: 2021-07-23 
  */
 
+use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
+use League\Route\Http\Exception\UnauthorizedException;
 use VX\User;
 
 return new class
@@ -63,9 +71,15 @@ return new class
     function post(VX $vx)
     {
         $user = User::FromGlobal();
+
         if (!$user->user_id) {
             $user = $vx->user;
         }
+
+        if (!password_verify($vx->_post["old_password"], $user->password)) {
+            throw new BadRequestException("Old password is incorrect");
+        }
+
 
         if ($user->canChangePasswordBy($vx->user)) {
             $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);

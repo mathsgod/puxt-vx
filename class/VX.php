@@ -163,7 +163,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         try {
             $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
         } catch (Exception $e) {
-            throw new UnauthorizedException();
+            return null;
         }
 
         return $token->user_id;
@@ -223,6 +223,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             ->withAttribute("context", $this)
             ->withAttribute("user", $this->user)
             ->withAttribute("acl", $this->getAcl());
+
 
         $response = $handler->handle($request);
 
@@ -287,8 +288,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     private function processAuthorization(ServerRequestInterface $request)
     {
-        //authorization
 
+        //authorization
         $this->user_id = 2;
 
 

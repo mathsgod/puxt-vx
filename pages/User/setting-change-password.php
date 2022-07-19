@@ -2,11 +2,16 @@
     <el-card>
         <el-form :model="form" ref="form" class="small-label">
             <div class="row">
-                <el-form-item :label="$t('New Password')" required prop="new_password" class="col-12 col-sm-6">
+                <el-form-item label="Old password" prop="old_password" required class="col-12">
+                    <el-input type="password" v-model="form.old_password"></el-input>
+                </el-form-item>
+
+                <el-form-item :label="$t('New Password')" required prop="new_password" class="col-12">
                     <el-input show-password type="password" v-model="form.new_password"></el-input>
                 </el-form-item>
-                <el-form-item label="Retype New Password" required prop="retype_password" class="col-12 col-sm-6">
-                    <el-input show-password type="password" v-model="form.retype_password"></el-input>
+                <el-form-item label="Retype New Password" required prop="retype_password" class="col-12">
+                    <el-input show-password type=" password" v-model="form.retype_password">
+                    </el-input>
                 </el-form-item>
 
                 <div class="col-12">
@@ -24,7 +29,12 @@
         template: document.getElementById("v-change-password"),
         data() {
             return {
-                form: {}
+                form: {
+                    old_password: null,
+                    new_password: null,
+                    retype_password: null
+
+                }
             }
         },
         methods: {
@@ -37,11 +47,21 @@
                             });
                             return;
                         }
-                        let resp = await this.$vx.post("/User/change-password", {
+                        let {
+                            data,
+                            status
+                        } = await this.$vx.post("/User/change-password", {
+                            old_password: this.form.old_password,
                             password: this.form.new_password
                         });
 
-                        if (resp.status == 204) {
+
+                        if (data.error) {
+                            this.$message.error(data.error.message);
+                            return;
+                        }
+
+                        if (status == 204) {
                             this.$message.success("Password updated");
                         }
                     }
