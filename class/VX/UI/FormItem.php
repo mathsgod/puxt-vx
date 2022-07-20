@@ -378,6 +378,10 @@ class FormItem extends EL\FormItem
             $input->setAttribute("base-url", $this->_vx->config["VX"]["tinymce"]["base-url"]);
         }
 
+        if ($this->_vx->config["VX"]["tinymce"]["allow_all_html_tag"]) {
+            $input->setAttribute("allow-all-html-tag", true);
+        }
+
 
         $this->append($input);
         $this->setProp($name);
