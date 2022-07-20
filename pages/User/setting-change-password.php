@@ -70,7 +70,7 @@
                             return;
                         }
 
-                        if (status == 204) {
+                        if (status == 200) {
                             this.$message.success("Password updated");
                         }
                     }

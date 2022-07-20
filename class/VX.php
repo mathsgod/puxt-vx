@@ -1,5 +1,6 @@
 <?php
 
+use FG\ASN1\Universal\Boolean;
 use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Db\Adapter\AdapterAwareInterface;
@@ -136,6 +137,18 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $this->db->useEventDispatcher($this->eventDispatcher());
         $this->eventDispatcher()->subscribeListenersFrom(new ListenerSubscriber($this));
+    }
+
+    public function isValidPassword(string $password): bool
+    {
+        foreach ($this->getPasswordPolicy() as $policy) {
+            //regexp check for password
+            if (!preg_match('/' . $policy["pattern"] . '/', $password)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getPasswordPolicy(): array
