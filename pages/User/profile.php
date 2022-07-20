@@ -35,7 +35,7 @@
                             <div class="profile-tabs d-flex justify-content-between flex-wrap mt-1 mt-md-0">
                                 <ul class="nav nav-pills mb-0">
                                     <li class="nav-item">
-                              
+
                                     </li>
                                 </ul>
                                 <!-- edit button -->
@@ -203,7 +203,7 @@ return new class
     {
         $this->user = $vx->user;
 
-        $this->user_photo = $vx->user->photo();
+        $this->user_photo = $vx->user->uri("avatar");
 
         $this->usergroup = collect($vx->user->UserGroup()->toArray())->map(function ($o) {
             return $o->name;

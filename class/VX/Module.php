@@ -167,12 +167,13 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 }
 
                 $data = $request->getParsedBody();
-               
+
 
                 $object->bind($data);
                 $object->save($data);
-                $response = (new Response())->withStatus(204);
-                return $response->withHeader("Content-Location", $object->uri());
+                return new EmptyResponse(204, [
+                    "Content-Location" => $object->uri()
+                ]);
             }
             throw new NotFoundException();
         });

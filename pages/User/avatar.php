@@ -10,9 +10,13 @@ return new class
     {
 
         $user = $vx->user;
-        if ($user->image === null) {
+        if ($user->photo === null) {
             header('Content-Type: image/png');
             readfile(dirname(__DIR__, 2) . "/www/images/user.png");
+            die();
+        } else {
+            header('Content-Type: image/png');
+            echo $user->photo;
             die();
         }
     }

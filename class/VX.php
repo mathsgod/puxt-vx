@@ -138,6 +138,50 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->eventDispatcher()->subscribeListenersFrom(new ListenerSubscriber($this));
     }
 
+    public function getPasswordPolicy(): array
+    {
+        $rules = [];
+
+
+        if ($this->config["VX"]["password policy"]["min length"]) {
+            $rules[] = [
+                "pattern" => "^.{" . $this->config["VX"]["password policy"]["min length"] . ",}$",
+                "message" => "Password must be at least " . $this->config["VX"]["password policy"]["min length"] . " characters long"
+            ];
+        }
+
+        if ($this->config["VX"]["password policy"]["uppercase character"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*[A-Z])",
+                "message" => "Password must include at least one uppercase character"
+            ];
+        }
+
+
+        if ($this->config["VX"]["password policy"]["lowercase character"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*[a-z])",
+                "message" => "Password must include at least one lowercase character"
+            ];
+        }
+
+        if ($this->config["VX"]["password policy"]["special character"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*[#$@!%&*?])",
+                "message" => "Password must include at least one special character or symbol"
+            ];
+        }
+
+        if ($this->config["VX"]["password policy"]["digit"]) {
+            $rules[] = [
+                "pattern" => "^(?=.*\d)",
+                "message" => "Password must include at least one digit"
+            ];
+        }
+
+        return $rules;
+    }
+
     private function loadModules()
     {
         //system module

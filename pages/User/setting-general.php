@@ -59,6 +59,7 @@
                 data
             } = await this.$vx.get("setting-general")
             this.user = data.user;
+            this.user.photo = this.$vx.endpoint + "User/avatar?t=" + (new Date).getTime();
         },
         methods: {
             async save() {
@@ -82,7 +83,7 @@
 
             async inputPhoto() {
                 let upload = this.$refs.user_img;
-                if (upload.files.length == 1) {
+                if (upload.files.length > 0) {
                     let file = upload.files[0];
                     let fd = new FormData();
                     fd.append("file", file);
@@ -95,7 +96,7 @@
                 let {
                     data
                 } = await this.$vx.get("setting-general");
-                this.user.photo = data.user.photo;
+                this.user.photo = this.$vx.endpoint + "User/avatar?t=" + (new Date).getTime();
             }
         }
     });
@@ -114,7 +115,6 @@ return new class
     {
         $user = $vx->user;
         return ["user" => [
-            "photo" => $user->photo(),
             "user_id" => $user->user_id,
             "username" => $user->username,
             "first_name" => $user->first_name,

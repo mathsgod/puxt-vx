@@ -1,6 +1,7 @@
 <?php
 
 use Gumlet\ImageResize;
+use Laminas\Diactoros\Response\EmptyResponse;
 
 /**
  * Created by: Raymond Chong
@@ -8,9 +9,6 @@ use Gumlet\ImageResize;
  */
 return new class
 {
-    function get(VX $vx)
-    {
-    }
 
     function  post(VX $vx)
     {
@@ -26,6 +24,6 @@ return new class
         $user->photo = (string)$image;
         $user->save();
 
-        http_response_code(204);
+        return new EmptyResponse(204);
     }
 };

@@ -29,7 +29,10 @@ return new class
 
 
         if (!$obj->user_id) {
-            $form->add("Password")->password("password")->required();
+
+            $formItem = $form->add("Password");
+            $formItem->password("password")->required();
+            $formItem->setAttribute(":rules", json_encode($vx->getPasswordPolicy()));
         }
 
         $form->add("Phone")->input("phone");
