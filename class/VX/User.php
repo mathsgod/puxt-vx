@@ -36,6 +36,12 @@ class User extends Model implements RoleInterface
     public $status;
 
 
+    #[Model\Field]
+    function name()
+    {
+        return $this->first_name . " " . $this->last_name;
+    }
+
     static function Load($id): static
     {
         $user = parent::Load($id);

@@ -1,6 +1,7 @@
 <?php
 
 use VX\PublicKeyCredentialSourceRepository;
+use VX\User;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -9,9 +10,11 @@ return new class
 {
     public function post(VX $vx)
     {
-
+        $token = $vx->_get["token"];
+        $token = $vx->jwtDecode($token);
+        $user = User::Get($token->user_id);
+        
         $server = $vx->getWebAuthnServer();
-        $user = $vx->user;
         $userEntity = new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
 
 

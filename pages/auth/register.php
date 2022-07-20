@@ -3,6 +3,7 @@
 use Laminas\Diactoros\Response\EmptyResponse;
 use Ramsey\Uuid\Uuid;
 use VX\PublicKeyCredentialSourceRepository;
+use VX\User;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
 
@@ -10,7 +11,9 @@ return new class
 {
     function post(VX $vx)
     {
-        $user = $vx->user;
+        $token = $vx->_get["token"];
+        $token = $vx->jwtDecode($token);
+        $user = User::Get($token->user_id);
 
         $server = $vx->getWebAuthnServer();
 

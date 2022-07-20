@@ -11,6 +11,11 @@ class UserGroup extends Model implements RoleInterface
     #[Assert\NotBlank]
     public $name;
 
+    #[Model\Field]
+    public function getName(){
+        return $this->name;
+    }
+
     public function getRoleId()
     {
         return "ug-" . $this->usergroup_id;

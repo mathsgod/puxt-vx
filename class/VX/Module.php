@@ -127,8 +127,12 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
                         $q->where->like($field, "%$value%");
                     }
 
-                    if($operator == '$in'){
+                    if ($operator == '$in') {
                         $q->where->in($field, $value);
+                    }
+
+                    if ($operator == '$between') {
+                        $q->where->between($field, $value[0], $value[1]);
                     }
                 }
             }

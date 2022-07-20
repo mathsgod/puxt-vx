@@ -7,7 +7,10 @@ use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
+use Reflection;
 use ReflectionClass;
+use ReflectionMethod;
+use ReflectionObject;
 
 class Model extends DBModel implements ResourceInterface, IModel
 {
@@ -142,6 +145,21 @@ class Model extends DBModel implements ResourceInterface, IModel
             }
         }
 
+
+        $relection_object = new ReflectionObject($this);
+
+        foreach ($relection_object->getMethods() as $method) {
+            foreach ($method->getAttributes() as $attribute) {
+                if ($attribute->getName() == \VX\Model\Field::class) {
+
+                    if (in_array($method->getName(), $fields)) {
+                        $data[$method->getName()] = $this->{$method->getName()}();
+                    }
+                }
+            }
+        }
+
+
         if (in_array("__canRead", $fields)) {
             $data["__canRead"] = $this->canReadBy(self::$_vx->user);
         }
@@ -153,6 +171,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         if (in_array("__canDelete", $fields)) {
             $data["__canDelete"] = $this->canDeleteBy(self::$_vx->user);
         }
+
 
 
         return $data;

@@ -406,16 +406,15 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     function jwtDecode(string $jwt)
     {
-        $data =  JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-        return json_decode(json_encode($data), true);
+        return JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
     }
 
-    public function generateAccessToken(User $user)
+    public function generateAccessToken(User $user, int $time = 3600)
     {
         return JWT::encode([
             "type" => "access_token",
             "iat" => time(),
-            "exp" => time() + 3600,
+            "exp" => time() + $time,
             "user_id" => $user->user_id
         ], $this->config["VX"]["jwt"]["secret"]);
     }
@@ -683,6 +682,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         return new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
     }
+
 
     public function resetPassword(string $password, string $token)
     {

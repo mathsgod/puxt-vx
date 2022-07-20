@@ -2,6 +2,7 @@
 
 use Firebase\JWT\JWT;
 use Laminas\Diactoros\Response\EmptyResponse;
+use VX\User;
 
 /**
  * Created by: Raymond Chong
@@ -16,9 +17,17 @@ return new class
 
     function post(VX $vx)
     {
-
         $data = $vx->_post;
-        $user = $vx->login($data["username"], $data["password"], $data["code"]);
+        if ($token = $data["token"]) {
+            $token = $vx->jwtDecode($token);
+            $user = User::Get($token->user_id);
+        } else {
+            $user = $vx->login($data["username"], $data["password"], $data["code"]);
+        }
+
+
+
+
 
         $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
         $refresh_token_string = "refresh_token=" . $vx->generateRefreshToken($user) . "; path=" . $vx->base_path . "auth/renew-token; SameSite=Strict; HttpOnly";

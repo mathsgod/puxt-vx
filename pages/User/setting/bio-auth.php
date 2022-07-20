@@ -5,22 +5,27 @@
  * Created by: Raymond Chong
  * Date: 2021-08-02 
  */
+
+use Laminas\Diactoros\Response\EmptyResponse;
+
 return new class
 {
 
-    function removeCredential(VX $vx)
+    function delete(VX $vx)
     {
 
         $user = $vx->user;
-        $uuid = $vx->_post["uuid"];
+        $uuid = $vx->_get["uuid"];
         $user->credential = collect($user->credential ?? [])->filter(function ($item) use ($uuid) {
             return $item["uuid"] != $uuid;
         })->toArray();
 
         $user->save();
+
+        return new EmptyResponse();
     }
 
-    function getCredential(VX $vx)
+    function get(VX $vx)
     {
         return collect($vx->user->credential ?? [])->map(function ($item) {
             return [
