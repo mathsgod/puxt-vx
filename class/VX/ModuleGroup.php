@@ -2,14 +2,14 @@
 
 namespace VX;
 
-class ModuleGroup implements TranslatorAwareInterface, MenuItemsInterface
+class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
 {
     use TranslatorAwareTrait;
 
     public $name;
 
     /**
-     * @var MenuItemsInterface[]
+     * @var MenuItemInterface[]
      */
     public $child = [];
 
@@ -17,14 +17,44 @@ class ModuleGroup implements TranslatorAwareInterface, MenuItemsInterface
 
     public $icon = "far fa-circle";
 
+
+    private static $Instances = [];
+
+    /**
+     * Create a new ModuleGroup if not exists.
+     */
+    public static function Get(string $name): self
+    {
+        if (!isset(self::$Instances[$name])) {
+            self::$Instances[$name] = new self($name);
+        }
+        return self::$Instances[$name];
+    }
+
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
+
     public function setIcon(string $icon)
     {
         $this->icon = $icon;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->name;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    public function getLink(): ?string
+    {
+        return null;
     }
 
     public function add(Module $module)

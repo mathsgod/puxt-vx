@@ -6,7 +6,7 @@ menu:
   Setting:
     link: /System/setting
     label: Setting
-    icon: fa fa-sliders-h
+    icon: tune
   Package:
     link: /System/package
     label: Package
@@ -20,7 +20,6 @@ menu:
     label: Mail test
     icon: far fa-envelope
   Database:
-    link: /System/database
     label: Database
     icon: fa fa-database
     menu: 

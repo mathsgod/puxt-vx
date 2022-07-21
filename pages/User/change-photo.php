@@ -25,7 +25,5 @@ return new class
         $user = $vx->user;
         $user->photo = (string)$image;
         $user->save();
-
-        http_response_code(204);
     }
 };

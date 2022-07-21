@@ -12,30 +12,31 @@ class Menu implements TranslatorAwareInterface
      * @var MenuItemInterface[]
      */
     public $items = [];
+
     public $groups = [];
     public $icons = [];
     public $acl;
+
     public function addModule(Module $module)
     {
         $module->setAcl($this->acl);
-        if ($module->group) {
-            if (!$mg = $this->groups[$module->group]) {
-                $mg = new ModuleGroup($module->group);
-
-                if ($icon = $this->icons[$module->group]) {
-                    $mg->setIcon($icon);
-                }
-
-                $mg->setTranslator($this->translator);
-                $this->groups[$module->group] = $mg;
-                $this->items[] = $mg;
+        if ($group = $module->getModuleGroup()) {
+            $group->setTranslator($this->translator);
+            if ($icon = $this->icons[$module->group]) {
+                $group->setIcon($icon);
             }
-            $mg->add($module);
+
+            if (!in_array($group, $this->items)) {
+                $this->items[] = $group;
+            }
+
+            $group->add($module);
         } else {
             $module->setTranslator($this->translator);
             $this->items[] = $module;
         }
     }
+
 
     public function setACL(AclInterface $acl)
     {;
@@ -46,7 +47,7 @@ class Menu implements TranslatorAwareInterface
     {
         $this->icons = $icons;
     }
-
+    
     public function getMenuByUser(User $user)
     {
         $data = [];
@@ -57,8 +58,10 @@ class Menu implements TranslatorAwareInterface
                 $data[] = $menu;
             }
         }
+
         return $data;
     }
+
 
     private function getOrderedItems()
     {

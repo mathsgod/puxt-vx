@@ -7,3 +7,6 @@ menu:
   All:  
     link: /ACL/all
     label: All
+  Menu:
+    link: /ACL/menu
+    label: Menu

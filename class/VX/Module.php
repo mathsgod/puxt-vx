@@ -2,7 +2,6 @@
 
 namespace VX;
 
-use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Permissions\Acl\AclInterface;
@@ -18,7 +17,7 @@ use Symfony\Component\Yaml\Yaml;
 use VX;
 use VX\Model as VXModel;
 
-class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsInterface
+class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInterface
 {
     use TranslatorAwareTrait;
 
@@ -29,7 +28,9 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
     public $sequence = PHP_INT_MAX;
     public $hide = false;
 
+
     public $menu = [];
+
     /**
      * @var AclInterface $acl
      */
@@ -104,6 +105,64 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
 
 
         $this->files = array_values($this->files);
+    }
+
+
+    public function isHide(): bool
+    {
+        return $this->hide;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->name;
+    }
+
+    public function getLink(): ?string
+    {
+        return null;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    public function getModuleGroup()
+    {
+        if (isset($this->group)) {
+            return ModuleGroup::Get($this->group);
+        }
+        return null;
+    }
+
+
+    /**
+     * @return ModuleMenu[]
+     */
+    public function getMenus(): array
+    {
+        $items = [];
+
+        if ($this->show_create) {
+            $items[] = new ModuleMenu([
+                "label" => "Add",
+                "icon" => "add",
+                "link" => "/" . $this->name . "/add"
+            ]);
+        }
+
+        $items[] = new ModuleMenu([
+            "label" => "List",
+            "icon" => "list",
+            "link" => "/" . $this->name
+        ]);
+
+        foreach ($this->menu as $m) {
+            $items[] = new ModuleMenu($m);
+        }
+
+        return $items;
     }
 
     private function getQueryData(string $class, array $query, ServerRequestInterface $request)
@@ -426,7 +485,16 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
 
         $data["link"] = "#";
         $data["name"] = $this->name;
+        $data["submenu"] = $submenu;
 
+        if (count($submenu) == 1) {
+
+            if ($submenu[0]["link"] == ("/" . $this->name)) {
+                $data["link"] = "/" . $this->name;
+                $data["submenu"] = null;
+            }
+        }
+        /* 
         if (count($submenu)) {
             $data["submenu"] = $submenu;
             array_unshift($data["submenu"], [
@@ -436,7 +504,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
             ]);
         } else {
             $data["link"] = "/" . $this->name;
-        }
+        } */
 
 
 
@@ -448,23 +516,12 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
 
         $links = [];
 
-
-        if ($this->show_create) {
-            //if ($this->acl->isAllowed($user, $this->name . "/add")) {
-            $link = [];
-            $link["label"] = $this->translator->trans("Add");
-            $link["icon"] = "add";
-            $link["link"] = "/" . $this->name . "/add";
-            $links[] = $link;
-            //}
-        }
-        foreach ($this->menu as $m) {
-            if (!$this->acl->isAllowed($user, substr($m["link"], 1))) {
+        foreach ($this->getMenus() as $m) {
+            if ($m->link && !$this->acl->isAllowed($user, substr($m->link, 1))) {
                 continue;
             }
-            $mm = new ModuleMenu($m);
-            $mm->setTranslator($this->translator);
-            $links[] = $mm->getMenuLinkByUser($user);
+            $m->setTranslator($this->translator);
+            $links[] = $m->getMenuLinkByUser($user);
         }
         return $links;
     }

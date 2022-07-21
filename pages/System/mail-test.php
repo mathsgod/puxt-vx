@@ -5,6 +5,9 @@
  * Created by: Raymond Chong
  * Date: 2021-07-27 
  */
+
+use Laminas\Diactoros\Response\EmptyResponse;
+
 return new class
 {
     function post(VX $vx)
@@ -15,6 +18,8 @@ return new class
         $mail->addAddress($vx->_post["email"]);
         $mail->msgHTML($vx->_post["content"]);
         $mail->send();
+
+        return new EmptyResponse();
     }
 
     function get(VX $vx)

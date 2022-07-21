@@ -64,7 +64,6 @@ return new class
             $menu->setTranslator($vx->getTranslator());
             $menu->setGroupIcon($group_icons);
 
-
             foreach ($modules as $m) {
                 if ($m->name == "FileManager") {
                     if (!$vx->config["VX"]["file_manager_show"]) {

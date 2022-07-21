@@ -160,6 +160,16 @@ class Model extends DBModel implements ResourceInterface, IModel
         }
 
 
+        if (in_array("__createdBy", $fields)) {
+            $user = $this->createdBy();
+            if ($user) {
+                $data["__createdBy"] = $user->getName();
+            } else {
+                $data["__createdBy"] = null;
+            }
+        }
+
+
         if (in_array("__canRead", $fields)) {
             $data["__canRead"] = $this->canReadBy(self::$_vx->user);
         }

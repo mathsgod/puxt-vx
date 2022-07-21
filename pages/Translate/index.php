@@ -4,6 +4,7 @@
  * Created by: Raymond Chong
  * Date: 2021-07-22 
  */
+
 use VX\Translate;
 
 return new class
@@ -26,15 +27,6 @@ return new class
         }
     }
 
-    function getData(VX $vx)
-    {
-        $modules = [];
-        foreach ($vx->getModules() as $module) {
-            $modules[] = ["name" => $module->name];
-        }
-        return ["modules" => $modules, "languages" => array_keys($vx->config["VX"]["language"])];
-    }
-
     function getTranslate(VX $vx)
     {
         $data = [];
@@ -53,5 +45,14 @@ return new class
         }
 
         return array_values($data);
+    }
+
+    function get(VX $vx)
+    {
+        $modules = [];
+        foreach ($vx->getModules() as $module) {
+            $modules[] = ["name" => $module->name];
+        }
+        return ["modules" => $modules, "languages" => array_keys($vx->config["VX"]["language"])];
     }
 };

@@ -136,6 +136,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->eventDispatcher()->subscribeListenersFrom(new ListenserSubscriber($this));
     }
 
+
     private function loadModules()
     {
         //system module
@@ -526,10 +527,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $acl->allow(null, "index");
         $acl->allow(null, "cancel-view-as");
         $acl->allow(null, "error");
-        /*         $acl->allow(null, "auth/login");
-        $acl->allow(null, "alogout");
-        $acl->allow(null, "renew-token");
- */
 
 
         $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "/class");
@@ -558,6 +555,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
                 }
             }
         }
+
 
 
         foreach (VXACL::Query() as $a) {
@@ -618,8 +616,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
                     $acl->addResource($file, $module);
                 }
             }
-        }
 
+
+            foreach ($module->getMenus() as $menu) {
+                if (!$acl->hasResource($menu)) {
+                    $acl->addResource($menu, $module);
+                }
+            }
+        }
 
         $this->acl = $acl;
         return $this->acl;

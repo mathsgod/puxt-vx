@@ -2,9 +2,11 @@
 
 namespace VX;
 
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use VX\UI\EL\MenuItem;
 
-class ModuleMenu implements TranslatorAwareInterface
+class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
 {
 
     public $link;
@@ -14,7 +16,7 @@ class ModuleMenu implements TranslatorAwareInterface
     public function __construct($data)
     {
         $this->label = $data["label"];
-        $this->icon = $data["icon"];
+        $this->icon = $data["icon"] ?? "link";
         $this->link = $data["link"];
 
         foreach ($data["menu"] as $m) {
@@ -24,6 +26,20 @@ class ModuleMenu implements TranslatorAwareInterface
     }
 
     protected $translator = null;
+
+    public function getResourceId()
+    {
+        return substr($this->link, 1);
+    }
+
+    public function getMenuItems()
+    {
+        $items = [];
+        foreach ($this->menu as $m) {
+            $items[] = new MenuItem($m);
+        }
+        return $items;
+    }
 
     public function setTranslator(TranslatorInterface $translator = null)
     {
