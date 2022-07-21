@@ -1,5 +1,5 @@
 sequence: 15
 class: VX\User
-icon: fa fa-user
+icon: person
 group: System
 show_create: true

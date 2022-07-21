@@ -1,6 +1,6 @@
 group: System
 sequence: 50
-icon: fa fa-desktop
+icon: computer
 
 menu:
   Setting:

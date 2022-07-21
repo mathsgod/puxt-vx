@@ -1,5 +1,5 @@
 sequence: 20
 group: System
 class: VX\UserGroup
-icon: fa fa-users
+icon: group
 show_create: true

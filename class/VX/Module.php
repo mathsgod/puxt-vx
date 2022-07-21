@@ -431,7 +431,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
             $data["submenu"] = $submenu;
             array_unshift($data["submenu"], [
                 "label" => $this->translator->trans("List"),
-                "icon" => "fa fa-list",
+                "icon" => "list",
                 "link" => "/" . $this->name
             ]);
         } else {
@@ -453,7 +453,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemsIn
             //if ($this->acl->isAllowed($user, $this->name . "/add")) {
             $link = [];
             $link["label"] = $this->translator->trans("Add");
-            $link["icon"] = "fa fa-plus";
+            $link["icon"] = "add";
             $link["link"] = "/" . $this->name . "/add";
             $links[] = $link;
             //}

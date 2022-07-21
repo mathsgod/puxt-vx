@@ -1,7 +1,7 @@
 sequence: 30
 class: VX\ACL
 group: System
-icon: fa fa-lock fa-fw
+icon: lock
 
 menu:
   All:  

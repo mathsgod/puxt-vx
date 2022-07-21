@@ -1,4 +1,4 @@
 class: VX\Config
-icon: fa fa-cog
+icon: settings
 group: System
 show_create: true
