@@ -69,13 +69,13 @@ return function ($options) {
     $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
 
         //B5 Broken Access Control 
-        if (!$vx->logined()) {
+        if (!$vx->logined) {
             return new EmptyResponse(401);
         }
 
         $glide = League\Glide\ServerFactory::create([
 
-            "source" => $vx->getFileSystem(),
+            "source" => $vx->getFileSystem($args["id"]),
             "cache" => dirname($vx->root) . DIRECTORY_SEPARATOR . "cache",
             "response" => new PsrResponseFactory(new Response(), function ($stream) {
                 return new Stream($stream);
