@@ -47,11 +47,11 @@ return function ($options) {
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
 
         //B5 Broken Access Control 
-        if (!$vx->logined()) {
+        if (!$vx->logined) {
             return new EmptyResponse(401);
         }
 
-        $fm = $vx->getFileSystem();
+        $fm = $vx->getFileSystem($args["id"]);
         $file = $args["file"];
         $file = urldecode($file);
 
