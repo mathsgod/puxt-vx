@@ -8,7 +8,7 @@ return new class
 {
     function get(VX $vx)
     {
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
 
         $file = $fs->read($vx->_get["path"]);
         $mime = $fs->mimeType($vx->_get["path"]);

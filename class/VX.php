@@ -109,7 +109,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         }
 
         $this->res = new Response;
-        $this->ui = new UI($this);
+//        $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
@@ -286,7 +286,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $translator->addResource("array", $a, $locale);
 
         $this->translator = $translator;
-        $this->ui->setTranslator($this->translator);
+        //$this->ui->setTranslator($this->translator);
     }
 
     private function processConfig()

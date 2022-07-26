@@ -1,4 +1,3 @@
-{{v|raw}}
 <?php
 
 /**
@@ -20,22 +19,5 @@ return new class
         $mail->send();
 
         return new EmptyResponse();
-    }
-
-    function get(VX $vx)
-    {
-
-
-        $v = $vx->ui->createForm([
-            "from" => "no-reply@" . $_SERVER["SERVER_NAME"],
-            "subject" => "Testing mail subject",
-            "content" => "This is testing content."
-        ]);
-        $v->add("Subject")->input("subject")->required();
-        $v->add("From")->email("from")->required();
-        $v->add("Email")->email("email")->required();
-        $v->add("Content")->textarea("content");
-
-        $this->v = $v;
     }
 };
