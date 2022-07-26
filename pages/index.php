@@ -56,7 +56,10 @@ return new class
                 $group_icons[$name] = $group["icon"];
             }
 
+
             $modules = $vx->getModules();
+
+
 
 
             $menu = new VX\Menu();
@@ -70,13 +73,10 @@ return new class
                         continue;
                     }
                 }
-
                 $menu->addModule($m);
             }
 
             $data["menus"] = $menu->getMenuByUser($vx->user);
-
-
 
             //language 
             $data["language"] = $vx->config["VX"]["language"];
@@ -103,10 +103,10 @@ return new class
 
             if (!$vx->view_as) {
                 if ($vx->user->isAdmin()) {
-                    $dropdown[] = ["label" => "View as", "icon" => "fa fa-eye", "link" => "/System/view-as"];
+                    $dropdown[] = ["label" => "View as", "icon" => "eye", "link" => "/System/view-as"];
                 }
             } else {
-                $dropdown[] = ["label" => "Cancel view as", "icon" => "fa fa-eye", "link" => "/cancel-view-as"];
+                $dropdown[] = ["label" => "Cancel view as", "icon" => "eye", "link" => "/cancel-view-as"];
             }
 
             $data["navbar"]["dropdown"] = $dropdown;
@@ -144,11 +144,7 @@ return new class
         return $data;
     }
 
-    function forgotPassword(VX $vx)
-    {
-        $vx->forgotPassword($vx->_post["username"], $vx->_post["email"]);
-        return ["data" => true];
-    }
+
 
     function resetPassword(VX $vx)
     {

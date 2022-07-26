@@ -77,6 +77,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     public $locale;
     public $db;
 
+    /**
+     * @var Module[]
+     */
     private $modules = [];
     private $puxt;
 
@@ -153,7 +156,17 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $modules = array_values(array_unique($modules));
 
         foreach ($modules as $module) {
+
             $this->modules[] = new Module($this, $module);
+        }
+    }
+
+    function getPayload(string $token)
+    {
+        try {
+            return JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        } catch (Exception $e) {
+            throw new UnauthorizedException();
         }
     }
 
@@ -302,13 +315,25 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         if ($_COOKIE["access_token"] && !$_COOKIE["refresh_token"]) {
             $token = $_COOKIE["access_token"];
 
-            if ($user_id = $this->getUserIdByToken($token)) {
-                $this->user_id = $user_id;
+            $payload = $this->getPayload($token);
+
+            if ($payload->user_id) {
+                $this->user_id = $payload->user_id;
+
+                if ($payload->view_as) {
+                    $this->user_id = $payload->view_as;
+
+                    $this->view_as = $payload->view_as;
+                }
+
+
                 $this->logined = true;
             }
         }
 
         $this->user = User::Get($this->user_id);
+
+
 
         if ($view_as = $request->getHeaderLine("vx-view-as")) {
             if ($this->user->isAdmin()) {
@@ -324,7 +349,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function getModule(string $name): ?Module
     {
-        foreach ($this->modules as $module) {
+        foreach ($this->getModules() as $module) {
             if ($module->name == $name) {
                 return $module;
             }
@@ -410,14 +435,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
     }
 
-    public function generateAccessToken(User $user, int $time = 3600)
+    public function generateAccessToken(User $user,  int $view_as = null)
     {
-        return JWT::encode([
+        $payload = [
             "type" => "access_token",
             "iat" => time(),
-            "exp" => time() + $time,
+            "exp" => time() + 3600,
             "user_id" => $user->user_id
-        ], $this->config["VX"]["jwt"]["secret"]);
+        ];
+        if ($view_as) {
+            $payload["view_as"] = $view_as;
+        }
+
+
+        return JWT::encode($payload, $this->config["VX"]["jwt"]["secret"]);
     }
 
     public function generateRefreshToken(User $user)
@@ -425,7 +456,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return JWT::encode([
             "type" => "refresh_token",
             "iat" => time(),
-            "exp" => time() + 3600 * 24, //1 day
+            "exp" => time() + $time, //1 day
             "user_id" => $user->user_id
         ], $this->config["VX"]["jwt"]["secret"]);
     }
@@ -519,13 +550,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $acl->allow(UserGroup::GetByNameOrCode("Administrators"));
 
         $acl->addResource("index");
-        $acl->addResource("login");
-        $acl->addResource("logout");
-        $acl->addResource("cancel-view-as");
         $acl->addResource("error");
-        $acl->addResource("renew-token");
         $acl->allow(null, "index");
-        $acl->allow(null, "cancel-view-as");
         $acl->allow(null, "error");
 
 
@@ -556,8 +582,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
 
-
-
         foreach (VXACL::Query() as $a) {
             if (!$a->module) continue;
 
@@ -584,23 +608,23 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
                 continue;
             }
 
-            if (!$acl->hasResource($a->module . "/" . $a->path)) {
-                $acl->addResource($a->module . "/" . $a->path, $a->module);
+            if (!$acl->hasResource($a->path())) {
+                $acl->addResource($a->path(), $a->module);
             }
 
             if ($a->usergroup_id) {
                 if ($a->value == "allow") {
-                    $acl->allow("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+                    $acl->allow("ug-{$a->usergroup_id}", $a->path());
                 } elseif ($a->value == "deny") {
-                    $acl->deny("ug-{$a->usergroup_id}", $a->module . "/" . $a->path);
+                    $acl->deny("ug-{$a->usergroup_id}", $a->path());
                 }
             }
 
             if ($a->user_id) {
                 if ($a->value == "allow") {
-                    $acl->allow("u-{$a->user_id}", $a->module . "/" . $a->path);
+                    $acl->allow("u-{$a->user_id}", $a->path());
                 } elseif ($a->value == "deny") {
-                    $acl->deny("u-{$a->user_id}", $a->module . "/" . $a->path);
+                    $acl->deny("u-{$a->user_id}", $a->path());
                 }
             }
         }
@@ -936,6 +960,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
      */
     public function getModules()
     {
+
+        if ($this->acl) {
+            foreach ($this->modules as $module) {
+                $module->setAcl($this->acl);
+            }
+        }
         return $this->modules;
     }
 

@@ -85,7 +85,7 @@ class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
         }
 
 
-        $data["submenu"] = $submenu;
+        $data["menus"] = $submenu;
 
         return $data;
     }

@@ -149,17 +149,17 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
                 "label" => "Add",
                 "icon" => "add",
                 "link" => "/" . $this->name . "/add"
-            ]);
+            ], $this->acl);
         }
 
         $items[] = new ModuleMenu([
             "label" => "List",
             "icon" => "list",
             "link" => "/" . $this->name
-        ]);
+        ], $this->acl);
 
         foreach ($this->menu as $m) {
-            $items[] = new ModuleMenu($m);
+            $items[] = new ModuleMenu($m, $this->acl);
         }
 
         return $items;
@@ -236,16 +236,17 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
 
                             $p["filters"] = $p["filters"] ?? [];
 
-                            if ($o->$target_key) { // many to one
-
+                            if (in_array($target_key, $o->__fields())) { // many to one
                                 $p["filters"][$target_key]['$eq'] = $o->$target_key;
                                 $d = $this->getQueryData($module->class, $p, $request);
                                 $d["data"] = $d["data"][0];
                             } else { //one to many
 
+
                                 $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
                                 $d = $this->getQueryData($module->class, $p, $request);
                             }
+
 
 
                             $obj[$target_module] = $d["data"];
@@ -476,55 +477,44 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
         if ($this->hide) {
             return [];
         }
+
+        $menus = [];
+
+
+        foreach ($this->getMenus() as $menu) {
+            if (!$this->acl->isAllowed($user, $menu)) {
+                continue;
+            }
+
+
+            $menus[] = $menu->getMenuLinkByUser($user);
+        }
+
+
+
+        if (count($menus) == 0) {
+            return [];
+        }
+
         $data = [];
         $data["label"] = $this->translator->trans($this->name);
         $data["icon"] = $this->icon;
 
-
-        $submenu = $this->getMenuLinkByUser($user);
-
         $data["link"] = "#";
         $data["name"] = $this->name;
-        $data["submenu"] = $submenu;
+        $data["menus"] = $menus;
 
-        if (count($submenu) == 1) {
+        if (count($menus) == 1) {
 
-            if ($submenu[0]["link"] == ("/" . $this->name)) {
+            if ($menus[0]["link"] == ("/" . $this->name)) {
                 $data["link"] = "/" . $this->name;
-                $data["submenu"] = null;
+                $data["menus"] = null;
             }
         }
-        /* 
-        if (count($submenu)) {
-            $data["submenu"] = $submenu;
-            array_unshift($data["submenu"], [
-                "label" => $this->translator->trans("List"),
-                "icon" => "list",
-                "link" => "/" . $this->name
-            ]);
-        } else {
-            $data["link"] = "/" . $this->name;
-        } */
-
-
 
         return $data;
     }
 
-    public function getMenuLinkByUser(User $user): array
-    {
-
-        $links = [];
-
-        foreach ($this->getMenus() as $m) {
-            if ($m->link && !$this->acl->isAllowed($user, substr($m->link, 1))) {
-                continue;
-            }
-            $m->setTranslator($this->translator);
-            $links[] = $m->getMenuLinkByUser($user);
-        }
-        return $links;
-    }
 
     function __debugInfo()
     {

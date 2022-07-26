@@ -2,6 +2,7 @@
 
 namespace VX;
 
+use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use VX\UI\EL\MenuItem;
@@ -12,15 +13,22 @@ class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
     public $link;
     public $label;
     public $icon;
+
+    /**
+     * @var ModuleMenu[]
+     */
     public $menu = [];
-    public function __construct($data)
+    public $acl;
+    public function __construct($data, ?AclInterface $acl)
     {
         $this->label = $data["label"];
         $this->icon = $data["icon"] ?? "link";
         $this->link = $data["link"];
+        $this->acl = $acl;
+
 
         foreach ($data["menu"] as $m) {
-            $mm = new ModuleMenu($m);
+            $mm = new ModuleMenu($m, $acl);
             $this->menu[] = $mm;
         }
     }
@@ -60,14 +68,22 @@ class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
         $data["link"] = "#";
 
         if ($this->menu) {
-            $data["submenu"] = [];
+            $data["menus"] = [];
             foreach ($this->menu as $m) {
-                $data["submenu"][] = $m->getMenuLinkByUser($user);
+                if (!$this->acl->isAllowed($user, $m)) {
+                    continue;
+                }
+
+                $data["menus"][] = $m->getMenuLinkByUser($user);
             }
         } else {
             $data["link"] = $this->link;
         }
 
         return $data;
+    }
+
+    public function isAllow($user)
+    {
     }
 }

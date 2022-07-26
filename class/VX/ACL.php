@@ -18,12 +18,12 @@ class ACL extends Model
         return self::SPECIAL_USER[$this->special_user];
     }
 
-    public function path()
+    public function path(): string
     {
-        if ($this->path == "") {
-            return $this->module;
-        } else {
+        if ($this->path) {
             return $this->module . "/" . $this->path;
+        } else {
+            return $this->module;
         }
     }
 
