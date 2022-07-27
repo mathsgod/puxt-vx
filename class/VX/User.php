@@ -7,6 +7,7 @@ use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Yaml\Yaml;
+use TheCodingMachine\GraphQLite\Annotations\Field;
 
 /**
  * @property int $user_id
@@ -54,6 +55,12 @@ class User extends Model implements RoleInterface
     function getName(): string
     {
         return $this->first_name . " " . $this->last_name;
+    }
+
+    #[Field]
+    function initial()
+    {
+        return $this->getInitial();
     }
 
     function getInitial(): string

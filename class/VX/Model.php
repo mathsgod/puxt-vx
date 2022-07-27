@@ -2,15 +2,11 @@
 
 namespace VX;
 
-use Exception;
-use Laminas\EventManager\EventManagerAwareInterface;
-use Laminas\EventManager\EventManagerInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
-use Reflection;
 use ReflectionClass;
-use ReflectionMethod;
 use ReflectionObject;
+use TheCodingMachine\GraphQLite\Annotations\Field;
 
 class Model extends DBModel implements ResourceInterface, IModel
 {
@@ -150,7 +146,7 @@ class Model extends DBModel implements ResourceInterface, IModel
 
         foreach ($relection_object->getMethods() as $method) {
             foreach ($method->getAttributes() as $attribute) {
-                if ($attribute->getName() == \VX\Model\Field::class) {
+                if ($attribute->getName() == Field::class) {
 
                     if (in_array($method->getName(), $fields)) {
                         $data[$method->getName()] = $this->{$method->getName()}();
