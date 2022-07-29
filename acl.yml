@@ -13,6 +13,7 @@ path:
     avatar: [Users,Power Users]
     profile: [Users,Power Users]
     change-photo: [Users,Power Users]
+    change-password: [Users,Power Users]
     myfav: [Users,Power Users]
     2step: [Users,Power Users]
     2step_whitelist: [Users,Power Users]
