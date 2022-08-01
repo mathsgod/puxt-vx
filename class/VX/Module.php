@@ -193,18 +193,25 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         });
 
         $route->get($this->name, function (ServerRequestInterface $request, array $args) {
-            if (strstr($request->getHeaderLine("Accept"), "application/json")) {
+            if (strstr($request->getHeaderLine("Accept"), "application/json") || $request->getHeaderLine("Accept") == "*/*") {
+
                 $query = $request->getQueryParams();
 
                 if (!$query["fields"]) {
                     throw new BadRequestException();
                 }
 
-                $fields = explode(",", $query["fields"]);
+                if (is_string($query["fields"])) {
+                    $fields = explode(",", $query["fields"]);
+                } else {
+                    $fields = $query["fields"];
+                }
+
+
                 $class = $this->class;
                 $q = $class::Query();
 
-                $hydrator = new ObjectPropertyHydrator;
+                $hydrator = new ModelPropertyHydrator;
                 $hydrator->addFilter("fields", function ($property) use ($fields) {
                     return in_array($property, $fields);
                 });
@@ -217,6 +224,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                         }
                     }
                 }
+
 
                 return new JsonResponse($data);
             }

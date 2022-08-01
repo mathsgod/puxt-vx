@@ -87,9 +87,11 @@ return new class
         if (!$user->canChangePasswordBy($vx->user)) {
             throw new ForbiddenException("You are not allowed to change this user's password");
         }
-
+        
         $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
         $user->save();
+
+        
     }
 
     function getPasswordPolicy(VX $vx)
