@@ -13,9 +13,9 @@ return new class
     function get(VX $vx)
     {
 
-        $hydrator = new ModelPropertyHydrator();
+      /*   $hydrator = new ModelPropertyHydrator();
 
         outp($hydrator->extract(User::Get(1)));
-        die();
+        die(); */
     }
 };
