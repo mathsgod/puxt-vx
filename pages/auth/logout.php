@@ -16,15 +16,9 @@ return new class
 
     function post(VX $vx)
     {
-        if ($access_token = $vx->getAccessToken()) {
-            $vx->invalidateJWT($access_token);
-        }
-
-        if ($refresh_token = $vx->getRefreshToken()) {
-            $vx->invalidateJWT($refresh_token);
-        }
-
-
+        $vx->invalidateJWT($vx->getAccessToken());
+        $vx->invalidateJWT($vx->getRefreshToken());
+ 
         $resp = new EmptyResponse(200);
 
         $access_token_string = "access_token=; path=" . $vx->base_path . "; httponly";
