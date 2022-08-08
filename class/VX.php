@@ -1,6 +1,6 @@
 <?php
 
-use FG\ASN1\Universal\Boolean;
+
 use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Db\Adapter\AdapterAwareInterface;
@@ -13,7 +13,6 @@ use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-use League\Route\Http\Exception\UnauthorizedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -23,6 +22,7 @@ use Psr\Log\LoggerAwareTrait;
 use PUXT\App;
 use PUXT\Context;
 use R\DB\Schema;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
@@ -36,6 +36,7 @@ use VX\ACL as VXACL;
 use VX\AuthLock;
 use VX\Config;
 use VX\IModel;
+use VX\JWTBlacklist;
 use VX\ListenerSubscriber;
 use VX\Mailer;
 use VX\Model;
@@ -226,6 +227,46 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $token->user_id;
     }
 
+
+    function decodeJWT(string $token)
+    {
+        try {
+            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        } catch (Exception $e) {
+            return null;
+        }
+        return $token;
+    }
+
+    function getAccessToken(): string
+    {
+        if ($access_token = $_COOKIE["access_token"]) {
+
+            if ($jwt = $this->decodeJWT($access_token)) {
+                //check jti is valid
+                if (JWTBlacklist::InList($jwt->jti)) {
+                    return "";
+                }
+                return $access_token;
+            }
+        }
+        return "";
+    }
+
+    function getRefreshToken(): string
+    {
+        if ($refresh_token = $_COOKIE["refresh_token"]) {
+            if ($jwt = $this->decodeJWT($refresh_token)) {
+                //check jti is valid
+                if (JWTBlacklist::InList($jwt->jti)) {
+                    return "";
+                }
+                return $refresh_token;
+            }
+        }
+        return "";
+    }
+
     function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->logger) {
@@ -350,9 +391,11 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->user_id = 2;
 
 
-        if ($_COOKIE["access_token"] && !$_COOKIE["refresh_token"]) {
-            $token = $_COOKIE["access_token"];
-            if ($user_id = $this->getUserIdByToken($token)) {
+        $access_token = $this->getAccessToken();
+        $refresh_token = $this->getRefreshToken();
+
+        if ($access_token && !$refresh_token) {
+            if ($user_id = $this->getUserIdByToken($access_token)) {
                 $this->user_id = $user_id;
                 $this->logined = true;
             }
@@ -448,6 +491,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     function generateToken(User $user, array $data)
     {
         return JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
             "iat" => time(),
             "exp" => time() + 3600,
             "user_id" => $user->user_id,
@@ -464,16 +508,24 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     public function generateAccessToken(User $user)
     {
         return JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + 3600,
-            "user_id" => $user->user_id
+            "user_id" => $user->user_id,
         ], $this->config["VX"]["jwt"]["secret"]);
+    }
+
+    public function invalidateJWT(string $token)
+    {
+        $jwt = $this->decodeJWT($token);
+        JWTBlacklist::Add($jwt->jti, $jwt->exp);
     }
 
     public function generateRefreshToken(User $user)
     {
         return JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
             "type" => "refresh_token",
             "iat" => time(),
             "exp" => time() + 3600 * 24, //1 day

@@ -6,6 +6,7 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use VX\JWTBlacklist;
 
 return new class
 {
@@ -15,10 +16,20 @@ return new class
 
     function post(VX $vx)
     {
+        if ($access_token = $vx->getAccessToken()) {
+            $vx->invalidateJWT($access_token);
+        }
+
+        if ($refresh_token = $vx->getRefreshToken()) {
+            $vx->invalidateJWT($refresh_token);
+        }
+
+
         $resp = new EmptyResponse(200);
 
         $access_token_string = "access_token=; path=" . $vx->base_path . "; httponly";
         $refresh_token_string = "refresh_token=; path=" . $vx->base_path . "auth/renew-token; httponly";
+
 
         if ($vx->request->getUri()->getScheme() == "https") {
             $access_token_string .= "; Secure";
