@@ -6,19 +6,15 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
-use VX\JWTBlacklist;
 
 return new class
 {
-    function get(VX $vx)
-    {
-    }
 
     function post(VX $vx)
     {
         $vx->invalidateJWT($vx->getAccessToken());
         $vx->invalidateJWT($vx->getRefreshToken());
- 
+
         $resp = new EmptyResponse(200);
 
         $access_token_string = "access_token=; path=" . $vx->base_path . "; httponly";
