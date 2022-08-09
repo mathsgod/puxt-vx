@@ -35,6 +35,7 @@ use VX\ACL as VXACL;
 use VX\AuthLock;
 use VX\Config;
 use VX\IModel;
+use VX\JWTBlacklist;
 use VX\ListenserSubscriber;
 use VX\Mailer;
 use VX\Model;
@@ -109,7 +110,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         }
 
         $this->res = new Response;
-//        $this->ui = new UI($this);
+        //        $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
@@ -228,6 +229,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->processAuthorization($request);
         $this->processTranslator();
 
+
         $this->_get = $_GET;
 
 
@@ -248,6 +250,47 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
 
         return $response;
+    }
+
+
+
+    function decodeJWT(string $token)
+    {
+        try {
+            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        } catch (Exception $e) {
+            return null;
+        }
+        return $token;
+    }
+
+    function getAccessToken(): string
+    {
+        if ($access_token = $_COOKIE["access_token"]) {
+
+            if ($jwt = $this->decodeJWT($access_token)) {
+                //check jti is valid
+                if (JWTBlacklist::InList($jwt->jti)) {
+                    return "";
+                }
+                return $access_token;
+            }
+        }
+        return "";
+    }
+
+    function getRefreshToken(): string
+    {
+        if ($refresh_token = $_COOKIE["refresh_token"]) {
+            if ($jwt = $this->decodeJWT($refresh_token)) {
+                //check jti is valid
+                if (JWTBlacklist::InList($jwt->jti)) {
+                    return "";
+                }
+                return $refresh_token;
+            }
+        }
+        return "";
     }
 
     private function processTranslator()

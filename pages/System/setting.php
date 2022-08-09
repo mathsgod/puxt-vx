@@ -30,7 +30,8 @@ return new class
         $config["authentication_lock"] = boolval($config["authentication_lock"]);
         $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
         $config["authentication_lock_time"] = intval($config["authentication_lock_time"]);
-
+        $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
+        $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
 
 
         //filter out the configs that are not in the form
@@ -61,7 +62,9 @@ return new class
                 "log-save",
                 "development",
                 "file_manager_show",
-                "allow_rememeber_me"
+                "allow_rememeber_me",
+                "file_manager_preview",
+                "jwt_blacklist"
 
             ]);
         }, ARRAY_FILTER_USE_KEY);

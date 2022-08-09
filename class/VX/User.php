@@ -37,7 +37,7 @@ class User extends Model implements RoleInterface
     public $status;
 
 
-    #[Model\Field]
+    #[Field]
     function name()
     {
         return $this->first_name . " " . $this->last_name;
