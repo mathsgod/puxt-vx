@@ -244,7 +244,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
             if ($jwt = $this->decodeJWT($access_token)) {
                 //check jti is valid
-                if (JWTBlacklist::InList($jwt->jti)) {
+                if ($this->config["VX"]["jwt_blacklist"] && JWTBlacklist::InList($jwt->jti)) {
                     return "";
                 }
                 return $access_token;
@@ -258,7 +258,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         if ($refresh_token = $_COOKIE["refresh_token"]) {
             if ($jwt = $this->decodeJWT($refresh_token)) {
                 //check jti is valid
-                if (JWTBlacklist::InList($jwt->jti)) {
+                if ($this->config["VX"]["jwt_blacklist"] && JWTBlacklist::InList($jwt->jti)) {
                     return "";
                 }
                 return $refresh_token;
@@ -518,8 +518,10 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function invalidateJWT(string $token)
     {
-        $jwt = $this->decodeJWT($token);
-        JWTBlacklist::Add($jwt->jti, $jwt->exp);
+        if ($this->config["VX"]["jwt_blacklist"]) {
+            $jwt = $this->decodeJWT($token);
+            JWTBlacklist::Add($jwt->jti, $jwt->exp);
+        }
     }
 
     public function generateRefreshToken(User $user)

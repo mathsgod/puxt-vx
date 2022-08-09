@@ -31,6 +31,7 @@ return new class
         $config["authentication_lock"] = boolval($config["authentication_lock"]);
         $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
         $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
+        $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
 
         $f = $vx->ui->createForm($config);
 
@@ -63,6 +64,7 @@ return new class
         $f->addDivider("Authentication failed lock")->setContentPosition("left");
         $f->add("Authentication lock")->switch("authentication_lock");
         $f->add("Lockout time (sec)")->inputNumber("authentication_lock_time");
+        $f->add("JWT blacklist")->switch("jwt_blacklist");
 
 
         $f->addDivider("2 step verification")->setContentPosition("left");
