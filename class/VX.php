@@ -100,9 +100,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->config["VX"]["authentication_lock"] = true;
         $this->config["VX"]["authentication_lock_time"] = 180;
 
-        $config = $this->config["VX"];
-        if ($config["table"]) {
-            foreach ($config["table"] as $k => $v) {
+        $config = $this->config->VX;
+        if ($config->table) {
+            foreach ($config->table as $k => $v) {
                 $r_class = new ReflectionClass($k);
                 $r_class->setStaticPropertyValue("_table", $v);
             }
