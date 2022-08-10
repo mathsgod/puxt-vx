@@ -12,16 +12,10 @@ use League\Route\RouteGroup;
 use League\Route\Router;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
+
 return function ($options) {
-    if ($this->puxt->request->getMethod() == "OPTIONS") {
-        http_response_code(200);
-        exit;
-    }
-
     $vx = new VX($this->puxt);
-
     $this->puxt->vx = $vx;
-
 
     $config = $this->puxt->config["VX"];
 
@@ -37,8 +31,11 @@ return function ($options) {
     $router = new Router();
     $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
     $router->middleware($vx);
-
     $router->addPatternMatcher("any", ".+");
+
+    $router->map("OPTIONS", "/", function (ServerRequestInterface $request) {
+        return new Response();
+    });
 
     $base = substr($vx->base_path, 0, -1);
 

@@ -62,6 +62,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     use EventDispatcherAwareBehavior;
     use LoggerAwareTrait;
     use AdapterAwareTrait;
+
     public $user;
     public $user_id;
     public $module;
@@ -72,7 +73,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
      */
     private $acl;
     public $ui;
-    public $config = [];
+    public $config;
     public Translator $translator;
     public $vx_root;
     public $locale;
@@ -90,20 +91,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     {
 
         $this->puxt = $puxt;
-        $this->base_path = $puxt->base_path . "api/";
+        $this->base_path = $this->config->VX->base_path ?? $puxt->base_path;
         $this->root = $puxt->root;
         $this->config = $puxt->config;
 
-        if ($this->config["VX"]["base_path"]) {
-            $this->base_path = $this->config["VX"]["base_path"];
-        }
-
-        $this->config["VX"]["authentication_lock"] = true;
-        $this->config["VX"]["authentication_lock_time"] = 180;
-
-        $config = $this->config["VX"];
-        if ($config["table"]) {
-            foreach ($config["table"] as $k => $v) {
+        $config = $this->config->VX;
+        if ($config->table) {
+            foreach ($config->table as $k => $v) {
                 $r_class = new ReflectionClass($k);
                 $r_class->setStaticPropertyValue("_table", $v);
             }
@@ -334,14 +328,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     private function processConfig()
     {
-        $parser = new Parser;
-        foreach ($parser->parseFile($this->vx_root . "/default.config.yml") as $k => $v) {
-            $this->config["VX"][$k] = $v;
-        }
 
-        foreach (Config::Query() as $config) {
-            $this->config["VX"][$config->name] = $config->value;
+        $parser = new Parser;
+        $config = $parser->parseFile($this->vx_root . "/default.config.yml");
+        foreach (Config::Query() as $c) {
+            $config[$c->name] = $c->value;
         }
+ 
+        $this->config->merge(new \Laminas\Config\Config(["VX" => $config]));
     }
 
     private function processAuthorization(ServerRequestInterface $request)

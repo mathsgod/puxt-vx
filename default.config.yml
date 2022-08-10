@@ -34,3 +34,6 @@ log-save: true
 development: true
 
 auth-lockout: true
+
+authentication_lock: true
+authentication_lock_time: 180
