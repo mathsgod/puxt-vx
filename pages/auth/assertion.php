@@ -17,9 +17,9 @@ return new class
         $server->setSecuredRelyingPartyId(["localhost"]);
 
         $username = $vx->_get["username"];
-        $user = User::Query(["username" => $username, "status" => 0])->first();
+        $user = User::Get(["username" => $username, "status" => 0]);
         if (!$user) {
-            throw new Exception("user not found");
+            throw new Exception("user not found", 400);
         }
         $userEntity = $vx->findWebauthnUserByUsername($user->username);
         $server->loadAndCheckAssertionResponse(

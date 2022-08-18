@@ -174,11 +174,6 @@ class User extends Model implements RoleInterface
             throw new Exception("User not found or incorrect password", 400);
         }
 
-        //check password
-        if (!self::PasswordVerify($password, $user->password)) {
-            throw new Exception("User not found or incorrect password", 400);
-        }
-
         if ($user->expiry_date && strtotime($user->expiry_date) < time()) {
             throw new Exception("User account expired", 400);
         }
