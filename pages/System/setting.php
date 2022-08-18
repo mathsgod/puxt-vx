@@ -32,9 +32,9 @@ return new class
         $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
 
-
+        /** @var \Laminas\Config\Config $config */
         //filter out the configs that are not in the form
-        $config = array_filter($config, function ($key) {
+        $config = array_filter($config->toArray(), function ($key) {
             return in_array($key, [
                 "company",
                 "company_logo",

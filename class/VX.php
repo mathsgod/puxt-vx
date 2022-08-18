@@ -334,7 +334,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         foreach (Config::Query() as $c) {
             $config[$c->name] = $c->value;
         }
- 
+
         $this->config->merge(new \Laminas\Config\Config(["VX" => $config]));
     }
 
@@ -921,6 +921,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
                 throw new Exception("IP locked $time seconds", 403);
             }
         }
+
 
         $ul = UserLog::Create();
         $ul->login_dt = date("Y-m-d H:i:s");

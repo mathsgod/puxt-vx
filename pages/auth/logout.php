@@ -9,15 +9,16 @@ use Laminas\Diactoros\Response\EmptyResponse;
 
 return new class
 {
-
     function get(VX $vx)
     {
         return $this->post($vx);
     }
+
+
     function post(VX $vx)
     {
-        //$vx->invalidateJWT($vx->getAccessToken());
-        //$vx->invalidateJWT($vx->getRefreshToken());
+        $vx->invalidateJWT($vx->getAccessToken());
+        $vx->invalidateJWT($vx->getRefreshToken());
 
         $resp = new EmptyResponse(200);
 
