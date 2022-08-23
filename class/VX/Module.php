@@ -10,6 +10,7 @@ use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
+use League\Route\Http\Exception\UnauthorizedException;
 use League\Route\RouteCollectionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use R\DB\Model;
@@ -41,6 +42,9 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
      */
     public $files = [];
 
+    /**
+     * @var VX $vx
+     */
     public $vx;
 
     public function __construct(VX $vx, string $name)
@@ -358,6 +362,11 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
         });
 
         $route->get($this->name, function (ServerRequestInterface $request, array $args) {
+
+            if (!$this->vx->logined) {
+                throw new  UnauthorizedException();
+            }
+
             $query = $request->getQueryParams();
             $data = $this->getQueryData($this->class, $query, $request);
             $data["meta"]["model"] = $this->name;
