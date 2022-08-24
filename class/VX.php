@@ -318,6 +318,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
 
         $request = $request
+            ->withAttribute("twig", $this->getTwig())
             ->withAttribute("context", $this)
             ->withAttribute("user", $this->user)
             ->withAttribute("acl", $this->getAcl());

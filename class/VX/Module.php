@@ -232,10 +232,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             if ($module_file = $this->getModuleFile("index")) {
                 $this->vx->module = $this;
 
-                $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($module_file->file)));
-                $request = $request->withAttribute("twig", $twig);
-
-
                 return $module_file->handle($request);
             }
 
@@ -252,9 +248,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface
                 $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that) {
                     $this->vx->module = $that;
 
-                    $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
-                    $request = $request->withAttribute("twig", $twig);
-
                     return $file->handle($request);
                 });
 
@@ -266,9 +259,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface
 
                     $this->vx->object_id = $args["id"];
                     $this->vx->module = $that;
-
-                    $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
-                    $request = $request->withAttribute("twig", $twig);
 
                     return $file->handle($request);
                 });

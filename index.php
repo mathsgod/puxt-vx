@@ -97,20 +97,12 @@ return function ($options) {
     });
 
 
-
-
     $router->map("GET", $vx->base_path . "cancel-view-as", function (ServerRequestInterface $request) use ($vx) {
-        $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
-        $request = $request->withAttribute("twig", $twig);
-
         $handler =  $vx->getRequestHandler($vx->vx_root . "/pages/cancel-view-as");
         return $handler->handle($request);
     });
 
     $router->map("GET",  $vx->base_path . "error", function (ServerRequestInterface $request) use ($vx) {
-        $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
-        $request = $request->withAttribute("twig", $twig);
-
         $handler = $vx->getRequestHandler($vx->vx_root . "/pages/error");
         return $handler->handle($request);
     });
