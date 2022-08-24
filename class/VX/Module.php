@@ -14,6 +14,7 @@ use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
+use League\Route\Http\Exception\UnauthorizedException;
 use League\Route\RouteCollectionInterface;
 use League\Route\Router;
 use Psr\Http\Message\RequestInterface;
@@ -119,6 +120,113 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         }
     }
 
+
+    private function getQueryData(string $class, array $query, ServerRequestInterface $request)
+    {
+        $meta = [];
+        $meta["primaryKey"] = $class::_key();
+
+        /** @var \R\DB\Query */
+        $q = $class::Query();
+
+        if ($filters = $query["filters"]) {
+
+            foreach ($filters as $field => $filter) {
+
+                foreach ($filter as $operator => $value) {
+                    if ($operator == '$eq') {
+                        $q->where->equalTo($field, $value);
+                    }
+
+                    if ($operator == '$contains') {
+                        $q->where->like($field, "%$value%");
+                    }
+
+                    if ($operator == '$in') {
+                        $q->where->in($field, $value);
+                    }
+
+                    if ($operator == '$between') {
+                        $q->where->between($field, $value[0], $value[1]);
+                    }
+                }
+            }
+        }
+
+        if ($sort = $query["sort"]) {
+            $order = [];
+            foreach ($sort as $s) {
+                $ss = explode(":", $s);
+
+                $order[$ss[0]] = $ss[1];
+            }
+            $q->order($order);
+        }
+
+        if ($pagination = $query["pagination"]) {
+            $paginator = $q->getPaginator();
+            $paginator->setCurrentPageNumber($pagination["page"]);
+            $paginator->setItemCountPerPage($pagination["pageSize"]);
+
+            $q = $paginator;
+
+            $meta["pagination"] = [
+                "page" => $paginator->getCurrentPageNumber(),
+                "pageSize" => $paginator->getItemCountPerPage(),
+                "total" => $paginator->getTotalItemCount()
+            ];
+        }
+
+        $data = [];
+        foreach ($q as $o) {
+            if ($o instanceof Model) {
+                if ($o->canReadBy($request->getAttribute("user"))) {
+
+                    if (is_string($query["fields"])) {
+                        $query["fields"] = explode(",", $query["fields"]);
+                    }
+
+
+                    $obj = $o->toArray($query["fields"] ?? []);
+                    if ($populate = $query["populate"]) {
+                        foreach ($populate as $target_module => $p) {
+                            $module = $this->vx->getModule($target_module);
+
+                            $target_class = $module->class;
+
+                            $target_key = $target_class::_key();
+
+                            $p["filters"] = $p["filters"] ?? [];
+
+                            if (in_array($target_key, $o->__fields())) { // many to one
+                                $p["filters"][$target_key]['$eq'] = $o->$target_key;
+                                $d = $this->getQueryData($module->class, $p, $request);
+                                $d["data"] = $d["data"][0];
+                            } else { //one to many
+
+
+                                $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
+                                $d = $this->getQueryData($module->class, $p, $request);
+                            }
+
+
+
+                            $obj[$target_module] = $d["data"];
+                        }
+                    }
+
+                    $data[] = $obj;
+                }
+            }
+        }
+
+        return  [
+            "data" => $data,
+            "meta" => $meta
+        ];
+    }
+
+
     function setupRoute(RouteCollectionInterface $route)
     {
 
@@ -178,6 +286,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface
             throw new NotFoundException();
         });
 
+
         $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
             $user = $request->getAttribute("user");
             $object = $this->getObject($args["id"]);
@@ -195,37 +304,13 @@ class Module implements TranslatorAwareInterface, ResourceInterface
         $route->get($this->name, function (ServerRequestInterface $request, array $args) {
             if (strstr($request->getHeaderLine("Accept"), "application/json") || $request->getHeaderLine("Accept") == "*/*") {
 
+                if (!$this->vx->logined) {
+                    throw new UnauthorizedException();
+                }
+
                 $query = $request->getQueryParams();
-
-                if (!$query["fields"]) {
-                    throw new BadRequestException();
-                }
-
-                if (is_string($query["fields"])) {
-                    $fields = explode(",", $query["fields"]);
-                } else {
-                    $fields = $query["fields"];
-                }
-
-
-                $class = $this->class;
-                $q = $class::Query();
-
-                $hydrator = new ModelPropertyHydrator;
-                $hydrator->addFilter("fields", function ($property) use ($fields) {
-                    return in_array($property, $fields);
-                });
-
-                $data = [];
-                foreach ($q as $o) {
-                    if ($o instanceof Model) {
-                        if ($o->canReadBy($request->getAttribute("user"))) {
-                            $data[] = $hydrator->extract($o);
-                        }
-                    }
-                }
-
-
+                $data = $this->getQueryData($this->class, $query, $request);
+                $data["meta"]["model"] = $this->name;
                 return new JsonResponse($data);
             }
 

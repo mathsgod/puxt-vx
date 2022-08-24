@@ -8,6 +8,7 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
 use ReflectionClass;
+use ReflectionObject;
 
 class Model extends DBModel implements ResourceInterface, IModel
 {
@@ -133,5 +134,72 @@ class Model extends DBModel implements ResourceInterface, IModel
         }
 
         return parent::bind($rs);
+    }
+
+
+    public function toArray(?array $fields = null): array
+    {
+        $key = self::_key();
+        $data = [];
+        $data[$key] = $this->$key;
+        foreach ($this->__fields() as $field) {
+
+            if ($fields && !in_array($field, $fields)) {
+                continue;
+            }
+
+            $data[$field] = $this->$field;
+        }
+
+        if (in_array("createdBy", $fields)) {
+            $user = $this->createdBy();
+            if ($user) {
+                $data["createdBy"] = [
+                    "user_id" => $user->user_id,
+                    "name" => $user->getName(),
+                ];
+            }
+        }
+
+
+        $relection_object = new ReflectionObject($this);
+
+        foreach ($relection_object->getMethods() as $method) {
+            foreach ($method->getAttributes() as $attribute) {
+                if ($attribute->getName() == Field::class) {
+
+                    if (in_array($method->getName(), $fields)) {
+                        $data[$method->getName()] = $this->{$method->getName()}();
+                    }
+                }
+            }
+        }
+
+
+        if (in_array("__createdBy", $fields)) {
+            $user = $this->createdBy();
+            if ($user) {
+                $data["__createdBy"] = $user->getName();
+            } else {
+                $data["__createdBy"] = null;
+            }
+        }
+
+
+        if (in_array("__canRead", $fields)) {
+            $data["__canRead"] = $this->canReadBy(self::$_vx->user);
+        }
+
+        if (in_array("__canUpdate", $fields)) {
+            $data["__canUpdate"] = $this->canUpdateBy(self::$_vx->user);
+        }
+
+        if (in_array("__canDelete", $fields)) {
+            $data["__canDelete"] = $this->canDeleteBy(self::$_vx->user);
+        }
+
+
+
+        return $data;
     }
 }
