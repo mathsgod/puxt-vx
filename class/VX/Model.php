@@ -2,9 +2,6 @@
 
 namespace VX;
 
-use Exception;
-use Laminas\EventManager\EventManagerAwareInterface;
-use Laminas\EventManager\EventManagerInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
 use ReflectionClass;
