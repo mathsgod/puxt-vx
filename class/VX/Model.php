@@ -9,6 +9,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
 use ReflectionClass;
 use ReflectionObject;
+use TheCodingMachine\GraphQLite\Annotations\Field;
 
 class Model extends DBModel implements ResourceInterface, IModel
 {

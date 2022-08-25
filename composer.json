@@ -29,7 +29,8 @@
         "mathsgod/r-db": "^4.11",
         "league/glide": "^2.1",
         "twig/extra-bundle": "^3.3",
-        "laminas/laminas-diactoros": "^2.13"
+        "laminas/laminas-diactoros": "^2.13",
+        "thecodingmachine/graphqlite": "^6.0"
     },
     "autoload": {
         "psr-4": {
