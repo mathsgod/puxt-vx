@@ -296,16 +296,24 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
             if ($object instanceof Model) {
                 $meta["primaryKey"] = $object->_key();
 
+                $fields = [];
                 foreach ($object->__attributes() as $attr) {
 
                     if ($attr["Type"] == "longblob" || $attr["Type"] == "blob") {
                     } else {
                         $data["data"][$attr["Field"]] = $object->{$attr["Field"]};
+                        $fields[] = $attr["Field"];
                     }
                 }
+
+                $fields = $request->getQueryParams()["fields"] ?? $fields;
+                $data["data"] = $object->toArray($fields);
             } else {
                 $data["data"] = $object;
             }
+
+
+
 
             $data["meta"] = $meta;
 
