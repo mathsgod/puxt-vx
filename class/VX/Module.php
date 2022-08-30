@@ -289,15 +289,24 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
             if (!$object->canReadBy($user)) {
                 throw new ForbiddenException();
             }
+
             $meta = [];
+            $data = [];
 
             if ($object instanceof Model) {
                 $meta["primaryKey"] = $object->_key();
+
+                foreach ($object->__attributes() as $attr) {
+
+                    if ($attr["Type"] == "longblob" || $attr["Type"] == "blob") {
+                    } else {
+                        $data["data"][$attr["Field"]] = $object->{$attr["Field"]};
+                    }
+                }
+            } else {
+                $data["data"] = $object;
             }
 
-
-            $data = [];
-            $data["data"] = $object;
             $data["meta"] = $meta;
 
             return new JsonResponse($data);
