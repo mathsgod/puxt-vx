@@ -7,6 +7,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
+use League\Route\Http\Exception\UnauthorizedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -44,7 +45,12 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
 
 
         if (!$acl->isAllowed($user, $this->getResourceId())) {
-            throw new ForbiddenException();
+
+            if ($this->module->vx->logined) {
+                throw new ForbiddenException();
+            } else {
+                throw new UnauthorizedException();
+            }
         }
 
         $loader = $this->module->vx->getRequestHandler($this->file);
