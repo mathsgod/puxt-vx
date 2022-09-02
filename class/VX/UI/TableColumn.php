@@ -55,9 +55,9 @@ class TableColumn extends EL\TableColumn implements TranslatorAwareInterface
         return $this;
     }
 
-    public function sortable()
+    public function sortable($method = "custom")
     {
-        $this->setAttribute("sortable", true);
+        $this->setAttribute("sortable", $method);
         return $this;
     }
 
