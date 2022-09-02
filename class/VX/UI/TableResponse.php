@@ -221,6 +221,10 @@ class TableResponse implements JsonSerializable
 
                 $dmap = $this->data_map->__invoke($obj);
                 foreach ($dmap as $k => $v) {
+                    $d[$k] = $v;
+                }
+
+                foreach ($d as $k => $v) {
                     if ($v === true) {
                         $d[$k] = "✔";
                     } else {
@@ -232,6 +236,7 @@ class TableResponse implements JsonSerializable
             }
             return $data;
         }
+
 
         foreach ($source as $obj) {
 
@@ -246,6 +251,15 @@ class TableResponse implements JsonSerializable
                     $d[$prop] = var_get($obj, $getter);
                 }
             }
+
+            foreach ($d as $k => $v) {
+                if ($v === true) {
+                    $d[$k] = "✔";
+                } else {
+                    $d[$k] = $v;
+                }
+            }
+
 
             $data[] = $d;
         }
