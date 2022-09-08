@@ -31,7 +31,6 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
 
     function handle(ServerRequestInterface $request): ResponseInterface
     {
-
         $user = $request->getAttribute("user");
         $acl = $request->getAttribute("acl");
 

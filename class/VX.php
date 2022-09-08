@@ -22,6 +22,7 @@ use Psr\Log\LoggerAwareTrait;
 use PUXT\App;
 use PUXT\Context;
 use R\DB\Schema;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
@@ -264,7 +265,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
             if ($jwt = $this->decodeJWT($access_token)) {
                 //check jti is valid
-                if (JWTBlacklist::InList($jwt->jti)) {
+                if ($this->config["VX"]["jwt_blacklist"] && JWTBlacklist::InList($jwt->jti ?? "")) {
                     return "";
                 }
                 return $access_token;
@@ -278,7 +279,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         if ($refresh_token = $_COOKIE["refresh_token"]) {
             if ($jwt = $this->decodeJWT($refresh_token)) {
                 //check jti is valid
-                if (JWTBlacklist::InList($jwt->jti)) {
+                if ($this->config["VX"]["jwt_blacklist"] && JWTBlacklist::InList($jwt->jti ?? "")) {
                     return "";
                 }
                 return $refresh_token;
@@ -352,7 +353,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         if ($_COOKIE["access_token"] && !$_COOKIE["refresh_token"]) {
             $token = $_COOKIE["access_token"];
 
-            $payload = $this->getPayload($token);
+            try {
+                $payload = $this->getPayload($token);
+            } catch (Exception $e) {
+                $this->user = User::Get(2);
+                return;
+            }
+
 
             if ($payload->user_id) {
                 $this->user_id = $payload->user_id;
@@ -475,6 +482,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     public function generateAccessToken(User $user,  int $view_as = null)
     {
         $payload = [
+            "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + 3600,
@@ -484,19 +492,30 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $payload["view_as"] = $view_as;
         }
 
-
         return JWT::encode($payload, $this->config["VX"]["jwt"]["secret"]);
     }
 
     public function generateRefreshToken(User $user)
     {
         return JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
             "type" => "refresh_token",
             "iat" => time(),
-            "exp" => time() + $time, //1 day
+            "exp" => time() + 3600 * 24, //1 day
             "user_id" => $user->user_id
         ], $this->config["VX"]["jwt"]["secret"]);
     }
+
+    public function invalidateJWT(string $token)
+    {
+        if ($this->config["VX"]["jwt_blacklist"]) {
+            $jwt = $this->decodeJWT($token);
+            if ($jwt->jti) {
+                JWTBlacklist::Add($jwt->jti, $jwt->exp);
+            }
+        }
+    }
+
 
     function getFileSystem(int $index = 0)
     {
