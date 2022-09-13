@@ -13,11 +13,15 @@ class Model extends DBModel implements ResourceInterface, IModel
 {
     public static function Sort(Query $q, string $sort, string $order)
     {
-        
+    }
+
+    public static function Filter(Query $q, string $filter, string $operator, $value)
+    {
     }
 
     public static function QueryData(array $query, User $user)
     {
+        $fields = array_column(self::__attributes(), "Field");
 
         $meta = [];
         $meta["primaryKey"] = static::_key();
@@ -30,20 +34,46 @@ class Model extends DBModel implements ResourceInterface, IModel
             foreach ($filters as $field => $filter) {
 
                 foreach ($filter as $operator => $value) {
-                    if ($operator == '$eq') {
-                        $q->where->equalTo($field, $value);
-                    }
 
-                    if ($operator == '$contains') {
-                        $q->where->like($field, "%$value%");
-                    }
+                    if (in_array($field, $fields)) {
+                        if ($operator == '$eq') {
+                            $q->where->equalTo($field, $value);
+                        }
 
-                    if ($operator == '$in') {
-                        $q->where->in($field, $value);
-                    }
+                        if ($operator == '$contains') {
+                            $q->where->like($field, "%$value%");
+                        }
 
-                    if ($operator == '$between') {
-                        $q->where->between($field, $value[0], $value[1]);
+                        if ($operator == '$in') {
+                            $q->where->in($field, $value);
+                        }
+
+                        if ($operator == '$between') {
+                            $q->where->between($field, $value[0], $value[1]);
+                        }
+
+                        if ($operator == '$gt') {
+                            $q->where->greaterThan($field, $value);
+                        }
+
+                        if ($operator == '$gte') {
+                            $q->where->greaterThanOrEqualTo($field, $value);
+                        }
+
+                        if ($operator == '$lt') {
+                            $q->where->lessThan($field, $value);
+                        }
+
+                        if ($operator == '$lte') {
+                            $q->where->lessThanOrEqualTo($field, $value);
+                        }
+
+                        if ($operator == '$ne') {
+                            $q->where->notEqualTo($field, $value);
+                        }
+                    } else {
+                        //custom filter
+                        static::Filter($q, $field, $operator, $value);
                     }
                 }
             }
@@ -54,7 +84,6 @@ class Model extends DBModel implements ResourceInterface, IModel
             foreach ($sort as $s) {
                 $ss = explode(":", $s);
 
-                $fields = array_column(self::__attributes(), "Field");
                 if (in_array($ss[0], $fields)) {
                     $order[$ss[0]] = $ss[1];
                 } else {

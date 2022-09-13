@@ -22,6 +22,15 @@ class EventLog extends Model
         }
     }
 
+    public static function Filter(Query $q, string $filter, string $operator, $value)
+    {
+        if ($filter == "User.username") {
+            $q->where->expression("user_id in (select user_id from User where username like ?)", ["%$value%"]);
+            
+        }
+    }
+
+
     public static function LogInsert($obj, User $user)
     {
         if ($obj instanceof self) return;
