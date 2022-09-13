@@ -131,6 +131,30 @@ class Model extends DBModel implements ResourceInterface, IModel
             $data[$field] = $this->$field;
         }
 
+        $ro = new ReflectionObject($this);
+
+        //field include dot
+        foreach ($fields as $field) {
+            if (strpos($field, ".") !== false) {
+
+                $f = explode(".", $field, 2);;
+
+                if (!$ro->hasMethod($f[0])) continue;
+
+                $method = $ro->getMethod($f[0]);
+                if (!$method->getAttributes(Field::class)) continue;
+
+
+                $obj = $this->{$method->getName()}();
+
+                if ($obj && $obj instanceof Model) {
+                    $data[$f[0]] = $obj->toArray([$f[1]]);
+                }
+            }
+        }
+
+
+
         if (in_array("createdBy", $fields)) {
             $user = $this->createdBy();
             if ($user) {

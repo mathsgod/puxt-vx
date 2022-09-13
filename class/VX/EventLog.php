@@ -4,9 +4,16 @@ namespace VX;
 
 
 use ReflectionObject;
+use TheCodingMachine\GraphQLite\Annotations\Field;
 
 class EventLog extends Model
 {
+    #[Field()]
+    public function User()
+    {
+        return User::Get($this->user_id);
+    }
+
     public static function LogInsert($obj, User $user)
     {
         if ($obj instanceof self) return;
