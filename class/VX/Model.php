@@ -113,26 +113,27 @@ class Model extends DBModel implements ResourceInterface, IModel
             if ($o instanceof Model) {
                 if ($o->canReadBy($user)) {
                     $obj = $o->toArray($query["fields"] ?? []);
+
                     if ($populate = $query["populate"]) {
                         foreach ($populate as $target_module => $p) {
+                            
                             $module = self::$_vx->getModule($target_module);
-
                             $target_class = $module->class;
-
                             $target_key = $target_class::_key();
-
                             $p["filters"] = $p["filters"] ?? [];
 
+                            $d = [];
                             if (in_array($target_key, $o->__fields())) { // many to one
                                 $p["filters"][$target_key]['$eq'] = $o->$target_key;
                                 $d = $module->class::QueryData($p, $user);
                                 $d["data"] = $d["data"][0];
+
+                                $obj[$target_module] = $d["data"];
                             } else { //one to many
                                 $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
-                                $d = $module->class::self::QueryData($p, $user);
+                                $d = $module->class::QueryData($p, $user);
+                                $obj[$target_module] = $d["data"];
                             }
-
-                            $obj[$target_module] = $d["data"];
                         }
                     }
 
@@ -197,6 +198,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         return self::$_vx->getAcl()->isAllowed($user, $this, "create");
     }
 
+    #[Field]
     public function createdBy(): ?User
     {
         if ($this->created_by) {
@@ -258,60 +260,31 @@ class Model extends DBModel implements ResourceInterface, IModel
         $key = self::_key();
         $data = [];
         $data[$key] = $this->$key;
-        foreach ($this->__fields() as $field) {
-
-            if ($fields && !in_array($field, $fields)) {
-                continue;
-            }
-
-            $data[$field] = $this->$field;
-        }
-
         $ro = new ReflectionObject($this);
 
         //field include dot
         foreach ($fields as $field) {
-            if (strpos($field, ".") !== false) {
+            if (is_array($field)) continue;
 
-                $f = explode(".", $field, 2);;
-
+            if (in_array($field, $this->__fields())) {
+                $data[$field] = $this->$field;
+            } elseif (strpos($field, ".") !== false) {
+                $f = explode(".", $field, 2);
                 if (!$ro->hasMethod($f[0])) continue;
 
                 $method = $ro->getMethod($f[0]);
                 if (!$method->getAttributes(Field::class)) continue;
-
-
                 $obj = $this->{$method->getName()}();
 
                 if ($obj && $obj instanceof Model) {
                     $data[$f[0]] = $obj->toArray([$f[1]]);
                 }
-            }
-        }
+            } else {
 
-
-
-        if (in_array("createdBy", $fields)) {
-            $user = $this->createdBy();
-            if ($user) {
-                $data["createdBy"] = [
-                    "user_id" => $user->user_id,
-                    "name" => $user->getName(),
-                ];
-            }
-        }
-
-
-        $relection_object = new ReflectionObject($this);
-
-        foreach ($relection_object->getMethods() as $method) {
-            foreach ($method->getAttributes() as $attribute) {
-                if ($attribute->getName() == Field::class) {
-
-                    if (in_array($method->getName(), $fields)) {
-                        $data[$method->getName()] = $this->{$method->getName()}();
-                    }
-                }
+                if (!$ro->hasMethod($field)) continue;
+                $method = $ro->getMethod($field);
+                if (!$method->getAttributes(Field::class)) continue;
+                $data[$field] = $this->{$method->getName()}();
             }
         }
 

@@ -10,7 +10,7 @@ class ACL extends Model
 
     public function User()
     {
-        return new User($this->user_id);
+        return User::Get($this->user_id);
     }
 
     public function SpecialUser()
