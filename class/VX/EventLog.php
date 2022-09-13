@@ -2,7 +2,8 @@
 
 namespace VX;
 
-
+use Laminas\Db\Sql\Expression;
+use R\DB\Query;
 use ReflectionObject;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 
@@ -12,6 +13,13 @@ class EventLog extends Model
     public function User()
     {
         return User::Get($this->user_id);
+    }
+
+    public static function Sort(Query $q, string $sort, string $order)
+    {
+        if ($sort == "User.username") {
+            $q->order(new Expression("(select username from User where user_id=EventLog.user_id) $order"));
+        }
     }
 
     public static function LogInsert($obj, User $user)

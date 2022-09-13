@@ -169,105 +169,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
         return $items;
     }
 
-    private function getQueryData(string $class, array $query, ServerRequestInterface $request)
-    {
-        $meta = [];
-        $meta["primaryKey"] = $class::_key();
-
-        /** @var \R\DB\Query */
-        $q = $class::Query();
-
-        if ($filters = $query["filters"]) {
-
-            foreach ($filters as $field => $filter) {
-
-                foreach ($filter as $operator => $value) {
-                    if ($operator == '$eq') {
-                        $q->where->equalTo($field, $value);
-                    }
-
-                    if ($operator == '$contains') {
-                        $q->where->like($field, "%$value%");
-                    }
-
-                    if ($operator == '$in') {
-                        $q->where->in($field, $value);
-                    }
-
-                    if ($operator == '$between') {
-                        $q->where->between($field, $value[0], $value[1]);
-                    }
-                }
-            }
-        }
-
-        if ($sort = $query["sort"]) {
-            $order = [];
-            foreach ($sort as $s) {
-                $ss = explode(":", $s);
-
-                $order[$ss[0]] = $ss[1];
-            }
-            $q->order($order);
-        }
-
-        if ($pagination = $query["pagination"]) {
-            $paginator = $q->getPaginator();
-            $paginator->setCurrentPageNumber($pagination["page"]);
-            $paginator->setItemCountPerPage($pagination["pageSize"]);
-
-            $q = $paginator;
-
-            $meta["pagination"] = [
-                "page" => $paginator->getCurrentPageNumber(),
-                "pageSize" => $paginator->getItemCountPerPage(),
-                "total" => $paginator->getTotalItemCount()
-            ];
-        }
-
-        $data = [];
-        foreach ($q as $o) {
-            if ($o instanceof VXModel) {
-                if ($o->canReadBy($request->getAttribute("user"))) {
-                    $obj = $o->toArray($query["fields"] ?? []);
-                    if ($populate = $query["populate"]) {
-                        foreach ($populate as $target_module => $p) {
-                            $module = $this->vx->getModule($target_module);
-
-                            $target_class = $module->class;
-
-                            $target_key = $target_class::_key();
-
-                            $p["filters"] = $p["filters"] ?? [];
-
-                            if (in_array($target_key, $o->__fields())) { // many to one
-                                $p["filters"][$target_key]['$eq'] = $o->$target_key;
-                                $d = $this->getQueryData($module->class, $p, $request);
-                                $d["data"] = $d["data"][0];
-                            } else { //one to many
-
-
-                                $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
-                                $d = $this->getQueryData($module->class, $p, $request);
-                            }
-
-
-
-                            $obj[$target_module] = $d["data"];
-                        }
-                    }
-
-                    $data[] = $obj;
-                }
-            }
-        }
-
-        return  [
-            "data" => $data,
-            "meta" => $meta
-        ];
-    }
-
     private function getModuleFile(string $path)
     {
         foreach ($this->files as $file) {
@@ -385,7 +286,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
             }
 
             $query = $request->getQueryParams();
-            $data = $this->getQueryData($this->class, $query, $request);
+            $data = $this->class::QueryData($query, $request->getAttribute("user"));
             $data["meta"]["model"] = $this->name;
             return new JsonResponse($data);
         });

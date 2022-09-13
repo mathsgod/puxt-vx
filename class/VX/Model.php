@@ -4,12 +4,119 @@ namespace VX;
 
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use R\DB\Model as DBModel;
+use R\DB\Query;
 use ReflectionClass;
 use ReflectionObject;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 
 class Model extends DBModel implements ResourceInterface, IModel
 {
+    public static function Sort(Query $q, string $sort, string $order)
+    {
+        
+    }
+
+    public static function QueryData(array $query, User $user)
+    {
+
+        $meta = [];
+        $meta["primaryKey"] = static::_key();
+
+        /** @var \R\DB\Query */
+        $q = static::Query();
+
+        if ($filters = $query["filters"]) {
+
+            foreach ($filters as $field => $filter) {
+
+                foreach ($filter as $operator => $value) {
+                    if ($operator == '$eq') {
+                        $q->where->equalTo($field, $value);
+                    }
+
+                    if ($operator == '$contains') {
+                        $q->where->like($field, "%$value%");
+                    }
+
+                    if ($operator == '$in') {
+                        $q->where->in($field, $value);
+                    }
+
+                    if ($operator == '$between') {
+                        $q->where->between($field, $value[0], $value[1]);
+                    }
+                }
+            }
+        }
+
+        if ($sort = $query["sort"]) {
+            $order = [];
+            foreach ($sort as $s) {
+                $ss = explode(":", $s);
+
+                $fields = array_column(self::__attributes(), "Field");
+                if (in_array($ss[0], $fields)) {
+                    $order[$ss[0]] = $ss[1];
+                } else {
+                    //call user defined sort
+                    static::Sort($q, $ss[0], $ss[1]);
+                }
+            }
+            $q->order($order);
+        }
+
+        if ($pagination = $query["pagination"]) {
+            $paginator = $q->getPaginator();
+            $paginator->setCurrentPageNumber($pagination["page"]);
+            $paginator->setItemCountPerPage($pagination["pageSize"]);
+
+            $q = $paginator;
+
+            $meta["pagination"] = [
+                "page" => $paginator->getCurrentPageNumber(),
+                "pageSize" => $paginator->getItemCountPerPage(),
+                "total" => $paginator->getTotalItemCount()
+            ];
+        }
+
+        $data = [];
+        foreach ($q as $o) {
+            if ($o instanceof Model) {
+                if ($o->canReadBy($user)) {
+                    $obj = $o->toArray($query["fields"] ?? []);
+                    if ($populate = $query["populate"]) {
+                        foreach ($populate as $target_module => $p) {
+                            $module = self::$_vx->getModule($target_module);
+
+                            $target_class = $module->class;
+
+                            $target_key = $target_class::_key();
+
+                            $p["filters"] = $p["filters"] ?? [];
+
+                            if (in_array($target_key, $o->__fields())) { // many to one
+                                $p["filters"][$target_key]['$eq'] = $o->$target_key;
+                                $d = $module->class::QueryData($p, $user);
+                                $d["data"] = $d["data"][0];
+                            } else { //one to many
+                                $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
+                                $d = $module->class::self::QueryData($p, $user);
+                            }
+
+                            $obj[$target_module] = $d["data"];
+                        }
+                    }
+
+                    $data[] = $obj;
+                }
+            }
+        }
+
+        return  [
+            "data" => $data,
+            "meta" => $meta
+        ];
+    }
 
     public static function FromGlobal(): static
     {
