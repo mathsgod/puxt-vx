@@ -485,7 +485,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
-            "exp" => time() + 3600,
+            "exp" => time() + ($this->config["VX"]["access_token_expire"] ?? 3600),
             "user_id" => $user->user_id
         ];
         if ($view_as) {
@@ -501,7 +501,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "jti" => Uuid::uuid4()->toString(),
             "type" => "refresh_token",
             "iat" => time(),
-            "exp" => time() + 3600 * 24, //1 day
+            "exp" => time() + ($this->config["VX"]["refresh_token_expire"] ?? 86400), //1 day
             "user_id" => $user->user_id
         ], $this->config["VX"]["jwt"]["secret"]);
     }

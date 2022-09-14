@@ -31,7 +31,6 @@ return new class
         $config["authentication_lock_time"] = intval($config["authentication_lock_time"]);
         $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
-
         /** @var \Laminas\Config\Config $config */
         //filter out the configs that are not in the form
         $config = array_filter($config->toArray(), function ($key) {
@@ -63,7 +62,9 @@ return new class
                 "file_manager_show",
                 "allow_rememeber_me",
                 "file_manager_preview",
-                "jwt_blacklist"
+                "jwt_blacklist",
+                "access_token_expire",
+                "refresh_token_expire",
 
             ]);
         }, ARRAY_FILTER_USE_KEY);

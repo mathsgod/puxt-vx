@@ -1,7 +1,9 @@
 <?php
 
 use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Stream;
@@ -12,6 +14,7 @@ use League\Route\RouteGroup;
 use League\Route\Router;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
+use Ramsey\Uuid\Uuid;
 
 return function ($options) {
     $vx = new VX($this->puxt);
@@ -53,6 +56,13 @@ return function ($options) {
 
 
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
+
+        //B5 Broken Access Control 
+        if (!$vx->logined) {
+            return new EmptyResponse(401);
+        }
+
+
         $fm = $vx->getFileSystem();
         $file = $args["file"];
         $file = urldecode($file);
@@ -67,8 +77,30 @@ return function ($options) {
         throw new NotFoundException();
     });
 
+    //file-upload
+    $router->map("POST", $vx->base_path . "file-upload", function (ServerRequestInterface $request) use ($vx) {
+
+        //B5 Broken Access Control 
+        if (!$vx->logined) {
+            return new EmptyResponse(401);
+        }
+
+        $fm = $vx->getFileSystem();
+        $files = $request->getUploadedFiles();
+        $file = $files["file"];
+        //generate uuid
+        $uuid = Uuid::uuid4()->toString();
+        $fm->write("cache/" . $uuid, $file->getStream()->getContents());
+        return new JsonResponse(["uuid" => "cache/$uuid"]);
+    });
 
     $router->map("GET", $vx->base_path . "photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
+
+        //B5 Broken Access Control 
+        if (!$vx->logined) {
+            return new EmptyResponse(401);
+        }
+
         $glide = League\Glide\ServerFactory::create([
 
             "source" => $vx->getFileSystem(),
@@ -83,6 +115,8 @@ return function ($options) {
 
 
     $router->map("GET",  $vx->base_path, function (ServerRequestInterface $request) use ($vx) {
+
+        
         $handler = $vx->getRequestHandler($vx->vx_root . "/pages/index");
         return $handler->handle($request);
     });
