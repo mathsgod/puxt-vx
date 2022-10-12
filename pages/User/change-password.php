@@ -76,8 +76,10 @@ return new class
             $user = $vx->user;
         }
 
-        if (!password_verify($vx->_post["old_password"], $user->password)) {
-            throw new BadRequestException("Old password is incorrect");
+        if (!$vx->user->isAdmin()) {
+            if (!password_verify($vx->_post["old_password"], $user->password)) {
+                throw new BadRequestException("Old password is incorrect");
+            }
         }
 
         if (!$vx->isValidPassword($vx->_post["password"])) {
@@ -87,11 +89,9 @@ return new class
         if (!$user->canChangePasswordBy($vx->user)) {
             throw new ForbiddenException("You are not allowed to change this user's password");
         }
-        
+
         $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
         $user->save();
-
-        
     }
 
     function getPasswordPolicy(VX $vx)

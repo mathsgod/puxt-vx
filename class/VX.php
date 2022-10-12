@@ -3,6 +3,7 @@
 
 use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
+use GuzzleHttp\Psr7\Query;
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
