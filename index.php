@@ -42,7 +42,16 @@ return function ($options) {
             $module->setupRoute($route);
         }
     });
-   
+
+    $router->map("OPTIONS", $vx->base_path . "{any:.*}", function (ServerRequestInterface $request) {
+
+        $response = new EmptyResponse(200);
+        $response = $response->withAddedHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        $response = $response->withAddedHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, vx-view-as");
+        $response = $response->withAddedHeader("Access-Control-Allow-Credentials", "true");
+        return $response;
+    });
+
 
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
 
