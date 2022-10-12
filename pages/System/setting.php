@@ -33,6 +33,9 @@ return new class
         $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
 
+        $config["access_token_expire"] = $config["access_token_expire"] ?? 3600;
+        $config["refresh_token_expire"] = $config["refresh_token_expire"] ?? 86400;
+
         $f = $vx->ui->createForm($config);
 
         $f->add("VX URL")->input("vx_url");
@@ -58,6 +61,8 @@ return new class
 
         $f->addDivider("Login")->setContentPosition("left");
         $f->add("Allow remember me")->checkbox("allow_remember_me");
+        $f->add("Access token expire (sec)")->input("access_token_expire");
+        $f->add("Refresh token expire (sec)")->input("refresh_token_expire");
 
 
 
