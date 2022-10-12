@@ -509,11 +509,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function generateAccessToken(User $user)
     {
+        $access_token_expire = $this->config["VX"]["jwt"]["access_token_expire"] ?? 3600;
         return JWT::encode([
             "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
-            "exp" => time() + 3600,
+            "exp" => time() + $access_token_expire,
             "user_id" => $user->user_id,
         ], $this->config["VX"]["jwt"]["secret"]);
     }
@@ -528,11 +529,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function generateRefreshToken(User $user)
     {
+        $refresh_token_expire = $this->config["VX"]["jwt"]["refresh_token_expire"] ?? 86400;
         return JWT::encode([
             "jti" => Uuid::uuid4()->toString(),
             "type" => "refresh_token",
             "iat" => time(),
-            "exp" => time() + 3600 * 24, //1 day
+            "exp" => time() + $refresh_token_expire,
             "user_id" => $user->user_id
         ], $this->config["VX"]["jwt"]["secret"]);
     }
