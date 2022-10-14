@@ -79,7 +79,7 @@ return new class
             $data["menus"] = $menu->getMenuByUser($vx->user);
 
             //language 
-            $data["language"] = $vx->config["VX"]["language"];
+            $data["language"] = $vx->config->VX->language->toArray();
 
             //user
             $user = $vx->user;
@@ -103,10 +103,10 @@ return new class
 
             if (!$vx->view_as) {
                 if ($vx->user->isAdmin()) {
-                    $dropdown[] = ["label" => "View as", "icon" => "eye", "link" => "/System/view-as"];
+                    $dropdown[] = ["label" => "View as", "icon" => "o_visibility", "link" => "/System/view-as"];
                 }
             } else {
-                $dropdown[] = ["label" => "Cancel view as", "icon" => "eye", "link" => "/cancel-view-as"];
+                $dropdown[] = ["label" => "Cancel view as", "icon" => "o_visibility_off", "link" => "/cancel-view-as"];
             }
 
             $data["navbar"]["dropdown"] = $dropdown;

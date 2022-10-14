@@ -10,6 +10,7 @@ path:
     token: [Users,Power Users]
     view-as: [Users,Power Users]
     forgot-password: [Users,Power Users,Guests]
+    is-allowed: [Users,Power Users,Guests]
 
   User:
     view: [Users,Power Users]

@@ -2,13 +2,10 @@
 
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
-use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Stream;
 use League\Glide\Responses\PsrResponseFactory;
-use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
@@ -116,7 +113,7 @@ return function ($options) {
 
     $router->map("GET",  $vx->base_path, function (ServerRequestInterface $request) use ($vx) {
 
-        
+
         $handler = $vx->getRequestHandler($vx->vx_root . "/pages/index");
         return $handler->handle($request);
     });
