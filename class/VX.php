@@ -455,9 +455,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $name = "localhost";
         }
 
-        $user = $this->user;
-        $userEntity = new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
-
         $rp = new PublicKeyCredentialRpEntity($name, $id);
         $source = new PublicKeyCredentialSourceRepository();
         $server = new Webauthn\Server($rp, $source);

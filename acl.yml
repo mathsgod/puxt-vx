@@ -1,5 +1,6 @@
 path:
   auth:
+    me: [Users,Power Users,Guests]
     login: [Users,Power Users,Guests]
     logout: [Users,Power Users,Guests]
     request-options: [Users,Power Users,Guests]

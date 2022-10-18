@@ -11,6 +11,12 @@ use Laminas\Diactoros\Response\EmptyResponse;
 return new class
 {
 
+    function isInstalled()
+    {
+        //check if webauthn is enabled
+        return Composer\InstalledVersions::isInstalled("web-auth/webauthn-lib");
+    }
+
     function delete(VX $vx)
     {
 

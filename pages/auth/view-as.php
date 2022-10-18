@@ -6,15 +6,19 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 use VX\User;
 
 return new class
 {
-
     function get(VX $vx)
     {
         $token = $_COOKIE["access_token"];
+        if (!$token) {
+            throw new BadRequestException("Missing access_token");
+        };
+
         $payload = $vx->getPayload($token);
 
         $user = User::Get($payload->user_id);
@@ -26,7 +30,7 @@ return new class
             $access_token_string .= "; Secure";
         }
 
-        $response = new EmptyResponse(200);
+        $response = new EmptyResponse();
         $response = $response->withAddedHeader("Set-Cookie", $access_token_string);
         return $response;
     }

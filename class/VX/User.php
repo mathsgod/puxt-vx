@@ -129,6 +129,10 @@ class User extends Model implements RoleInterface
 
     public function canChangePasswordBy(User $user)
     {
+        if ($this->isGuest()) {
+            return false;
+        }
+        
         if ($this->user_id == $user->user_id) {
             return true;
         }

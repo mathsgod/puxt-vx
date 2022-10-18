@@ -13,7 +13,7 @@ return new class
         $token = $vx->_get["token"];
         $token = $vx->jwtDecode($token);
         $user = User::Get($token->user_id);
-        
+
         $server = $vx->getWebAuthnServer();
         $userEntity = new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);
 

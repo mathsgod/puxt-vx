@@ -20,7 +20,7 @@ return new class
         $vx->invalidateJWT($vx->getAccessToken());
         $vx->invalidateJWT($vx->getRefreshToken());
 
-        $resp = new EmptyResponse(200);
+        $resp = new EmptyResponse();
 
         $access_token_string = "access_token=; path=" . $vx->base_path . "; httponly";
         $refresh_token_string = "refresh_token=; path=" . $vx->base_path . "auth/renew-token; httponly";
