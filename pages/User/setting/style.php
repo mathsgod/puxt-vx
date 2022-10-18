@@ -17,7 +17,7 @@ return new class
             $user->style[$k] = $v;
         }
 
-   
+
         $user->save();
 
         return new EmptyResponse();
@@ -38,7 +38,10 @@ return new class
     function get(VX $vx)
     {
         $user = $vx->user;
-        $style = $user->style ?? [];
-        return $style;
+        if ($user->style) {
+            return $user->style;
+        } else {
+            return [];
+        }
     }
 };

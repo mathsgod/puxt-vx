@@ -144,15 +144,6 @@ return new class
         return $data;
     }
 
-
-
-    function resetPassword(VX $vx)
-    {
-        $vx->resetPassword($vx->_post["password"], $vx->_post["token"]);
-        return ["data" => true];
-    }
-
-
     function setNavbarColor(VX $vx)
     {
         $user = $vx->user;

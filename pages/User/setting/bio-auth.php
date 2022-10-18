@@ -33,6 +33,7 @@ return new class
 
     function get(VX $vx)
     {
+
         return collect($vx->user->credential ?? [])->map(function ($item) {
             return [
                 "uuid" => $item["uuid"],

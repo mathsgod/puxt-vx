@@ -45,12 +45,6 @@ return function ($options) {
         }
     });
 
-    $router->map("GET", $vx->base_path . "me", function (ServerRequestInterface $request, array $args) use ($vx) {
-        $handler = $vx->getRequestHandler($vx->vx_root . "/pages/me");
-        return $handler->handle($request);
-    });
-
-
 
     $router->map("GET", $vx->base_path . "drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
 

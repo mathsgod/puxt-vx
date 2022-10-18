@@ -79,6 +79,8 @@ class Model extends DBModel implements ResourceInterface, IModel
             }
         }
 
+        $meta["total"] = $q->count();
+
         if ($sort = $query["sort"]) {
             $order = [];
             foreach ($sort as $s) {
@@ -116,7 +118,7 @@ class Model extends DBModel implements ResourceInterface, IModel
 
                     if ($populate = $query["populate"]) {
                         foreach ($populate as $target_module => $p) {
-                            
+
                             $module = self::$_vx->getModule($target_module);
                             $target_class = $module->class;
                             $target_key = $target_class::_key();
@@ -255,7 +257,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         return parent::__call($function, $args);
     }
 
-    public function toArray(?array $fields = null): array
+    public function toArray(?array $fields = []): array
     {
         $key = self::_key();
         $data = [];

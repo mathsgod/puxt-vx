@@ -242,6 +242,29 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
             throw new NotFoundException();
         });
 
+        $route->post($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
+            if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
+                $user = $request->getAttribute("user");
+                $object = $this->getObject($args["id"]);
+
+                if (!$object) {
+                    throw new NotFoundException();
+                }
+                if (!$object->canUpdateBy($user)) {
+                    throw new ForbiddenException();
+                }
+
+                $data = $request->getParsedBody();
+
+                $object->bind($data);
+                $object->save($data);
+                return new EmptyResponse(200, [
+                    "Content-Location" => $object->uri()
+                ]);
+            }
+            throw new NotFoundException();
+        });
+
         $route->patch($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
                 $user = $request->getAttribute("user");
