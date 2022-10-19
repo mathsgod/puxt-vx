@@ -21,7 +21,7 @@ return new class
             $deep = true;
         }
 
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
 
         $folders = $fs->listContents($vx->_get["path"] ?? "/", $deep)->filter(function (StorageAttributes $attr) {
             return $attr->isDir();

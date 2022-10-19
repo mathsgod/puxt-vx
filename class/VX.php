@@ -947,24 +947,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         try {
             $user = User::Login($username, $password);
 
-            if ($this->isNeed2Step()) {
-                if ($user->need2Step($ip)) {
-                    if (!$code) {
-                        throw new Exception("code required", 400);
-                    }
-                    if ($user->secret) {
-                    }
-                    $g = new GoogleAuthenticator();
-                    if (!$g->checkCode($user->secret, $code)) {
-                        throw new Exception("code incorrect");
-                    }
+            if ($this->isNeed2Step() && $user->need2Step($ip)) {
+                if (!$code) {
+                    throw new Exception("code required", 400);
+                }
+                $g = new GoogleAuthenticator();
+                if (!$g->checkCode($user->secret, $code)) {
+                    throw new Exception("code incorrect");
                 }
             }
 
 
             $ul->user_id = $user->user_id;
             $ul->result = "SUCCESS";
-            //  $ul->save();
+            $ul->save();
             AuthLock::ClearLockedIP($ip);
         } catch (Exception $e) {
 
@@ -975,7 +971,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             if ($user) {
                 $ul->user_id = $user->user_id;
                 $ul->result = "FAIL";
-                //  $ul->save();
+                $ul->save();
             }
             throw $e;
         }

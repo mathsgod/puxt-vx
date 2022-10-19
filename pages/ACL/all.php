@@ -12,6 +12,61 @@ use PhpOffice\PhpSpreadsheet\Style\Protection;
 
 return new class
 {
+    function getACL(VX $vx, $usergroup_id)
+    {
+        $usergroup = UserGroup::Get($usergroup_id);
+
+        $ret = [];
+        $acl = $vx->getAcl();
+
+        foreach ($vx->getModules() as $module) {
+
+            $r = [];
+            $r["name"] = $module->name;
+
+            $r["all"] = [
+                "value" => $acl->isAllowed($usergroup, $module),
+                "disabled" => $this->getACLPreset($usergroup, $module, "all")
+            ];
+            $r["create"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "create"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "create")
+            ];
+            $r["read"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "read"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "read")
+            ];
+            $r["update"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "update"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "update")
+            ];
+            $r["delete"] = [
+                "value" => $acl->isAllowed($usergroup, $module, "delete"),
+                "disabled" => $this->getACLPreset($usergroup, $module, "delete")
+            ];
+
+            $r["files"] = [];
+
+            foreach ($module->getFiles() as $file) {
+                $r["files"][] = [
+                    "name" => $file->path,
+                    "allow" => [
+                        "checked" => $this->getACLPathValue($usergroup, $module, $file->path, "allow"),
+                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->path, "allow")
+                    ],
+                    "deny" => [
+                        "checked" => $this->getACLPathValue($usergroup, $module, $file->path, "deny"),
+                        "disabled" => $this->getACLPathPreset($usergroup, $module, $file->path, "deny")
+                    ]
+                ];
+            }
+
+            $ret[] = $r;
+        }
+
+        return $ret;
+    }
+
 
     function getXlsx(VX $vx)
     {
@@ -23,7 +78,7 @@ return new class
         $sheet->getColumnDimensionByColumn(2)->setWidth(25);
         $sheet->freezePane("A2");
 
-        $ret = $this->getACL($vx);
+        $ret = $this->getACL($vx,$vx->_get["usergroup_id"]);
 
         $row = 2;
         foreach ($ret as $r) {

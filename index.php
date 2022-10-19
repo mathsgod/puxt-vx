@@ -33,6 +33,8 @@ return function ($options) {
     $router->middleware($vx);
     $router->addPatternMatcher("any", ".+");
 
+    
+
     $router->map("OPTIONS", "/", function (ServerRequestInterface $request) {
         return new Response();
     });

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Created by: Raymond Chong
- * Date: 2021-07-06 
+ * @author: Raymond Chong
+ * Date: 2022-10-19
  */
 
 use Carbon\Carbon;
@@ -14,11 +14,21 @@ return new class
 {
     function get(VX $vx)
     {
+        if ($vx->_get["type"]) {
+            $type = FileManager::LookupMimeType($vx->_get["type"]);
+        }
+
+
         $fs = $vx->getFileSystem();
         $parent = $vx->_get["path"] ?? "/";
 
-        return $fs->listContents($parent, true)->filter(function (StorageAttributes $attr) {
-            return $attr->isFile();
+        return $fs->listContents($parent, true)->filter(function (StorageAttributes $attr) use ($fs, $type) {
+            if ($attr->isFile()) {
+                if ($type) {
+                    return in_array($fs->mimeType($attr->path()), $type);
+                }
+                return true;
+            }
         })->map(function (FileAttributes $attr) use ($fs) {
             $mtime = Carbon::createFromTimestamp($attr->lastModified());
             $filename = basename($attr->path());

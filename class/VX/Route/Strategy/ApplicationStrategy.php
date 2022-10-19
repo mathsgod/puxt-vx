@@ -2,6 +2,7 @@
 
 namespace VX\Route\Strategy;
 
+use Laminas\Diactoros\Response\EmptyResponse;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};
 use League\Route\Route;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -32,6 +33,7 @@ class ApplicationStrategy extends \League\Route\Strategy\ApplicationStrategy
 
             public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
             {
+                return new EmptyResponse(404);
                 $handler = $this->vx->getRequestHandler($this->vx->vx_root . "/pages/error");
                 return $handler->handle($request);
             }
