@@ -23,7 +23,7 @@ return new class
 
         $fs = $vx->getFileSystem();
 
-        $folders = $fs->listContents($vx->_get["path"] ?? "/", $deep)->filter(function (StorageAttributes $attr) {
+        $folders = $fs->listContents($vx->_get["path"], $deep)->filter(function (StorageAttributes $attr) {
             return $attr->isDir();
         });
 
@@ -38,22 +38,16 @@ return new class
             });
         }
 
-        $folders = $folders->map(function (StorageAttributes $attr) {
-            $mtime = Carbon::createFromTimestamp($attr->lastModified());
+        $folders = $folders->map(function (StorageAttributes $attr) use ($vx) {
             $path = $attr->path();
             return [
                 "name" => basename($path),
-                "path" => str_replace(DIRECTORY_SEPARATOR, "/", $path),
-                "last_modified" => $mtime->format("Y-m-d"),
-                "last_modified_human" => (string)$mtime->diffForHumans(),
-                "size" => ""
+                "path" => $vx->normalizePath($path),
+                "last_modified" => $attr->lastModified(),
             ];
         })->toArray();
 
-
-
-
-        $files = $fs->listContents($vx->_get["path"] ?? "/", $deep)->filter(function (StorageAttributes $attr) {
+        $files = $fs->listContents($vx->_get["path"], $deep)->filter(function (StorageAttributes $attr) {
             return $attr->isFile();
         });
 
@@ -76,15 +70,15 @@ return new class
 
 
 
-        $files = $files->map(function (FileAttributes $attr) use ($fs) {
+        $files = $files->map(function (FileAttributes $attr) use ($fs, $vx) {
             $mtime = Carbon::createFromTimestamp($attr->lastModified());
             $filename = basename($attr->path());
             return [
                 "name" => $filename,
-                "path" => $attr->path(),
+                "path" => $vx->normalizePath($attr->path()),
                 "size" => $attr->fileSize(),
                 "size_display" => FileManager::FormatBytes($attr->fileSize()),
-                "last_modified" => $mtime->format("Y-m-d"),
+                "last_modified" => $attr->lastModified(),
                 "last_modified_human" => (string)$mtime->diffForHumans(),
                 "extension" => pathinfo($filename, PATHINFO_EXTENSION),
                 "mime_type" => $fs->mimeType($attr->path()),
@@ -93,15 +87,8 @@ return new class
             ];
         })->toArray();
 
-        $parent = dirname($vx->_get["path"]);
-        if ($parent == ".") {
-            $parent = "";
-        }
-
-
         return [
-            "parent" => $parent,
-            "path" => $vx->_get["path"],
+            "path" => $vx->normalizePath($vx->_get["path"]),
             "folders" => $folders,
             "files" => $files
         ];

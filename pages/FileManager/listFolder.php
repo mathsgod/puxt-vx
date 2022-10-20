@@ -14,16 +14,19 @@ return new class
     {
         $fs = $vx->getFileSystem();
 
-        $parent = $vx->_get["path"] ?? "/";
+        $parent = $vx->_get["path"];
+        $parent = $vx->normalizePath($parent);
+
         $ret = $fs->listContents($parent)->filter(function (StorageAttributes $attr) {
-
             return $attr->isDir();
-        })->map(function (StorageAttributes $attr) use ($parent) {
+        })->map(function (StorageAttributes $attr) use ($parent, $vx) {
 
+            $path = $attr->path();
             return [
-                "name" => basename($attr->path()),
-                "path" => $attr->path(),
-                "location" => $parent
+                "name" => basename($path),
+                "path" => $vx->normalizePath($path),
+                "location" => $parent,
+                "last_modified" => $attr->lastModified(),
             ];
         })->toArray();
 

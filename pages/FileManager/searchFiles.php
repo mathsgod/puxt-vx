@@ -29,12 +29,12 @@ return new class
                 }
                 return true;
             }
-        })->map(function (FileAttributes $attr) use ($fs) {
+        })->map(function (FileAttributes $attr) use ($fs, $vx) {
             $mtime = Carbon::createFromTimestamp($attr->lastModified());
             $filename = basename($attr->path());
             return [
                 "name" => $filename,
-                "path" => $attr->path(),
+                "path" => $vx->normalizePath($attr->path()),
                 "size" => $attr->fileSize(),
                 "size_display" => FileManager::FormatBytes($attr->fileSize()),
                 "last_modified" => $mtime->format("Y-m-d"),

@@ -8,25 +8,18 @@ return new class
 {
     function post(VX $vx)
     {
-
         $path = $vx->_post["path"];
-        //get parent
-        $parent = dirname($path);
-        if ($parent == '\\') {
-            $parent = "";
-        }
-        $parent .= "/";
-
-        $target = $parent . $vx->_post["name"];
 
         $fs = $vx->getFileSystem();
+        $base = dirname($path);
+        $target = $base . "/" . $vx->_post["name"];
         $fs->move($vx->_post["path"], $target);
 
         return [
-
-            "name" => $vx->_post["name"],
-            "path" => $target,
-            "location" => $parent
+            "name" => basename($target),
+            "path" => $vx->normalizePath($target),
+            "location" => $vx->normalizePath($base),
+            "last_modified" => $fs->lastModified($target),
         ];
     }
 };

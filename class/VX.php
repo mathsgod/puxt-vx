@@ -114,6 +114,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->useEventDispatcher($puxt->eventDispatcher());
     }
 
+    public function normalizePath(string $path)
+    {
+        $path = str_replace(DIRECTORY_SEPARATOR, "/", $path);
+
+        //remove trailing slash
+        $path = rtrim($path, "/");
+
+        //remove starting slash
+        $path = ltrim($path, "/");
+
+        
+        return "/" . $path;
+    }
+
     private function loadDB()
     {
         $db_config = $this->puxt->config["database"];

@@ -4,6 +4,10 @@
  * Created by: Raymond Chong
  * Date: 2021-07-06 
  */
+
+use League\Flysystem\DirectoryAttributes;
+use League\Flysystem\StorageAttributes;
+
 return new class
 {
     function post(VX $vx)
@@ -11,16 +15,12 @@ return new class
         $fs = $vx->getFileSystem();
         $fs->createDirectory($vx->_post["path"]);
 
-        $path = $vx->_post["path"];
-
-        $parent = dirname($path);
-        //replace \ with /
-        $parent = str_replace(DIRECTORY_SEPARATOR, "/", $parent);
-
+        $path = $vx->normalizePath($vx->_post["path"]);
         return [
-            "name" => basename($path),
+            "name" => basename($vx->_post["path"]),
             "path" => $path,
-            "location" => $parent
+            "location" => $vx->normalizePath(dirname($path)),
+            "last_modified" => $fs->lastModified($vx->_post["path"]),
         ];
     }
 };

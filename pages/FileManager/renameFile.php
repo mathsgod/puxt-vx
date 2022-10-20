@@ -11,9 +11,9 @@ return new class
 {
     function post(VX $vx)
     {
-        $base = dirname($vx->_post["path"]);
-        $target = $base . DIRECTORY_SEPARATOR . $vx->_post["name"];
-
+        $path = $vx->_post["path"];
+        $base = dirname($path);
+        $target = $base . "/" . $vx->_post["name"];
 
         $ext = pathinfo($target, PATHINFO_EXTENSION);
         if (in_array($ext, FileManager::$DisallowExt)) {
@@ -22,5 +22,14 @@ return new class
 
         $fs = $vx->getFileSystem();
         $fs->move($vx->_post["path"], $target);
+
+        return [
+            "name" => basename($target),
+            "path" => $vx->normalizePath($target),
+            "location" => $vx->normalizePath($base),
+            "last_modified" => $fs->lastModified($target),
+            "size" => $fs->fileSize($target),
+            "mime_type" => $fs->mimeType($target)
+        ];
     }
 };

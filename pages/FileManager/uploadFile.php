@@ -18,11 +18,7 @@ return new class
             throw new Exception("No file uploaded", 400);
         }
 
-
-
-
-        $name = $file->getClientFilename();
-        $ext = pathinfo($name, PATHINFO_EXTENSION);
+        $ext = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
 
         if (in_array($ext, FileManager::$DisallowExt)) {
             throw new Exception("File extension not allowed", 400);
@@ -33,24 +29,27 @@ return new class
         $file = $event->target;
         $fs = $vx->getFileSystem();
 
+
+        $path = $vx->_post["path"];
+
+        $name = $file->getClientFilename();
+        $target = $path . "/" . $name;
+
         try {
-            $fs->write($vx->_post["path"] . "/" . $file->getClientFilename(), $file->getStream()->getContents());
+            $fs->write($target, $file->getStream()->getContents());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), 400);
         }
 
-        $path = str_replace(DIRECTORY_SEPARATOR, "/", $vx->_post["path"]);
-
-
-        if ($path != "") {
-            $path .= "/";
-        }
-
         return [
-            "data" => [
-                "name" => $name,
-                "path" => $path . $name
-            ]
+            "name" => $name,
+            "path" => $vx->normalizePath($target),
+            "location" => $vx->normalizePath($path),
+            "last_modified" => $fs->lastModified($target),
+            "size" => $fs->fileSize($target),
+            "type" => $fs->mimeType($target),
+            "extention" => $ext,
+            "mime_type" => $fs->mimeType($target),
         ];
     }
 };
