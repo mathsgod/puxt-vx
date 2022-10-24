@@ -1,6 +1,6 @@
 <?php
 
-use Firebase\JWT\JWT;
+use Firege\JWT\JWT;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
