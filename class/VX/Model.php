@@ -209,6 +209,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         return null;
     }
 
+    #[Field]
     public function updatedBy(): ?User
     {
         if ($this->updated_by) {
