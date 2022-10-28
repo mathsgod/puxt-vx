@@ -207,7 +207,13 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
                     }
                 }
 
-                $fields = $request->getQueryParams()["fields"] ?? $fields;
+                if (in_array("*", $request->getQueryParams()["fields"] ?? [])) {
+                    $fields = array_merge($fields, $request->getQueryParams()["fields"] ?? []);
+                } else {
+                    $fields = $request->getQueryParams()["fields"] ?? $fields;
+                }
+
+
                 $data["data"] = $object->toArray($fields);
             } else {
                 $data["data"] = $object;

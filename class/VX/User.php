@@ -6,7 +6,6 @@ use Exception;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Yaml\Yaml;
 use TheCodingMachine\GraphQLite\Annotations\Field;
 
 /**
@@ -43,6 +42,12 @@ class User extends Model implements RoleInterface
         return $this->first_name . " " . $this->last_name;
     }
 
+    #[Field]
+    function getStatus()
+    {
+        return $this->status == 0 ? "Active" : "Inactive";
+    }
+
     static function Load($id): static
     {
         $user = parent::Load($id);
@@ -51,6 +56,8 @@ class User extends Model implements RoleInterface
         }
         return $user;
     }
+
+
 
     function getName(): string
     {
@@ -132,7 +139,7 @@ class User extends Model implements RoleInterface
         if ($this->isGuest()) {
             return false;
         }
-        
+
         if ($this->user_id == $user->user_id) {
             return true;
         }

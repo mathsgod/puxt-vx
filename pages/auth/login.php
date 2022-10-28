@@ -25,14 +25,15 @@ return new class
             $user = $vx->login($data["username"], $data["password"], $data["code"]);
         }
 
-        
-        $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; path=" . $vx->base_path . "; SameSite=None; HttpOnly; Secure";
-        $refresh_token_string = "refresh_token=" . $vx->generateRefreshToken($user) . "; path=" . $vx->base_path . "auth/renew-token; SameSite=None; HttpOnly; Secure";
-/*         if ($vx->request->getUri()->getScheme() == "https") {
-            $access_token_string .= "; Secure";
-            $refresh_token_string .= "; Secure";
+
+        $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; path=" . $vx->base_path . "; HttpOnly";
+        $refresh_token_string = "refresh_token=" . $vx->generateRefreshToken($user) . "; path=" . $vx->base_path . "auth/renew-token; HttpOnly";
+
+        if ($vx->request->getUri()->getScheme() == "https") {
+            $access_token_string .= "; SameSite=None; Secure";
+            $refresh_token_string .= "; SameSite=None; Secure";
         }
- */
+
         $response = new EmptyResponse(200);
         $response = $response->withAddedHeader("Set-Cookie", $access_token_string);
         $response = $response->withAddedHeader("Set-Cookie", $refresh_token_string);
