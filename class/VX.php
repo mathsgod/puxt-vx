@@ -130,7 +130,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $db_config["password"],
             $db_config["charset"] ?? "utf8mb4",
             $db_config["port"] ?? 3306,
-            $db_config["options"]
+            $db_config["options"]->toArray() ?? []
         );
 
         $this->setDbAdapter($schema->getDbAdatpter());
