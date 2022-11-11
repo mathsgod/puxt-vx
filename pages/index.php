@@ -110,6 +110,8 @@ return new class
             }
 
             $data["navbar"]["dropdown"] = $dropdown;
+            $data["menu"]["width"] = intval($vx->config->VX->menu_width ?? 280);
+            $data["theme_customizer"] = boolval($vx->config->VX->theme_customizer ?? true);
 
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
             $data["i18n_module"] = $vx->getModuleTranslate();

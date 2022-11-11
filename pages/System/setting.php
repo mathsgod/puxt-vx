@@ -33,6 +33,7 @@ return new class
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
         $config["access_token_expire"] = $config["access_token_expire"] ?? 3600;
         $config["refresh_token_expire"] = $config["refresh_token_expire"] ?? 86400;
+        $config["theme_customizer"] = boolval($config["theme_customizer"] ?? true);
 
         /** @var \Laminas\Config\Config $config */
         //filter out the configs that are not in the form
@@ -68,6 +69,8 @@ return new class
                 "jwt_blacklist",
                 "access_token_expire",
                 "refresh_token_expire",
+                "menu_width",
+                "theme_customizer"
 
             ]);
         }, ARRAY_FILTER_USE_KEY);

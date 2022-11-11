@@ -58,6 +58,20 @@ class User extends Model implements RoleInterface
     }
 
 
+    function getAddress()
+    {
+        $str = [];
+        if ($this->addr1) {
+            $str[] = $this->addr1;
+        }
+        if ($this->addr2) {
+            $str[] = $this->addr2;
+        }
+        if ($this->addr3) {
+            $str[] = $this->addr3;
+        }
+        return implode("\n", $str);
+    }
 
     function getName(): string
     {
