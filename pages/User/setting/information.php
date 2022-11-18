@@ -8,14 +8,26 @@ return new class
 {
     function get(VX $vx)
     {
-        $user = $vx->user;
-
         return [
-            "user_id" => $user->user_id,
-            "phone" => $user->phone,
-            "addr1" => $user->addr1,
-            "addr2" => $user->addr2,
-            "addr3" => $user->addr3,
+            [
+                '$formkit' => "elFormInput",
+                "label" => "Phone",
+                "name" => "phone",
+            ], [
+                '$formkit' => "elFormInput",
+                "label" => "Address1",
+                "name" => "addr1",
+            ],
+            [
+                '$formkit' => "elFormInput",
+                "label" => "Address2",
+                "name" => "addr2",
+            ],
+            [
+                '$formkit' => "elFormInput",
+                "label" => "Address3",
+                "name" => "addr3",
+            ],
         ];
     }
 };
