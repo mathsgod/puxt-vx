@@ -16,7 +16,7 @@ return new class
     {
         $token = $_COOKIE["access_token"];
         if (!$token) {
-            throw new BadRequestException("Missing access_token");
+            return new EmptyResponse();
         };
 
         $payload = $vx->getPayload($token);

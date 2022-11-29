@@ -9,7 +9,7 @@ path:
     register: [Users,Power Users,Guests]
     register-options: [Users,Power Users,Guests]
     token: [Users,Power Users]
-    view-as: [Users,Power Users]
+    view-as: [Users,Power Users,Guests]
     forgot-password: [Users,Power Users,Guests]
     is-allowed: [Users,Power Users,Guests]
 

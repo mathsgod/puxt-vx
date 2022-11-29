@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Response\EmptyResponse;
 use Symfony\Component\Yaml\Parser;
 use VX\ACL;
 use VX\Module;
@@ -78,7 +79,7 @@ return new class
         $sheet->getColumnDimensionByColumn(2)->setWidth(25);
         $sheet->freezePane("A2");
 
-        $ret = $this->getACL($vx,$vx->_get["usergroup_id"]);
+        $ret = $this->getACL($vx, $vx->_get["usergroup_id"]);
 
         $row = 2;
         foreach ($ret as $r) {
@@ -138,12 +139,12 @@ return new class
 
 
         if ($post["type"] == "path") {
-            $acl = ACL::Query([
+            $acl = ACL::Get([
                 "usergroup_id" => $post["usergroup_id"],
                 "module" => $post["module"],
                 "path" => $post["path"],
                 "value" => $post["value"]
-            ])->first();
+            ]);
 
             if ($post["checked"]) {
                 if (!$acl) $acl = new ACL();
@@ -161,12 +162,12 @@ return new class
             return;
         }
 
-        $acl = ACL::Query([
+        $acl = ACL::Get([
             "usergroup_id" => $post["usergroup_id"],
             "module" => $post["module"],
             "action" => $post["action"],
             "value" => "allow"
-        ])->first();
+        ]);
 
         if ($post["value"]) {
             if (!$acl) $acl = new ACL();
@@ -183,7 +184,7 @@ return new class
             }
         }
 
-        http_response_code(204);
+        return new EmptyResponse();
     }
 
 
