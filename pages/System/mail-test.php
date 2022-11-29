@@ -10,7 +10,7 @@ use Laminas\Diactoros\Response\EmptyResponse;
 return new class
 {
     function post(VX $vx)
-    {
+    {return new EmptyResponse();
         $mail = $vx->getMailer();
         $mail->Subject = $vx->_post["subject"];
         $mail->setFrom($vx->_post["from"]);
