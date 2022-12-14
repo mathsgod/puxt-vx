@@ -16,7 +16,7 @@ class AuthLock extends Model
 
     public static function ClearLockedIP(string $ip)
     {
-        $a = self::Query(["ip" => $ip])->first();
+        $a = self::Get(["ip" => $ip]);
 
         if ($a) {
             $a->delete();

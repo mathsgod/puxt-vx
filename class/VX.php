@@ -1,12 +1,15 @@
 <?php
 
 use Firebase\JWT\JWT;
-use Google\Authenticator\GoogleAuthenticator;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Authentication\Storage\NonPersistent;
+
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\AclInterface;
+use Laminas\ServiceManager\ServiceManager;
 use League\Event\EventDispatcherAware;
 use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\FileAttributes;
@@ -33,6 +36,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\ACL as VXACL;
+use VX\Auth\TokenAdapter;
 use VX\AuthLock;
 use VX\Config;
 use VX\IModel;
@@ -45,7 +49,6 @@ use VX\Response;
 use VX\Translate;
 use VX\User;
 use VX\UserLog;
-use VX\UI;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
@@ -79,6 +82,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     public $vx_root;
     public $locale;
     public $db;
+    public $container;
 
     /**
      * @var Module[]
@@ -87,6 +91,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     private $puxt;
 
     public $base_path;
+
+    protected $server_manager;
 
     public function __construct(App $puxt)
     {
@@ -112,7 +118,30 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->loadModules();
         $this->loadDB();
         $this->useEventDispatcher($puxt->eventDispatcher());
+
+        $this->server_manager = new ServiceManager([
+            "services" => [
+                VX::class => $this
+            ],
+            "factories" => [
+                AuthenticationService::class => function () {
+                    return new Laminas\Authentication\AuthenticationService(new NonPersistent);
+                },
+                "AuthenticationAdapter" => function () {
+                    return function (string $username, string $password) {
+                        return new \VX\Auth\Adapter($username, $password);
+                    };
+                }
+            ]
+        ]);
     }
+
+
+    public function getServiceManager()
+    {
+        return $this->server_manager;
+    }
+
 
     public function normalizePath(string $path)
     {
@@ -124,7 +153,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         //remove starting slash
         $path = ltrim($path, "/");
 
-        
+
         return "/" . $path;
     }
 
@@ -939,11 +968,31 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return true;
     }
 
+    function loginWithToken(string $token)
+    {
+        /** @var AuthenticationService */
+        $service = $this->getServiceManager()->get(AuthenticationService::class);
+
+        $service->setAdapter(new TokenAdapter($token, $this->config["VX"]["jwt"]["secret"]));
+
+        $result = $service->authenticate();
+
+        if (!$result->isValid()) {
+            throw new Exception($result->getMessages()[0], 401);
+        }
+
+        $user = User::Get($result->getIdentity());
+
+        return [
+            "access_token" => $this->generateAccessToken($user),
+            "refresh_token" =>  $this->generateRefreshToken($user)
+        ];
+    }
+
     // login with username, password and code, throw exception if failed
-    function login(string $username, string $password, ?string $code = null): User
+    function login(string $username, string $password, ?string $code = null)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
-
 
         if ($this->config["VX"]["authentication_lock"]) {
             $time = $this->config["VX"]["authentication_lock_time"];
@@ -952,44 +1001,25 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
 
+        $adatper = $this->getServiceManager()->get("AuthenticationAdapter");
 
-        $ul = UserLog::Create();
-        $ul->login_dt = date("Y-m-d H:i:s");
-        $ul->ip = $ip;
-        $ul->user_agent = $_SERVER["HTTP_USER_AGENT"];
+        /** @var AuthenticationService */
+        $service = $this->getServiceManager()->get(AuthenticationService::class);
+        $service->setAdapter($adatper($username, $password, $code));
 
-        try {
-            $user = User::Login($username, $password);
+        $result = $service->authenticate();
 
-            if ($this->isNeed2Step() && $user->need2Step($ip)) {
-                if (!$code) {
-                    throw new Exception("code required", 400);
-                }
-                $g = new GoogleAuthenticator();
-                if (!$g->checkCode($user->secret, $code)) {
-                    throw new Exception("code incorrect");
-                }
-            }
-
-
-            $ul->user_id = $user->user_id;
-            $ul->result = "SUCCESS";
-            $ul->save();
-            AuthLock::ClearLockedIP($ip);
-        } catch (Exception $e) {
-
-            AuthLock::LockIP($ip);
-
-            $user = User::Query(["username" => $username])->first();
-
-            if ($user) {
-                $ul->user_id = $user->user_id;
-                $ul->result = "FAIL";
-                $ul->save();
-            }
-            throw $e;
+        if (!$result->isValid()) {
+            //failed
+            throw new Exception($result->getMessages()[0], 401);
         }
-        return $user;
+        AuthLock::ClearLockedIP($ip);
+        $user = User::Get($result->getIdentity());
+
+        return [
+            "access_token" => $this->generateAccessToken($user),
+            "refresh_token" =>  $this->generateRefreshToken($user)
+        ];
     }
 
     public function logout()
