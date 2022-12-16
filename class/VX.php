@@ -96,6 +96,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function __construct(App $puxt)
     {
+        $puxt->getServiceManager()->setService(VX::class, $this);
+
 
         $this->puxt = $puxt;
         $this->base_path = $this->config->VX->base_path ?? $puxt->base_path;

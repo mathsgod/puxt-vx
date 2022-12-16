@@ -17,6 +17,7 @@ return function ($options) {
     $vx = new VX($this->puxt);
     $this->puxt->vx = $vx;
 
+
     $config = $this->puxt->config["VX"];
 
     if ($logger_config = $config["logger"]) {
@@ -33,7 +34,7 @@ return function ($options) {
     $router->middleware($vx);
     $router->addPatternMatcher("any", ".+");
 
-    
+
 
     $router->map("OPTIONS", "/", function (ServerRequestInterface $request) {
         return new Response();
