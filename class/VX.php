@@ -8,14 +8,14 @@ use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Acl\Acl;
-use Laminas\Permissions\Acl\AclInterface;
-use Laminas\ServiceManager\ServiceManager;
+use Laminas\Permissions\Rbac\Rbac;
 use League\Event\EventDispatcherAware;
 use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use League\Route\Http\Exception\UnauthorizedException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -36,7 +36,8 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\ACL as VXACL;
-use VX\Auth\TokenAdapter;
+use VX\Authentication\UserInterface;
+use VX\Authentication\UserRepositoryInterface;
 use VX\AuthLock;
 use VX\Config;
 use VX\IModel;
@@ -45,7 +46,6 @@ use VX\ListenserSubscriber;
 use VX\Mailer;
 use VX\Model;
 use VX\Module;
-use VX\Response;
 use VX\Translate;
 use VX\User;
 use VX\UserLog;
@@ -54,6 +54,7 @@ use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\SystemValue;
 use VX\UserGroup;
+use VX\UserRepository;
 
 /**
  * @property User $user
@@ -92,12 +93,41 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public $base_path;
 
-    protected $server_manager;
+
+    /**
+     * @var \Laminas\Permissions\Rbac\Rbac
+     */
+    private $rbac;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    protected $user_repository;
+
+    /**
+     * @var AuthenticationService
+     */
+    protected $auth;
+    
+    protected $service;
 
     public function __construct(App $puxt)
     {
+        $this->service = $puxt->getServiceManager();
+        if (!$this->service->has(UserRepositoryInterface::class)) {
+            $this->service->setService(UserRepositoryInterface::class, new UserRepository());
+        }
+
+        $this->user_repository = $this->service->get(UserRepositoryInterface::class);
+
+        $this->auth = new AuthenticationService();
+        $this->auth->setStorage(new NonPersistent());
+        $this->service->setService(AuthenticationService::class, $this->auth);
+
         $puxt->getServiceManager()->setService(VX::class, $this);
 
+        $services = $puxt->getServiceManager();
+        $this->service = $services;
 
         $this->puxt = $puxt;
         $this->base_path = $this->config->VX->base_path ?? $puxt->base_path;
@@ -112,38 +142,26 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
 
-        $this->res = new Response;
-        //        $this->ui = new UI($this);
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
         $this->loadModules();
         $this->loadDB();
-        $this->useEventDispatcher($puxt->eventDispatcher());
-
-        $this->server_manager = new ServiceManager([
-            "services" => [
-                VX::class => $this
-            ],
-            "factories" => [
-                AuthenticationService::class => function () {
-                    return new Laminas\Authentication\AuthenticationService(new NonPersistent);
-                },
-                "AuthenticationAdapter" => function () {
-                    return function (string $username, string $password) {
-                        return new \VX\Auth\Adapter($username, $password);
-                    };
-                }
-            ]
-        ]);
+        $this->useEventDispatcher($services->get(EventDispatcherInterface::class));
     }
 
-
-    public function getServiceManager()
+    public function getRBAC()
     {
-        return $this->server_manager;
-    }
+        if ($this->rbac) return $this->rbac;
+        $this->rbac = new Rbac();
 
+        foreach (UserGroup::Query() as $ug) {
+            $this->rbac->addRole($ug);
+        }
+
+
+        return $this->rbac;
+    }
 
     public function normalizePath(string $path)
     {
@@ -273,10 +291,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->_get = $_GET;
 
 
+        //$this->getServiceManager()->setService(AclInterface::class, $this->getAcl());
+
+        $this->getServiceManager()->setService(Rbac::class, $this->getRBAC());
+
         $request = $request
             ->withAttribute("context", $this)
-            ->withAttribute("user", $this->user)
-            ->withAttribute("acl", $this->getAcl());
+            ->withAttribute("user", $this->user);
 
         $response = $handler->handle($request);
 
@@ -521,14 +542,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
     }
 
-    public function generateAccessToken(User $user,  int $view_as = null)
+    public function generateAccessToken(UserInterface $user,  int $view_as = null)
     {
         $payload = [
             "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + ($this->config["VX"]["access_token_expire"] ?? 3600),
-            "user_id" => $user->user_id
+            "id" => $user->getIdentity(),
         ];
         if ($view_as) {
             $payload["view_as"] = $view_as;
@@ -537,14 +558,14 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return JWT::encode($payload, $this->config["VX"]["jwt"]["secret"]);
     }
 
-    public function generateRefreshToken(User $user)
+    public function generateRefreshToken(UserInterface $user)
     {
         return JWT::encode([
             "jti" => Uuid::uuid4()->toString(),
             "type" => "refresh_token",
             "iat" => time(),
             "exp" => time() + ($this->config["VX"]["refresh_token_expire"] ?? 86400), //1 day
-            "user_id" => $user->user_id
+            "user_id" => $user->getIdentity()
         ], $this->config["VX"]["jwt"]["secret"]);
     }
 
@@ -627,7 +648,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $this->getFileSystem($index);
     }
 
-    public function getAcl(): AclInterface
+   /*  public function getAcl(): AclInterface
     {
         if ($this->acl) return $this->acl;
 
@@ -750,7 +771,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->acl = $acl;
         return $this->acl;
     }
-
+ */
     public function getModuleTranslate()
     {
         $a = [];
@@ -970,30 +991,30 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return true;
     }
 
+    function getServiceManager()
+    {
+        return $this->puxt->getServiceManager();
+    }
+
     function loginWithToken(string $token)
     {
-        /** @var AuthenticationService */
-        $service = $this->getServiceManager()->get(AuthenticationService::class);
+        $adatper = $this->user_repository->getAuthenticationAdatper($token, null, null);
 
-        $service->setAdapter(new TokenAdapter($token, $this->config["VX"]["jwt"]["secret"]));
-
-        $result = $service->authenticate();
+        $result = $this->auth->authenticate($adatper);
 
         if (!$result->isValid()) {
             throw new Exception($result->getMessages()[0], 401);
         }
-
-        $user = User::Get($result->getIdentity());
-
-        return [
-            "access_token" => $this->generateAccessToken($user),
-            "refresh_token" =>  $this->generateRefreshToken($user)
-        ];
+        return $result->getIdentity();
     }
 
     // login with username, password and code, throw exception if failed
     function login(string $username, string $password, ?string $code = null)
     {
+
+        $adatper = $this->user_repository->getAuthenticationAdatper($username, $password, $code);
+        $result = $this->auth->authenticate($adatper);
+
         $ip = $_SERVER['REMOTE_ADDR'];
 
         if ($this->config["VX"]["authentication_lock"]) {
@@ -1003,25 +1024,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
 
-        $adatper = $this->getServiceManager()->get("AuthenticationAdapter");
-
-        /** @var AuthenticationService */
-        $service = $this->getServiceManager()->get(AuthenticationService::class);
-        $service->setAdapter($adatper($username, $password, $code));
-
-        $result = $service->authenticate();
-
         if (!$result->isValid()) {
             //failed
             throw new Exception($result->getMessages()[0], 401);
         }
-        AuthLock::ClearLockedIP($ip);
-        $user = User::Get($result->getIdentity());
 
-        return [
-            "access_token" => $this->generateAccessToken($user),
-            "refresh_token" =>  $this->generateRefreshToken($user)
-        ];
+        return $result->getIdentity();
     }
 
     public function logout()

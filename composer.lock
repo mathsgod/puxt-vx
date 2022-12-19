@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c3a643d554aa0b157a6cc2762434230",
+    "content-hash": "1a2a05dcb1b2d8a078d47e8da6f102e3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1032,16 +1032,16 @@
         },
         {
             "name": "laminas/laminas-db",
-            "version": "2.16.2",
+            "version": "2.16.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-db.git",
-                "reference": "f382589868928e628118d80144321223944625ca"
+                "reference": "dadd9a19d2f9e89aa59205572b928892b91ff1da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/f382589868928e628118d80144321223944625ca",
-                "reference": "f382589868928e628118d80144321223944625ca",
+                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/dadd9a19d2f9e89aa59205572b928892b91ff1da",
+                "reference": "dadd9a19d2f9e89aa59205572b928892b91ff1da",
                 "shasum": ""
             },
             "require": {
@@ -1099,7 +1099,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-12-11T12:56:04+00:00"
+            "time": "2022-12-17T16:31:58+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -1416,6 +1416,66 @@
                 }
             ],
             "time": "2022-12-01T10:29:36+00:00"
+        },
+        {
+            "name": "laminas/laminas-permissions-rbac",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-permissions-rbac.git",
+                "reference": "b3c376fdc0eae3d5208280d57cd9bb766c3d85a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-permissions-rbac/zipball/b3c376fdc0eae3d5208280d57cd9bb766c3d85a0",
+                "reference": "b3c376fdc0eae3d5208280d57cd9bb766c3d85a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
+            },
+            "conflict": {
+                "zendframework/zend-permissions-rbac": "*"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "~2.4.0",
+                "phpunit/phpunit": "^9.5.26",
+                "psalm/plugin-phpunit": "^0.18.0",
+                "vimeo/psalm": "^4.29.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Permissions\\Rbac\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Provides a role-based access control management",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "authorization",
+                "laminas",
+                "laminas-permissions-rbac",
+                "rbac"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-permissions-rbac/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-permissions-rbac/issues",
+                "rss": "https://github.com/laminas/laminas-permissions-rbac/releases.atom",
+                "source": "https://github.com/laminas/laminas-permissions-rbac"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2022-11-15T23:03:03+00:00"
         },
         {
             "name": "laminas/laminas-servicemanager",
@@ -6834,16 +6894,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.253.3",
+            "version": "3.253.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "7e66338fc6aedd5fa53b268ee30d8f6e4a568147"
+                "reference": "da3b60b090b2070bd452d8b87737ea1e00d8002f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7e66338fc6aedd5fa53b268ee30d8f6e4a568147",
-                "reference": "7e66338fc6aedd5fa53b268ee30d8f6e4a568147",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/da3b60b090b2070bd452d8b87737ea1e00d8002f",
+                "reference": "da3b60b090b2070bd452d8b87737ea1e00d8002f",
                 "shasum": ""
             },
             "require": {
@@ -6922,9 +6982,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.253.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.253.4"
             },
-            "time": "2022-12-15T19:26:05+00:00"
+            "time": "2022-12-16T19:23:03+00:00"
         },
         {
             "name": "beberlei/assert",

@@ -1,17 +1,13 @@
 <?php
 
-use Firege\JWT\JWT;
-use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Di\InjectorInterface;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
-use VX\PublicKeyCredentialSourceRepository;
-use VX\User;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Webauthn\PublicKeyCredentialSource;
+use VX\Menu;
 
 return new class
 {
-    function get(VX $vx)
+    function get(VX $vx, InjectorInterface $injector)
     {
         $logined = $vx->logined;
         $data = [
@@ -60,10 +56,10 @@ return new class
             $modules = $vx->getModules();
 
 
-
-
-            $menu = new VX\Menu();
-            $menu->setACL($vx->getAcl());
+            /**
+             * @var Menu $menu
+             */
+            $menu = $injector->create(Menu::class);
             $menu->setTranslator($vx->getTranslator());
             $menu->setGroupIcon($group_icons);
 

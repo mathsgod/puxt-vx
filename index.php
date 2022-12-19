@@ -12,8 +12,15 @@ use League\Route\Router;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
+use VX\Authentication\UserRepositoryInterface;
 
 return function ($options) {
+
+    /**
+     * @var \Puxt\App $puxt
+     */
+    $puxt=$this->puxt;
+
     $vx = new VX($this->puxt);
     $this->puxt->vx = $vx;
 

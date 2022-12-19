@@ -2,7 +2,7 @@
 
 namespace VX;
 
-use Laminas\Permissions\Acl\AclInterface;
+use Laminas\Permissions\Rbac\Rbac;
 
 class Menu implements TranslatorAwareInterface
 {
@@ -17,9 +17,13 @@ class Menu implements TranslatorAwareInterface
     public $icons = [];
     public $acl;
 
+    public function __construct(Rbac $acl)
+    {
+        $this->acl = $acl;
+    }
+
     public function addModule(Module $module)
     {
-        $module->setAcl($this->acl);
         if ($group = $module->getModuleGroup()) {
             $group->setTranslator($this->translator);
             if ($icon = $this->icons[$module->group]) {
@@ -38,16 +42,13 @@ class Menu implements TranslatorAwareInterface
     }
 
 
-    public function setACL(AclInterface $acl)
-    {;
-        $this->acl = $acl;
-    }
+
 
     public function setGroupIcon(array $icons)
     {
         $this->icons = $icons;
     }
-    
+
     public function getMenuByUser(User $user)
     {
         $data = [];

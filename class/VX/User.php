@@ -4,9 +4,9 @@ namespace VX;
 
 use Exception;
 use Laminas\Db\Sql\Where;
-use Laminas\Permissions\Acl\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use TheCodingMachine\GraphQLite\Annotations\Field;
+use VX\Authentication\UserInterface;
 
 /**
  * @property int $user_id
@@ -16,7 +16,7 @@ use TheCodingMachine\GraphQLite\Annotations\Field;
  * @property string $username
  * @property array $style
  */
-class User extends Model implements RoleInterface
+class User extends Model implements UserInterface
 {
     public static $_table = "User";
 
@@ -35,6 +35,20 @@ class User extends Model implements RoleInterface
     #[Assert\Choice([0, 1])]
     public $status;
 
+
+    function getIdentity(): string
+    {
+        return $this->user_id;
+    }
+
+    function getRoles(): array
+    {
+        $roles = [];
+        foreach (UserRole::Query(["user_id" => $this->user_id]) as $ur) {
+            $roles[] = $ur->Role()->getName();
+        }
+        return $roles;
+    }
 
     #[Field]
     function name()

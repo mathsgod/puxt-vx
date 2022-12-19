@@ -2,7 +2,6 @@
 
 namespace VX;
 
-use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
 use League\Route\Http\Exception\BadRequestException;
@@ -32,13 +31,12 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
     function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute("user");
-        $acl = $request->getAttribute("acl");
-
+//        $acl = $request->getAttribute("acl");
         
         if (!$user instanceof RoleInterface) {
             throw new BadRequestException();
         }
-
+/* 
         if (!$acl instanceof AclInterface) {
             throw new BadRequestException();
         }
@@ -47,7 +45,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
         if (!$acl->isAllowed($user, $this->getResourceId())) {
             throw new ForbiddenException();
         }
-
+ */
 /*         if ($request->getMethod() == "GET") {
 
             //check accept header has text/vue

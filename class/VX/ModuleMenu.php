@@ -2,8 +2,8 @@
 
 namespace VX;
 
-use Laminas\Permissions\Acl\AclInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Rbac\Rbac;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use VX\UI\EL\MenuItem;
 
@@ -19,7 +19,7 @@ class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
      */
     public $menu = [];
     public $acl;
-    public function __construct($data, ?AclInterface $acl)
+    public function __construct($data, ?Rbac $acl)
     {
         $this->label = $data["label"];
         $this->icon = $data["icon"] ?? "link";

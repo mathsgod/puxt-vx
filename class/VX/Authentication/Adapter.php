@@ -1,22 +1,24 @@
 <?php
 
-namespace VX\Auth;
+namespace VX\Authentication;
 
+use Firebase\JWT\JWT;
 use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Authentication\Adapter\AdapterInterface;
 use VX\User;
 use Laminas\Authentication\Result;
+use Ramsey\Uuid\Uuid;
 use VX\UserLog;
 
 class Adapter implements AdapterInterface
 {
-    protected $username;
+    protected $identity;
     protected $password;
     protected $code;
 
-    public function __construct(string $username, string $password, ?string $code)
+    public function __construct(string $identity, ?string $password, ?string $code)
     {
-        $this->username = $username;
+        $this->identity = $identity;
         $this->password = $password;
         $this->code = $code;
     }
@@ -31,7 +33,7 @@ class Adapter implements AdapterInterface
         $ul->user_agent = $_SERVER["HTTP_USER_AGENT"];
 
         $user = User::Get([
-            "username" => $this->username,
+            "username" => $this->identity,
             "status" => 0
         ]);
 
@@ -81,6 +83,18 @@ class Adapter implements AdapterInterface
         $ul->result = "SUCCESS";
         $ul->save();
 
-        return new Result(Result::SUCCESS, $user->user_id);
+
+        //create Token
+
+        $identity = JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
+            "type" => "access_token",
+            "iat" => time(),
+            "exp" => time() + 3600 * 8,
+            "id" => $user->getIdentity()
+        ], $_ENV["JWT_SECRET"]);
+
+
+        return new Result(Result::SUCCESS, $identity);
     }
 }

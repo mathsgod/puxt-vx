@@ -3,16 +3,56 @@
 namespace VX;
 
 use Laminas\Db\Sql\Where;
-use Laminas\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Rbac\Role;
+use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UserGroup extends Model implements RoleInterface
 {
     #[Assert\NotBlank]
     public $name;
+    private $_role;
 
-    #[Model\Field]
-    public function getName(){
+    private function getRole()
+    {
+        if ($this->_role) {
+            return $this->_role;
+        }
+        return $this->_role = new Role($this->name);
+    }
+
+    public function addPermission(string $name): void
+    {
+        $this->getRole()->addPermission($name);
+    }
+
+    public function hasPermission(string $name): bool
+    {
+        return $this->getRole()->hasPermission($name);
+    }
+
+    public function addChild(RoleInterface $child): void
+    {
+        $this->getRole()->addChild($child);
+    }
+
+    public function addParent(RoleInterface $parent): void
+    {
+        $this->getRole()->addParent($parent);
+    }
+
+    public function getChildren(): iterable
+    {
+        return $this->getRole()->getChildren();
+    }
+
+    public function getParents(): iterable
+    {
+        return $this->getRole()->getParents();
+    }
+
+    public function getName(): string
+    {
         return $this->name;
     }
 

@@ -4,8 +4,6 @@ namespace VX;
 
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Permissions\Acl\AclInterface;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\ForbiddenException;
@@ -18,7 +16,7 @@ use Symfony\Component\Yaml\Yaml;
 use VX;
 use VX\Model as VXModel;
 
-class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInterface
+class Module implements TranslatorAwareInterface, MenuItemInterface
 {
     use TranslatorAwareTrait;
 
@@ -31,11 +29,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
 
 
     public $menu = [];
-
-    /**
-     * @var AclInterface $acl
-     */
-    public $acl;
 
     /**
      * @var ModuleFile[] $files
@@ -229,6 +222,7 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
 
 
         $route->post($this->name, function (ServerRequestInterface $request, array $args) {
+
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
                 $user = $request->getAttribute("user");
 
@@ -320,9 +314,11 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
             return new JsonResponse($data);
         });
 
+
         $methods = ["GET", "POST", "PATCH", "DELETE"];
         foreach ($methods as $method) {
             foreach ($this->files as $file) {
+
                 $that = $this;
 
                 $path = $this->name . "/" . $file->path;
@@ -391,10 +387,6 @@ class Module implements TranslatorAwareInterface, ResourceInterface, MenuItemInt
         return $this->name;
     }
 
-    public function setAcl(AclInterface $acl)
-    {
-        $this->acl = $acl;
-    }
 
     /**
      * @return ModuleFile[]
