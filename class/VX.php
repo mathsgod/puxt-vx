@@ -7,6 +7,7 @@ use Laminas\Authentication\Storage\NonPersistent;
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
+use Laminas\Di\InjectorInterface;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Rbac\Rbac;
 use League\Event\EventDispatcherAware;
@@ -15,6 +16,7 @@ use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use League\Route\Http\Exception\UnauthorizedException;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -36,8 +38,12 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\ACL as VXACL;
-use VX\Authentication\UserInterface;
+use VX\Authentication;
+use VX\Authentication\AuthenticationMiddleware;
 use VX\Authentication\UserRepositoryInterface;
+use VX\Authentication\Adapter;
+use VX\Authentication\AuthenticationInterface;
+use VX\Authentication\UserInterface;
 use VX\AuthLock;
 use VX\Config;
 use VX\IModel;
@@ -45,6 +51,7 @@ use VX\JWTBlacklist;
 use VX\ListenserSubscriber;
 use VX\Mailer;
 use VX\Model;
+use VX\ModelInterface;
 use VX\Module;
 use VX\Translate;
 use VX\User;
@@ -52,12 +59,12 @@ use VX\UserLog;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+
 use VX\SystemValue;
 use VX\UserGroup;
 use VX\UserRepository;
 
 /**
- * @property User $user
  * @property int $user_id
  * @property Module $module
  */
@@ -68,16 +75,13 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     use LoggerAwareTrait;
     use AdapterAwareTrait;
 
-    public $user;
+    public UserInterface $user;
+
     public $user_id;
     public $module;
     public $logined = false;
     public $res;
-    /**
-     * @var \Laminas\Permissions\Acl\Acl
-     */
-    private $acl;
-    public $ui;
+
     public $config;
     public Translator $translator;
     public $vx_root;
@@ -108,12 +112,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
      * @var AuthenticationService
      */
     protected $auth;
-    
+
     protected $service;
+
+    /**
+     * @var InjectorInterface
+     */
+    protected $injector;
 
     public function __construct(App $puxt)
     {
         $this->service = $puxt->getServiceManager();
+
+        $this->injector = $this->service->get(InjectorInterface::class);
+
         if (!$this->service->has(UserRepositoryInterface::class)) {
             $this->service->setService(UserRepositoryInterface::class, new UserRepository());
         }
@@ -123,6 +135,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->auth = new AuthenticationService();
         $this->auth->setStorage(new NonPersistent());
         $this->service->setService(AuthenticationService::class, $this->auth);
+        $this->service->setService(AuthenticationInterface::class, new Authentication());
 
         $puxt->getServiceManager()->setService(VX::class, $this);
 
@@ -145,9 +158,17 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
 
-        $this->loadModules();
+
+
+
+
         $this->loadDB();
+        $this->service->setService(Rbac::class, $this->getRBAC());
+        $this->loadModules();
+
         $this->useEventDispatcher($services->get(EventDispatcherInterface::class));
+
+        $this->service->setService(AuthenticationInterface::class, new Authentication);
     }
 
     public function getRBAC()
@@ -158,7 +179,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         foreach (UserGroup::Query() as $ug) {
             $this->rbac->addRole($ug);
         }
-
 
         return $this->rbac;
     }
@@ -216,7 +236,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         foreach ($modules as $module) {
 
-            $this->modules[] = new Module($this, $module);
+            $this->modules[] = new Module($this, $module, $this->rbac);
         }
     }
 
@@ -242,13 +262,31 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        /**
+         * @var UserInterface $user
+         */
+        $this->user = $request->getAttribute(UserInterface::class);
+
+
+        //check user roles has guest
+        $this->logined = true;
+        foreach ($this->user->getRoles() as $role) {
+            if ($role->getName() === "Guests") {
+                $this->logined = false;
+                break;
+            }
+        }
+
+
+
+
+        //authentication interface
         if ($this->logger) {
             $this->logger->info("Request: " . $request->getUri()->getPath());
         }
 
         $uri_path = $request->getUri()->getPath();
         $this->request_uri = substr($uri_path, strlen($this->base_path));
-
 
         $this->_files = [];
 
@@ -284,20 +322,11 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->request = $request;
 
         $this->processConfig();
-        $this->processAuthorization($request);
         $this->processTranslator();
-
 
         $this->_get = $_GET;
 
 
-        //$this->getServiceManager()->setService(AclInterface::class, $this->getAcl());
-
-        $this->getServiceManager()->setService(Rbac::class, $this->getRBAC());
-
-        $request = $request
-            ->withAttribute("context", $this)
-            ->withAttribute("user", $this->user);
 
         $response = $handler->handle($request);
 
@@ -404,10 +433,21 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $this->config->merge(new \Laminas\Config\Config(["VX" => $config]));
     }
-
+    /* 
     private function processAuthorization(ServerRequestInterface $request)
     {
-        //authorization
+
+
+
+
+
+
+        print_R($request->getCookieParams());
+        die();
+
+        //        $this->user_repository->getUserByIdentity()
+
+
 
         $this->user_id = 2;
 
@@ -456,7 +496,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
         }
     }
-
+ */
     public function getModule(string $name): ?Module
     {
         foreach ($this->getModules() as $module) {
@@ -648,7 +688,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $this->getFileSystem($index);
     }
 
-   /*  public function getAcl(): AclInterface
+    /*  public function getAcl(): AclInterface
     {
         if ($this->acl) return $this->acl;
 
@@ -998,9 +1038,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     function loginWithToken(string $token)
     {
-        $adatper = $this->user_repository->getAuthenticationAdatper($token, null, null);
-
-        $result = $this->auth->authenticate($adatper);
+        $result = $this->auth->authenticate(new Adapter($token, null, null));
 
         if (!$result->isValid()) {
             throw new Exception($result->getMessages()[0], 401);
@@ -1011,9 +1049,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     // login with username, password and code, throw exception if failed
     function login(string $username, string $password, ?string $code = null)
     {
+        $result = $this->auth->authenticate(new Adapter($username, $password, $code));
 
-        $adatper = $this->user_repository->getAuthenticationAdatper($username, $password, $code);
-        $result = $this->auth->authenticate($adatper);
 
         $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -1046,7 +1083,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         }
     }
 
-    public function object(): ?IModel
+    public function object(): ?ModelInterface
     {
         if ($this->module) {
             $class = $this->module->class;
@@ -1064,12 +1101,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
      */
     public function getModules()
     {
-
-        if ($this->acl) {
-            foreach ($this->modules as $module) {
-                $module->setAcl($this->acl);
-            }
-        }
         return $this->modules;
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a2a05dcb1b2d8a078d47e8da6f102e3",
+    "content-hash": "cbd0020ea93245d88c73ee1fffb44ec4",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1353,69 +1353,6 @@
                 }
             ],
             "time": "2022-12-05T16:02:38+00:00"
-        },
-        {
-            "name": "laminas/laminas-permissions-acl",
-            "version": "2.13.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-permissions-acl.git",
-                "reference": "a13454dc3013cdcb388c95c418866e93dc781300"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-permissions-acl/zipball/a13454dc3013cdcb388c95c418866e93dc781300",
-                "reference": "a13454dc3013cdcb388c95c418866e93dc781300",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
-            },
-            "conflict": {
-                "laminas/laminas-servicemanager": "<3.0",
-                "zendframework/zend-permissions-acl": "*"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "~2.4.0",
-                "laminas/laminas-servicemanager": "^3.19",
-                "phpunit/phpunit": "^9.5.26",
-                "psalm/plugin-phpunit": "^0.18.0",
-                "vimeo/psalm": "^5.0"
-            },
-            "suggest": {
-                "laminas/laminas-servicemanager": "To support Laminas\\Permissions\\Acl\\Assertion\\AssertionManager plugin manager usage"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Permissions\\Acl\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Provides a lightweight and flexible access control list (ACL) implementation for privileges management",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "acl",
-                "laminas"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-permissions-acl/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-permissions-acl/issues",
-                "rss": "https://github.com/laminas/laminas-permissions-acl/releases.atom",
-                "source": "https://github.com/laminas/laminas-permissions-acl"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2022-12-01T10:29:36+00:00"
         },
         {
             "name": "laminas/laminas-permissions-rbac",

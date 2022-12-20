@@ -2,14 +2,16 @@
 
 namespace VX;
 
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\RoleInterface;
 use R\DB\Model as DBModel;
 use R\DB\Query;
 use ReflectionClass;
 use ReflectionObject;
 use TheCodingMachine\GraphQLite\Annotations\Field;
+use VX\Authentication\UserInterface;
 
-class Model extends DBModel implements ResourceInterface, IModel
+class Model extends DBModel implements ModelInterface
 {
     public static function Sort(Query $q, string $sort, string $order)
     {
@@ -19,7 +21,7 @@ class Model extends DBModel implements ResourceInterface, IModel
     {
     }
 
-    public static function QueryData(array $query, User $user)
+    public static function QueryData(array $query, UserInterface $user)
     {
         $fields = array_column(self::__attributes(), "Field");
 
@@ -113,6 +115,7 @@ class Model extends DBModel implements ResourceInterface, IModel
         $data = [];
         foreach ($q as $o) {
             if ($o instanceof Model) {
+
                 if ($o->canReadBy($user)) {
                     $obj = $o->toArray($query["fields"] ?? []);
 
@@ -174,30 +177,88 @@ class Model extends DBModel implements ResourceInterface, IModel
         return $this->$key;
     }
 
-    public function getResourceId()
+
+    public function assert(Rbac $rbac, RoleInterface $role, string $permission): bool
     {
-        $r = new ReflectionClass(static::class);
-        return $r->getShortName();
+        if ($role->getName() == "Administrators") {
+            return true;
+        }
+        return false;
     }
 
-    public function canDeleteBy(User $user): bool
+    public function canDeleteBy(UserInterface $user): bool
     {
-        return self::$_vx->getAcl()->isAllowed($user, $this, "delete");
+        /**
+         * @var Rbac
+         */
+        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
+
+        $granted = false;
+        foreach ($user->getRoles() as $role) {
+
+            if ($rbac->isGranted($role->getName(), "delete", $this)) {
+                return true;
+                break;
+            }
+        }
+
+        return false;
     }
 
-    public function canReadBy(User $user): bool
+    public function canReadBy(UserInterface $user): bool
     {
-        return self::$_vx->getAcl()->isAllowed($user, $this, "read");
+
+        /**
+         * @var Rbac
+         */
+        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
+
+        $granted = false;
+        foreach ($user->getRoles() as $role) {
+
+            if ($rbac->isGranted($role->getName(), "read", $this)) {
+                return true;
+                break;
+            }
+        }
+
+        return false;
     }
 
-    public function canUpdateBy(User $user): bool
+    public function canUpdateBy(UserInterface $user): bool
     {
-        return self::$_vx->getAcl()->isAllowed($user, $this, "update");
+        /**
+         * @var Rbac
+         */
+        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
+
+        $granted = false;
+        foreach ($user->getRoles() as $role) {
+
+            if ($rbac->isGranted($role->getName(), "update", $this)) {
+                return true;
+                break;
+            }
+        }
+
+        return false;
     }
 
-    public function canCreateBy(User $user): bool
+    public function canCreateBy(UserInterface $user): bool
     {
-        return self::$_vx->getAcl()->isAllowed($user, $this, "create");
+        /**
+         * @var Rbac
+         */
+        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
+
+
+        foreach ($user->getRoles() as $role) {
+            if ($rbac->isGranted($role->getName(), "create", $this)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #[Field]

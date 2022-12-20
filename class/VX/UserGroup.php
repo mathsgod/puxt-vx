@@ -3,11 +3,13 @@
 namespace VX;
 
 use Laminas\Db\Sql\Where;
+use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\Role;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use VX\Authentication\UserInterface;
 
-class UserGroup extends Model implements RoleInterface
+class UserGroup extends Model implements ModelInterface, RoleInterface
 {
     #[Assert\NotBlank]
     public $name;
@@ -18,7 +20,13 @@ class UserGroup extends Model implements RoleInterface
         if ($this->_role) {
             return $this->_role;
         }
-        return $this->_role = new Role($this->name);
+        $this->_role = new Role($this->name);
+
+        $this->_role->addPermission("create");
+        $this->_role->addPermission("read");
+        $this->_role->addPermission("update");
+        $this->_role->addPermission("delete");
+        return $this->_role;
     }
 
     public function addPermission(string $name): void
@@ -54,11 +62,6 @@ class UserGroup extends Model implements RoleInterface
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getRoleId()
-    {
-        return "ug-" . $this->usergroup_id;
     }
 
     public function removeUser(User $user)
@@ -106,7 +109,7 @@ class UserGroup extends Model implements RoleInterface
         return $ug;
     }
 
-    public function canUpdateBy(User $user): bool
+    public function canUpdateBy(UserInterface $user): bool
     {
         if ($this->readonly) {
             return false;
@@ -114,7 +117,7 @@ class UserGroup extends Model implements RoleInterface
         return parent::canUpdateBy($user);
     }
 
-    public function canDeleteBy(User $user): bool
+    public function canDeleteBy(UserInterface $user): bool
     {
         if ($this->readonly) {
             return false;

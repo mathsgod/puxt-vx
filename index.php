@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Di\InjectorInterface;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -12,6 +13,7 @@ use League\Route\Router;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
+use VX\Authentication\AuthenticationMiddleware;
 use VX\Authentication\UserRepositoryInterface;
 
 return function ($options) {
@@ -19,7 +21,12 @@ return function ($options) {
     /**
      * @var \Puxt\App $puxt
      */
-    $puxt=$this->puxt;
+    $puxt = $this->puxt;
+
+    /**
+     * @var InjectorInterface $injector
+     */
+    $injector = $puxt->getServiceManager()->get(InjectorInterface::class);
 
     $vx = new VX($this->puxt);
     $this->puxt->vx = $vx;
@@ -38,9 +45,15 @@ return function ($options) {
 
     $router = new Router();
     $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($vx));
+
+    /**
+     * @var AuthenticationMiddleware $middleware
+     */
+    $middleware=$injector->create(AuthenticationMiddleware::class);
+    $router->middleware($middleware);
+    
     $router->middleware($vx);
     $router->addPatternMatcher("any", ".+");
-
 
 
     $router->map("OPTIONS", "/", function (ServerRequestInterface $request) {

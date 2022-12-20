@@ -1,14 +1,16 @@
 <?php
 
 use Laminas\Di\InjectorInterface;
+use Laminas\Permissions\Rbac\Rbac;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
 use VX\Menu;
 
 return new class
 {
-    function get(VX $vx, InjectorInterface $injector)
+    function get(VX $vx, InjectorInterface $injector, Rbac $rbac)
     {
+
         $logined = $vx->logined;
         $data = [
             "logined" => $logined,
@@ -63,6 +65,8 @@ return new class
             $menu->setTranslator($vx->getTranslator());
             $menu->setGroupIcon($group_icons);
 
+
+  
             foreach ($modules as $m) {
                 if ($m->name == "FileManager") {
                     if (!$vx->config["VX"]["file_manager_show"]) {

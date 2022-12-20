@@ -2,6 +2,8 @@
 
 namespace VX;
 
+use VX\Authentication\UserInterface;
+
 class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
 {
     use TranslatorAwareTrait;
@@ -64,7 +66,7 @@ class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
         $this->sequence = min($this->sequence, $module->sequence);
     }
 
-    public function getMenuItemByUser(User $user): array
+    public function getMenuItemByUser(UserInterface $user): array
     {
         $data = [];
 

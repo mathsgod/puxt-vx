@@ -2,16 +2,14 @@
 
 namespace VX;
 
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use Laminas\Permissions\Acl\Role\RoleInterface;
-use League\Route\Http\Exception\BadRequestException;
-use League\Route\Http\Exception\ForbiddenException;
+use Laminas\Permissions\Rbac\AssertionInterface;
+use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\RoleInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use PUXT\VueRequestHandler;
 
-class ModuleFile implements ResourceInterface, RequestHandlerInterface
+class ModuleFile implements RequestHandlerInterface, AssertionInterface
 {
     public string $path;
     public string $file;
@@ -23,20 +21,22 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
         $this->file = $file;
     }
 
-    function getResourceId()
+    public function assert(Rbac $rbac, RoleInterface $role, string $permission): bool
     {
-        return $this->module->name . "/" . $this->path;
+        return true;
     }
+
 
     function handle(ServerRequestInterface $request): ResponseInterface
     {
+
         $user = $request->getAttribute("user");
-//        $acl = $request->getAttribute("acl");
-        
-        if (!$user instanceof RoleInterface) {
+        //        $acl = $request->getAttribute("acl");
+
+        /*       if (!$user instanceof RoleInterface) {
             throw new BadRequestException();
-        }
-/* 
+        } */
+        /* 
         if (!$acl instanceof AclInterface) {
             throw new BadRequestException();
         }
@@ -46,7 +46,7 @@ class ModuleFile implements ResourceInterface, RequestHandlerInterface
             throw new ForbiddenException();
         }
  */
-/*         if ($request->getMethod() == "GET") {
+        /*         if ($request->getMethod() == "GET") {
 
             //check accept header has text/vue
             $accept = $request->getHeaderLine("Accept");

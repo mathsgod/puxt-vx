@@ -2,6 +2,7 @@
 
 namespace VX;
 
+use ArrayObject;
 use Exception;
 use Laminas\Db\Sql\Where;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -41,11 +42,20 @@ class User extends Model implements UserInterface
         return $this->user_id;
     }
 
-    function getRoles(): array
+    public function getDetail(string $name, $default = null)
+    {
+    }
+
+    public function getDetails(): array
+    {
+        return [];
+    }
+
+    public function getRoles(): array
     {
         $roles = [];
-        foreach (UserRole::Query(["user_id" => $this->user_id]) as $ur) {
-            $roles[] = $ur->Role()->getName();
+        foreach (UserList::Query(["user_id" => $this->user_id]) as $ur) {
+            $roles[] = $ur->UserGroup();
         }
         return $roles;
     }
@@ -126,10 +136,6 @@ class User extends Model implements UserInterface
     }
 
 
-    public function getRoleId()
-    {
-        return "u-" . $this->user_id;
-    }
 
     public function need2Step(string $remote_ip)
     {
@@ -272,7 +278,7 @@ class User extends Model implements UserInterface
         return $this->is("Guests");
     }
 
-    public function canDeleteBy(User $user): bool
+    public function canDeleteBy(UserInterface $user): bool
     {
         if ($this->isSystemAccount()) return false;
         if ($user->user_id == $this->user_id) return false; //no one can delete self
@@ -286,7 +292,7 @@ class User extends Model implements UserInterface
         return false;
     }
 
-    public function canUpdateBy(User $user): bool
+    public function canUpdateBy(UserInterface $user): bool
     {
         if ($user->isAdmin()) return true; //admin can update all
         if ($user->user_id == $this->user_id) return true; //update self
@@ -299,7 +305,7 @@ class User extends Model implements UserInterface
         return false;
     }
 
-    public function canReadBy(User $user): bool
+    public function canReadBy(UserInterface $user): bool
     {
         if ($user->user_id == $this->user_id) return true; //anyone can read self
         if ($user->isAdmin()) return true; //admin can read all

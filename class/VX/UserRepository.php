@@ -10,17 +10,18 @@ use VX\Authentication\UserRepositoryInterface;
 class UserRepository implements UserRepositoryInterface
 {
 
-    public function getUserByIdentity(string $identity): ?UserInterface
+    public function authenticate(string $credential, ?string $password = null): ?UserInterface
     {
-        return User::Query(["username" => $identity])->first();
+        return User::Query(["username" => $credential])->first();
     }
+
 
     public function getAll(): array
     {
         return User::Query()->toArray();
     }
 
-    public function getAuthenticationAdatper(string $identity, ?string $crdential, ?string $code): ?AdapterInterface
+    public function getAuthenticationAdatper(string $identity, ?string $crdential = null, ?string $code = null): ?AdapterInterface
     {
         return new Adapter($identity, $crdential, $code);
     }

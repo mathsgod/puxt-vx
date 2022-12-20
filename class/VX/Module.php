@@ -4,19 +4,23 @@ namespace VX;
 
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Permissions\Rbac\AssertionInterface;
+use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\RoleInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Http\Exception\UnauthorizedException;
 use League\Route\RouteCollectionInterface;
+use VX\Authentication\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use R\DB\Model;
 use Symfony\Component\Yaml\Yaml;
 use VX;
 use VX\Model as VXModel;
 
-class Module implements TranslatorAwareInterface, MenuItemInterface
+class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionInterface
 {
     use TranslatorAwareTrait;
 
@@ -40,8 +44,12 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
      */
     public $vx;
 
-    public function __construct(VX $vx, string $name)
+
+    protected $rbac;
+
+    public function __construct(VX $vx, string $name, Rbac $rbac)
     {
+        $this->rbac = $rbac;
         $this->vx = $vx;
         $this->name = $name;
         $this->class = $name;
@@ -104,6 +112,17 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         $this->files = array_values($this->files);
     }
 
+    public function assert(Rbac $rbac, RoleInterface $role, string $permission): bool
+    {
+        //check module file has true
+        foreach ($this->files as $file) {
+            if ($file->assert($rbac, $role, $permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public function isHide(): bool
     {
@@ -143,20 +162,22 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
 
         if ($this->show_create) {
             $items[] = new ModuleMenu([
+                "name" => $this->name . ".add",
                 "label" => "Add",
                 "icon" => "add",
                 "link" => "/" . $this->name . "/add"
-            ], $this->acl);
+            ]);
         }
 
         $items[] = new ModuleMenu([
+            "name" => $this->name . ".list",
             "label" => "List",
             "icon" => "list",
             "link" => "/" . $this->name
-        ], $this->acl);
+        ]);
 
         foreach ($this->menu as $m) {
-            $items[] = new ModuleMenu($m, $this->acl);
+            $items[] = new ModuleMenu($m);
         }
 
         return $items;
@@ -174,13 +195,26 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
     function setupRoute(RouteCollectionInterface $route)
     {
 
-        $route->get($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
-            $user = $request->getAttribute("user");
+        $rbac = $this->rbac;
+        $route->get($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($rbac) {
+            /**
+             * @var UserInterface $user
+             */
+            $user = $request->getAttribute(UserInterface::class);
             $object = $this->getObject($args["id"]);
             if (!$object) {
                 throw new NotFoundException();
             }
-            if (!$object->canReadBy($user)) {
+
+            $granted = false;
+            foreach ($user->getRoles() as $role) {
+                if ($rbac->isGranted($role->getName(), "read", $object)) {
+                    $granted = true;
+                    break;
+                }
+            }
+
+            if (!$granted) {
                 throw new ForbiddenException();
             }
 
@@ -221,12 +255,14 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         });
 
 
-        $route->post($this->name, function (ServerRequestInterface $request, array $args) {
+        $route->post($this->name, function (ServerRequestInterface $request, array $args) use ($rbac) {
 
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
-                $user = $request->getAttribute("user");
+                $user = $request->getAttribute(UserInterface::class);
 
                 $object = $this->createObject();
+
+
                 if (!$object->canCreateBy($user)) {
                     throw new ForbiddenException();
                 }
@@ -244,7 +280,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
 
         $route->post($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
-                $user = $request->getAttribute("user");
+                $user = $request->getAttribute(UserInterface::class);
                 $object = $this->getObject($args["id"]);
 
                 if (!$object) {
@@ -267,12 +303,13 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
 
         $route->patch($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
-                $user = $request->getAttribute("user");
+                $user = $request->getAttribute(UserInterface::class);
                 $object = $this->getObject($args["id"]);
 
                 if (!$object) {
                     throw new NotFoundException();
                 }
+
                 if (!$object->canUpdateBy($user)) {
                     throw new ForbiddenException();
                 }
@@ -288,13 +325,18 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
             throw new NotFoundException();
         });
 
-        $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
-            $user = $request->getAttribute("user");
+        $rbac = $this->rbac;
+        $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($rbac) {
+            $user = $request->getAttribute(UserInterface::class);
+
             $object = $this->getObject($args["id"]);
+
+
             if (!$object) {
                 throw new NotFoundException();
             }
-            if (!$object->canDeleteBy($user)) {
+
+            if (!$rbac->isGranted($user, "delete", $object)) {
                 throw new ForbiddenException();
             }
 
@@ -308,8 +350,10 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
                 throw new  UnauthorizedException();
             }
 
+
+
             $query = $request->getQueryParams();
-            $data = $this->class::QueryData($query, $request->getAttribute("user"));
+            $data = $this->class::QueryData($query, $request->getAttribute(UserInterface::class));
             $data["meta"]["model"] = $this->name;
             return new JsonResponse($data);
         });
@@ -380,14 +424,6 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         return $map;
     }
 
-
-
-    public function getResourceId()
-    {
-        return $this->name;
-    }
-
-
     /**
      * @return ModuleFile[]
      */
@@ -407,33 +443,43 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         }
     }
 
-    public function createObject(): ?IModel
+    public function createObject(): ?ModelInterface
     {
         $class = $this->class;
         if (!$class) return null;
         return new $class;
     }
 
-    public function getObject(int $id): ?IModel
+    public function getObject(int $id): ?ModelInterface
     {
+
         $class = $this->class;
         return $class::Get($id);
     }
 
-    public function getMenuItemByUser(User $user): array
+    public function getMenuItemByUser(UserInterface $user): array
     {
         if ($this->hide) {
             return [];
         }
 
         $menus = [];
+        $roles = $user->getRoles();
 
 
         foreach ($this->getMenus() as $menu) {
-            if (!$this->acl->isAllowed($user, $menu)) {
-                continue;
+            foreach ($roles as $role) {
+                if (!$this->rbac->isGranted($role->getName(), $menu->name ?? "")) {
+                    continue;
+                }
             }
 
+
+            //$this->rbac->isGranted()
+            /*      if (!$this->acl->isAllowed($user, $menu)) {
+                continue;
+            }
+ */
 
             $menus[] = $menu->getMenuLinkByUser($user);
         }

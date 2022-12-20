@@ -27,6 +27,18 @@ class Adapter implements AdapterInterface
     public function authenticate()
     {
 
+        //check is jwt
+
+        try {
+            $jwt = JWT::decode($this->identity, $_ENV["JWT_SECRET"], ['HS256']);
+            $user = User::Get($jwt->id);
+            if (!$user) {
+                return new Result(Result::FAILURE_IDENTITY_NOT_FOUND, null, ["User not found or incorrect password"]);
+            }
+            return new Result(Result::SUCCESS, $user);
+        } catch (\Exception $e) {
+        }
+
         $ul = UserLog::Create();
         $ul->login_dt = date("Y-m-d H:i:s");
         $ul->ip = $_SERVER['REMOTE_ADDR'];
@@ -91,7 +103,7 @@ class Adapter implements AdapterInterface
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + 3600 * 8,
-            "id" => $user->getIdentity()
+            "user_id" => $user->getIdentity()
         ], $_ENV["JWT_SECRET"]);
 
 

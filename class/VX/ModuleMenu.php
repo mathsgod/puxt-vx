@@ -2,52 +2,37 @@
 
 namespace VX;
 
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use Laminas\Permissions\Rbac\Rbac;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use VX\UI\EL\MenuItem;
+use VX\Authentication\UserInterface;
 
-class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
+class ModuleMenu implements TranslatorAwareInterface
 {
 
     public $link;
     public $label;
     public $icon;
+    public $name;
 
     /**
      * @var ModuleMenu[]
      */
     public $menu = [];
-    public $acl;
-    public function __construct($data, ?Rbac $acl)
+    public function __construct($data)
     {
+        $this->name = substr($data["link"], 1);
+        $this->name = $data["name"];
         $this->label = $data["label"];
         $this->icon = $data["icon"] ?? "link";
         $this->link = $data["link"];
-        $this->acl = $acl;
-
 
         foreach ($data["menu"] as $m) {
-            $mm = new ModuleMenu($m, $acl);
+            $mm = new ModuleMenu($m);
             $this->menu[] = $mm;
         }
     }
 
     protected $translator = null;
 
-    public function getResourceId()
-    {
-        return substr($this->link, 1);
-    }
-
-    public function getMenuItems()
-    {
-        $items = [];
-        foreach ($this->menu as $m) {
-            $items[] = new MenuItem($m);
-        }
-        return $items;
-    }
 
     public function setTranslator(TranslatorInterface $translator = null)
     {
@@ -58,7 +43,7 @@ class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
     }
 
 
-    public function getMenuLinkByUser(User $user)
+    public function getMenuLinkByUser(UserInterface $user)
     {
         $data = [];
 
@@ -67,12 +52,15 @@ class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
         $data["icon"] = $this->icon;
         $data["link"] = "#";
 
+        
         if ($this->menu) {
             $data["menus"] = [];
+
             foreach ($this->menu as $m) {
-                if (!$this->acl->isAllowed($user, $m)) {
+                
+                /*   if (!$this->acl->isAllowed($user, $m)) {
                     continue;
-                }
+                } */
 
                 $data["menus"][] = $m->getMenuLinkByUser($user);
             }
@@ -81,9 +69,5 @@ class ModuleMenu implements TranslatorAwareInterface, ResourceInterface
         }
 
         return $data;
-    }
-
-    public function isAllow($user)
-    {
     }
 }

@@ -14,17 +14,20 @@ return new class
 {
     function get(VX $vx)
     {
+        return new EmptyResponse(200);
         $token = $_COOKIE["access_token"];
         if (!$token) {
             return new EmptyResponse();
         };
 
-        $payload = $vx->getPayload($token);
+        $result = $users->getAuthenticationAdatper($token)->authenticate();
+        if (!$result->isValid()) {
+            return new EmptyResponse();
+        }
 
-        $user = User::Get($payload->user_id);
+        $token = $result->getIdentity();
 
-
-        $access_token_string = "access_token=" . $vx->generateAccessToken($user)  . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
+        $access_token_string = "access_token=" . $token . "; path=" . $vx->base_path . "; SameSite=Strict; HttpOnly";
 
         if ($vx->request->getUri()->getScheme() == "https") {
             $access_token_string .= "; Secure";
