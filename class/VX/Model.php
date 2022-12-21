@@ -186,84 +186,6 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
         return $this->$key;
     }
 
-    public function canDeleteBy(UserInterface $user): bool
-    {
-
-        return true;
-        /**
-         * @var Rbac
-         */
-        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
-
-        $granted = false;
-        foreach ($user->getRoles() as $role) {
-
-            if ($rbac->isGranted($role->getName(), "delete", $this)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    public function canReadBy(UserInterface $user): bool
-    {
-        return true;
-        /**
-         * @var Rbac
-         */
-        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
-
-        $granted = false;
-        foreach ($user->getRoles() as $role) {
-
-            if ($rbac->isGranted($role->getName(), "read", $this)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    public function canUpdateBy(UserInterface $user): bool
-    {
-        return true;
-        /**
-         * @var Rbac
-         */
-        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
-
-        $granted = false;
-        foreach ($user->getRoles() as $role) {
-
-            if ($rbac->isGranted($role->getName(), "update", $this)) {
-                return true;
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    public function canCreateBy(UserInterface $user): bool
-    {
-        return true;
-        /**
-         * @var Rbac
-         */
-        $rbac = self::$_vx->getServiceManager()->get(Rbac::class);
-
-
-        foreach ($user->getRoles() as $role) {
-            if ($rbac->isGranted($role->getName(), "create", $this)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     #[Field]
     public function createdBy(): ?User
@@ -366,17 +288,17 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
             }
         }
 
-
+        $vx = self::$_vx->getSecurity();
         if (in_array("__canRead", $fields)) {
-            $data["__canRead"] = $this->canReadBy(self::$_vx->user);
+            $data["__canRead"] = $vx->isGranted(self::$_vx->user, "read", $this);
         }
 
         if (in_array("__canUpdate", $fields)) {
-            $data["__canUpdate"] = $this->canUpdateBy(self::$_vx->user);
+            $data["__canUpdate"] = $vx->isGranted(self::$_vx->user, "update", $this);
         }
 
         if (in_array("__canDelete", $fields)) {
-            $data["__canDelete"] = $this->canDeleteBy(self::$_vx->user);
+            $data["__canDelete"] =  $vx->isGranted(self::$_vx->user, "delete", $this);
         }
 
 

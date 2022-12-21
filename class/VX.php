@@ -166,7 +166,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $this->getSecurity()->isGranted($this->user, $permission, $assertion);
     }
 
-    public function getSecurity()
+    public function getSecurity():Security
     {
         if ($this->security) return $this->security;
         $this->security = new Security();

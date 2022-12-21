@@ -45,6 +45,10 @@ class User extends Model implements UserInterface
             return false;
         }
 
+        if ($permission === "read") {
+            if ($user->is("Users")) return true;
+        }
+
         return parent::assert($security, $user, $permission);
     }
 
@@ -53,14 +57,14 @@ class User extends Model implements UserInterface
         return $this->user_id;
     }
 
-    public function getDetail(string $name, $default = null)
+  /*   public function getDetail(string $name, $default = null)
     {
     }
 
     public function getDetails(): array
     {
         return [];
-    }
+    } */
 
     public function getRoles(): array
     {
@@ -147,8 +151,6 @@ class User extends Model implements UserInterface
         return $this->user_id == 1 || $this->user_id == 2 || $this->user_id == 3;
     }
 
-
-
     public function need2Step(string $remote_ip)
     {
         if (!$this->secret) return false;
@@ -179,69 +181,7 @@ class User extends Model implements UserInterface
         return $fav;
     }
 
-
-    public function canChangePasswordBy(User $user)
-    {
-        if ($this->isGuest()) {
-            return false;
-        }
-
-        if ($this->user_id == $user->user_id) {
-            return true;
-        }
-
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        if ($this->isAdmin()) {
-            return false;
-        }
-
-        if ($user->isPowerUser()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private static function PasswordVerify(string $password, string $hash)
-    {
-        return password_verify($password, $hash);
-    }
-
     const STATUS = ["Active", "Inactive"];
-    /**
-     * loing with username and password, thow exception if fail
-     */
-    public static function Login(string $username, string $password): self
-    {
-
-        $user = self::Get([
-            "username" => $username,
-            "status" => 0
-        ]);
-
-        if (!$user) {
-            throw new Exception("User not found or incorrect password", 400);
-        }
-
-        //check password
-        if (!self::PasswordVerify($password, $user->password)) {
-            throw new Exception("User not found or incorrect password", 400);
-        }
-
-        if ($user->expiry_date && strtotime($user->expiry_date) < time()) {
-            throw new Exception("User account expired", 400);
-        }
-
-        if ($user->UserList->count() == 0) {
-            throw new Exception("User has no user group", 400);
-        }
-
-
-        return $user;
-    }
 
     public function __toString()
     {
@@ -272,8 +212,6 @@ class User extends Model implements UserInterface
 
         return in_array($group->usergroup_id, self::$_is[$this->user_id]);
     }
-
-
 
     public function isAdmin(): bool
     {
