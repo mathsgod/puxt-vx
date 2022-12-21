@@ -2,7 +2,7 @@
 
 namespace VX;
 
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 
 class Menu implements TranslatorAwareInterface
 {

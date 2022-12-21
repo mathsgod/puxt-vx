@@ -13,12 +13,13 @@ use League\Route\Http\Exception\ForbiddenException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Http\Exception\UnauthorizedException;
 use League\Route\RouteCollectionInterface;
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use R\DB\Model;
 use Symfony\Component\Yaml\Yaml;
 use VX;
 use VX\Model as VXModel;
+use VX\Security\Security;
 
 class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionInterface
 {
@@ -45,11 +46,11 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
     public $vx;
 
 
-    protected $rbac;
+    protected $security;
 
-    public function __construct(VX $vx, string $name, Rbac $rbac)
+    public function __construct(VX $vx, string $name, Security $security)
     {
-        $this->rbac = $rbac;
+        $this->security = $security;
         $this->vx = $vx;
         $this->name = $name;
         $this->class = $name;
@@ -468,10 +469,9 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
 
 
         foreach ($this->getMenus() as $menu) {
-            foreach ($roles as $role) {
-                if (!$this->rbac->isGranted($role->getName(), $menu->name ?? "")) {
-                    continue;
-                }
+
+            if (!$this->security->isGranted($user, $menu->name ?? "")) {
+                continue;
             }
 
 

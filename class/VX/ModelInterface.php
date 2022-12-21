@@ -2,16 +2,8 @@
 
 namespace VX;
 
-use Laminas\Permissions\Rbac\AssertionInterface;
-use VX\Authentication\UserInterface;
-
-interface ModelInterface extends AssertionInterface
+interface ModelInterface
 {
-    public function canReadBy(UserInterface $user): bool;
-    public function canDeleteBy(UserInterface $user): bool;
-    public function canUpdateBy(UserInterface $user): bool;
-    public function canCreateBy(UserInterface $user): bool;
-
     public function uri(?string $name = null): string;
 
     public function save();

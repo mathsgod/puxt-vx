@@ -5,7 +5,7 @@ namespace VX;
 use Exception;
 use Firebase\JWT\JWT;
 use VX\Authentication\AuthenticationInterface;
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Authentication implements AuthenticationInterface

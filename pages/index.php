@@ -5,10 +5,11 @@ use Laminas\Permissions\Rbac\Rbac;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
 use VX\Menu;
+use VX\Security\Security;
 
 return new class
 {
-    function get(VX $vx, InjectorInterface $injector, Rbac $rbac)
+    function get(VX $vx, InjectorInterface $injector, Security $s)
     {
 
         $logined = $vx->logined;
@@ -66,7 +67,7 @@ return new class
             $menu->setGroupIcon($group_icons);
 
 
-  
+
             foreach ($modules as $m) {
                 if ($m->name == "FileManager") {
                     if (!$vx->config["VX"]["file_manager_show"]) {

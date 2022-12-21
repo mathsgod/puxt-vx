@@ -5,9 +5,13 @@ namespace VX;
 use ArrayObject;
 use Exception;
 use Laminas\Db\Sql\Where;
+use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use TheCodingMachine\GraphQLite\Annotations\Field;
-use VX\Authentication\UserInterface;
+use VX\Security\AssertionInterface;
+use VX\Security\Security;
+use VX\Security\UserInterface;
 
 /**
  * @property int $user_id
@@ -36,6 +40,16 @@ class User extends Model implements UserInterface
     #[Assert\Choice([0, 1])]
     public $status;
 
+    function assert(Security $security, UserInterface $user, string $permission): bool
+    {
+        if ($permission === "can_change_password") {
+            if ($user->is("Administrators")) return true;
+            if ($this->user_id == $user->getIdentity()) return true;
+            return false;
+        }
+
+        return parent::assert($security, $user, $permission);
+    }
 
     function getIdentity(): string
     {
@@ -53,9 +67,10 @@ class User extends Model implements UserInterface
 
     public function getRoles(): array
     {
+
         $roles = [];
         foreach (UserList::Query(["user_id" => $this->user_id]) as $ur) {
-            $roles[] = $ur->UserGroup();
+            $roles[] = $ur->UserGroup()->getName();
         }
         return $roles;
     }
@@ -238,8 +253,13 @@ class User extends Model implements UserInterface
 
 
     private static $_is = [];
-    public function is(string $name): bool
+    public function is(RoleInterface|string $role): bool
     {
+        if ($role instanceof RoleInterface) {
+            $name = $role->getName();
+        } else {
+            $name = $role;
+        }
 
         $group = UserGroup::GetByNameOrCode($name);
         if (!$group) return false;
@@ -276,43 +296,6 @@ class User extends Model implements UserInterface
     public function isGuest(): bool
     {
         return $this->is("Guests");
-    }
-
-    public function canDeleteBy(UserInterface $user): bool
-    {
-        if ($this->isSystemAccount()) return false;
-        if ($user->user_id == $this->user_id) return false; //no one can delete self
-
-        if ($user->isAdmin()) return true; //admin can delete all
-        if ($this->isGuest()) return false; //cannot delete guest
-        if ($this->isAdmin()) return false; //no one can edit admin
-
-        if ($user->isPowerUser()) return true; //power user can delete other
-
-        return false;
-    }
-
-    public function canUpdateBy(UserInterface $user): bool
-    {
-        if ($user->isAdmin()) return true; //admin can update all
-        if ($user->user_id == $this->user_id) return true; //update self
-
-        if ($this->isAdmin()) return false; //no one can edit admin
-        if ($this->isGuest()) return false; //cannot udpate guest
-
-        if ($user->isPowerUser()) return true; //power user can edit other
-
-        return false;
-    }
-
-    public function canReadBy(UserInterface $user): bool
-    {
-        if ($user->user_id == $this->user_id) return true; //anyone can read self
-        if ($user->isAdmin()) return true; //admin can read all
-        if ($this->isGuest()) return false; //cannot read guest
-        if ($this->isAdmin()) return false; //no one can read admin
-
-        return parent::canReadBy($user);
     }
 
     public function UserGroup()

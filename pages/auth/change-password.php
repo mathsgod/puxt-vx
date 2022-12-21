@@ -6,16 +6,17 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Permissions\Rbac\Rbac;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
 
 return new class
 {
-    function post(VX $vx)
+    function post(VX $vx, Rbac $rbac)
     {
         $user = $vx->user;
 
-        if (!$user->canChangePasswordBy($vx->user)) {
+        if (!$rbac->isGranted($user, "user.can_change_password", $user)) {
             throw new ForbiddenException("You are not allowed to change password");
         }
 

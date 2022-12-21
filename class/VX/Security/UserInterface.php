@@ -1,15 +1,16 @@
 <?php
 
-namespace VX\Authentication;
-
-use Laminas\Permissions\Rbac\RoleInterface;
+namespace VX\Security;
 
 interface UserInterface
 {
     public function getIdentity(): string;
 
     /**
-     * @return RoleInterface[]
+     * @return string[]
      */
     public function getRoles(): array;
+
+
+    public function is(string $role): bool;
 }

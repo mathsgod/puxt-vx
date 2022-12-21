@@ -8,15 +8,11 @@ use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
 use Laminas\Di\InjectorInterface;
-use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Rbac\Rbac;
 use League\Event\EventDispatcherAware;
 use League\Event\EventDispatcherAwareBehavior;
-use League\Flysystem\FileAttributes;
-use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use League\Route\Http\Exception\UnauthorizedException;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -33,20 +29,16 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
-use VX\ACL as VXACL;
 use VX\Authentication;
-use VX\Authentication\AuthenticationMiddleware;
 use VX\Authentication\UserRepositoryInterface;
 use VX\Authentication\Adapter;
 use VX\Authentication\AuthenticationInterface;
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 use VX\AuthLock;
 use VX\Config;
-use VX\IModel;
 use VX\JWTBlacklist;
 use VX\ListenserSubscriber;
 use VX\Mailer;
@@ -59,7 +51,7 @@ use VX\UserLog;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
-
+use VX\Security\Security;
 use VX\SystemValue;
 use VX\UserGroup;
 use VX\UserRepository;
@@ -98,10 +90,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     public $base_path;
 
 
-    /**
-     * @var \Laminas\Permissions\Rbac\Rbac
-     */
-    private $rbac;
+    private $security;
 
     /**
      * @var UserRepositoryInterface
@@ -163,7 +152,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
 
         $this->loadDB();
-        $this->service->setService(Rbac::class, $this->getRBAC());
+        $this->service->setService(Security::class, $this->getSecurity());
         $this->loadModules();
 
         $this->useEventDispatcher($services->get(EventDispatcherInterface::class));
@@ -171,16 +160,24 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->service->setService(AuthenticationInterface::class, new Authentication);
     }
 
-    public function getRBAC()
+    public function isGranted(string $permission, $assertion = null): bool
     {
-        if ($this->rbac) return $this->rbac;
-        $this->rbac = new Rbac();
+        return $this->getSecurity()->isGranted($this->user, $permission, $assertion);
+    }
+
+    public function getSecurity()
+    {
+        if ($this->security) return $this->security;
+        $this->security = new Security();
 
         foreach (UserGroup::Query() as $ug) {
-            $this->rbac->addRole($ug);
+            $this->security->addRole($ug->name);
+
+            $role = $this->security->getRole($ug->name);
+            $role->addPermission("user.can_change_password");
         }
 
-        return $this->rbac;
+        return $this->security;
     }
 
     public function normalizePath(string $path)
@@ -236,7 +233,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         foreach ($modules as $module) {
 
-            $this->modules[] = new Module($this, $module, $this->rbac);
+            $this->modules[] = new Module($this, $module, $this->security);
         }
     }
 
@@ -271,7 +268,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         //check user roles has guest
         $this->logined = true;
         foreach ($this->user->getRoles() as $role) {
-            if ($role->getName() === "Guests") {
+            if ($role === "Guests") {
                 $this->logined = false;
                 break;
             }

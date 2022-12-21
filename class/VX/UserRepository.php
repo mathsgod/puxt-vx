@@ -4,7 +4,7 @@ namespace VX;
 
 use Laminas\Authentication\Adapter\AdapterInterface;
 use VX\Authentication\Adapter;
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 use VX\Authentication\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
@@ -16,7 +16,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
-    public function getAll(): array
+    public function all(): array
     {
         return User::Query()->toArray();
     }

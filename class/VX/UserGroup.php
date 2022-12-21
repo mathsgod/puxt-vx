@@ -3,61 +3,13 @@
 namespace VX;
 
 use Laminas\Db\Sql\Where;
-use Laminas\Permissions\Rbac\Rbac;
-use Laminas\Permissions\Rbac\Role;
-use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 
-class UserGroup extends Model implements ModelInterface, RoleInterface
+class UserGroup extends Model implements ModelInterface
 {
     #[Assert\NotBlank]
     public $name;
-    private $_role;
-
-    private function getRole()
-    {
-        if ($this->_role) {
-            return $this->_role;
-        }
-        $this->_role = new Role($this->name);
-
-        $this->_role->addPermission("create");
-        $this->_role->addPermission("read");
-        $this->_role->addPermission("update");
-        $this->_role->addPermission("delete");
-        return $this->_role;
-    }
-
-    public function addPermission(string $name): void
-    {
-        $this->getRole()->addPermission($name);
-    }
-
-    public function hasPermission(string $name): bool
-    {
-        return $this->getRole()->hasPermission($name);
-    }
-
-    public function addChild(RoleInterface $child): void
-    {
-        $this->getRole()->addChild($child);
-    }
-
-    public function addParent(RoleInterface $parent): void
-    {
-        $this->getRole()->addParent($parent);
-    }
-
-    public function getChildren(): iterable
-    {
-        return $this->getRole()->getChildren();
-    }
-
-    public function getParents(): iterable
-    {
-        return $this->getRole()->getParents();
-    }
 
     public function getName(): string
     {

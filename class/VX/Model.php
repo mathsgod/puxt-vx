@@ -9,10 +9,17 @@ use R\DB\Query;
 use ReflectionClass;
 use ReflectionObject;
 use TheCodingMachine\GraphQLite\Annotations\Field;
-use VX\Authentication\UserInterface;
+use VX\Security\AssertionInterface;
+use VX\Security\Security;
+use VX\Security\UserInterface;
 
-class Model extends DBModel implements ModelInterface
+class Model extends DBModel implements ModelInterface, AssertionInterface
 {
+    function assert(Security $security, UserInterface $user, string $permission): bool
+    {
+        return false;
+    }
+
     public static function Sort(Query $q, string $sort, string $order)
     {
     }
@@ -175,15 +182,6 @@ class Model extends DBModel implements ModelInterface
     {
         $key = static::_key();
         return $this->$key;
-    }
-
-
-    public function assert(Rbac $rbac, RoleInterface $role, string $permission): bool
-    {
-        if ($role->getName() == "Administrators") {
-            return true;
-        }
-        return false;
     }
 
     public function canDeleteBy(UserInterface $user): bool

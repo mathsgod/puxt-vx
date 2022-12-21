@@ -3,7 +3,7 @@
 namespace VX;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
-use VX\Authentication\UserInterface;
+use VX\Security\UserInterface;
 
 class ModuleMenu implements TranslatorAwareInterface
 {
