@@ -2,8 +2,6 @@
 
 namespace VX;
 
-use Laminas\Permissions\Rbac\Rbac;
-use Laminas\Permissions\Rbac\RoleInterface;
 use R\DB\Model as DBModel;
 use R\DB\Query;
 use ReflectionClass;
