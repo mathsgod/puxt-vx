@@ -15,7 +15,7 @@ return new class
         }
 
         try {
-            $payload = JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
+            $payload = JWT::decode($refresh_token, $_ENV["JWT_SECRET"], ["HS256"]);
         } catch (Exception $e) {
             //remove the cookie
             $resp = new EmptyResponse();

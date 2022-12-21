@@ -7,7 +7,7 @@ use VX\Security\AssertionInterface;
 use VX\Security\Security;
 use VX\Security\UserInterface;
 
-class ModuleMenu implements TranslatorAwareInterface,AssertionInterface
+class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
 {
 
     public $link;
@@ -50,26 +50,26 @@ class ModuleMenu implements TranslatorAwareInterface,AssertionInterface
     }
 
 
-    public function getMenuLinkByUser(UserInterface $user)
+    public function getMenuLinkByUser(UserInterface $user, Security $security)
     {
         $data = [];
 
-        $data["name"] = $this->label;
+        $data["name"] = $this->name;
         $data["label"] = $this->translator ? $this->translator->trans($this->label) : $this->label;
         $data["icon"] = $this->icon;
         $data["link"] = "#";
 
-        
+
         if ($this->menu) {
             $data["menus"] = [];
 
             foreach ($this->menu as $m) {
-                
-                /*   if (!$this->acl->isAllowed($user, $m)) {
-                    continue;
-                } */
 
-                $data["menus"][] = $m->getMenuLinkByUser($user);
+                if (!$security->isGranted($user, $m->name ?? "")) {
+                    continue;
+                };
+
+                $data["menus"][] = $m->getMenuLinkByUser($user, $security);
             }
         } else {
             $data["link"] = $this->link;

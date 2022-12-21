@@ -5,12 +5,15 @@ use Laminas\Permissions\Rbac\Rbac;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
 use VX\Menu;
+use VX\Module;
 use VX\Security\Security;
 
 return new class
 {
     function get(VX $vx, InjectorInterface $injector, Security $s)
     {
+
+ 
 
         $logined = $vx->logined;
         $data = [

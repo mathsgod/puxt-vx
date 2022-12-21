@@ -151,7 +151,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
 
         if ($this->show_create) {
             $items[] = new ModuleMenu([
-                "name" => $this->name . ".add",
+                "name" => $this->name . "/add",
                 "label" => "Add",
                 "icon" => "add",
                 "link" => "/" . $this->name . "/add"
@@ -159,7 +159,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         }
 
         $items[] = new ModuleMenu([
-            "name" => $this->name . ".list",
+            "name" => $this->name . "/list",
             "label" => "List",
             "icon" => "list",
             "link" => "/" . $this->name
@@ -168,6 +168,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         foreach ($this->menu as $m) {
             $items[] = new ModuleMenu($m);
         }
+
 
         return $items;
     }
@@ -450,11 +451,13 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
 
         foreach ($this->getMenus() as $menu) {
 
-            if (!$this->security->isGranted($user, "read", $menu)) {
-                continue;
+            if (!$user->is("Administrators")) {
+                if (!$this->security->isGranted($user, $menu->name ?? "")) {
+                    continue;
+                }
             }
 
-            $menus[] = $menu->getMenuLinkByUser($user);
+            $menus[] = $menu->getMenuLinkByUser($user, $this->security);
         }
 
 

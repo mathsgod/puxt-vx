@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Authentication\Storage\NonPersistent;
 
@@ -8,7 +9,6 @@ use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
 use Laminas\Di\InjectorInterface;
-use Laminas\Permissions\Rbac\Rbac;
 use League\Event\EventDispatcherAware;
 use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
@@ -29,6 +29,7 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -172,9 +173,16 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         foreach (UserGroup::Query() as $ug) {
             $this->security->addRole($ug->name);
+        }
 
-            $role = $this->security->getRole($ug->name);
-            $role->addPermission("user.can_change_password");
+        $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
+
+        foreach ($acl["path"] as $path => $groups) {
+            foreach ($groups as $group) {
+                if ($this->security->hasRole($group)) {
+                    $this->security->getRole($group)->addPermission($path);
+                }
+            }
         }
 
         return $this->security;
@@ -233,29 +241,11 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         foreach ($modules as $module) {
 
+
             $this->modules[] = new Module($this, $module, $this->security);
         }
     }
 
-    function getPayload(string $token)
-    {
-        try {
-            return JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-        } catch (Exception $e) {
-            throw new UnauthorizedException();
-        }
-    }
-
-    function getUserIdByToken(string $token)
-    {
-        try {
-            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-        } catch (Exception $e) {
-            throw new UnauthorizedException();
-        }
-
-        return $token->user_id;
-    }
 
     function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -340,15 +330,9 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     }
 
 
-
     function decodeJWT(string $token)
     {
-        try {
-            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-        } catch (Exception $e) {
-            return null;
-        }
-        return $token;
+        return  JWT::decode($token, new Key($_ENV["JWT_SECRET"], "HS256"));
     }
 
     function getAccessToken(): string
@@ -416,7 +400,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $translator->addResource("array", $a, $locale);
 
         $this->translator = $translator;
-        //$this->ui->setTranslator($this->translator);
     }
 
     private function processConfig()
@@ -430,70 +413,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $this->config->merge(new \Laminas\Config\Config(["VX" => $config]));
     }
-    /* 
-    private function processAuthorization(ServerRequestInterface $request)
-    {
 
-
-
-
-
-
-        print_R($request->getCookieParams());
-        die();
-
-        //        $this->user_repository->getUserByIdentity()
-
-
-
-        $this->user_id = 2;
-
-        if ($request->getUri()->getPath() == "/api/auth/login") {
-            $this->user = User::Get(2);
-            return;
-        }
-
-        if ($_COOKIE["access_token"] && !$_COOKIE["refresh_token"]) {
-            $token = $_COOKIE["access_token"];
-
-            try {
-                $payload = $this->getPayload($token);
-            } catch (Exception $e) {
-                $this->user = User::Get(2);
-                return;
-            }
-
-
-            if ($payload->user_id) {
-                $this->user_id = $payload->user_id;
-
-                if ($payload->view_as) {
-                    $this->user_id = $payload->view_as;
-
-                    $this->view_as = $payload->view_as;
-                }
-
-
-                $this->logined = true;
-            }
-        }
-
-        $this->user = User::Get($this->user_id);
-
-
-
-        if ($view_as = $request->getHeaderLine("vx-view-as")) {
-            if ($this->user->isAdmin()) {
-                $view_as = intval($view_as);
-                if ($user = User::Get($view_as)) {
-                    $this->view_as = $view_as;
-                    $this->user_id = $view_as;
-                    $this->user = $user;
-                }
-            }
-        }
-    }
- */
     public function getModule(string $name): ?Module
     {
         foreach ($this->getModules() as $module) {
@@ -564,47 +484,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $server;
     }
 
-    function generateToken(User $user, array $data)
-    {
-        return JWT::encode([
-            "iat" => time(),
-            "exp" => time() + 3600,
-            "user_id" => $user->user_id,
-            "data" => $data
-        ], $this->config["VX"]["jwt"]["secret"]);
-    }
-
-    function jwtDecode(string $jwt)
-    {
-        return JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
-    }
-
-    public function generateAccessToken(UserInterface $user,  int $view_as = null)
-    {
-        $payload = [
-            "jti" => Uuid::uuid4()->toString(),
-            "type" => "access_token",
-            "iat" => time(),
-            "exp" => time() + ($this->config["VX"]["access_token_expire"] ?? 3600),
-            "id" => $user->getIdentity(),
-        ];
-        if ($view_as) {
-            $payload["view_as"] = $view_as;
-        }
-
-        return JWT::encode($payload, $this->config["VX"]["jwt"]["secret"]);
-    }
-
-    public function generateRefreshToken(UserInterface $user)
-    {
-        return JWT::encode([
-            "jti" => Uuid::uuid4()->toString(),
-            "type" => "refresh_token",
-            "iat" => time(),
-            "exp" => time() + ($this->config["VX"]["refresh_token_expire"] ?? 86400), //1 day
-            "user_id" => $user->getIdentity()
-        ], $this->config["VX"]["jwt"]["secret"]);
-    }
 
     public function invalidateJWT(string $token)
     {
@@ -925,7 +804,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function resetPassword(string $password, string $token)
     {
-        $payload = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        $payload = JWT::decode($token, new Key($_ENV["JWT_SECRET"], "HS256"));
         $user = User::Load($payload->user_id);
 
         if (md5($user->password) != $payload->hash) {
@@ -947,7 +826,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "exp" => time() + 3600,
             "user_id" => $user->user_id,
             "hash" => md5($user->password)
-        ], $this->config["VX"]["jwt"]["secret"]);
+        ], $_ENV["JWT_SECRET"], "HS256");
 
         $reset_link = $this->config["VX"]["vx_url"] . "/reset-password?token=" . $token;
 

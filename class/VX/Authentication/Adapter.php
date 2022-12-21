@@ -103,8 +103,8 @@ class Adapter implements AdapterInterface
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + 3600 * 8,
-            "user_id" => $user->getIdentity()
-        ], $_ENV["JWT_SECRET"]);
+            "id" => $user->getIdentity()
+        ], $_ENV["JWT_SECRET"], "HS256");
 
 
         return new Result(Result::SUCCESS, $identity);
