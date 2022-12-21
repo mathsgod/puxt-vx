@@ -2,14 +2,13 @@
 
 namespace VX;
 
-use Laminas\Permissions\Rbac\AssertionInterface;
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class ModuleFile implements RequestHandlerInterface, AssertionInterface
+class ModuleFile implements RequestHandlerInterface
 {
     public string $path;
     public string $file;
@@ -20,13 +19,7 @@ class ModuleFile implements RequestHandlerInterface, AssertionInterface
         $this->path = $path;
         $this->file = $file;
     }
-
-    public function assert(Rbac $rbac, RoleInterface $role, string $permission): bool
-    {
-        return true;
-    }
-
-
+    
     function handle(ServerRequestInterface $request): ResponseInterface
     {
 

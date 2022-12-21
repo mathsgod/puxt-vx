@@ -3,9 +3,11 @@
 namespace VX;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
+use VX\Security\AssertionInterface;
+use VX\Security\Security;
 use VX\Security\UserInterface;
 
-class ModuleMenu implements TranslatorAwareInterface
+class ModuleMenu implements TranslatorAwareInterface,AssertionInterface
 {
 
     public $link;
@@ -32,6 +34,11 @@ class ModuleMenu implements TranslatorAwareInterface
     }
 
     protected $translator = null;
+
+    function assert(Security $security, UserInterface $user, string $permission): bool
+    {
+        return true;
+    }
 
 
     public function setTranslator(TranslatorInterface $translator = null)

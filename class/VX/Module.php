@@ -4,9 +4,6 @@ namespace VX;
 
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Permissions\Rbac\AssertionInterface;
-use Laminas\Permissions\Rbac\Rbac;
-use Laminas\Permissions\Rbac\RoleInterface;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Route\Http\Exception\ForbiddenException;
@@ -19,9 +16,10 @@ use R\DB\Model;
 use Symfony\Component\Yaml\Yaml;
 use VX;
 use VX\Model as VXModel;
+use VX\Security\AssertionInterface;
 use VX\Security\Security;
 
-class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionInterface
+class Module implements TranslatorAwareInterface, MenuItemInterface
 {
     use TranslatorAwareTrait;
 
@@ -113,16 +111,6 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
         $this->files = array_values($this->files);
     }
 
-    public function assert(Rbac $rbac, RoleInterface $role, string $permission): bool
-    {
-        //check module file has true
-        foreach ($this->files as $file) {
-            if ($file->assert($rbac, $role, $permission)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     public function isHide(): bool
@@ -196,8 +184,8 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
     function setupRoute(RouteCollectionInterface $route)
     {
 
-        $rbac = $this->rbac;
-        $route->get($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($rbac) {
+        $security = $this->security;
+        $route->get($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($security) {
             /**
              * @var UserInterface $user
              */
@@ -207,15 +195,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
                 throw new NotFoundException();
             }
 
-            $granted = false;
-            foreach ($user->getRoles() as $role) {
-                if ($rbac->isGranted($role->getName(), "read", $object)) {
-                    $granted = true;
-                    break;
-                }
-            }
-
-            if (!$granted) {
+            if (!$security->isGranted($user, "read", $object)) {
                 throw new ForbiddenException();
             }
 
@@ -256,15 +236,14 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
         });
 
 
-        $route->post($this->name, function (ServerRequestInterface $request, array $args) use ($rbac) {
+        $route->post($this->name, function (ServerRequestInterface $request, array $args) use ($security) {
 
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
                 $user = $request->getAttribute(UserInterface::class);
 
                 $object = $this->createObject();
 
-
-                if (!$object->canCreateBy($user)) {
+                if (!$security->isGranted($user, "create", $object)) {
                     throw new ForbiddenException();
                 }
 
@@ -279,7 +258,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
             throw new NotFoundException();
         });
 
-        $route->post($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
+        $route->post($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($security) {
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
                 $user = $request->getAttribute(UserInterface::class);
                 $object = $this->getObject($args["id"]);
@@ -287,7 +266,8 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
                 if (!$object) {
                     throw new NotFoundException();
                 }
-                if (!$object->canUpdateBy($user)) {
+
+                if (!$security->isGranted($user, "update", $object)) {
                     throw new ForbiddenException();
                 }
 
@@ -302,7 +282,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
             throw new NotFoundException();
         });
 
-        $route->patch($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) {
+        $route->patch($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($security) {
             if (strstr($request->getHeaderLine("Content-Type"), "application/json")) {
                 $user = $request->getAttribute(UserInterface::class);
                 $object = $this->getObject($args["id"]);
@@ -311,7 +291,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
                     throw new NotFoundException();
                 }
 
-                if (!$object->canUpdateBy($user)) {
+                if (!$security->isGranted($user, "update", $object)) {
                     throw new ForbiddenException();
                 }
 
@@ -326,8 +306,8 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
             throw new NotFoundException();
         });
 
-        $rbac = $this->rbac;
-        $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($rbac) {
+
+        $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($security) {
             $user = $request->getAttribute(UserInterface::class);
 
             $object = $this->getObject($args["id"]);
@@ -337,7 +317,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
                 throw new NotFoundException();
             }
 
-            if (!$rbac->isGranted($user, "delete", $object)) {
+            if (!$security->isGranted($user, "delete", $object)) {
                 throw new ForbiddenException();
             }
 
@@ -345,17 +325,17 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
             return new EmptyResponse();
         });
 
-        $route->get($this->name, function (ServerRequestInterface $request, array $args) {
+        $route->get($this->name, function (ServerRequestInterface $request, array $args) use ($security) {
 
             if (!$this->vx->logined) {
                 throw new  UnauthorizedException();
             }
 
-
-
             $query = $request->getQueryParams();
-            $data = $this->class::QueryData($query, $request->getAttribute(UserInterface::class));
+
+            $data = $this->class::QueryData($query, $request->getAttribute(UserInterface::class), $security);
             $data["meta"]["model"] = $this->name;
+
             return new JsonResponse($data);
         });
 
@@ -470,16 +450,9 @@ class Module implements TranslatorAwareInterface, MenuItemInterface, AssertionIn
 
         foreach ($this->getMenus() as $menu) {
 
-            if (!$this->security->isGranted($user, $menu->name ?? "")) {
+            if (!$this->security->isGranted($user, "read", $menu)) {
                 continue;
             }
-
-
-            //$this->rbac->isGranted()
-            /*      if (!$this->acl->isAllowed($user, $menu)) {
-                continue;
-            }
- */
 
             $menus[] = $menu->getMenuLinkByUser($user);
         }

@@ -17,7 +17,8 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
 {
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
-        return false;
+        if ($user->is("Administrators")) return true;
+        return $security->isGranted($user, $permission);
     }
 
     public static function Sort(Query $q, string $sort, string $order)
@@ -28,7 +29,7 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
     {
     }
 
-    public static function QueryData(array $query, UserInterface $user)
+    public static function QueryData(array $query, UserInterface $user, Security $security)
     {
         $fields = array_column(self::__attributes(), "Field");
 
@@ -123,7 +124,8 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
         foreach ($q as $o) {
             if ($o instanceof Model) {
 
-                if ($o->canReadBy($user)) {
+
+                if ($security->isGranted($user, "read", $o)) {
                     $obj = $o->toArray($query["fields"] ?? []);
 
                     if ($populate = $query["populate"]) {
@@ -137,13 +139,13 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
                             $d = [];
                             if (in_array($target_key, $o->__fields())) { // many to one
                                 $p["filters"][$target_key]['$eq'] = $o->$target_key;
-                                $d = $module->class::QueryData($p, $user);
+                                $d = $module->class::QueryData($p, $user, $security);
                                 $d["data"] = $d["data"][0];
 
                                 $obj[$target_module] = $d["data"];
                             } else { //one to many
                                 $p["filters"][$meta["primaryKey"]]['$eq'] = $o->{$meta["primaryKey"]};
-                                $d = $module->class::QueryData($p, $user);
+                                $d = $module->class::QueryData($p, $user, $security);
                                 $obj[$target_module] = $d["data"];
                             }
                         }
@@ -186,6 +188,8 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
 
     public function canDeleteBy(UserInterface $user): bool
     {
+
+        return true;
         /**
          * @var Rbac
          */
@@ -205,7 +209,7 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
 
     public function canReadBy(UserInterface $user): bool
     {
-
+        return true;
         /**
          * @var Rbac
          */
@@ -225,6 +229,7 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
 
     public function canUpdateBy(UserInterface $user): bool
     {
+        return true;
         /**
          * @var Rbac
          */
@@ -244,6 +249,7 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
 
     public function canCreateBy(UserInterface $user): bool
     {
+        return true;
         /**
          * @var Rbac
          */

@@ -14,7 +14,6 @@ use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
 use VX\Authentication\AuthenticationMiddleware;
-use VX\Authentication\UserRepositoryInterface;
 
 return function ($options) {
 

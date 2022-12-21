@@ -2,14 +2,11 @@
 
 namespace VX;
 
-use ArrayObject;
 use Exception;
 use Laminas\Db\Sql\Where;
-use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use TheCodingMachine\GraphQLite\Annotations\Field;
-use VX\Security\AssertionInterface;
 use VX\Security\Security;
 use VX\Security\UserInterface;
 
