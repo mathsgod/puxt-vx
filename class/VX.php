@@ -205,15 +205,20 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     private function loadDB()
     {
         $db_config = $this->puxt->config["database"];
-        $schema = new Schema(
-            $db_config["database"],
-            $db_config["hostname"],
-            $db_config["username"],
-            $db_config["password"],
-            $db_config["charset"] ?? "utf8mb4",
-            $db_config["port"] ?? 3306,
-            $db_config["options"]
-        );
+        if ($db_config) {
+            $schema = new Schema(
+                $db_config["database"],
+                $db_config["hostname"],
+                $db_config["username"],
+                $db_config["password"],
+                $db_config["charset"] ?? "utf8mb4",
+                $db_config["port"] ?? 3306,
+                $db_config["options"]
+            );
+        } else {
+            $schema = Schema::Create();
+        }
+
 
         $this->setDbAdapter($schema->getDbAdatpter());
         $this->db = $schema;

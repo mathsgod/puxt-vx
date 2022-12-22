@@ -20,9 +20,4 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::Query()->toArray();
     }
-
-    public function getAuthenticationAdatper(string $identity, ?string $crdential = null, ?string $code = null): ?AdapterInterface
-    {
-        return new Adapter($identity, $crdential, $code);
-    }
 }
