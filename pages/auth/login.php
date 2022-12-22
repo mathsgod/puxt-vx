@@ -15,13 +15,8 @@ return new class
 
     function post(VX $vx)
     {
-        $data = $vx->_post;
-        if ($token = $data["token"]) {
-            $token = $vx->loginWithToken($token);
-        } else {
-            $token = $vx->login($data["username"], $data["password"], $data["code"]);
-        }
-
+        $token = $vx->login();
+        
         //generate cookie string
         $access_token_string = "access_token=" . $token  . "; path=" . $vx->base_path . "; SameSite=None; HttpOnly;Secure ";
         //$refresh_token_string = "refresh_token=" . $token["refresh_token"] . "; path=" . $vx->base_path . "auth/renew-token; SameSite=None; HttpOnly;Secure";

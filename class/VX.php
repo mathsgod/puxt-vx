@@ -2,6 +2,7 @@
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Laminas\Authentication\Adapter\AdapterInterface;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Authentication\Storage\NonPersistent;
 
@@ -12,6 +13,7 @@ use Laminas\Di\InjectorInterface;
 use League\Event\EventDispatcherAware;
 use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +52,7 @@ use VX\UserLog;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+use VX\Security\AuthenticationAdapter;
 use VX\Security\Security;
 use VX\SystemValue;
 use VX\UserGroup;
@@ -157,6 +160,10 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->useEventDispatcher($services->get(EventDispatcherInterface::class));
 
         $this->service->setService(AuthenticationInterface::class, new Authentication);
+
+        $this->service->setFactory(AdapterInterface::class, function (ContainerInterface $container) {
+            return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
+        });
     }
 
     public function isGranted(string $permission, $assertion = null): bool
@@ -164,7 +171,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $this->getSecurity()->isGranted($this->user, $permission, $assertion);
     }
 
-    public function getSecurity():Security
+    public function getSecurity(): Security
     {
         if ($this->security) return $this->security;
         $this->security = new Security();
@@ -921,9 +928,10 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     }
 
     // login with username, password and code, throw exception if failed
-    function login(string $username, string $password, ?string $code = null)
+    function login()
     {
-        $result = $this->auth->authenticate(new Adapter($username, $password, $code));
+        $adatper = $this->service->get(AdapterInterface::class);
+        $result = $this->auth->authenticate($adatper);
 
 
         $ip = $_SERVER['REMOTE_ADDR'];
