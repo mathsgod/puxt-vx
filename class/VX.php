@@ -35,7 +35,6 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\Authentication;
 use VX\Authentication\UserRepositoryInterface;
-use VX\Authentication\Adapter;
 use VX\Authentication\AuthenticationInterface;
 use VX\Security\UserInterface;
 use VX\AuthLock;
@@ -148,10 +147,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         Model::$_vx = $this;
         $this->vx_root = dirname(__DIR__);
-
-
-
-
 
         $this->loadDB();
         $this->service->setService(Security::class, $this->getSecurity());
@@ -569,130 +564,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $this->getFileSystem($index);
     }
 
-    /*  public function getAcl(): AclInterface
-    {
-        if ($this->acl) return $this->acl;
-
-        //acl
-        $acl = new Acl;
-
-        $ugs = [];
-        foreach (UserGroup::Query() as $usergroup) {
-            $acl->addRole($usergroup);
-
-            $ugs[$usergroup->name] = $usergroup;
-        }
-
-        foreach (User::Query() as $user) {
-            $acl->addRole($user, $user->UserGroup());
-        }
-
-        $acl->allow(UserGroup::GetByNameOrCode("Administrators"));
-
-        $acl->addResource("index");
-        $acl->addResource("error");
-        $acl->allow(null, "index");
-        $acl->allow(null, "error");
-
-
-        $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($this->root . DIRECTORY_SEPARATOR . "/class");
-        $fs = new League\Flysystem\Filesystem($adapter);
-        $php = $fs->listContents("/")->filter(function (StorageAttributes $attr) {
-            return $attr->isFile();
-        })->map(function (FileAttributes  $attr) {
-            return pathinfo($attr->path(), PATHINFO_FILENAME);
-        });
-        foreach ($php as $r) {
-            $acl->addResource($r);
-        }
-
-        $acl_data = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
-        foreach ($acl_data["path"] as $module => $paths) {
-            if (!$acl->hasResource($module)) {
-                $acl->addResource($module);
-            }
-
-            foreach ($paths as $path => $roles) {
-                $acl->addResource($module . "/" . $path, $module);
-
-                foreach ($roles as $role) {
-
-                    $acl->allow($ugs[$role], $module . "/" . $path);
-                }
-            }
-        }
-
-        foreach (VXACL::Query() as $a) {
-            if (!$a->module) continue;
-
-            if (!$acl->hasResource($a->module)) {
-                $acl->addResource($a->module);
-            }
-
-            if ($a->action) {
-                if ($a->usergroup_id) {
-                    if ($a->action == "all") {
-                        $acl->allow("ug-{$a->usergroup_id}", $a->module);
-                    } else {
-                        $acl->allow("ug-{$a->usergroup_id}", $a->module, $a->action);
-                    }
-                }
-
-                if ($a->user_id) {
-                    if ($a->action == "all") {
-                        $acl->allow("u-{$a->user_id}", $a->module);
-                    } else {
-                        $acl->allow("u-{$a->user_id}", $a->module, $a->action);
-                    }
-                }
-                continue;
-            }
-
-            if (!$acl->hasResource($a->path())) {
-                $acl->addResource($a->path(), $a->module);
-            }
-
-            if ($a->usergroup_id) {
-                if ($a->value == "allow") {
-                    $acl->allow("ug-{$a->usergroup_id}", $a->path());
-                } elseif ($a->value == "deny") {
-                    $acl->deny("ug-{$a->usergroup_id}", $a->path());
-                }
-            }
-
-            if ($a->user_id) {
-                if ($a->value == "allow") {
-                    $acl->allow("u-{$a->user_id}", $a->path());
-                } elseif ($a->value == "deny") {
-                    $acl->deny("u-{$a->user_id}", $a->path());
-                }
-            }
-        }
-
-
-        foreach ($this->getModules() as $module) {
-            if (!$acl->hasResource($module)) {
-                $acl->addResource($module);
-            }
-
-            foreach ($module->getFiles() as $file) {
-                if (!$acl->hasResource($file)) {
-                    $acl->addResource($file, $module);
-                }
-            }
-
-
-            foreach ($module->getMenus() as $menu) {
-                if (!$acl->hasResource($menu)) {
-                    $acl->addResource($menu, $module);
-                }
-            }
-        }
-
-        $this->acl = $acl;
-        return $this->acl;
-    }
- */
     public function getModuleTranslate()
     {
         $a = [];
@@ -917,22 +788,11 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return $this->puxt->getServiceManager();
     }
 
-    function loginWithToken(string $token)
-    {
-        $result = $this->auth->authenticate(new Adapter($token, null, null));
-
-        if (!$result->isValid()) {
-            throw new Exception($result->getMessages()[0], 401);
-        }
-        return $result->getIdentity();
-    }
-
     // login with username, password and code, throw exception if failed
     function login()
     {
         $adatper = $this->service->get(AdapterInterface::class);
         $result = $this->auth->authenticate($adatper);
-
 
         $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -953,7 +813,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function logout()
     {
-        $this->user_id = 2;
         //get last logout
         $o = UserLog::Query([
             "user_id" => $this->user_id
@@ -971,7 +830,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $class = $this->module->class;
 
             if (class_exists($class, true)) {
-                return new $class($this->object_id);
+                return $class::Get($this->object_id);
             }
         }
 
