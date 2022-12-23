@@ -25,7 +25,6 @@ use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -33,8 +32,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
-use PUXT\App;
-use PUXT\Context;
 use R\DB\Schema;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -159,26 +156,10 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $this->loadConfig();
 
+        Model::$_vx = $this;
+
         /* 
-        $this->service = $puxt->getServiceManager();
 
-        $this->injector = $this->service->get(InjectorInterface::class);
-
-        if (!$this->service->has(UserRepositoryInterface::class)) {
-            $this->service->setService(UserRepositoryInterface::class, new UserRepository());
-        }
-
-        $this->user_repository = $this->service->get(UserRepositoryInterface::class);
-
-        $this->auth = new AuthenticationService();
-        $this->auth->setStorage(new NonPersistent());
-        $this->service->setService(AuthenticationService::class, $this->auth);
-        $this->service->setService(AuthenticationInterface::class, new Authentication());
-
-        $puxt->getServiceManager()->setService(VX::class, $this);
-
-        $services = $puxt->getServiceManager();
-        $this->service = $services;
 
         $this->puxt = $puxt;
         $this->base_path = $this->config->VX->base_path ?? $puxt->base_path;
@@ -194,18 +175,7 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         }
 
         Model::$_vx = $this;
-        $this->vx_root = dirname(__DIR__);
 
-        $this->loadDB();
-        $this->service->setService(Security::class, $this->getSecurity());
-        $this->loadModules();
-
-        $this->useEventDispatcher($services->get(EventDispatcherInterface::class));
-
-        $this->service->setService(AuthenticationInterface::class, new Authentication);
-
-        $this->service->setFactory(AdapterInterface::class, function (ContainerInterface $container) {
-            return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
         }); */
     }
 
