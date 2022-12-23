@@ -144,7 +144,10 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $this->loadDB();
         $this->service->setService(Security::class, $this->getSecurity());
         $this->loadModules();
-        $this->service->setService(AuthenticationInterface::class, new Authentication);
+        if (!$this->service->has(AuthenticationInterface::class)) {
+            $this->service->setService(AuthenticationInterface::class, new Authentication);
+        }
+
         $this->service->setFactory(AdapterInterface::class, function (ContainerInterface $container) {
             return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
         });
@@ -338,7 +341,7 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
                 return $handler->handle($request);
             }
         });
-        
+
 
         $this->service->setService(ServerRequestInterface::class, $request);
 
