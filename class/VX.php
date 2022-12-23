@@ -5,14 +5,25 @@ use Firebase\JWT\Key;
 use Laminas\Authentication\Adapter\AdapterInterface;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Authentication\Storage\NonPersistent;
-
+use Laminas\Config\Config;
 use Laminas\Db\Adapter\AdapterAwareInterface;
 use Laminas\Db\Adapter\AdapterAwareTrait;
 use Laminas\Db\Sql\Where;
 use Laminas\Di\InjectorInterface;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\Stream;
+use Laminas\ServiceManager\ServiceManager;
 use League\Event\EventDispatcherAware;
 use League\Event\EventDispatcherAwareBehavior;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use League\Glide\Responses\PsrResponseFactory;
+use League\Route\Http\Exception\NotFoundException;
+use League\Route\RouteGroup;
+use League\Route\Router;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,9 +32,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use PUXT\App;
 use PUXT\Context;
 use R\DB\Schema;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
@@ -36,9 +49,9 @@ use Twig\Loader\LoaderInterface;
 use VX\Authentication;
 use VX\Authentication\UserRepositoryInterface;
 use VX\Authentication\AuthenticationInterface;
+use VX\Authentication\AuthenticationMiddleware;
 use VX\Security\UserInterface;
 use VX\AuthLock;
-use VX\Config;
 use VX\JWTBlacklist;
 use VX\ListenserSubscriber;
 use VX\Mailer;
@@ -61,7 +74,7 @@ use VX\UserRepository;
  * @property int $user_id
  * @property Module $module
  */
-class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface, EventDispatcherAware
+class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface, EventDispatcherAware
 {
 
     use EventDispatcherAwareBehavior;
@@ -73,14 +86,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     public $user_id;
     public $module;
     public $logined = false;
-    public $res;
 
     public $config;
     public Translator $translator;
     public $vx_root;
     public $locale;
     public $db;
-    public $container;
 
     /**
      * @var Module[]
@@ -89,6 +100,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     private $puxt;
 
     public $base_path;
+    public $root;
+
+
+    public $_get = [];
+    public $_post = [];
+    public $_files = [];
 
 
     private $security;
@@ -110,8 +127,39 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
      */
     protected $injector;
 
-    public function __construct(App $puxt)
+    public function __construct(ServiceManager $service, Config $config)
     {
+        $this->vx_root = dirname(__DIR__);
+        $this->root =  $service->get(PUXT\App::class)->root;
+        $this->base_path = "/api";
+
+
+        $this->auth = new AuthenticationService();
+        $this->auth->setStorage(new NonPersistent());
+
+        $this->injector = $service->get(InjectorInterface::class);
+
+
+        $this->service = $service;
+        $this->config = $config;
+
+        //load db
+        $this->loadDB();
+        $this->service->setService(Security::class, $this->getSecurity());
+        $this->loadModules();
+        $this->service->setService(AuthenticationInterface::class, new Authentication);
+        $this->service->setFactory(AdapterInterface::class, function (ContainerInterface $container) {
+            return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
+        });
+
+        $this->service->setService(UserRepositoryInterface::class, new UserRepository());
+        $this->service->setService(VX::class, $this);
+
+
+
+        $this->loadConfig();
+
+        /* 
         $this->service = $puxt->getServiceManager();
 
         $this->injector = $this->service->get(InjectorInterface::class);
@@ -158,8 +206,232 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
         $this->service->setFactory(AdapterInterface::class, function (ContainerInterface $container) {
             return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
-        });
+        }); */
     }
+
+    public function getRouter()
+    {
+        $vx = $this;
+
+        $router = new Router();
+        $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($this));
+
+
+        /** @var AuthenticationMiddleware $middleware */
+        $middleware = $this->injector->create(AuthenticationMiddleware::class);
+        $router->middleware($middleware);
+
+
+        $router->addPatternMatcher("any", ".+");
+
+        $router->map("OPTIONS", "/", fn () => new EmptyResponse(200));
+
+        $modules = $this->getModules();
+        $router->group($this->base_path, function (RouteGroup $route) use ($modules) {
+            foreach ($modules as $module) {
+                $module->setupRoute($route);
+            }
+        });
+
+
+        $router->map("GET", $vx->base_path . "/drive/{id:number}/{file:any}", function (ServerRequestInterface $serverRequest, array $args) use ($vx) {
+
+            //B5 Broken Access Control 
+            if (!$vx->logined) {
+                return new EmptyResponse(401);
+            }
+
+
+            $fm = $vx->getFileSystem();
+            $file = $args["file"];
+            $file = urldecode($file);
+
+            if ($fm->fileExists($file)) {
+                $response = (new ResponseFactory())->createResponse();
+
+                $response = $response->withHeader("Content-Type", $fm->mimeType($file));
+                $response = $response->withBody(new Stream($fm->readStream($file)));
+                return $response;
+            }
+            throw new NotFoundException();
+        });
+
+        //file-upload
+        $router->map("POST", $vx->base_path . "/file-upload", function (ServerRequestInterface $request) use ($vx) {
+
+            //B5 Broken Access Control 
+            if (!$vx->logined) {
+                return new EmptyResponse(401);
+            }
+
+            $fm = $vx->getFileSystem();
+            $files = $request->getUploadedFiles();
+            $file = $files["file"];
+            //generate uuid
+            $uuid = Uuid::uuid4()->toString();
+            $fm->write("cache/" . $uuid, $file->getStream()->getContents());
+            return new JsonResponse(["uuid" => "cache/$uuid"]);
+        });
+
+        $router->map("GET", $vx->base_path . "/photo/{id:number}/{file:any}", function (ServerRequestInterface $request, array $args) use ($vx) {
+
+            //B5 Broken Access Control 
+            if (!$vx->logined) {
+                return new EmptyResponse(401);
+            }
+
+            $glide = League\Glide\ServerFactory::create([
+
+                "source" => $vx->getFileSystem(),
+                "cache" => dirname($vx->root) . DIRECTORY_SEPARATOR . "cache",
+                "response" => new PsrResponseFactory(new Response(), function ($stream) {
+                    return new Stream($stream);
+                }),
+            ]);
+
+            return  $glide->getImageResponse($args["file"], $request->getQueryParams());
+        });
+
+
+        $router->map("GET",  $vx->base_path, function (ServerRequestInterface $request) use ($vx) {
+            return  $vx->getRequestHandler($vx->vx_root . "/pages/index")->handle($request);
+        });
+
+        $router->map("GET",  $vx->base_path . "/", function (ServerRequestInterface $request) use ($vx) {
+            return  $vx->getRequestHandler($vx->vx_root . "/pages/index")->handle($request);
+        });
+
+        $router->map("POST",  $vx->base_path, function (ServerRequestInterface $request) use ($vx) {
+            return $vx->getRequestHandler($vx->vx_root . "/pages/index")->handle(($request));
+        });
+
+        $router->map("GET", $vx->base_path . "/cancel-view-as", function (ServerRequestInterface $request) use ($vx) {
+            $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
+            $request = $request->withAttribute("twig", $twig);
+
+            $handler =  $vx->getRequestHandler($vx->vx_root . "/pages/cancel-view-as");
+            return $handler->handle($request);
+        });
+
+        $router->map("GET",  $vx->base_path . "/error", function (ServerRequestInterface $request) use ($vx) {
+            $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
+            $request = $request->withAttribute("twig", $twig);
+
+            $handler = $vx->getRequestHandler($vx->vx_root . "/pages/error");
+            return $handler->handle($request);
+        });
+
+        return $router;
+    }
+
+
+    function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $logger = $request->getAttribute(LoggerInterface::class);
+        if ($logger instanceof LoggerInterface) {
+            $logger->info("Request: " . $request->getUri()->getPath());
+        }
+
+
+        $this->_get = $_GET;
+        $this->_post = $_POST;
+
+
+        $request = $request->withAttribute(VX::class, $this);
+
+        $router = $this->getRouter();
+
+        $router->middleware(new class implements MiddlewareInterface
+        {
+            function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+            {
+
+                $vx = $request->getAttribute(VX::class);
+
+                $user = $request->getAttribute(UserInterface::class);
+                if ($user) {
+                    $vx->user = $user;
+                    $vx->logined = true;
+                    foreach ($user->getRoles() as $role) {
+                        if ($role === "Guests") {
+                            $vx->logined = false;
+                            break;
+                        }
+                    }
+                }
+
+
+                //translate
+                $vx->processTranslator();
+
+
+                return $handler->handle($request);
+            }
+        });
+        
+
+        $this->service->setService(ServerRequestInterface::class, $request);
+
+        $response = $router->dispatch($request);
+
+        if ($_SERVER["HTTP_ORIGIN"]) {
+            $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
+        }
+
+        $response = $response
+            ->withHeader("Access-Control-Allow-Credentials", "true")
+            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
+            ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
+            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
+
+        return $response;
+
+
+        return new HtmlResponse("test");
+
+
+
+
+
+        $uri_path = $request->getUri()->getPath();
+        $this->request_uri = substr($uri_path, strlen($this->base_path));
+
+
+        $has_vx = false;
+
+        if (strpos($request->getHeaderLine("Content-Type"), "multipart/form-data") !== false) {
+
+            foreach ($request->getUploadedFiles() as $name => $file) {
+                if (is_array($file)) {
+                    $this->_files[$name] = $file;
+                    continue;
+                }
+
+                if ($file->getClientMediaType() == "application/json" && $name == "vx") {
+                    $has_vx = true;
+
+                    $this->_post = json_decode($file->getStream()->getContents(), true);
+                    continue;
+                }
+                $this->_files[$name] = $file;
+            }
+
+            foreach ($this->_files as $name => $file) {
+
+                $this->_post[$name] = $file;
+            }
+        }
+
+        if (!$has_vx) {
+            $this->_post = $request->getParsedBody();
+        }
+
+
+
+
+        return $response;
+    }
+
 
     public function isGranted(string $permission, $assertion = null): bool
     {
@@ -204,7 +476,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     private function loadDB()
     {
-        $db_config = $this->puxt->config["database"];
+        $db_config = $this->config["database"];
         if ($db_config) {
             $schema = new Schema(
                 $db_config["database"],
@@ -252,89 +524,6 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     }
 
 
-    function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
-        /**
-         * @var UserInterface $user
-         */
-        $this->user = $request->getAttribute(UserInterface::class);
-
-
-        //check user roles has guest
-        $this->logined = true;
-        foreach ($this->user->getRoles() as $role) {
-            if ($role === "Guests") {
-                $this->logined = false;
-                break;
-            }
-        }
-
-
-
-
-        //authentication interface
-        if ($this->logger) {
-            $this->logger->info("Request: " . $request->getUri()->getPath());
-        }
-
-        $uri_path = $request->getUri()->getPath();
-        $this->request_uri = substr($uri_path, strlen($this->base_path));
-
-        $this->_files = [];
-
-        $has_vx = false;
-
-        if (strpos($request->getHeaderLine("Content-Type"), "multipart/form-data") !== false) {
-
-            foreach ($request->getUploadedFiles() as $name => $file) {
-                if (is_array($file)) {
-                    $this->_files[$name] = $file;
-                    continue;
-                }
-
-                if ($file->getClientMediaType() == "application/json" && $name == "vx") {
-                    $has_vx = true;
-
-                    $this->_post = json_decode($file->getStream()->getContents(), true);
-                    continue;
-                }
-                $this->_files[$name] = $file;
-            }
-
-            foreach ($this->_files as $name => $file) {
-
-                $this->_post[$name] = $file;
-            }
-        }
-
-        if (!$has_vx) {
-            $this->_post = $request->getParsedBody();
-        }
-
-        $this->request = $request;
-
-        $this->processConfig();
-        $this->processTranslator();
-
-        $this->_get = $_GET;
-
-
-
-        $response = $handler->handle($request);
-
-        if ($_SERVER["HTTP_ORIGIN"]) {
-            $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
-        }
-        $response = $response
-            ->withHeader("Access-Control-Allow-Credentials", "true")
-            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
-            ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
-            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
-
-        return $response;
-    }
-
-
     function decodeJWT(string $token)
     {
         return  JWT::decode($token, new Key($_ENV["JWT_SECRET"], "HS256"));
@@ -369,7 +558,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         return "";
     }
 
-    private function processTranslator()
+    public function processTranslator()
     {
         $locale = $this->user->language ?? "en";
         $this->locale = $locale;
@@ -407,16 +596,16 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $this->translator = $translator;
     }
 
-    private function processConfig()
+    private function loadConfig()
     {
 
         $parser = new Parser;
         $config = $parser->parseFile($this->vx_root . "/default.config.yml");
-        foreach (Config::Query() as $c) {
+        foreach (\VX\Config::Query() as $c) {
             $config[$c->name] = $c->value;
         }
 
-        $this->config->merge(new \Laminas\Config\Config(["VX" => $config]));
+        $this->config->merge(new Config(["VX" => $config]));
     }
 
     public function getModule(string $name): ?Module
