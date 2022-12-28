@@ -191,6 +191,7 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($this));
 
 
+
         /** @var AuthenticationMiddleware $middleware */
         $middleware = $this->injector->create(AuthenticationMiddleware::class);
         $router->middleware($middleware);
@@ -310,6 +311,11 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $this->_get = $_GET;
         $this->_post = $_POST;
 
+
+        if (strpos($request->getHeaderLine("Content-Type"), "application/json") !== false) {
+            $body = $request->getBody()->getContents();
+            $request = $request->withParsedBody(json_decode($body, true));
+        }
 
         $request = $request->withAttribute(VX::class, $this);
 
