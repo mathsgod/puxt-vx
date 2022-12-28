@@ -7,13 +7,14 @@ use VX\FileManager;
 use VX\Menu;
 use VX\Module;
 use VX\Security\Security;
+use VX\User;
 
 return new class
 {
     function get(VX $vx, InjectorInterface $injector, Security $s)
     {
 
- 
+
 
         $logined = $vx->logined;
         $data = [
@@ -35,12 +36,14 @@ return new class
         if ($logined) {
             //fav
             $data["favs"] = [];
-            foreach ($vx->user->MyFavorite() as $fav) {
-                $data["favs"][] = [
-                    "label" => $fav->label,
-                    "link" => $fav->path,
-                    "name" => $fav->label
-                ];
+            if ($vx->user instanceof User) {
+                foreach ($vx->user->MyFavorite() as $fav) {
+                    $data["favs"][] = [
+                        "label" => $fav->label,
+                        "link" => $fav->path,
+                        "name" => $fav->label
+                    ];
+                }
             }
 
             $page_setting = Yaml::parseFile(__DIR__ . "/setting.yml");
@@ -96,8 +99,8 @@ return new class
                 "language" => $user->language ?? "en",
                 "style" => $user->style,
                 "default_page" => $user->default_page ?? "/Dashboard",
-                "usergroup" => $user->UserGroup()->map(fn ($o) => $o->name)->join(","),
-                "image" => $user->uri("avatar")
+                "usergroup" => implode(",", $user->getRoles()),
+                "image" => $user instanceof User ? $user->uri("avatar") : ""
             ];
 
             //nav dropdown
@@ -106,7 +109,7 @@ return new class
             $dropdown = [];
 
             if (!$vx->view_as) {
-                if ($vx->user->isAdmin()) {
+                if ($vx->user->is("Administrators")) {
                     $dropdown[] = ["label" => "View as", "icon" => "o_visibility", "link" => "/System/view-as"];
                 }
             } else {
@@ -120,7 +123,7 @@ return new class
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
             $data["i18n_module"] = $vx->getModuleTranslate();
             $data["i18n_en"] = $vx->getGlobalTranslator()->getCatalogue("en")->all()["messages"];
-            $data["locale"] = $vx->user->language;
+            $data["locale"] = $vx->user->language ?? ["en"];
             $data["file_upload_max_size"] = FileManager::FormatBytes($vx->getFileUploadMaxSize());
         }
 
@@ -152,49 +155,69 @@ return new class
 
     function setNavbarColor(VX $vx)
     {
-        $user = $vx->user;
-        $user->style["navbar_color"] = $vx->_post["color"];
-        $user->save();
+        if ($vx->user instanceof User) {
+            $user = $vx->user;
+            $user->style["navbar_color"] = $vx->_post["color"];
+            $user->save();
+        }
     }
 
     function setNavbarType(VX $vx)
     {
-        $user = $vx->user;
-        $user->style["navbar_type"] = $vx->_post["type"];
-        $user->save();
+        if ($vx->user instanceof User) {
+
+            $user = $vx->user;
+            $user->style["navbar_type"] = $vx->_post["type"];
+            $user->save();
+        }
     }
 
 
     function setFooterType(VX $vx)
     {
-        $user = $vx->user;
-        $user->style["footer_type"] = $vx->_post["type"];
-        $user->save();
+        if ($vx->user instanceof User) {
+
+            $user = $vx->user;
+            $user->style["footer_type"] = $vx->_post["type"];
+            $user->save();
+        }
     }
 
     function setCollapsible(VX $vx)
     {
-        $user = $vx->user;
-        $user->style["collapsible"] = $vx->_post["collapsible"];
-        $user->save();
+        if ($vx->user instanceof User) {
+
+            $user = $vx->user;
+            $user->style["collapsible"] = $vx->_post["collapsible"];
+            $user->save();
+        }
     }
 
     function setLayout(VX $vx)
     {
-        $user = $vx->user;
-        $user->style["layout"] = $vx->_post["layout"];
-        $user->save();
+        if ($vx->user instanceof User) {
+
+            $user = $vx->user;
+            $user->style["layout"] = $vx->_post["layout"];
+            $user->save();
+        }
     }
 
     function addMyFavorite(VX $vx)
     {
-        $user = $vx->user;
-        $user->addMyFavorite($vx->_post["label"], $vx->_post["path"]);
+        if ($vx->user instanceof User) {
+
+            $user = $vx->user;
+            $user->addMyFavorite($vx->_post["label"], $vx->_post["path"]);
+        }
     }
 
     function removeMyFavorite(VX $vx)
     {
-        $user = $vx->user;
-        $user->removeMyFavorite($vx->_post["path"]);
+        if ($vx->user instanceof User) {
+
+            $user = $vx->user;
+            $user->removeMyFavorite($vx->_post["path"]);
+        }
     }
 };
