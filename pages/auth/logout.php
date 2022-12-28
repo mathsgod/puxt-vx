@@ -6,16 +6,17 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Psr\Http\Message\ServerRequestInterface;
 
 return new class
 {
-    function get(VX $vx)
+    function get(VX $vx, ServerRequestInterface $request)
     {
-        return $this->post($vx);
+        return $this->post($vx, $request);
     }
 
 
-    function post(VX $vx)
+    function post(VX $vx, ServerRequestInterface $request)
     {
         if ($_COOKIE["access_token"] == null) {
             return new EmptyResponse();
@@ -30,7 +31,7 @@ return new class
         $access_token_string = "access_token=; path=" . $vx->base_path . "; httponly";
         //$refresh_token_string = "refresh_token=; path=" . $vx->base_path . "auth/renew-token; httponly";
 
-        if ($vx->request->getUri()->getScheme() == "https") {
+        if ($request->getUri()->getScheme() == "https") {
             $access_token_string .= "; Secure";
             //  $refresh_token_string .= "; Secure";
         }
