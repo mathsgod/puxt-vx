@@ -6,31 +6,34 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use VX\User;
 
 return new class
 {
 
     function patch(VX $vx)
     {
-        $user = $vx->user;
-        foreach ($vx->_post as $k => $v) {
-            $user->style[$k] = $v;
+        if ($vx->user instanceof User) {
+            $user = $vx->user;
+            foreach ($vx->_post as $k => $v) {
+                $user->style[$k] = $v;
+            }
+
+            $user->save();
         }
-
-
-        $user->save();
 
         return new EmptyResponse();
     }
 
     function post(VX $vx)
     {
-
-        $user = $vx->user;
-        foreach ($vx->_post as $k => $v) {
-            $user->style[$k] = $v;
+        if ($vx->user instanceof User) {
+            $user = $vx->user;
+            foreach ($vx->_post as $k => $v) {
+                $user->style[$k] = $v;
+            }
+            $user->save();
         }
-        $user->save();
 
         return new EmptyResponse();
     }
