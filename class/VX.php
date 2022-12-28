@@ -579,6 +579,14 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         }
 
         $this->config->merge(new Config(["VX" => $config]));
+
+
+        //check langauge
+        if (!$this->config->VX->language) {
+            $this->config->VX->language =  [
+                "en" => "English",
+            ];
+        }
     }
 
     public function getModule(string $name): ?Module
