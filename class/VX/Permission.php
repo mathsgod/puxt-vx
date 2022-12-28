@@ -1,6 +1,6 @@
 <?php
 
-use VX\Model;
+namespace VX;
 
 class Permission extends Model
 {

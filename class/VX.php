@@ -55,6 +55,7 @@ use VX\Mailer;
 use VX\Model;
 use VX\ModelInterface;
 use VX\Module;
+use VX\Permission;
 use VX\Translate;
 use VX\User;
 use VX\UserLog;
@@ -428,6 +429,10 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
                     $this->security->getRole($group)->addPermission($path);
                 }
             }
+        }
+
+        foreach (Permission::Query() as $p) {
+            $this->security->getRole($p->role)->addPermission($p->value);
         }
 
         return $this->security;
