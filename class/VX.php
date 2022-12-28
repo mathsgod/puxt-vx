@@ -307,17 +307,18 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
             $logger->info("Request: " . $request->getUri()->getPath());
         }
 
+        $request = $request->withAttribute(VX::class, $this);
 
         $this->_get = $_GET;
         $this->_post = $_POST;
-
-
         if (strpos($request->getHeaderLine("Content-Type"), "application/json") !== false) {
+
             $body = $request->getBody()->getContents();
-            $request = $request->withParsedBody(json_decode($body, true));
+            $this->_post = json_decode($body, true);
+            $request = $request->withParsedBody($this->_post);
         }
 
-        $request = $request->withAttribute(VX::class, $this);
+
 
         $router = $this->getRouter();
 
