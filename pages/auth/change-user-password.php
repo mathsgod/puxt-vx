@@ -8,21 +8,22 @@
 use Laminas\Diactoros\Response\EmptyResponse;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\ForbiddenException;
+use VX\Security\Security;
 use VX\User;
 
 return new class
 {
-    function post(VX $vx)
+    function post(Security $security, VX $vx)
     {
 
         //only admin can change password
-        if (!$vx->user->isAdmin()) {
+        if (!$vx->user->is("Administrators")) {
             throw new ForbiddenException("Only admin can change this user's password");
         }
 
         $user = User::Get($vx->_post["user_id"]);
 
-        if (!$user->canChangePasswordBy($vx->user)) {
+        if (!$security->isGranted($vx->user, "can_change_password", $user)) {
             throw new ForbiddenException("You are not allowed to change password");
         }
 
