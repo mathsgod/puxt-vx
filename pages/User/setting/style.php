@@ -14,7 +14,11 @@ return new class
     function post(VX $vx)
     {
         if ($vx->user instanceof StyleableInterface) {
-            $vx->user->setStyles($vx->_post);
+            $style = $vx->user->getStyles();
+            foreach ($vx->post as $k => $v) {
+                $style[$k] = $v;
+            }
+            $vx->user->setStyles($style);
         }
 
         return new EmptyResponse();
