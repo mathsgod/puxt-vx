@@ -16,9 +16,8 @@ use VX\Security\UserInterface;
  * @property string $last_name
  * @property string $email
  * @property string $username
- * @property array $style
  */
-class User extends Model implements UserInterface
+class User extends Model implements UserInterface, StyleableInterface
 {
     public static $_table = "User";
 
@@ -36,6 +35,26 @@ class User extends Model implements UserInterface
 
     #[Assert\Choice([0, 1])]
     public $status;
+
+    function getStyles(): array
+    {
+        $attr = self::__attribute("style");
+        if ($attr["Type"] == "json") {
+            return $this->style;
+        }
+        return json_decode($this->style, true);
+    }
+
+    function setStyles(array $styles): void
+    {
+        $attr = self::__attribute("style");
+        if ($attr["Type"] == "json") {
+            $this->style = $styles;
+        } else {
+            $this->style = json_encode($styles, JSON_UNESCAPED_UNICODE);
+        }
+        $this->save();
+    }
 
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
@@ -57,7 +76,7 @@ class User extends Model implements UserInterface
         return $this->user_id;
     }
 
-  /*   public function getDetail(string $name, $default = null)
+    /*   public function getDetail(string $name, $default = null)
     {
     }
 

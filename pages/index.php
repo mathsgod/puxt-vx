@@ -7,6 +7,7 @@ use VX\FileManager;
 use VX\Menu;
 use VX\Module;
 use VX\Security\Security;
+use VX\StyleableInterface;
 use VX\User;
 
 return new class
@@ -97,7 +98,7 @@ return new class
                 "first_name" => $user->first_name,
                 "last_name" => $user->last_name,
                 "language" => $user->language ?? "en",
-                "style" => $user->style,
+                "style" => ($user instanceof StyleableInterface) ? $user->getStyles() : [],
                 "default_page" => $user->default_page ?? "/Dashboard",
                 "usergroup" => implode(",", $user->getRoles()),
                 "image" => $user instanceof User ? $user->uri("avatar") : ""
