@@ -30,7 +30,7 @@ class ListenserSubscriber implements ListenerSubscriber
             }
 
             if (in_array("created_by", $target->__fields())) {
-                $target->created_by = $vx->user->getIdentity();
+                $target->created_by = $vx->getCurrentUser()->getIdentity();
             }
         });
 
@@ -43,25 +43,25 @@ class ListenserSubscriber implements ListenerSubscriber
             }
 
             if (in_array("updated_by", $target->__fields())) {
-                $target->updated_by = $vx->user->getIdentity();
+                $target->updated_by = $vx->getCurrentUser()->getIdentity();
             }
         });
 
         $acceptor->subscribeTo(AfterInsert::class, function (AfterInsert $event) use ($vx) {
             if (!$event->target instanceof EventLog) {
-                EventLog::LogInsert($event->target, $vx->user);
+                EventLog::LogInsert($event->target, $vx->getCurrentUser());
             }
         });
 
         $acceptor->subscribeTo(AfterUpdate::class, function (AfterUpdate $event) use ($vx) {
             if (!$event->target instanceof EventLog) {
-                EventLog::LogUpdate($event->target, $vx->user);
+                EventLog::LogUpdate($event->target, $vx->getCurrentUser());
             }
         });
 
         $acceptor->subscribeTo(AfterDelete::class, function (AfterDelete $event) use ($vx) {
             if (!$event->target instanceof EventLog) {
-                EventLog::LogDelete($event->target, $vx->user);
+                EventLog::LogDelete($event->target, $vx->getCurrentUser());
             }
         });
     }

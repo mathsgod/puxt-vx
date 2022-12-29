@@ -49,6 +49,7 @@ use VX\Authentication\AuthenticationInterface;
 use VX\Authentication\AuthenticationMiddleware;
 use VX\Security\UserInterface;
 use VX\AuthLock;
+use VX\DefaultUserFactory;
 use VX\JWTBlacklist;
 use VX\ListenserSubscriber;
 use VX\Mailer;
@@ -141,10 +142,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $this->service = $service;
         $this->config = $config;
 
-        //load db
-        $this->loadDB();
-        $this->service->setService(Security::class, $this->getSecurity());
-        $this->loadModules();
         if (!$this->service->has(AuthenticationInterface::class)) {
             $this->service->setService(AuthenticationInterface::class, new Authentication);
         }
@@ -156,11 +153,26 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $this->service->setService(UserRepositoryInterface::class, new UserRepository());
         $this->service->setService(VX::class, $this);
 
-
+        //load db
+        $this->loadDB();
+        $this->service->setService(Security::class, $this->getSecurity());
+        $this->loadModules();
 
         $this->loadConfig();
 
         Model::$_vx = $this;
+
+        if (!$this->service->has(UserInterface::class)) {
+            $this->service->setFactory(UserInterface::class, DefaultUserFactory::class);
+        }
+
+        $this->user = $this->service->get(UserInterface::class);
+
+
+
+        //get default user
+        $this->service->has(UserInterface::class) && $this->user = $this->service->get(UserInterface::class);
+
 
         /* 
 
@@ -181,6 +193,14 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         Model::$_vx = $this;
 
         }); */
+    }
+
+    public function getCurrentUser(): UserInterface
+    {
+        if ($this->user === null) {
+            return User::Get(2);
+        }
+        return $this->user;
     }
 
     public function getRouter()
@@ -353,9 +373,9 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $this->service->setService(ServerRequestInterface::class, $request);
 
-        try{
+        try {
             $response = $router->dispatch($request);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $response = new HtmlResponse($e->getMessage(), 500);
         }
 
