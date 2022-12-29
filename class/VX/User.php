@@ -48,7 +48,7 @@ class User extends Model implements UserInterface, StyleableInterface
     function setStyles(array $styles): void
     {
         $attr = self::__attribute("style");
-        if ($attr["Type"] == "json") {
+        if ($attr["Type"] === "json") {
             $this->style = $styles;
         } else {
             $this->style = json_encode($styles, JSON_UNESCAPED_UNICODE);
@@ -154,16 +154,6 @@ class User extends Model implements UserInterface, StyleableInterface
         }
         return strtoupper($initial);
     }
-
-    function save()
-    {
-        $attr = self::__attribute("style");
-        if ($attr["Type"] != "json") {
-            $this->style = json_encode($this->style, JSON_UNESCAPED_UNICODE);
-        }
-        return parent::save();
-    }
-
 
     public function isSystemAccount()
     {
