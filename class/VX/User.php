@@ -43,7 +43,7 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         if ($attr["Type"] == "json") {
             return $this->style;
         }
-        return json_decode($this->style, true);
+        return json_decode($this->style, true) ?? [];
     }
 
     function setStyles(array $styles): void
