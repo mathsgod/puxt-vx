@@ -155,11 +155,6 @@ class User extends Model implements UserInterface, StyleableInterface
         return strtoupper($initial);
     }
 
-    public function isSystemAccount()
-    {
-        return $this->user_id == 1 || $this->user_id == 2 || $this->user_id == 3;
-    }
-
     public function need2Step(string $remote_ip)
     {
         if (!$this->secret) return false;
