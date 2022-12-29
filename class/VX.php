@@ -353,7 +353,11 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $this->service->setService(ServerRequestInterface::class, $request);
 
-        $response = $router->dispatch($request);
+        try{
+            $response = $router->dispatch($request);
+        }catch(Exception $e){
+            $response = new HtmlResponse($e->getMessage(), 500);
+        }
 
         if ($_SERVER["HTTP_ORIGIN"]) {
             $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
