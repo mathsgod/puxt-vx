@@ -30,7 +30,7 @@ class ListenserSubscriber implements ListenerSubscriber
             }
 
             if (in_array("created_by", $target->__fields())) {
-                $target->created_by = $vx->user_id;
+                $target->created_by = $vx->user->getIdentity();
             }
         });
 
@@ -43,7 +43,7 @@ class ListenserSubscriber implements ListenerSubscriber
             }
 
             if (in_array("updated_by", $target->__fields())) {
-                $target->updated_by = $vx->user_id;
+                $target->updated_by = $vx->user->getIdentity();
             }
         });
 
