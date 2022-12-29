@@ -15,7 +15,7 @@ return new class
     {
         if ($vx->user instanceof StyleableInterface) {
             $style = $vx->user->getStyles();
-            foreach ($vx->post as $k => $v) {
+            foreach ($vx->_post as $k => $v) {
                 $style[$k] = $v;
             }
             $vx->user->setStyles($style);
