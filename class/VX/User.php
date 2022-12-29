@@ -7,6 +7,7 @@ use Laminas\Db\Sql\Where;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use TheCodingMachine\GraphQLite\Annotations\Field;
+use VX\Security\AssertionInterface;
 use VX\Security\Security;
 use VX\Security\UserInterface;
 
@@ -17,7 +18,7 @@ use VX\Security\UserInterface;
  * @property string $email
  * @property string $username
  */
-class User extends Model implements UserInterface, StyleableInterface
+class User extends Model implements UserInterface, StyleableInterface, AssertionInterface
 {
     public static $_table = "User";
 
