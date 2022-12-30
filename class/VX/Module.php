@@ -15,8 +15,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use R\DB\Model;
 use Symfony\Component\Yaml\Yaml;
 use VX;
-use VX\Model as VXModel;
-use VX\Security\AssertionInterface;
 use VX\Security\Security;
 
 class Module implements TranslatorAwareInterface, MenuItemInterface

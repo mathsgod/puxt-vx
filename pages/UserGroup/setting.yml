@@ -1,5 +1,0 @@
-sequence: 20
-group: System
-class: VX\UserGroup
-icon: group
-show_create: true

@@ -1,11 +1,9 @@
 <?php
 
 use Laminas\Di\InjectorInterface;
-use Laminas\Permissions\Rbac\Rbac;
 use Symfony\Component\Yaml\Yaml;
 use VX\FileManager;
 use VX\Menu;
-use VX\Module;
 use VX\Security\Security;
 use VX\StyleableInterface;
 use VX\User;
@@ -14,9 +12,6 @@ return new class
 {
     function get(VX $vx, InjectorInterface $injector, Security $security)
     {
-
-
-
         $logined = $vx->logined;
         $data = [
             "logined" => $logined,
@@ -29,11 +24,10 @@ return new class
                     "name" => "puxt",
                     "value" => Composer\InstalledVersions::getVersion("mathsgod/puxt")
                 ]
-            ]
+            ],
+            "locale" => "en"
         ];
 
-
-        $data["locale"] = "en";
         if ($logined) {
             //fav
             $data["favs"] = [];

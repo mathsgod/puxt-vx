@@ -286,20 +286,20 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
             }
         }
 
-        $vx = self::$_vx->getSecurity();
+        $short_name = $ro->getShortName();
+
+        $secruity = self::$_vx->getSecurity();
         if (in_array("__canRead", $fields)) {
-            $data["__canRead"] = $vx->isGranted(self::$_vx->user, "read", $this);
+            $data["__canRead"] = $secruity->isGranted(self::$_vx->user, $short_name . ".read", $this);
         }
 
         if (in_array("__canUpdate", $fields)) {
-            $data["__canUpdate"] = $vx->isGranted(self::$_vx->user, "update", $this);
+            $data["__canUpdate"] = $secruity->isGranted(self::$_vx->user, $short_name . ".update", $this);
         }
 
         if (in_array("__canDelete", $fields)) {
-            $data["__canDelete"] =  $vx->isGranted(self::$_vx->user, "delete", $this);
+            $data["__canDelete"] =  $secruity->isGranted(self::$_vx->user, $short_name . ".delete", $this);
         }
-
-
 
         return $data;
     }

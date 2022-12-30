@@ -80,7 +80,7 @@ class AuthenticationAdapter implements AdapterInterface
             return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ["User account expired"]);
         }
 
-        if ($user->UserList->count() == 0) {
+        if (count($user->getRoles()) == 0) {
             $ul->result = "FAIL";
             $ul->save();
             return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ["User has no user group"]);

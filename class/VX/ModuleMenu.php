@@ -37,7 +37,10 @@ class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
 
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
-        return true;
+        if ($user->is("Administrators")) {
+            return true;
+        }
+        return $security->isGranted($user, $permission);
     }
 
 
@@ -47,6 +50,12 @@ class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
         foreach ($this->menu as $menu) {
             $menu->setTranslator($translator);
         }
+    }
+
+    public function getName()
+    {
+        $name = substr($this->link, 0, 1) == "/" ? $link = substr($this->link, 1) : $this->link;
+        return "menu.{$name}";
     }
 
 
@@ -65,7 +74,7 @@ class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
 
             foreach ($this->menu as $m) {
 
-                if (!$security->isGranted($user, $m->name ?? "")) {
+                if (!$security->isGranted($user, $m->getName(), $m)) {
                     continue;
                 };
 

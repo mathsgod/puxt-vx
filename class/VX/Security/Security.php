@@ -41,17 +41,6 @@ class Security
 
     public function isGranted(UserInterface $user, string $permission, $assertion = null): bool
     {
-        /*    if (!$this->hasRole($role)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'No role with name "%s" could be found',
-                is_object($role) ? $role->getName() : $role
-            ));
-        } */
-
-        if ($user->is("Administrators")) {
-            return true;
-        }
-
         if ($assertion) {
 
             if (
@@ -71,10 +60,7 @@ class Security
             return  $assertion($this, $user, $permission);
         }
 
-
         foreach ($user->getRoles() as $role) {
-
-
             if ($this->rbac->isGranted($role, $permission, $assertion)) {
                 return true;
             }

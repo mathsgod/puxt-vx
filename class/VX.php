@@ -63,6 +63,7 @@ use VX\UserLog;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
+use VX\Role;
 use VX\Security\AuthenticationAdapter;
 use VX\Security\Security;
 use VX\SystemValue;
@@ -128,19 +129,19 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
     public function __construct(ServiceManager $service, Config $config)
     {
+        $this->service = $service;
+        $this->config = $config;
+
+
         $this->vx_root = dirname(__DIR__);
         $this->root =  $service->get(PUXT\App::class)->root;
         $this->base_path = "/api";
 
-
-        $this->auth = new AuthenticationService();
-        $this->auth->setStorage(new NonPersistent());
+        $this->auth = new AuthenticationService(new NonPersistent());
 
         $this->injector = $service->get(InjectorInterface::class);
 
 
-        $this->service = $service;
-        $this->config = $config;
 
         if (!$this->service->has(AuthenticationInterface::class)) {
             $this->service->setService(AuthenticationInterface::class, new Authentication);
@@ -172,34 +173,10 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         //get default user
         $this->service->has(UserInterface::class) && $this->user = $this->service->get(UserInterface::class);
-
-
-        /* 
-
-
-        $this->puxt = $puxt;
-        $this->base_path = $this->config->VX->base_path ?? $puxt->base_path;
-        $this->root = $puxt->root;
-        $this->config = $puxt->config;
-
-        $config = $this->config->VX;
-        if ($config->table) {
-            foreach ($config->table as $k => $v) {
-                $r_class = new ReflectionClass($k);
-                $r_class->setStaticPropertyValue("_table", $v);
-            }
-        }
-
-        Model::$_vx = $this;
-
-        }); */
     }
 
-    public function getCurrentUser(): UserInterface
+    function getCurrentUser(): UserInterface
     {
-        if ($this->user === null) {
-            return User::Get(2);
-        }
         return $this->user;
     }
 
@@ -448,8 +425,8 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         if ($this->security) return $this->security;
         $this->security = new Security();
 
-        foreach (UserGroup::Query() as $ug) {
-            $this->security->addRole($ug->name);
+        foreach (Role::Query() as $role) {
+            $this->security->addRole($role->name);
         }
 
         $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");

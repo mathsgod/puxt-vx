@@ -37,6 +37,8 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
     #[Assert\Choice([0, 1])]
     public $status;
 
+    const STATUS = ["Active", "Inactive"];
+
     function getStyles(): array
     {
         $attr = self::__attribute("style");
@@ -59,6 +61,24 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
 
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
+
+        if ($permission === "User.update") {
+            if ($this->is("Guests")) {
+                return false;
+            }
+        }
+
+        if ($permission === "User.read") {
+            if ($this->is("Guests")) return false;
+        }
+
+        if ($permission === "User.delete") {
+            if ($this->is("Guests")) return false;
+
+            //cannot delete self
+            if ($this->user_id == $user->getIdentity()) return false;
+        }
+
         if ($permission === "can_change_password") {
             if ($user->is("Administrators")) return true;
             if ($this->user_id == $user->getIdentity()) return true;
@@ -69,12 +89,19 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
             if ($user->is("Users")) return true;
         }
 
+
         return parent::assert($security, $user, $permission);
     }
 
     function getIdentity(): string
     {
         return $this->user_id;
+    }
+
+    function delete()
+    {
+        UserRole::Query(["user_id" => $this->user_id])->delete();
+        return parent::delete();
     }
 
     /*   public function getDetail(string $name, $default = null)
@@ -86,12 +113,23 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         return [];
     } */
 
+    public function removeRole(string $role): void
+    {
+        UserRole::Query(["user_id" => $this->user_id, "role" => $role])->delete();
+    }
+
+    public function addRole(string $role): void
+    {
+        if ($this->is($role)) return;
+        UserRole::Create(["user_id" => $this->user_id, "role" => $role])->save();
+    }
+
+    #[Field]
     public function getRoles(): array
     {
-
         $roles = [];
-        foreach (UserList::Query(["user_id" => $this->user_id]) as $ur) {
-            $roles[] = $ur->UserGroup()->getName();
+        foreach (UserRole::Query(["user_id" => $this->user_id]) as $ur) {
+            $roles[] = $ur->role;
         }
         return $roles;
     }
@@ -186,15 +224,6 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         return $fav;
     }
 
-    const STATUS = ["Active", "Inactive"];
-
-    public function __toString()
-    {
-        return $this->first_name . " " . $this->last_name;
-    }
-
-
-    private static $_is = [];
     public function is(RoleInterface|string $role): bool
     {
         if ($role instanceof RoleInterface) {
@@ -203,44 +232,11 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
             $name = $role;
         }
 
-        $group = UserGroup::GetByNameOrCode($name);
-        if (!$group) return false;
-
-        if (isset(self::$_is[$this->user_id])) {
-            return in_array($group->usergroup_id, self::$_is[$this->user_id]);
-        }
-
-        self::$_is[$this->user_id] = [];
-        foreach ($this->UserList as $ul) {
-            self::$_is[$this->user_id][] = $ul->usergroup_id;
-        }
-
-        return in_array($group->usergroup_id, self::$_is[$this->user_id]);
+        return in_array($name, $this->getRoles());
     }
 
-    public function isAdmin(): bool
+    public function __toString()
     {
-        return $this->is("Administrators");
-    }
-
-    public function isPowerUser(): bool
-    {
-        return $this->is("Power Users");
-    }
-
-    public function isUser(): bool
-    {
-        return $this->is("Users");
-    }
-
-    public function isGuest(): bool
-    {
-        return $this->is("Guests");
-    }
-
-    public function UserGroup()
-    {
-        return UserGroup::Query()
-            ->where(fn (Where $where) => $where->expression("usergroup_id in (select usergroup_id from UserList where user_id=?)", [$this->user_id]));
+        return $this->first_name . " " . $this->last_name;
     }
 }
