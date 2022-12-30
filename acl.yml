@@ -18,7 +18,7 @@ path:
   User/myfav: [Users,Power Users]
   User/2step: [Users,Power Users]
   User/2step_whitelist: [Users,Power Users]
-  User/list: [Power Users, Users]
+  User/list: [Power Users]
   User/setting: [Power Users,Users]
   User/setting/2fa: [Power Users,Users]
   User/setting/bio-auth: [Power Users,Users]

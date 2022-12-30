@@ -9,6 +9,7 @@ use Firebase\JWT\Key;
 use VX\Authentication\AuthenticationInterface;
 use VX\Security\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use VX;
 
 class Authentication implements AuthenticationInterface
 {
@@ -20,17 +21,14 @@ class Authentication implements AuthenticationInterface
             return User::Get(2);
         }
 
-        /*  $tok = JWT::encode(["test" => 1], $_ENV["JWT_SECRET"], "HS256");;
-        echo $tok;
-        print_r(JWT::decode($tok,  new Key($_ENV["JWT_SECRET"], "HS256")));
-        die(); */
-
-
 
         try {
             $payload = JWT::decode($access_token,  new Key($_ENV["JWT_SECRET"], "HS256"));
 
+
             if ($payload->view_as) {
+                $vx = $request->getAttribute(VX::class);
+                $vx->view_as = $payload->view_as;
                 return User::Get($payload->view_as);
             }
 

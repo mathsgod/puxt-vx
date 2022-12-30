@@ -196,8 +196,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $router->addPatternMatcher("any", ".+");
 
-        $router->map("OPTIONS", "/", fn () => new EmptyResponse(200));
-
         $modules = $this->getModules();
         $router->group($this->base_path, function (RouteGroup $route) use ($modules) {
             foreach ($modules as $module) {
@@ -299,6 +297,11 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
     function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        if ($request->getMethod() == "OPTIONS") {
+            return new EmptyResponse(200);
+        }
+        $request = $request->withAttribute(VX::class, $this);
+
         $logger = $request->getAttribute(LoggerInterface::class);
         if ($logger instanceof LoggerInterface) {
             $logger->info("Request: " . $request->getUri()->getPath());
@@ -314,8 +317,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
             $this->_post = json_decode($body, true);
             $request = $request->withParsedBody($this->_post);
         }
-
-
 
         $router = $this->getRouter();
 
@@ -362,54 +363,9 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $response = $response
             ->withHeader("Access-Control-Allow-Credentials", "true")
-            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, vx-view-as, rest-jwt")
+            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
             ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
             ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
-
-        return $response;
-
-
-        return new HtmlResponse("test");
-
-
-
-
-
-        $uri_path = $request->getUri()->getPath();
-        $this->request_uri = substr($uri_path, strlen($this->base_path));
-
-
-        $has_vx = false;
-
-        if (strpos($request->getHeaderLine("Content-Type"), "multipart/form-data") !== false) {
-
-            foreach ($request->getUploadedFiles() as $name => $file) {
-                if (is_array($file)) {
-                    $this->_files[$name] = $file;
-                    continue;
-                }
-
-                if ($file->getClientMediaType() == "application/json" && $name == "vx") {
-                    $has_vx = true;
-
-                    $this->_post = json_decode($file->getStream()->getContents(), true);
-                    continue;
-                }
-                $this->_files[$name] = $file;
-            }
-
-            foreach ($this->_files as $name => $file) {
-
-                $this->_post[$name] = $file;
-            }
-        }
-
-        if (!$has_vx) {
-            $this->_post = $request->getParsedBody();
-        }
-
-
-
 
         return $response;
     }
@@ -427,6 +383,10 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         foreach (Role::Query() as $role) {
             $this->security->addRole($role->name);
+
+            foreach ($role->getChildren() as $child) {
+                $this->security->addRole($child->name, $role->name);
+            };
         }
 
         $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");

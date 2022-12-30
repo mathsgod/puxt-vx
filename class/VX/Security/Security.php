@@ -18,6 +18,8 @@ class Security
     public function __construct()
     {
         $this->rbac = new Rbac();
+        $this->rbac->setCreateMissingRoles(true);
+        $this->rbac->getCreateMissingRoles(true);
     }
 
     public function getRole(string $roleName): RoleInterface
@@ -30,6 +32,7 @@ class Security
         if (is_string($role)) {
             $role = new Role($role);
         }
+        if ($this->hasRole($role)) return;
 
         $this->rbac->addRole($role, $parents);
     }
