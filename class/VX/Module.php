@@ -54,14 +54,15 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         $this->class = $name;
 
         // load all system files
-        $base[] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name;
+        $base[] =  $vx->vx_root . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name;
         $base[] = getcwd() . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $this->name;
 
         foreach ($base as $b) {
 
             if (file_exists($b)) {
-                $adapter = new \League\Flysystem\Local\LocalFilesystemAdapter($b);
-                $fs = new \League\Flysystem\Filesystem($adapter);
+
+
+                $fs = new \League\Flysystem\Filesystem(new \League\Flysystem\Local\LocalFilesystemAdapter($b));
                 $files = $fs->listContents('/', true)->filter(function (StorageAttributes $attributes) {
                     return $attributes->isFile();
                 })->filter(function (FileAttributes $attributes) {
@@ -69,14 +70,20 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
                     return $ext == "php" || $ext == "twig" || $ext == "html";
                 })->toArray();
 
+
                 foreach ($files as $file) {
 
-                    $ext = pathinfo($file["path"], PATHINFO_EXTENSION);
-                    $path = substr($file["path"], 0, - (strlen($ext) + 1));
+                    $path = $file["path"];
+                    //remove extension of path
+
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $path = substr($path, 0, - (strlen($ext) + 1));
 
                     $this->files[$path] = new ModuleFile($this, $path, $b . DIRECTORY_SEPARATOR . $path);
                 }
             }
+
+
 
             //load config 
             if (file_exists($setting = $b . DIRECTORY_SEPARATOR . "setting.yml")) {
@@ -105,7 +112,6 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
                 }
             }
         }
-
 
 
         $this->files = array_values($this->files);
@@ -180,6 +186,67 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
                 return $file;
             }
         }
+    }
+
+    function getPermission(): array
+    {
+
+        $children = [];
+
+
+        $menus = [];
+        foreach ($this->getMenus() as $menu) {
+            substr($menu->link, 0, 1) == "/" ? $link = substr($menu->link, 1) : $menu->link;
+            $menus[] = [
+                "value" => "menu." . $link,
+                "label" => "$menu->label"
+            ];
+        }
+
+        $children[] = [
+            "label" => "[Menu]",
+            "children" => $menus
+        ];
+
+
+
+        //check class is model
+        if (class_exists($this->class)) {
+            $ref = new \ReflectionClass($this->class);
+            if ($ref->isSubclassOf(Model::class)) {
+                $children = array_merge($children, [
+                    [
+                        "value" => $this->name . ".read",
+                        "label" => "Read",
+                    ],
+                    [
+                        "value" => $this->name . ".create",
+                        "label" => "Create",
+                    ],
+                    [
+                        "value" => $this->name . ".update",
+                        "label" => "Update",
+                    ],
+                    [
+                        "value" => $this->name . ".delete",
+                        "label" => "Delete",
+                    ]
+                ]);
+            }
+        }
+
+        $children = array_merge($children,  array_map(function (ModuleFile $file) {
+            return [
+                "value" => $this->name . "/" . $file->path,
+                "label" => $file->path
+            ];
+        }, $this->files));
+
+        return [
+            "value" => $this->name,
+            "label" => $this->name,
+            "children" => $children,
+        ];
     }
 
     function setupRoute(RouteCollectionInterface $route)
@@ -483,6 +550,11 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
         }
 
         return $data;
+    }
+
+    function getOrder(): int
+    {
+        return intval($this->sequence);
     }
 
 

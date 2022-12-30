@@ -59,7 +59,6 @@ class ModuleFile implements RequestHandlerInterface
         return [
             'path' => $this->path,
             'file' => $this->file,
-            'resourceId' => $this->getResourceId(),
         ];
     }
 }

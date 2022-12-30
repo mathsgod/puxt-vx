@@ -48,6 +48,10 @@ class Security
             ));
         } */
 
+        if ($user->is("Administrators")) {
+            return true;
+        }
+
         if ($assertion) {
 
             if (

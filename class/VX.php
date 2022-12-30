@@ -526,10 +526,13 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $modules = array_values(array_unique($modules));
 
         foreach ($modules as $module) {
-
-
             $this->modules[] = new Module($this, $module, $this->security);
         }
+
+        //order module
+        usort($this->modules, function ($a, $b) {
+            return $a->getOrder() <=> $b->getOrder();
+        });
     }
 
 

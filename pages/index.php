@@ -12,7 +12,7 @@ use VX\User;
 
 return new class
 {
-    function get(VX $vx, InjectorInterface $injector, Security $s)
+    function get(VX $vx, InjectorInterface $injector, Security $security)
     {
 
 
@@ -109,6 +109,10 @@ return new class
 
             $dropdown = [];
 
+            if ($security->isGranted($vx->user, "User/setting")) {
+                $dropdown[] = ["label" => "Setting", "icon" => "o_settings", "link" => "/User/setting"];
+            }
+
             if (!$vx->view_as) {
                 if ($vx->user->is("Administrators")) {
                     $dropdown[] = ["label" => "View as", "icon" => "o_visibility", "link" => "/System/view-as"];
@@ -116,6 +120,10 @@ return new class
             } else {
                 $dropdown[] = ["label" => "Cancel view as", "icon" => "o_visibility_off", "link" => "/cancel-view-as"];
             }
+
+
+
+
 
             $data["navbar"]["dropdown"] = $dropdown;
             $data["menu"]["width"] = intval($vx->config->VX->menu_width ?? 280);
