@@ -54,7 +54,6 @@ use VX\JWTBlacklist;
 use VX\ListenserSubscriber;
 use VX\Mailer;
 use VX\Model;
-use VX\ModelInterface;
 use VX\Module;
 use VX\Permission;
 use VX\Translate;
@@ -67,7 +66,6 @@ use VX\Role;
 use VX\Security\AuthenticationAdapter;
 use VX\Security\Security;
 use VX\SystemValue;
-use VX\UserGroup;
 use VX\UserRepository;
 
 /**
@@ -127,6 +125,8 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
      */
     protected $injector;
 
+    public $view_as;
+
     public function __construct(ServiceManager $service, Config $config)
     {
         $this->service = $service;
@@ -135,13 +135,11 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $this->vx_root = dirname(__DIR__);
         $this->root =  $service->get(PUXT\App::class)->root;
-        $this->base_path = "/api";
+        $this->base_path = rtrim($config->VX->base_path ?? "/api", "/");
+
 
         $this->auth = new AuthenticationService(new NonPersistent());
-
         $this->injector = $service->get(InjectorInterface::class);
-
-
 
         if (!$this->service->has(AuthenticationInterface::class)) {
             $this->service->setService(AuthenticationInterface::class, new Authentication);
@@ -169,8 +167,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $this->user = $this->service->get(UserInterface::class);
 
-
-
         //get default user
         $this->service->has(UserInterface::class) && $this->user = $this->service->get(UserInterface::class);
     }
@@ -186,7 +182,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
         $router = new Router();
         $router->setStrategy(new \VX\Route\Strategy\ApplicationStrategy($this));
-
 
 
         /** @var AuthenticationMiddleware $middleware */
@@ -276,19 +271,11 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         });
 
         $router->map("GET", $vx->base_path . "/cancel-view-as", function (ServerRequestInterface $request) use ($vx) {
-            $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
-            $request = $request->withAttribute("twig", $twig);
-
-            $handler =  $vx->getRequestHandler($vx->vx_root . "/pages/cancel-view-as");
-            return $handler->handle($request);
+            return $vx->getRequestHandler($vx->vx_root . "/pages/cancel-view-as")->handle($request);
         });
 
         $router->map("GET",  $vx->base_path . "/error", function (ServerRequestInterface $request) use ($vx) {
-            $twig = $vx->getTwig(new \Twig\Loader\FilesystemLoader($vx->vx_root . "/pages"));
-            $request = $request->withAttribute("twig", $twig);
-
-            $handler = $vx->getRequestHandler($vx->vx_root . "/pages/error");
-            return $handler->handle($request);
+            return new EmptyResponse(404);
         });
 
         return $router;
@@ -307,8 +294,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
             $logger->info("Request: " . $request->getUri()->getPath());
         }
 
-        $request = $request->withAttribute(VX::class, $this);
-
         $this->_get = $_GET;
         $this->_post = $_POST;
         if (strpos($request->getHeaderLine("Content-Type"), "application/json") !== false) {
@@ -319,6 +304,14 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         }
 
         $router = $this->getRouter();
+
+        //get the current module
+        $path = $request->getUri()->getPath();
+        //remove the base path
+        $path = substr($path, strlen($this->base_path));
+        $path = explode("/", $path);
+        $module = $path[0];
+        $this->module = $this->getModule($module);
 
         $router->middleware(new class implements MiddlewareInterface
         {
@@ -341,7 +334,7 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
 
                 //translate
-                $vx->processTranslator();
+                $vx->processTranslator($user->language ?? "en");
 
 
                 return $handler->handle($request);
@@ -507,9 +500,8 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         return "";
     }
 
-    public function processTranslator()
+    public function processTranslator(string $locale = "en")
     {
-        $locale = $this->user->language ?? "en";
         $this->locale = $locale;
         //translator
         $translator = new Translator($locale);
@@ -531,15 +523,19 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $translator->addLoader("array", new ArrayLoader);
         $a = [];
 
-        foreach (Translate::Query(["language" => $locale])->where(function (Where $w) {
-            $w->expression("module is null or module=''", []);
-        }) as $t) {
+        $q = Translate::Query(["language" => $locale]);
+        $q->where->expression("module is null or module=''", []);
+
+        foreach ($q as $t) {
             $a[$t->name] = $t->value;
         }
 
-        foreach (Translate::Query(["module" => $this->module->name, "language" => $locale]) as $t) {
+        //get current module
+        $q = Translate::Query(["module" => $this->module->name, "language" => $locale]);
+        foreach ($q as $t) {
             $a[$t->name] = $t->value;
         }
+
         $translator->addResource("array", $a, $locale);
 
         $this->translator = $translator;
@@ -547,14 +543,20 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
 
     private function loadConfig()
     {
-
         $parser = new Parser;
         $config = $parser->parseFile($this->vx_root . "/default.config.yml");
-        foreach (\VX\Config::Query() as $c) {
-            $config[$c->name] = $c->value;
+
+        $vx_config = $this->config->VX->toArray();
+        foreach ($config as $k => $v) {
+            if (!isset($vx_config[$k])) {
+                $this->config->VX->$k = $v;
+            }
         }
 
-        $this->config->merge(new Config(["VX" => $config]));
+        foreach (\VX\Config::Query() as $c) {
+
+            $config[$c->name] = $c->value;
+        }
 
 
         //check langauge
@@ -975,35 +977,12 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         }
     }
 
-    public function object(): ?ModelInterface
-    {
-        if ($this->module) {
-            $class = $this->module->class;
-
-            if (class_exists($class, true)) {
-                return $class::Get($this->object_id);
-            }
-        }
-
-        return null;
-    }
-
     /**
      * @return Module[]
      */
     public function getModules()
     {
         return $this->modules;
-    }
-
-    public function postForm()
-    {
-        $body = $this->_post;
-        if ($obj = $this->object()) {
-            $obj->bind($body);
-            $obj->save();
-        }
-        return $obj;
     }
 
     function getRequestHandler(string $file)

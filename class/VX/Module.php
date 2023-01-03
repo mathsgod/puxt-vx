@@ -27,6 +27,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
     public $group;
     public $sequence = PHP_INT_MAX;
     public $hide = false;
+    public $show_create = false;
 
 
     public $menu = [];

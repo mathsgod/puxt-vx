@@ -2,6 +2,7 @@
 
 use Laminas\Di\InjectorInterface;
 use Symfony\Component\Yaml\Yaml;
+
 use VX\FileManager;
 use VX\Menu;
 use VX\Security\Security;
@@ -115,12 +116,14 @@ return new class
                 $dropdown[] = ["label" => "Cancel view as", "icon" => "o_visibility_off", "link" => "/cancel-view-as"];
             }
 
-
+/* 
+            outp($vx->config->toArray());
+            die(); */
 
 
 
             $data["navbar"]["dropdown"] = $dropdown;
-            $data["menu"]["width"] = intval($vx->config->VX->menu_width ?? 280);
+            $data["menu"]["width"] = $vx->config->VX->menu_width;
             $data["theme_customizer"] = boolval($vx->config->VX->theme_customizer ?? true);
 
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];

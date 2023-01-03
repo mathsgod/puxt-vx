@@ -37,3 +37,5 @@ auth-lockout: true
 
 authentication_lock: true
 authentication_lock_time: 180
+
+menu_width: 280

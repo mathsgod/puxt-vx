@@ -12,6 +12,7 @@ class ModuleFile implements RequestHandlerInterface
 {
     public string $path;
     public string $file;
+    public $module;
 
     public function __construct(Module $module, string $path, string  $file)
     {
@@ -19,7 +20,7 @@ class ModuleFile implements RequestHandlerInterface
         $this->path = $path;
         $this->file = $file;
     }
-    
+
     function handle(ServerRequestInterface $request): ResponseInterface
     {
 
