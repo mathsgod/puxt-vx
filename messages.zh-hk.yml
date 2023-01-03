@@ -35,6 +35,7 @@ City: 城市
 Website: 網站
 Add: 新增
 Edit: 編輯
+edit: 編輯
 UserLog: 使用者紀錄
 EventLog: 事件紀錄
 Sign out: 登出
@@ -106,3 +107,5 @@ Database: 資料庫
 Charset: 字元編碼
 vx-table-message: 顯示 {0} 至 {1} 共 {2} 項資料
 vx-per-page: 每頁顯示
+Role: 角色
+Permission: 權限

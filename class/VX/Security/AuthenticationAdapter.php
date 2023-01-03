@@ -7,6 +7,7 @@ use Firebase\JWT\Key;
 use Google\Authenticator\GoogleAuthenticator;
 use Laminas\Authentication\Adapter\AdapterInterface;
 use Laminas\Authentication\Result;
+use Laminas\Config\Config;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
 use VX\User;
@@ -15,9 +16,11 @@ use VX\UserLog;
 class AuthenticationAdapter implements AdapterInterface
 {
     protected $request;
-    public function __construct(ServerRequestInterface $request)
+    protected $config;
+    public function __construct(ServerRequestInterface $request, Config $config)
     {
         $this->request = $request;
+        $this->config = $config;
     }
 
     public function authenticate()
@@ -89,7 +92,7 @@ class AuthenticationAdapter implements AdapterInterface
 
         //check code
         if ($user->need2Step($_SERVER['REMOTE_ADDR'])) {
-            if (!$this->code) {
+            if (!$code) {
                 $ul->result = "FAIL";
                 $ul->save();
                 return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ["code required"]);
@@ -108,11 +111,13 @@ class AuthenticationAdapter implements AdapterInterface
 
         //create Token
 
+        $access_token_time = $this->config->VX->access_token_time ?? 3600 * 8;
+
         $identity = JWT::encode([
             "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
-            "exp" => time() + 3600 * 8,
+            "exp" => time() + $access_token_time,
             "id" => $user->getIdentity()
         ], $_ENV["JWT_SECRET"], "HS256");
 

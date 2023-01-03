@@ -2,16 +2,17 @@
 
 use Laminas\Di\InjectorInterface;
 use Symfony\Component\Yaml\Yaml;
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 use VX\FileManager;
 use VX\Menu;
 use VX\Security\Security;
 use VX\StyleableInterface;
+
 use VX\User;
 
 return new class
 {
-    function get(VX $vx, InjectorInterface $injector, Security $security)
+    function get(VX $vx, InjectorInterface $injector, Security $security, TranslatorInterface $translator)
     {
         $logined = $vx->logined;
         $data = [
@@ -105,18 +106,26 @@ return new class
             $dropdown = [];
 
             if ($security->isGranted($vx->user, "User/setting")) {
-                $dropdown[] = ["label" => "Setting", "icon" => "o_settings", "link" => "/User/setting"];
+                $dropdown[] = [
+                    "label" => "Setting",
+                    "icon" => "o_settings",
+                    "link" => "/User/setting"
+                ];
             }
 
             if (!$vx->view_as) {
                 if ($vx->user->is("Administrators")) {
-                    $dropdown[] = ["label" => "View as", "icon" => "o_visibility", "link" => "/System/view-as"];
+                    $dropdown[] = [
+                        "label" => "View as",
+                        "icon" => "o_visibility",
+                        "link" => "/System/view-as"
+                    ];
                 }
             } else {
                 $dropdown[] = ["label" => "Cancel view as", "icon" => "o_visibility_off", "link" => "/cancel-view-as"];
             }
 
-/* 
+            /* 
             outp($vx->config->toArray());
             die(); */
 

@@ -6,10 +6,9 @@
  */
 return new class
 {
-    function post(VX $vx)
+    function get()
     {
-
-        print_r($vx->_get);;
-        die();
+        throw new Exception("test");
+        return ["hello" => "world"];
     }
 };

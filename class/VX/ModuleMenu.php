@@ -19,16 +19,16 @@ class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
      * @var ModuleMenu[]
      */
     public $menu = [];
-    public function __construct($data)
+    public function __construct($data, TranslatorInterface $translator)
     {
         $this->name = substr($data["link"], 1);
         $this->name = $data["name"];
-        $this->label = $data["label"];
+        $this->label = $translator->trans($data["label"]);
         $this->icon = $data["icon"] ?? "link";
         $this->link = $data["link"];
 
         foreach ($data["menu"] as $m) {
-            $mm = new ModuleMenu($m);
+            $mm = new ModuleMenu($m, $translator);
             $this->menu[] = $mm;
         }
     }

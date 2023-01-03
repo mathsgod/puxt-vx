@@ -39,3 +39,7 @@ authentication_lock: true
 authentication_lock_time: 180
 
 menu_width: 280
+
+access_token_expire: 86400
+
+theme_customizer: true

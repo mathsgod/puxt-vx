@@ -160,7 +160,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
                 "label" => "Add",
                 "icon" => "add",
                 "link" => "/" . $this->name . "/add"
-            ]);
+            ], $this->translator);
         }
 
         $items[] = new ModuleMenu([
@@ -168,10 +168,10 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
             "label" => "List",
             "icon" => "list",
             "link" => "/" . $this->name
-        ]);
+        ], $this->translator);
 
         foreach ($this->menu as $m) {
-            $items[] = new ModuleMenu($m);
+            $items[] = new ModuleMenu($m, $this->translator);
         }
 
 
@@ -198,7 +198,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
             substr($menu->link, 0, 1) == "/" ? $link = substr($menu->link, 1) : $menu->link;
             $menus[] = [
                 "value" => "menu." . $link,
-                "label" => "$menu->label"
+                "label" => $menu->label
             ];
         }
 

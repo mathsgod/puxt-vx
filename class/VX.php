@@ -24,6 +24,7 @@ use League\Glide\Responses\PsrResponseFactory;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
+use PhpOffice\PhpSpreadsheet\Helper\Html;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +41,7 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -146,7 +148,9 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         }
 
         $this->service->setFactory(AdapterInterface::class, function (ContainerInterface $container) {
-            return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
+            $injector = $container->get(InjectorInterface::class);
+            return $injector->create(AuthenticationAdapter::class);
+            //return new AuthenticationAdapter($container->get(ServerRequestInterface::class));
         });
 
         $this->service->setService(UserRepositoryInterface::class, new UserRepository());
@@ -347,7 +351,11 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         try {
             $response = $router->dispatch($request);
         } catch (Exception $e) {
-            $response = new HtmlResponse($e->getMessage(), 500);
+            if ($this->config->debug) {
+                $response = new HtmlResponse($e->getMessage(), 500);
+            } else {
+                $response = new HtmlResponse("Change the debug mode to true to see the error message", 500);
+            }
         }
 
         if ($_SERVER["HTTP_ORIGIN"]) {
@@ -539,6 +547,7 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $translator->addResource("array", $a, $locale);
 
         $this->translator = $translator;
+        $this->service->setService(TranslatorInterface::class, $translator);
     }
 
     private function loadConfig()
