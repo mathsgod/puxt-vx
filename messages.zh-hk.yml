@@ -50,7 +50,7 @@ Logout time: 登出時間
 File name: 檔案名稱
 Join date: 加入日期
 Default page: 預設頁
-2 step verfication: 二步認證
+2 step verification: 二步認證
 Expiry date: 有效日期
 List: 列表
 Access deny: 拒絶存取
@@ -75,6 +75,7 @@ FileManager: 檔案管理器
 Settings: 設定
 Change Password: 更改密碼
 Theme Customizer: 主題定制器
+Theme customizer: 主題定制器
 Customize & Preview in Real Time: 實時自定義和預覽
 Delete: 刪除
 View: 檢視
@@ -109,3 +110,13 @@ vx-table-message: 顯示 {0} 至 {1} 共 {2} 項資料
 vx-per-page: 每頁顯示
 Role: 角色
 Permission: 權限
+Old password: 舊密碼
+New password: 新密碼
+Confirm password: 確認密碼
+General: 一般
+Roles: 角色
+Change password: 更改密碼
+Change role: 更改角色
+Address1: 地址1
+Address2: 地址2
+Address3: 地址3

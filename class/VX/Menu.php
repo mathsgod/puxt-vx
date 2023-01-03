@@ -4,9 +4,8 @@ namespace VX;
 
 use VX\Security\UserInterface;
 
-class Menu implements TranslatorAwareInterface
+class Menu
 {
-    use TranslatorAwareTrait;
 
     /**
      * @var MenuItemInterface[]
@@ -19,7 +18,6 @@ class Menu implements TranslatorAwareInterface
     public function addModule(Module $module)
     {
         if ($group = $module->getModuleGroup()) {
-            $group->setTranslator($this->translator);
             if ($icon = $this->icons[$module->group]) {
                 $group->setIcon($icon);
             }
@@ -30,7 +28,6 @@ class Menu implements TranslatorAwareInterface
 
             $group->add($module);
         } else {
-            $module->setTranslator($this->translator);
             $this->items[] = $module;
         }
     }

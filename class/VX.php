@@ -74,7 +74,7 @@ use VX\UserRepository;
  * @property int $user_id
  * @property Module $module
  */
-class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface, EventDispatcherAware
+class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInterface, EventDispatcherAware
 {
 
     use EventDispatcherAwareBehavior;
@@ -140,7 +140,20 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $this->base_path = rtrim($config->VX->base_path ?? "/api", "/");
 
 
+        //load translator
+        $this->translator = new Translator("en");
+        $this->translator->setFallbackLocales(["en"]);
+
+        if (file_exists($file = $this->vx_root . "/messages.en.yml")) {
+            $this->translator->addLoader("yaml", new YamlFileLoader);
+            $this->translator->addResource('yaml', $file, "en");
+        }
+        $this->service->setService(TranslatorInterface::class, $this->translator);
+
+        //auth
         $this->auth = new AuthenticationService(new NonPersistent());
+
+
         $this->injector = $service->get(InjectorInterface::class);
 
         if (!$this->service->has(AuthenticationInterface::class)) {
@@ -464,7 +477,7 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         $modules = array_values(array_unique($modules));
 
         foreach ($modules as $module) {
-            $this->modules[] = new Module($this, $module, $this->security);
+            $this->modules[] = new Module($this, $module, $this->security, $this->translator);
         }
 
         //order module
@@ -511,21 +524,15 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
     public function processTranslator(string $locale = "en")
     {
         $this->locale = $locale;
-        //translator
-        $translator = new Translator($locale);
-        $translator->setFallbackLocales(["en"]);
+        $translator = $this->translator;
+        $translator->setLocale($locale);
 
-        if (file_exists($this->vx_root . "/messages.$locale.yml")) {
-            $translator->addLoader("yaml", new YamlFileLoader);
-            $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
+        if ($locale != "en") {
+            if (file_exists($this->vx_root . "/messages.$locale.yml")) {
+                $translator->addLoader("yaml", new YamlFileLoader);
+                $translator->addResource('yaml', $this->vx_root . "/messages.$locale.yml", $locale);
+            }
         }
-
-        //en
-        if (file_exists($this->vx_root . "/messages.en.yml")) {
-            $translator->addLoader("yaml", new YamlFileLoader);
-            $translator->addResource('yaml', $this->vx_root . "/messages.en.yml", "en");
-        }
-
 
         //load from db
         $translator->addLoader("array", new ArrayLoader);
@@ -545,9 +552,6 @@ class VX  implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInte
         }
 
         $translator->addResource("array", $a, $locale);
-
-        $this->translator = $translator;
-        $this->service->setService(TranslatorInterface::class, $translator);
     }
 
     private function loadConfig()

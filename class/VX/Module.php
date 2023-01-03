@@ -14,12 +14,12 @@ use VX\Security\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use R\DB\Model;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use VX;
 use VX\Security\Security;
 
-class Module implements TranslatorAwareInterface, MenuItemInterface
+class Module implements MenuItemInterface
 {
-    use TranslatorAwareTrait;
 
     public $name;
     public $class;
@@ -44,9 +44,11 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
 
 
     protected $security;
+    protected $translator;
 
-    public function __construct(VX $vx, string $name, Security $security)
+    public function __construct(VX $vx, string $name, Security $security, TranslatorInterface $translator = null)
     {
+        $this->translator = $translator;
         $this->security = $security;
         $this->vx = $vx;
         $this->name = $name;
@@ -141,7 +143,7 @@ class Module implements TranslatorAwareInterface, MenuItemInterface
     public function getModuleGroup()
     {
         if (isset($this->group)) {
-            return ModuleGroup::Get($this->group);
+            return ModuleGroup::Get($this->group, $this->translator);
         }
         return null;
     }

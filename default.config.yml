@@ -7,15 +7,13 @@ two_step_verification: false
 biometric_authentication: false
 2-step verification white list: null
 footer_content:
-copyright_year: 2021
+copyright_year: 2023
 copyright_url: https://www.hostlink.com.hk
 copyright_name: HostLink
 
 login_version: v1
 
-
 search-form: false
-default-skin: skin-blue
 
 domain:
 
@@ -23,15 +21,13 @@ smtp:
 smtp-username:
 smtp-password:
 smtp-port:
-smtp-auto-tls: 1
+smtp-auto-tls: true
 
 return-path:
 
 password-length: 6
 
 log-save: true
-
-development: true
 
 auth-lockout: true
 

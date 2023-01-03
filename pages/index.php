@@ -66,10 +66,7 @@ return new class
              * @var Menu $menu
              */
             $menu = $injector->create(Menu::class);
-            $menu->setTranslator($vx->getTranslator());
             $menu->setGroupIcon($group_icons);
-
-
 
             foreach ($modules as $m) {
                 if ($m->name == "FileManager") {

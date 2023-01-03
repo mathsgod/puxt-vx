@@ -2,11 +2,12 @@
 
 namespace VX;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
 use VX\Security\UserInterface;
 
-class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
+class ModuleGroup implements MenuItemInterface
 {
-    use TranslatorAwareTrait;
+
 
     public $name;
 
@@ -19,23 +20,25 @@ class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
 
     public $icon = "far fa-circle";
 
-
     private static $Instances = [];
+
+    protected $translator;
 
     /**
      * Create a new ModuleGroup if not exists.
      */
-    public static function Get(string $name): self
+    public static function Get(string $name, TranslatorInterface $translator): self
     {
         if (!isset(self::$Instances[$name])) {
-            self::$Instances[$name] = new self($name);
+            self::$Instances[$name] = new self($name, $translator);
         }
         return self::$Instances[$name];
     }
 
-    public function __construct(string $name)
+    public function __construct(string $name, TranslatorInterface $translator)
     {
         $this->name = $name;
+        $this->translator = $translator;
     }
 
 
@@ -62,7 +65,6 @@ class ModuleGroup implements TranslatorAwareInterface, MenuItemInterface
     public function add(Module $module)
     {
         $this->child[] = $module;
-        $module->setTranslator($this->translator);
         $this->sequence = min($this->sequence, $module->sequence);
     }
 

@@ -7,7 +7,7 @@ use VX\Security\AssertionInterface;
 use VX\Security\Security;
 use VX\Security\UserInterface;
 
-class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
+class ModuleMenu implements AssertionInterface
 {
 
     public $link;
@@ -19,6 +19,8 @@ class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
      * @var ModuleMenu[]
      */
     public $menu = [];
+    protected $translator;
+
     public function __construct($data, TranslatorInterface $translator)
     {
         $this->name = substr($data["link"], 1);
@@ -31,9 +33,9 @@ class ModuleMenu implements TranslatorAwareInterface, AssertionInterface
             $mm = new ModuleMenu($m, $translator);
             $this->menu[] = $mm;
         }
+        $this->translator = $translator;
     }
 
-    protected $translator = null;
 
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
