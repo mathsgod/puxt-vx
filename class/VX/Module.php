@@ -516,7 +516,6 @@ class Module implements MenuItemInterface
         }
 
         $menus = [];
-        $roles = $user->getRoles();
 
 
         foreach ($this->getMenus() as $menu) {
