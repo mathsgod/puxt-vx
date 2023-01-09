@@ -502,9 +502,11 @@ class Module implements MenuItemInterface
 
     public function getObject(?int $id): ?ModelInterface
     {
-
         $class = $this->class;
-        return $class::Get($id);
+        if (is_subclass_of($class, Model::class)) {
+            return $class::Get($id);
+        }
+        return new $class($id);
     }
 
     public function getMenuItemByUser(UserInterface $user): array
