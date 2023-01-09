@@ -163,7 +163,9 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
     public static function FromGlobal(): static
     {
         $vx = self::$_vx;
-        return $vx->object();
+        if ($vx->module) {
+            return $vx->module->getObject($vx->object_id);
+        }
     }
 
     static $_db;

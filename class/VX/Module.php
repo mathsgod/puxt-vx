@@ -500,7 +500,7 @@ class Module implements MenuItemInterface
         return new $class;
     }
 
-    public function getObject(int $id): ?ModelInterface
+    public function getObject(?int $id): ?ModelInterface
     {
 
         $class = $this->class;

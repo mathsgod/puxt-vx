@@ -24,7 +24,6 @@ use League\Glide\Responses\PsrResponseFactory;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteGroup;
 use League\Route\Router;
-use PhpOffice\PhpSpreadsheet\Helper\Html;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -128,6 +127,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     protected $injector;
 
     public $view_as;
+    public $object_id;
 
     public function __construct(ServiceManager $service, Config $config)
     {
@@ -329,6 +329,11 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         $path = explode("/", $path);
         $module = $path[0];
         $this->module = $this->getModule($module);
+
+        if (is_numeric($path[1])) {
+            $this->object_id = $path[1];
+        }
+
 
         $router->middleware(new class implements MiddlewareInterface
         {
