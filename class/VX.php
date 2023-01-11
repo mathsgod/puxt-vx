@@ -572,8 +572,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         }
 
         foreach (\VX\Config::Query() as $c) {
-
-            $config[$c->name] = $c->value;
+            $this->config->VX[$c->name] = $c->value;
         }
 
 
