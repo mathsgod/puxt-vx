@@ -519,14 +519,9 @@ class Module implements MenuItemInterface
 
 
         foreach ($this->getMenus() as $menu) {
-
-            if (!$user->is("Administrators")) {
-                if (!$this->security->isGranted($user, $menu->name ?? "")) {
-                    continue;
-                }
+            if ($this->security->isGranted($user, $menu->getName())) {
+                $menus[] = $menu->getMenuLinkByUser($user, $this->security);
             }
-
-            $menus[] = $menu->getMenuLinkByUser($user, $this->security);
         }
 
 
