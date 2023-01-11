@@ -1,6 +1,6 @@
 <div id="change_password">
     <el-card>
-        <el-form :model="form" ref="form" label-widh="auto" label-position="top">
+        <el-form :model="form" ref="form" label-width="auto" label-position="left">
             <el-form-item label="New Password" required prop="new_password" class="col-12 col-sm-6">
                 <el-input show-password type="password" v-model="form.new_password"></el-input>
             </el-form-item>
