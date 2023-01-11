@@ -39,11 +39,13 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
 
     function getStyles(): array
     {
+        $default_style = ["dense" => true, "theme" => "semi-dark"];
+
         $attr = self::__attribute("style");
         if ($attr["Type"] == "json") {
-            return $this->style ?? [];
+            return $this->style ?? $default_style;
         }
-        return json_decode($this->style, true) ?? [];
+        return json_decode($this->style, true) ?? $default_style;
     }
 
     function setStyles(array $styles): void
