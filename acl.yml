@@ -11,6 +11,7 @@ path:
   auth/view-as: [Users,Power Users,Guests]
   auth/forgot-password: [Users,Power Users,Guests]
   auth/is-allowed: [Users,Power Users,Guests]
+  auth/password-policy: [Users,Power Users]
   User/view: [Users,Power Users]
   User/avatar: [Users,Power Users]
   User/profile: [Users,Power Users]
@@ -32,3 +33,4 @@ path:
   UserGroup/index: [Power Users]
   UserGroup/list: [Power Users]
   UserGroup/edit: [Power Users]
+  cancel-view-as: [Users,Power Users]

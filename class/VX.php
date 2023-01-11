@@ -410,13 +410,16 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
         $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
 
+
         foreach ($acl["path"] as $path => $groups) {
             foreach ($groups as $group) {
-                if ($this->security->hasRole($group)) {
-                    $this->security->getRole($group)->addPermission($path);
+                if (!$this->security->hasRole($group)) {
+                    $this->security->addRole($group);
                 }
+                $this->security->getRole($group)->addPermission($path);
             }
         }
+
 
         foreach (Permission::Query() as $p) {
             $this->security->getRole($p->role)->addPermission($p->value);

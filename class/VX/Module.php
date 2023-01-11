@@ -408,16 +408,23 @@ class Module implements MenuItemInterface
             return new JsonResponse($data);
         });
 
+        $security = $this->security;
 
         $methods = ["GET", "POST", "PATCH", "DELETE"];
         foreach ($methods as $method) {
             foreach ($this->files as $file) {
 
+
                 $that = $this;
 
                 $path = $this->name . "/" . $file->path;
                 $path = str_replace("@", ":", $path);
-                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that) {
+                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $security, $path) {
+                    $user = $request->getAttribute(UserInterface::class);
+                    if (!$security->isGranted($user, $path, $file)) {
+                        return new EmptyResponse(403);
+                    }
+
                     $this->vx->module = $that;
 
                     $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
@@ -427,10 +434,15 @@ class Module implements MenuItemInterface
                 });
 
 
+                $fpath = $this->name . "/" . $file->path;
                 $path = $this->name . "/{id:number}/" . $file->path;
                 $path = str_replace("@", ":", $path);
 
-                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $path) {
+                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $fpath, $security) {
+                    $user = $request->getAttribute(UserInterface::class);
+                    if (!$security->isGranted($user, $fpath, $file)) {
+                        return new EmptyResponse(403);
+                    }
 
                     $this->vx->object_id = $args["id"];
                     $this->vx->module = $that;
@@ -519,7 +531,7 @@ class Module implements MenuItemInterface
 
 
         foreach ($this->getMenus() as $menu) {
-            if ($this->security->isGranted($user, $menu->getName())) {
+            if ($this->security->isGranted($user, $menu->getName(), $menu)) {
                 $menus[] = $menu->getMenuLinkByUser($user, $this->security);
             }
         }

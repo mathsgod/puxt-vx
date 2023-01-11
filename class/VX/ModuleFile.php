@@ -7,8 +7,11 @@ use Laminas\Permissions\Rbac\RoleInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use VX\Security\AssertionInterface;
+use VX\Security\Security;
+use VX\Security\UserInterface;
 
-class ModuleFile implements RequestHandlerInterface
+class ModuleFile implements RequestHandlerInterface, AssertionInterface
 {
     public string $path;
     public string $file;
@@ -21,38 +24,18 @@ class ModuleFile implements RequestHandlerInterface
         $this->file = $file;
     }
 
+    public function assert(Security $security, UserInterface $user, string $permission): bool
+    {
+        if ($user->is("Administrators")) {
+            return true;
+        }
+
+        return $security->isGranted($user, $permission);
+    }
+
     function handle(ServerRequestInterface $request): ResponseInterface
     {
-
-        $user = $request->getAttribute("user");
-        //        $acl = $request->getAttribute("acl");
-
-        /*       if (!$user instanceof RoleInterface) {
-            throw new BadRequestException();
-        } */
-        /* 
-        if (!$acl instanceof AclInterface) {
-            throw new BadRequestException();
-        }
-
-
-        if (!$acl->isAllowed($user, $this->getResourceId())) {
-            throw new ForbiddenException();
-        }
- */
-        /*         if ($request->getMethod() == "GET") {
-
-            //check accept header has text/vue
-            $accept = $request->getHeaderLine("Accept");
-            if (strpos($accept, "text/vue") !== false && file_exists($this->file . ".vue")) {
-
-                $handler = new VueRequestHandler($this->file . ".vue");
-                return $handler->handle($request);
-            }
-        }
- */
-        $loader = $this->module->vx->getRequestHandler($this->file);
-        return $loader->handle($request);
+        return \PUXT\RequestHandler::Create($this->file)->handle($request);
     }
 
     function __debugInfo()
