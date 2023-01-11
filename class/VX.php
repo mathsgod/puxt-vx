@@ -134,6 +134,9 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         $this->service = $service;
         $this->config = $config;
 
+        if (!$this->config->get("VX")) {
+            $this->config->VX = [];
+        }
 
         $this->vx_root = dirname(__DIR__);
         $this->root =  $service->get(PUXT\App::class)->root;
@@ -566,6 +569,8 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         $parser = new Parser;
         $config = $parser->parseFile($this->vx_root . "/default.config.yml");
+
+
 
         $vx_config = $this->config->VX->toArray();
         foreach ($config as $k => $v) {
