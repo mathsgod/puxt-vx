@@ -36,5 +36,9 @@ path:
   UserGroup/edit: [Power Users]
   cancel-view-as: [Users,Power Users]
   forgot-password: [Users,Power Users,Guests]
-  
+  menu.User: [Power Users]
+  menu.User/add: [Power Users]
+  Role/get-data: [Power Users]
+  auth/change-role: [Power Users]
+  Role.list: [Power Users,Users]
   

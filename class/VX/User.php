@@ -65,9 +65,24 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
 
+        if ($permission === "list") {
+            if ($user->is("Guests")) return false;
+            if ($user->is("Users")) return false;
+            if ($user->is("Power Users")) return true;
+        }
+
         if ($permission === "update") {
-            if ($user->is("Guests")) {
+            if ($this->is("Guests")) return false;
+            if ($user->is("Guests")) return false;
+            if ($user->is("Users")) {
+                if ($this->user_id == $user->getIdentity()) return true;
                 return false;
+            }
+
+            if ($user->is("Power Users")) {
+                //except admin
+                if ($this->is("Administrators")) return false;
+                return true;
             }
         }
 
@@ -77,13 +92,29 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
                 if ($this->user_id == $user->getIdentity()) return true;
                 return false;
             }
+            if ($user->is("Power Users")) {
+                //except admin
+                if ($this->is("Administrators")) return false;
+                if ($this->is("Guests")) return false;
+
+                return true;
+            }
         }
 
         if ($permission === "delete") {
+            //no one can delete guest
+            if ($this->is("Guests")) return false;
+
             //no one can delete self
             if ($this->user_id == $user->getIdentity()) return false;
             if ($user->is("Guests")) return false;
             if ($user->is("Users")) return false;
+
+            if ($user->is("Power Users")) {
+                //except admin
+                if ($this->is("Administrators")) return false;
+                return true;
+            }
         }
 
         if ($permission === "can_change_password") {

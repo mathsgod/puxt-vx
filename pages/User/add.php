@@ -12,10 +12,6 @@ use VX\UserRole;
 
 return new class
 {
-    function get(VX $vx)
-    {
-    }
-
     function post(VX $vx)
     {
         $user = User::Create([
@@ -34,9 +30,13 @@ return new class
             "language" => $vx->_post["language"],
             "default_page" => $vx->_post["default_page"],
         ]);
-        $user->save();
 
+        $user->save();
         foreach ($vx->_post["role"] as $role) {
+
+            //only admin can add admin
+            if ($role == "Administrators" && !$vx->user->is("Administrators")) continue;
+
             UserRole::Create([
                 "user_id" => $user->user_id,
                 "role" => $role

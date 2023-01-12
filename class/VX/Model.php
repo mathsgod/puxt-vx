@@ -125,7 +125,7 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
             if ($o instanceof Model) {
 
 
-                if ($security->isGranted($user, "read", $o)) {
+                if ($security->isGranted($user, "list", $o)) {
                     $obj = $o->toArray($query["fields"] ?? []);
 
                     if ($populate = $query["populate"]) {
@@ -290,19 +290,18 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
             }
         }
 
-        $short_name = $ro->getShortName();
 
         $secruity = self::$_vx->getSecurity();
         if (in_array("__canRead", $fields)) {
-            $data["__canRead"] = $secruity->isGranted(self::$_vx->user, $short_name . ".read", $this);
+            $data["__canRead"] = $secruity->isGranted(self::$_vx->user, "read", $this);
         }
 
         if (in_array("__canUpdate", $fields)) {
-            $data["__canUpdate"] = $secruity->isGranted(self::$_vx->user, $short_name . ".update", $this);
+            $data["__canUpdate"] = $secruity->isGranted(self::$_vx->user, "update", $this);
         }
 
         if (in_array("__canDelete", $fields)) {
-            $data["__canDelete"] =  $secruity->isGranted(self::$_vx->user, $short_name . ".delete", $this);
+            $data["__canDelete"] =  $secruity->isGranted(self::$_vx->user, "delete", $this);
         }
 
         return $data;

@@ -34,6 +34,11 @@ return new class
         $data = [];
 
         foreach ($roles as $role) {
+
+            if ($vx->user->is("Power Users") && $role->name == "Administrators") continue;
+            
+
+
             $data[] = [
                 "role_id" => $role->role_id,
                 "label" => $role->name,
