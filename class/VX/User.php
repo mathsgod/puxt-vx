@@ -42,7 +42,6 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         $default_style = [
             "dense" => true,
             "theme" => "semi-dark",
-            "descriptions_border" => true,
         ];
 
         $attr = self::__attribute("style");
