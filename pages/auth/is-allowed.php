@@ -12,6 +12,9 @@ return new class
 {
     function get(VX $vx, Security $security)
     {
+        if (!$vx->_get["path"]) {
+            return new EmptyResponse(200);
+        }
 
         if (!$security->isGranted($vx->user, $vx->_get["path"])) {
             return new EmptyResponse(403);

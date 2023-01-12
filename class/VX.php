@@ -875,14 +875,16 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         if (!$user) return;
 
         $token = JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
             "type" => "access_token",
             "iat" => time(),
             "exp" => time() + 3600,
-            "user_id" => $user->user_id,
-            "hash" => md5($user->password)
+            "id" => $user->user_id,
         ], $_ENV["JWT_SECRET"], "HS256");
 
         $reset_link = $this->config["VX"]["vx_url"] . "/reset-password?token=" . $token;
+        echo $token;
+        die();
 
         $html = $this->getTwig()->load("templates/reset-password.twig")->render([
             "ip" => $_SERVER["REMOTE_ADDR"],
@@ -895,6 +897,8 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             ],
             "reset_link" => $reset_link
         ]);
+
+        
 
         $mailer = $this->getMailer();
         $mailer->setFrom("no-reply@" . $_SERVER["SERVER_NAME"]);

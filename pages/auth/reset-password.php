@@ -12,8 +12,27 @@ use VX\User;
 
 return new class
 {
+
+    function post(VX $vx)
+    {
+
+        if ($token = $vx->_post["token"]) {
+
+            //decode token
+            $payload = $vx->decodeJWT($token);
+            $user = User::Get($payload->id);
+            if (!$user) {
+                throw new BadRequestException("User not found");
+            }
+            $user->password = password_hash($vx->_post["password"], PASSWORD_DEFAULT);
+            $user->save();
+        }
+        return new EmptyResponse();
+    }
+
     function get(VX $vx)
     {
+
         if (!$vx->user->isAdmin()) {
             //only admin can reset password
             throw new ForbiddenException("You are not allowed to reset password");

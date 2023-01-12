@@ -18,12 +18,14 @@ return new class
 
     function post(VX $vx, ServerRequestInterface $request)
     {
-        if ($_COOKIE["access_token"] == null) {
+
+        if (!$_COOKIE["access_token"]) {
             return new EmptyResponse();
         }
 
 
         $vx->invalidateJWT($vx->getAccessToken());
+
         //$vx->invalidateJWT($vx->getRefreshToken());
 
         $resp = new EmptyResponse();
