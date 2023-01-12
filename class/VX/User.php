@@ -65,33 +65,33 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
     function assert(Security $security, UserInterface $user, string $permission): bool
     {
 
-        if ($permission === "User.update") {
-            if ($this->is("Guests")) {
+        if ($permission === "update") {
+            if ($user->is("Guests")) {
                 return false;
             }
         }
 
-        if ($permission === "User.read") {
-            if ($this->is("Guests")) return false;
+        if ($permission === "read") {
+            if ($user->is("Guests")) return false;
+            if ($user->is("Users")) {
+                if ($this->user_id == $user->getIdentity()) return true;
+                return false;
+            }
         }
 
-        if ($permission === "User.delete") {
-            if ($this->is("Guests")) return false;
-
-            //cannot delete self
+        if ($permission === "delete") {
+            //no one can delete self
             if ($this->user_id == $user->getIdentity()) return false;
+            if ($user->is("Guests")) return false;
+            if ($user->is("Users")) return false;
         }
 
         if ($permission === "can_change_password") {
-            if ($user->is("Administrators")) return true;
+            if ($user->is("Guests")) return false;
             if ($this->user_id == $user->getIdentity()) return true;
+            if ($user->is("Administrators")) return true;
             return false;
         }
-
-        if ($permission === "read") {
-            if ($user->is("Users")) return true;
-        }
-
 
         return parent::assert($security, $user, $permission);
     }

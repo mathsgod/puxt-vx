@@ -375,7 +375,6 @@ class Module implements MenuItemInterface
             throw new NotFoundException();
         });
 
-
         $route->delete($this->name . "/{id:number}", function (ServerRequestInterface $request, array $args) use ($security) {
             $user = $request->getAttribute(UserInterface::class);
 
@@ -397,7 +396,7 @@ class Module implements MenuItemInterface
         $route->get($this->name, function (ServerRequestInterface $request, array $args) use ($security) {
 
             if (!$this->vx->logined) {
-                throw new  UnauthorizedException();
+                throw new UnauthorizedException();
             }
 
             $query = $request->getQueryParams();

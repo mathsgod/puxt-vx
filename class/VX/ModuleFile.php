@@ -2,8 +2,7 @@
 
 namespace VX;
 
-use Laminas\Permissions\Rbac\Rbac;
-use Laminas\Permissions\Rbac\RoleInterface;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -35,6 +34,14 @@ class ModuleFile implements RequestHandlerInterface, AssertionInterface
 
     function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $security = $this->module->vx->getSecurity();
+        $permisson = $this->module->name . "/" . $this->path;
+
+
+        if (!$security->isGranted($request->getAttribute(UserInterface::class), $permisson)) {
+            return new EmptyResponse(403);
+        }
+
         return \PUXT\RequestHandler::Create($this->file)->handle($request);
     }
 
