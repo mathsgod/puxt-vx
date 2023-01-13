@@ -402,17 +402,26 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         if ($this->security) return $this->security;
         $this->security = new Security();
+        $this->security->addRole("Everyone", ["Administrators", "Users", "Power Users", "Guests"]);
+
+
 
         foreach (Role::Query() as $role) {
-            $this->security->addRole($role->name);
+            if (!$this->security->hasRole($role->name)) {
+                $this->security->addRole($role->name);
+            }
 
-            foreach ($role->getChildren() as $child) {
-                $this->security->addRole($child->name, $role->name);
-            };
+            if ($role->parent) {
+                if (!$this->security->hasRole($role->parent)) {
+                    $this->security->addRole($role->parent);
+                }
+    
+
+                $this->security->getRole($role->parent)->addParent($this->security->getRole($role->name));
+            }
         }
 
         $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
-
 
         foreach ($acl["path"] as $path => $groups) {
             foreach ($groups as $group) {
@@ -422,7 +431,6 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
                 $this->security->getRole($group)->addPermission($path);
             }
         }
-
 
         foreach (Permission::Query() as $p) {
             $this->security->getRole($p->role)->addPermission($p->value);
@@ -898,7 +906,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             "reset_link" => $reset_link
         ]);
 
-        
+
 
         $mailer = $this->getMailer();
         $mailer->setFrom("no-reply@" . $_SERVER["SERVER_NAME"]);

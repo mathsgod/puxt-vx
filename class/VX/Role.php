@@ -9,7 +9,7 @@ class Role extends Model
      */
     function getChildren(): array
     {
-        return Role::Query(["parent_id" => $this->role_id])->toArray();
+        return Role::Query(["parent" => $this->name])->toArray();
     }
 
     public function delete()

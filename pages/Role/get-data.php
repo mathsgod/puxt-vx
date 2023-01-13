@@ -5,48 +5,51 @@
  * @date 2022-12-30 
  */
 
-use VX\Role;
+use Laminas\Permissions\Rbac\RoleInterface;
+use VX\Security\Security;
 
 return new class
 {
-    private function findChildren(Role $role)
+    private function findChildren(RoleInterface $role)
     {
         $data = [];
-
-        $children = $role->getChildren();
-
-        foreach ($children as $role) {
+        foreach ($role->getParents() as $p) {
             $data[] = [
-                "role_id" => $role->role_id,
-                "label" => $role->name,
-                "name" => $role->name,
-                "readonly" => $role->readonly,
-                "children" => $this->findChildren($role)
+                "label" => $p->getName(),
+                "name" => $p->getName(),
+                "parent" => $role->getName(),
+                "children" => $this->findChildren($p),
             ];
         }
         return $data;
     }
 
-    function get(VX $vx)
+    function get(VX $vx, Security $security)
     {
-        $roles = Role::Query(["parent_id" => null])->toArray();
-
-        $data = [];
-
-        foreach ($roles as $role) {
-
-            if ($vx->user->is("Power Users") && $role->name == "Administrators") continue;
-            
-
-
+        $everyone = $security->getRole("Everyone");
+        foreach ($everyone->getParents() as $parent) {
+            $name = $parent->getName();
+            if ($name == "Administrators" || $name == "Power Users" || $name == "Users" || $name == "Guests") {
+                $readonly = true;
+            }else{
+                $readonly = false;
+            }
             $data[] = [
-                "role_id" => $role->role_id,
-                "label" => $role->name,
-                "name" => $role->name,
-                "readonly" => $role->readonly,
-                "children" => $this->findChildren($role)
+                "label" => $parent->getName(),
+                "name" => $parent->getName(),
+                "parent" => "Everyone",
+                "children" => $this->findChildren($parent),
+                "readonly" => $readonly,
             ];
         }
-        return $data;
+
+        return [
+            [
+                "label" => "Everyone",
+                "name" => "Everyone",
+                "readonly" => true,
+                "children" => $data
+            ]
+        ];
     }
 };

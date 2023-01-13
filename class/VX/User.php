@@ -266,7 +266,35 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
             $name = $role;
         }
 
-        return in_array($name, $this->getRoles());
+
+        return in_array($name, $this->getAllRoles());
+    }
+
+
+    private function getRoleChild(string $role): array
+    {
+        $roles = [];
+        $security = self::$_vx->getSecurity();
+        foreach ($security->getRole($role)->getChildren() as $child) {
+            $roles[] = $child->getName();
+
+            foreach ($this->getRoleChild($child->getName()) as $c) {
+                $roles[] = $c;
+            }
+        }
+
+        return $roles;
+    }
+    public function getAllRoles()
+    {
+        $roles = [];
+        foreach ($this->getRoles() as $role) {
+            $roles[] = $role;
+            foreach ($this->getRoleChild($role) as $c) {
+                $roles[] = $c;
+            }
+        }
+        return $roles;
     }
 
     public function __toString()

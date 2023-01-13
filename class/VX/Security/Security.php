@@ -22,6 +22,10 @@ class Security
         $this->rbac->getCreateMissingRoles(true);
     }
 
+    public function getRbac(){
+        return $this->rbac;
+    }
+
     public function getRole(string $roleName): RoleInterface
     {
         return $this->rbac->getRole($roleName);

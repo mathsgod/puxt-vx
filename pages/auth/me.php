@@ -8,6 +8,7 @@ return new class
 {
     function get(VX $vx)
     {
+
         return $vx->user->toArray([
             "user_id",
             "username",
