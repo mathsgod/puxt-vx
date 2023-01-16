@@ -48,7 +48,6 @@ class Security
 
     public function isGranted(UserInterface $user, string $permission, $assertion = null): bool
     {
-        if ($user->is("Administrators")) return true;
         if ($assertion) {
             if (
                 !$assertion instanceof AssertionInterface

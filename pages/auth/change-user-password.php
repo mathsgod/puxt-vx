@@ -11,6 +11,8 @@ use League\Route\Http\Exception\ForbiddenException;
 use VX\Security\Security;
 use VX\User;
 
+
+//no need old password. only admin can change 
 return new class
 {
     function post(Security $security, VX $vx)

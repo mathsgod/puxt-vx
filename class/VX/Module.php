@@ -217,6 +217,10 @@ class Module implements MenuItemInterface
             if ($ref->isSubclassOf(Model::class)) {
                 $children = array_merge($children, [
                     [
+                        "value" => $this->name . ".list",
+                        "label" => "List",
+                    ],
+                    [
                         "value" => $this->name . ".read",
                         "label" => "Read",
                     ],
@@ -419,11 +423,6 @@ class Module implements MenuItemInterface
                 $path = $this->name . "/" . $file->path;
                 $path = str_replace("@", ":", $path);
                 $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $security, $path) {
-                    $user = $request->getAttribute(UserInterface::class);
-                    if (!$security->isGranted($user, $path, $file)) {
-                        return new EmptyResponse(403);
-                    }
-
                     $this->vx->module = $that;
 
                     $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
@@ -438,11 +437,6 @@ class Module implements MenuItemInterface
                 $path = str_replace("@", ":", $path);
 
                 $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $fpath, $security) {
-                    $user = $request->getAttribute(UserInterface::class);
-                    if (!$security->isGranted($user, $fpath, $file)) {
-                        return new EmptyResponse(403);
-                    }
-
                     $this->vx->object_id = $args["id"];
                     $this->vx->module = $that;
 

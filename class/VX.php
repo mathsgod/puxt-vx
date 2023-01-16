@@ -308,6 +308,8 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             return new EmptyResponse(200);
         }
         $request = $request->withAttribute(VX::class, $this);
+        $request = $request->withAttribute(Security::class, $this->getSecurity());
+        $request = $request->withAttribute(\Twig\Environment::class, $this->getTwig());
 
         $logger = $request->getAttribute(LoggerInterface::class);
         if ($logger instanceof LoggerInterface) {
@@ -398,13 +400,35 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         return $this->getSecurity()->isGranted($this->user, $permission, $assertion);
     }
 
+    public function getPresetPermissions(): array
+    {
+        $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
+        $permissions = [];
+        foreach ($acl["path"] as $p => $groups) {
+            foreach ($groups as $group) {
+                $permissions[$group][] = $p;
+            }
+        }
+        return $permissions;
+    }
+
+    public function getPresetSecurity(): Security
+    {
+        $security = new Security;
+        $security->addRole("Everyone", ["Administrators", "Users", "Power Users", "Guests"]);
+        foreach ($this->getPresetPermissions() as $role => $permission) {
+            foreach ($permission as $p) {
+                $security->getRole($role)->addPermission($p);
+            }
+        }
+        return $security;
+    }
+
     public function getSecurity(): Security
     {
         if ($this->security) return $this->security;
         $this->security = new Security();
         $this->security->addRole("Everyone", ["Administrators", "Users", "Power Users", "Guests"]);
-
-
 
         foreach (Role::Query() as $role) {
             if (!$this->security->hasRole($role->name)) {
@@ -415,20 +439,14 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
                 if (!$this->security->hasRole($role->parent)) {
                     $this->security->addRole($role->parent);
                 }
-    
 
                 $this->security->getRole($role->parent)->addParent($this->security->getRole($role->name));
             }
         }
 
-        $acl = Yaml::parseFile(dirname(__DIR__) . DIRECTORY_SEPARATOR . "acl.yml");
-
-        foreach ($acl["path"] as $path => $groups) {
-            foreach ($groups as $group) {
-                if (!$this->security->hasRole($group)) {
-                    $this->security->addRole($group);
-                }
-                $this->security->getRole($group)->addPermission($path);
+        foreach ($this->getPresetPermissions() as $role => $permission) {
+            foreach ($permission as $p) {
+                $this->security->getRole($role)->addPermission($p);
             }
         }
 
@@ -891,8 +909,6 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         ], $_ENV["JWT_SECRET"], "HS256");
 
         $reset_link = $this->config["VX"]["vx_url"] . "/reset-password?token=" . $token;
-        echo $token;
-        die();
 
         $html = $this->getTwig()->load("templates/reset-password.twig")->render([
             "ip" => $_SERVER["REMOTE_ADDR"],

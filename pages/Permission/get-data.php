@@ -6,6 +6,7 @@
  */
 
 use VX\Permission;
+use VX\Security\Security;
 
 return new class
 {
@@ -26,6 +27,8 @@ return new class
     }
     function get(VX $vx)
     {
+
+        $data = [];
         if ($vx->_get["role"] == "Administrators") {
             $modules = $vx->getModules();
             $data = [];
@@ -40,15 +43,26 @@ return new class
             foreach ($data as $key => $value) {
                 $ds[] = [
                     "value" => $value,
-                    "disabled" => true
                 ];
             }
-
             return $ds;
         }
 
-        $data = [];
+        //preset permission
+
+        $preset_security = $vx->getPresetSecurity();
+        $preset = array_merge(...array_values($vx->getPresetPermissions()));
+        foreach ($preset as $value) {
+            if ($preset_security->getRbac()->isGranted($vx->_get["role"], $value)) {
+                $data[] = [
+                    "value" => $value,
+                ];
+            }
+        }
+
+
         foreach (Permission::Query(["role" => $vx->_get["role"]]) as $p) {
+            if (in_array($p->value, $preset)) continue;
             $data[] = [
                 "value" => $p->value,
             ];

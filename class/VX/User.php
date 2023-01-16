@@ -101,6 +101,7 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
             }
         }
 
+
         if ($permission === "delete") {
             //no one can delete guest
             if ($this->is("Guests")) return false;
@@ -165,6 +166,11 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         foreach (UserRole::Query(["user_id" => $this->user_id]) as $ur) {
             $roles[] = $ur->role;
         }
+
+        if (count($roles) == 0) {
+            $roles[] = "Everyone";
+        }
+
         return $roles;
     }
 

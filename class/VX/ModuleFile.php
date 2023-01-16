@@ -34,11 +34,10 @@ class ModuleFile implements RequestHandlerInterface, AssertionInterface
 
     function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $security = $this->module->vx->getSecurity();
-        $permisson = $this->module->name . "/" . $this->path;
+        /** @var Security $security */
+        $security = $request->getAttribute(Security::class);
 
-
-        if (!$security->isGranted($request->getAttribute(UserInterface::class), $permisson)) {
+        if (!$security->isGranted($request->getAttribute(UserInterface::class), $this->module->name . "/" . $this->path, $this)) {
             return new EmptyResponse(403);
         }
 
