@@ -24,7 +24,6 @@ class ModuleMenu implements AssertionInterface
     public function __construct($data, TranslatorInterface $translator)
     {
         $this->name = substr($data["link"], 1);
-        $this->name = $data["name"];
         $this->label = $translator->trans($data["label"]);
         $this->icon = $data["icon"] ?? "link";
         $this->link = $data["link"];
@@ -54,10 +53,28 @@ class ModuleMenu implements AssertionInterface
         }
     }
 
+    public function getPermission()
+    {
+        $permission = [];
+        if ($this->getName()) {
+            $permission["value"] = $this->getName();
+        }
+
+        $permission["label"] = $this->label;
+        $permission["children"] = array_map(function ($m) {
+            return $m->getPermission();
+        }, $this->menu);
+        return $permission;
+    }
+
     public function getName()
     {
-        $name = substr($this->link, 0, 1) == "/" ? $link = substr($this->link, 1) : $this->link;
-        return "menu.{$name}";
+        if (!$this->link) return null;
+
+        $name = substr($this->link, 1);
+        //explode first /
+        $strs = explode("/", $name, 2);
+        return $strs[0] . "/[menu]/" . $strs[1];
     }
 
 
@@ -65,7 +82,6 @@ class ModuleMenu implements AssertionInterface
     {
         $data = [];
 
-        $data["name"] = $this->name;
         $data["label"] = $this->translator ? $this->translator->trans($this->label) : $this->label;
         $data["icon"] = $this->icon;
         $data["link"] = "#";

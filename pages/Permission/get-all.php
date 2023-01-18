@@ -19,7 +19,7 @@ return new class
 
     private function setAllValue(&$d)
     {
-        if ($this->preset_security->getRbac()->isGranted($this->role, $d["value"]??"")) {
+        if ($this->preset_security->getRbac()->isGranted($this->role, $d["value"] ?? "")) {
             $d["disabled"] = true;
         }
 
@@ -38,7 +38,7 @@ return new class
         $this->role = $role;
         $this->preset_security = $vx->getPresetSecurity();
 
-        foreach (Permission::Query(["role" => $vx->_get["role"]]) as $p) {
+        foreach (Permission::Query(["role" => $this->role]) as $p) {
             $this->permission[] = $p->value;
         }
 
@@ -48,7 +48,8 @@ return new class
         $data = [];
 
         foreach ($modules as $module) {
-            $data[] = $module->getPermission();
+            $d=$module->getPermission();
+            $data[] = $d;
         }
 
         if ($this->role) {

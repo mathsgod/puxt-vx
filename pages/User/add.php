@@ -6,7 +6,6 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
-use VX\Authentication\UserRepositoryInterface;
 use VX\User;
 use VX\UserRole;
 

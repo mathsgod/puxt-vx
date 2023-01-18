@@ -194,49 +194,65 @@ class Module implements MenuItemInterface
 
         $children = [];
 
-
+        // menu
         $menus = [];
         foreach ($this->getMenus() as $menu) {
-            substr($menu->link, 0, 1) == "/" ? $link = substr($menu->link, 1) : $menu->link;
-            $menus[] = [
-                "value" => "menu." . $link,
-                "label" => $menu->label
-            ];
+            $menus[] = $menu->getPermission();
         }
+        
 
         $children[] = [
-            "label" => "[Menu]",
+            "label" => "[menu]",
             "children" => $menus
         ];
 
+        // action
+        $actions = [];
+        foreach (Permission::Query() as $p) {
+            if (str_starts_with($p->value, $this->name . "/[action]/")) {
+                $actions[] = [
+                    "value" => $p->value,
+                    "label" => explode("/", $p->value)[2]
+                ];
+            }
+        }
+        $children[] = [
+            "value" => $this->name . "/[action]",
+            "label" => "[action]",
+            "children" => $actions
+        ];
 
 
         //check class is model
         if (class_exists($this->class)) {
+
             $ref = new \ReflectionClass($this->class);
             if ($ref->isSubclassOf(Model::class)) {
-                $children = array_merge($children, [
-                    [
-                        "value" => $this->name . ".list",
-                        "label" => "List",
-                    ],
-                    [
-                        "value" => $this->name . ".read",
-                        "label" => "Read",
-                    ],
-                    [
-                        "value" => $this->name . ".create",
-                        "label" => "Create",
-                    ],
-                    [
-                        "value" => $this->name . ".update",
-                        "label" => "Update",
-                    ],
-                    [
-                        "value" => $this->name . ".delete",
-                        "label" => "Delete",
+                $children[] = [
+                    "label" => "[model]",
+                    "children" => [
+                        [
+                            "value" => $this->name . "/[model]/list",
+                            "label" => "List",
+                        ],
+                        [
+                            "value" => $this->name . "/[model]/read",
+                            "label" => "Read",
+                        ],
+                        [
+                            "value" => $this->name . "/[model]/create",
+                            "label" => "Create",
+                        ],
+                        [
+                            "value" => $this->name . "/[model]/update",
+                            "label" => "Update",
+                        ],
+                        [
+                            "value" => $this->name . "/[model]/delete",
+                            "label" => "Delete",
+                        ]
                     ]
-                ]);
+                ];
             }
         }
 
@@ -246,6 +262,13 @@ class Module implements MenuItemInterface
                 "label" => $file->path
             ];
         }, $this->files));
+
+  /*       //get all children value
+        $values = array_map(function ($item) {
+            return $item["value"];
+        }, $children);
+
+ */
 
         return [
             "value" => $this->name,

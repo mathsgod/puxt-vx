@@ -45,7 +45,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\Authentication;
-use VX\Authentication\UserRepositoryInterface;
+use VX\Security\UserRepositoryInterface;
 use VX\Authentication\AuthenticationInterface;
 use VX\Authentication\AuthenticationMiddleware;
 use VX\Security\UserInterface;
@@ -416,11 +416,28 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         $security = new Security;
         $security->addRole("Everyone", ["Administrators", "Users", "Power Users", "Guests"]);
+
+        foreach (Role::Query() as $role) {
+            if (!$security->hasRole($role->name)) {
+                $security->addRole($role->name);
+            }
+
+            if ($role->parent) {
+                if (!$security->hasRole($role->parent)) {
+                    $security->addRole($role->parent);
+                }
+
+                $security->getRole($role->parent)->addParent($security->getRole($role->name));
+            }
+        }
+
         foreach ($this->getPresetPermissions() as $role => $permission) {
             foreach ($permission as $p) {
                 $security->getRole($role)->addPermission($p);
             }
         }
+
+
         return $security;
     }
 

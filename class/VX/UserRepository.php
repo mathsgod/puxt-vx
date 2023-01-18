@@ -2,10 +2,8 @@
 
 namespace VX;
 
-use Laminas\Authentication\Adapter\AdapterInterface;
-use VX\Authentication\Adapter;
 use VX\Security\UserInterface;
-use VX\Authentication\UserRepositoryInterface;
+use VX\Security\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {

@@ -34,6 +34,7 @@ Fax: 傳真
 City: 城市
 Website: 網站
 Add: 新增
+add: 新增
 Edit: 編輯
 edit: 編輯
 UserLog: 使用者紀錄
@@ -69,7 +70,6 @@ IP address: IP地址
 User agent: 使用者代理
 Version: 版本
 Home: 主頁
-Reset passsword: 重設密碼
 2 Step verification: 雙重認證
 FileManager: 檔案管理器
 Settings: 設定
@@ -120,3 +120,9 @@ Change role: 更改角色
 Address1: 地址1
 Address2: 地址2
 Address3: 地址3
+Archives: 檔案
+Labels: 標籤
+Last Modified: 最後修改
+Upload file: 上傳檔案
+Storage: 儲存空間
+Search for file name: 搜尋檔案名稱

@@ -8,6 +8,7 @@ use TheCodingMachine\GraphQLite\Annotations\Field;
 use VX\Security\AssertionInterface;
 use VX\Security\Security;
 use VX\Security\UserInterface;
+use VX\User\Favoriteable;
 
 /**
  * @property int $user_id
@@ -16,7 +17,7 @@ use VX\Security\UserInterface;
  * @property string $email
  * @property string $username
  */
-class User extends Model implements UserInterface, StyleableInterface, AssertionInterface
+class User extends Model implements UserInterface, StyleableInterface, AssertionInterface, Favoriteable
 {
     public static $_table = "User";
 
@@ -36,6 +37,36 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
     public $status;
 
     const STATUS = ["Active", "Inactive"];
+
+    function getFavorites()
+    {
+        $favs = [];
+        foreach (MyFavorite::Query() as $fav) {
+            $favs[] = [
+                "id" => $fav->my_favorite_id,
+                "icon" => $fav->icon ?? "link",
+                "label" => $fav->label,
+                "link" => $fav->path,
+                "name" => $fav->label
+            ];
+        }
+        return $favs;
+    }
+
+    function removeFavorite($id)
+    {
+        MyFavorite::Get($id)->delete();
+    }
+
+    function addFavorite(string $label, string $path, ?string $icon = null)
+    {
+        MyFavorite::Create([
+            "user_id" => $this->user_id,
+            "label" => $label,
+            "path" => $path,
+            "icon" => $icon
+        ])->save();
+    }
 
     function getStyles(): array
     {
@@ -87,17 +118,16 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         }
 
         if ($permission === "read") {
-            if ($user->is("Guests")) return false;
+            if (in_array("Guests", $this->getRoles())) return false;
+
             if ($user->is("Users")) {
                 if ($this->user_id == $user->getIdentity()) return true;
-                return false;
             }
+
             if ($user->is("Power Users")) {
                 //except admin
                 if ($this->is("Administrators")) return false;
                 if ($this->is("Guests")) return false;
-
-                return true;
             }
         }
 
@@ -108,8 +138,6 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
 
             //no one can delete self
             if ($this->user_id == $user->getIdentity()) return false;
-            if ($user->is("Guests")) return false;
-            if ($user->is("Users")) return false;
 
             if ($user->is("Power Users")) {
                 //except admin
@@ -213,7 +241,11 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
 
     function getName(): string
     {
-        return $this->first_name . " " . $this->last_name;
+        $name = $this->first_name;
+        if ($this->last_name) {
+            $name .= " " . $this->last_name;
+        }
+        return $name;
     }
 
     #[Field]
@@ -245,23 +277,6 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         }
 
         return true;
-    }
-
-    public function removeMyFavorite(string $path)
-    {
-        return $this->MyFavorite->where(["path" => $path])->delete();
-    }
-
-    public function addMyFavorite(string $label, string $path)
-    {
-
-        $fav = new MyFavorite;
-        $fav->user_id = $this->user_id;
-        $fav->label = $label;
-        $fav->path = $path;
-        $fav->save();
-
-        return $fav;
     }
 
     public function is(RoleInterface|string $role): bool

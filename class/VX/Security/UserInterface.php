@@ -13,4 +13,6 @@ interface UserInterface
 
 
     public function is(string $role): bool;
+
+    public function getName(): string;
 }

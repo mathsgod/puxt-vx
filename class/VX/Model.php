@@ -18,7 +18,7 @@ class Model extends DBModel implements ModelInterface, AssertionInterface
         if ($user->is("Administrators")) return true;
         //get name
         $name = (new ReflectionObject($this))->getShortName();
-        return $security->isGranted($user, $name . "." . $permission);
+        return $security->isGranted($user, $name . "/[model]/" . $permission);
     }
 
     public static function Sort(Query $q, string $sort, string $order)

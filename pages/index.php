@@ -9,6 +9,7 @@ use VX\Security\Security;
 use VX\StyleableInterface;
 
 use VX\User;
+use VX\User\Favoriteable;
 
 return new class
 {
@@ -33,14 +34,8 @@ return new class
         if ($logined) {
             //fav
             $data["favs"] = [];
-            if ($vx->user instanceof User) {
-                foreach ($vx->user->MyFavorite() as $fav) {
-                    $data["favs"][] = [
-                        "label" => $fav->label,
-                        "link" => $fav->path,
-                        "name" => $fav->label
-                    ];
-                }
+            if ($vx->user instanceof Favoriteable) {
+                $data["favs"] = $vx->user->getFavorites();
             }
 
             $page_setting = Yaml::parseFile(__DIR__ . "/setting.yml");
@@ -87,13 +82,12 @@ return new class
 
 
             $data["me"] = [
-                "username" => $user->username,
-                "first_name" => $user->first_name,
-                "last_name" => $user->last_name,
+                "name" => $user->getName(),
                 "language" => $user->language ?? "en",
                 "style" => ($user instanceof StyleableInterface) ? $user->getStyles() : [],
                 "default_page" => $user->default_page ?? "/Dashboard",
                 "usergroup" => implode(",", $user->getRoles()),
+                "roles" => implode(",", $user->getRoles()),
                 "image" => $user instanceof User ? $user->uri("avatar") : ""
             ];
 
@@ -129,7 +123,7 @@ return new class
 
 
             $data["navbar"]["dropdown"] = $dropdown;
-            $data["menu"]["width"] = $vx->config->VX->menu_width;
+            $data["menu_width"] = intval($vx->config->VX->menu_width);
             $data["theme_customizer"] = boolval($vx->config->VX->theme_customizer ?? true);
 
             $data["i18n"] = $vx->getGlobalTranslator()->getCatalogue($vx->locale)->all()["messages"];
@@ -148,9 +142,7 @@ return new class
 
             "company-logo" => $config["company_logo"],
             "company-url" => $config["company_url"],
-            "login" => [
-                "version" => $config["login_version"]
-            ],
+            "login_version" => $config["login_version"],
             "allow_remember_me" => boolval($config["allow_remember_me"]),
             "css" => [],
             "js" => [],
@@ -212,24 +204,6 @@ return new class
             $user = $vx->user;
             $user->style["layout"] = $vx->_post["layout"];
             $user->save();
-        }
-    }
-
-    function addMyFavorite(VX $vx)
-    {
-        if ($vx->user instanceof User) {
-
-            $user = $vx->user;
-            $user->addMyFavorite($vx->_post["label"], $vx->_post["path"]);
-        }
-    }
-
-    function removeMyFavorite(VX $vx)
-    {
-        if ($vx->user instanceof User) {
-
-            $user = $vx->user;
-            $user->removeMyFavorite($vx->_post["path"]);
         }
     }
 };

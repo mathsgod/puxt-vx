@@ -1,8 +1,6 @@
 <?php
 
-namespace VX\Authentication;
-
-use VX\Security\UserInterface;
+namespace VX\Security;
 
 interface UserRepositoryInterface
 {
