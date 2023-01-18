@@ -2,7 +2,6 @@
 
 use Laminas\Di\InjectorInterface;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use VX\FileManager;
 use VX\Menu;
 use VX\Security\Security;
@@ -13,7 +12,7 @@ use VX\User\Favoriteable;
 
 return new class
 {
-    function get(VX $vx, InjectorInterface $injector, Security $security, TranslatorInterface $translator)
+    function get(VX $vx, InjectorInterface $injector, Security $security)
     {
         $logined = $vx->logined;
         $data = [

@@ -22,7 +22,8 @@ class Security
         $this->rbac->getCreateMissingRoles(true);
     }
 
-    public function getRbac(){
+    public function getRbac()
+    {
         return $this->rbac;
     }
 
@@ -31,6 +32,12 @@ class Security
         return $this->rbac->getRole($roleName);
     }
 
+    /**
+     * Add a child.
+     *
+     * @param  string|RoleInterface $role
+     * @param  null|array|RoleInterface $parents
+     */
     public function addRole($role, $parents = null): void
     {
         if (is_string($role)) {
@@ -41,6 +48,11 @@ class Security
         $this->rbac->addRole($role, $parents);
     }
 
+    /**
+     * Is a role registered?
+     *
+     * @param  RoleInterface|string $role
+     */
     public function hasRole($role): bool
     {
         return $this->rbac->hasRole($role);

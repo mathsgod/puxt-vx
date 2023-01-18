@@ -46,8 +46,8 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use VX\Authentication;
 use VX\Security\UserRepositoryInterface;
-use VX\Authentication\AuthenticationInterface;
-use VX\Authentication\AuthenticationMiddleware;
+use VX\Security\AuthenticationInterface;
+use VX\Security\AuthenticationMiddleware;
 use VX\Security\UserInterface;
 use VX\AuthLock;
 use VX\DefaultUserFactory;
@@ -64,7 +64,9 @@ use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\Role;
+use VX\RoleRepository;
 use VX\Security\AuthenticationAdapter;
+use VX\Security\RoleRepositoryInterface;
 use VX\Security\Security;
 use VX\SystemValue;
 use VX\UserRepository;
@@ -129,6 +131,8 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     public $view_as;
     public $object_id;
 
+    public $roles;
+
     public function __construct(ServiceManager $service, Config $config)
     {
         $this->service = $service;
@@ -174,6 +178,11 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
         //load db
         $this->loadDB();
+
+        //role
+        $this->roles = new RoleRepository;
+        $this->service->setService(RoleRepositoryInterface::class, $this->roles);
+
         $this->service->setService(Security::class, $this->getSecurity());
         $this->loadModules();
 
@@ -415,20 +424,9 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     public function getPresetSecurity(): Security
     {
         $security = new Security;
-        $security->addRole("Everyone", ["Administrators", "Users", "Power Users", "Guests"]);
 
-        foreach (Role::Query() as $role) {
-            if (!$security->hasRole($role->name)) {
-                $security->addRole($role->name);
-            }
-
-            if ($role->parent) {
-                if (!$security->hasRole($role->parent)) {
-                    $security->addRole($role->parent);
-                }
-
-                $security->getRole($role->parent)->addParent($security->getRole($role->name));
-            }
+        foreach ($this->roles->all() as $role) {
+            $security->addRole($role, $role->getParents());
         }
 
         foreach ($this->getPresetPermissions() as $role => $permission) {
@@ -444,21 +442,10 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     public function getSecurity(): Security
     {
         if ($this->security) return $this->security;
+
         $this->security = new Security();
-        $this->security->addRole("Everyone", ["Administrators", "Users", "Power Users", "Guests"]);
-
-        foreach (Role::Query() as $role) {
-            if (!$this->security->hasRole($role->name)) {
-                $this->security->addRole($role->name);
-            }
-
-            if ($role->parent) {
-                if (!$this->security->hasRole($role->parent)) {
-                    $this->security->addRole($role->parent);
-                }
-
-                $this->security->getRole($role->parent)->addParent($this->security->getRole($role->name));
-            }
+        foreach ($this->roles->all() as $role) {
+            $this->security->addRole($role, $role->getParents());
         }
 
         foreach ($this->getPresetPermissions() as $role => $permission) {

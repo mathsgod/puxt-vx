@@ -1,6 +1,6 @@
 <?php
 
-namespace VX\Authentication;
+namespace VX\Security;
 
 use Psr\Http\Message\ServerRequestInterface;
 use VX\Security\UserInterface;

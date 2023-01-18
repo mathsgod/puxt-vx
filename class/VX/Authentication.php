@@ -6,7 +6,7 @@ namespace VX;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use VX\Authentication\AuthenticationInterface;
+use VX\Security\AuthenticationInterface;
 use VX\Security\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use VX;
