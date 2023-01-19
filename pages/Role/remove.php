@@ -6,17 +6,17 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
-use VX\Role;
+use VX\Security\RoleRepositoryInterface;
 
 return new class
 {
-    function post(VX $vx)
+    function post(VX $vx, RoleRepositoryInterface $roles)
     {
-        foreach (Role::Query([
-            "name" => $vx->_post["name"],
-        ]) as $role) {
-            $role->delete();
+
+        if ($role = $roles->findById($vx->_post["name"])) {
+            $roles->delete($role);
         }
+
         return new EmptyResponse();
     }
 };

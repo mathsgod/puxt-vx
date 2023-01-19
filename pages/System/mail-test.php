@@ -6,6 +6,7 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Symfony\Component\Translation\Translator;
 
 return new class
 {
@@ -20,5 +21,42 @@ return new class
         $mail->send();
 
         return new EmptyResponse();
+    }
+
+    function get()
+    {
+        $schema = new FormKit\Schema;
+        $schema->addFormKit("elFormInput", [
+            "label" => "Subject",
+            "name" => "subject",
+            "validation" => "required"
+        ]);
+
+        $schema->addFormKit("elFormInput", [
+            "label" => "From",
+            "name" => "from",
+            "validation" => "required|email"
+        ]);
+
+        $schema->addFormKit("elFormInput", [
+            "label" => "To",
+            "name" => "email",
+            "validation" => "required|email"
+        ]);
+
+        $schema->addFormKit("elFormTextarea", [
+            "label" => "Content",
+            "name" => "content",
+            "validation" => "required"
+        ]);
+
+
+        return [
+            "data" => [
+                "subject" => "Test Subject",
+                "content" => "This is a test email",
+            ],
+            "schema" => $schema
+        ];
     }
 };

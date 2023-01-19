@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7794251e009e84ce24644721faa4b28",
+    "content-hash": "7b88f14fb0740a85d27612e1fa6a0316",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2158,16 +2158,16 @@
         },
         {
             "name": "mathsgod/r-db",
-            "version": "4.16.1",
+            "version": "4.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/r-db.git",
-                "reference": "3522f27db85d6d5a28de9925d73f1ec68d7fc2e4"
+                "reference": "0cf8cba4996c192f815e9220101af6551f076586"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/3522f27db85d6d5a28de9925d73f1ec68d7fc2e4",
-                "reference": "3522f27db85d6d5a28de9925d73f1ec68d7fc2e4",
+                "url": "https://api.github.com/repos/mathsgod/r-db/zipball/0cf8cba4996c192f815e9220101af6551f076586",
+                "reference": "0cf8cba4996c192f815e9220101af6551f076586",
                 "shasum": ""
             },
             "require": {
@@ -2192,6 +2192,9 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "function.php"
+                ],
                 "psr-4": {
                     "R\\DB\\": "src"
                 }
@@ -2208,9 +2211,9 @@
             "description": "A lightweight orm library for mysql",
             "support": {
                 "issues": "https://github.com/mathsgod/r-db/issues",
-                "source": "https://github.com/mathsgod/r-db/tree/4.16.1"
+                "source": "https://github.com/mathsgod/r-db/tree/4.17.1"
             },
-            "time": "2022-10-18T10:22:58+00:00"
+            "time": "2023-01-19T03:35:54+00:00"
         },
         {
             "name": "monolog/monolog",

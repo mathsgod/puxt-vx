@@ -12,6 +12,7 @@ use VX;
 
 class ApplicationStrategy extends \League\Route\Strategy\ApplicationStrategy
 {
+    private $vx;
     public function __construct(VX $vx)
     {
         $this->vx = $vx;
@@ -34,8 +35,6 @@ class ApplicationStrategy extends \League\Route\Strategy\ApplicationStrategy
             public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
             {
                 return new EmptyResponse(404);
-                $handler = $this->vx->getRequestHandler($this->vx->vx_root . "/pages/error");
-                return $handler->handle($request);
             }
         };
     }

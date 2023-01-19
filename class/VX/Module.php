@@ -158,7 +158,6 @@ class Module implements MenuItemInterface
 
         if ($this->show_create) {
             $items[] = new ModuleMenu([
-                "name" => $this->name . "/add",
                 "label" => "Add",
                 "icon" => "add",
                 "link" => "/" . $this->name . "/add"
@@ -166,7 +165,6 @@ class Module implements MenuItemInterface
         }
 
         $items[] = new ModuleMenu([
-            "name" => $this->name . "/list",
             "label" => "List",
             "icon" => "list",
             "link" => "/" . $this->name

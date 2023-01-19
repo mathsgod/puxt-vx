@@ -27,6 +27,7 @@ use League\Route\Router;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -63,7 +64,6 @@ use VX\UserLog;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialRpEntity;
 use VX\PublicKeyCredentialSourceRepository;
-use VX\Role;
 use VX\RoleRepository;
 use VX\Security\AuthenticationAdapter;
 use VX\Security\RoleRepositoryInterface;
@@ -106,6 +106,10 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     public $_get = [];
     public $_post = [];
+
+    /**
+     * @var array<UploadedFileInterface>
+     */
     public $_files = [];
 
 
@@ -333,6 +337,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             $this->_post = json_decode($body, true);
             $request = $request->withParsedBody($this->_post);
         }
+        $this->_files = $request->getUploadedFiles();
 
         $router = $this->getRouter();
 
@@ -382,7 +387,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
         try {
             $response = $router->dispatch($request);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             if ($this->config->debug) {
                 $response = new HtmlResponse($e->getMessage(), 500);
             } else {
@@ -425,7 +430,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         $security = new Security;
 
-        foreach ($this->roles->all() as $role) {
+        foreach ($this->roles->findAll() as $role) {
             $security->addRole($role, $role->getParents());
         }
 
@@ -444,7 +449,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         if ($this->security) return $this->security;
 
         $this->security = new Security();
-        foreach ($this->roles->all() as $role) {
+        foreach ($this->roles->findAll() as $role) {
             $this->security->addRole($role, $role->getParents());
         }
 

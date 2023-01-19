@@ -3,10 +3,14 @@
 namespace VX;
 
 use Laminas\Permissions\Rbac\Role;
+use Laminas\Permissions\Rbac\RoleInterface;
 use VX\Security\RoleRepositoryInterface;
 
 class RoleRepository implements RoleRepositoryInterface
 {
+    /**
+     * @var Role[]
+     */
     private array $roles = [];
 
     public function __construct()
@@ -29,20 +33,59 @@ class RoleRepository implements RoleRepositoryInterface
                 $roles[$role->name] = new Role($role->name);
             }
 
-            if ($role->parent) {
+            if ($role->child) {
 
-                if (!$roles[$role->parent]) {
-                    $roles[$role->parent] = new Role($role->parent);
+                if (!$roles[$role->child]) {
+                    $roles[$role->child] = new Role($role->child);
                 }
 
-                $roles[$role->parent]->addParent($roles[$role->name]);
+                $roles[$role->name]->addChild($roles[$role->child]);
             }
         }
         $this->roles = array_values($roles);
     }
 
-    function all(): array
+    function findAll(): iterable
     {
         return $this->roles;
+    }
+
+    function delete(RoleInterface $role): void
+    {
+        $name = $role->getName();
+        
+        foreach (\VX\Role::Query(["name" => $name]) as $role) {
+            $role->delete();
+        }
+
+        foreach (\VX\Role::Query(["child" => $name]) as $role) {
+            $role->delete();
+        }
+    }
+
+    function findById($id): ?RoleInterface
+    {
+        foreach ($this->roles as $role) {
+            if ($role->getName() == $id) {
+                return $role;
+            }
+        }
+        return null;
+    }
+
+    function save(RoleInterface $role): void
+    {
+        $r = \VX\Role::Query(["name" => $role->getName()])->first();
+        if (!$r) {
+            $r = new \VX\Role();
+            $r->name = $role->getName();
+        }
+
+        $r->child = null;
+        foreach ($role->getChildren() as $child) {
+            $r->child = $child->getName();
+        }
+
+        $r->save();
     }
 }

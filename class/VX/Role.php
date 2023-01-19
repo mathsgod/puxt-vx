@@ -14,12 +14,7 @@ class Role extends Model
 
     public function delete()
     {
-        foreach ($this->getChildren() as $child) {
-            $child->delete();
-        }
-
         UserRole::Query(["role" => $this->name])->delete();
-
         parent::delete();
     }
 }

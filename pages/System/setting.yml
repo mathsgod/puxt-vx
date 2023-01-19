@@ -32,3 +32,11 @@ menu:
         link: /System/database/charset
         label: Charset
         icon: fa fa-spell-check
+      Backup:
+        link: /System/database/backup
+        label: Backup
+        icon: backup_table
+      Restore:
+        link: /System/database/restore
+        label: Restore
+        icon: restore

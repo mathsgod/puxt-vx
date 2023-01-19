@@ -3,6 +3,7 @@
 namespace VX;
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -38,7 +39,7 @@ class ModuleFile implements RequestHandlerInterface, AssertionInterface
         $security = $request->getAttribute(Security::class);
 
         if (!$security->isGranted($request->getAttribute(UserInterface::class), $this->module->name . "/" . $this->path, $this)) {
-            return new EmptyResponse(403);
+            return new HtmlResponse("Access Denied: " . $this->module->name . "/" . $this->path, 403, ["Content-Type" => "text/plain; charset=utf-8"]);
         }
 
         return \PUXT\RequestHandler::Create($this->file)->handle($request);
