@@ -1051,4 +1051,9 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         return \PUXT\RequestHandler::Create($file);
     }
+
+    function createSchema()
+    {
+        return new \Formkit\Schema($this->translator);
+    }
 }

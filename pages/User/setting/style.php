@@ -7,7 +7,6 @@
 
 use Laminas\Diactoros\Response\EmptyResponse;
 use VX\StyleableInterface;
-use VX\User;
 
 return new class
 {
@@ -21,14 +20,44 @@ return new class
             $vx->user->setStyles($style);
         }
 
-        return new EmptyResponse();
+        return new EmptyResponse(200);
     }
 
     function get(VX $vx)
     {
         if ($vx->user instanceof StyleableInterface) {
-            return $vx->user->getStyles();
+            $style = $vx->user->getStyles();
+        } else {
+            $style = [];
         }
-        return [];
+
+        $schema = $vx->createSchema();
+        $schema->addDivider("Form");
+        $schema->addRadioGroup("form_size")->label("Size")->options([
+            "large" => "Large",
+            "default" => "Default",
+            "small" => "Small",
+        ])->validation("required");
+
+        $schema->addDivider("Table");
+        $schema->addRadioGroup("table_size")->label("Size")->options([
+            "large" => "Large",
+            "default" => "Default",
+            "small" => "Small",
+        ])->validation("required");
+        $schema->addSwitch("table_border")->label("Border");
+
+        $schema->addDivider("Descriptions");
+
+        $schema->addRadioGroup("descriptions_size")->label("Size")->options([
+            "large" => "Large",
+            "default" => "Default",
+            "small" => "Small",
+        ])->validation("required");
+
+        return [
+            "data" => $style,
+            "schema" => $schema
+        ];
     }
 };
