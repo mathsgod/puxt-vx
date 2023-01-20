@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormInputNumber extends FormKitNode
+class ElFormInputNumber extends FormKitComponentNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {

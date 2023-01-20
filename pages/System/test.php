@@ -5,7 +5,6 @@
  * Date: 2022-09-14 
  */
 
-use FormKit\Schema;
 use VX\User;
 
 return new class
@@ -13,8 +12,9 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
+       
 
-
+       
         $table = $schema->addTable()->data(User::Query()->toArray())->size("small");
         //$table->height(100);
         $table->addTableColumn()->label("ID")->prop("username");
@@ -41,9 +41,9 @@ return new class
         $timeline->addTimelineItem()->timestamp("2022-01-22")->addChildren("test2");
         $timeline->addTimelineItem()->timestamp("2022-01-23")->addChildren("test3");
         $item = $timeline->addTimelineItem()->timestamp("2022-01-23");
-        $card = $item->addCard()->header("Card 2")->shadow("never")->addChildren("card body");
+        $card = $item->addCard()->header("Card 2")->shadow("never")->addChildren("card body"); 
 
-
+        
 
         $h1 = $schema->addElement("h1");
         $h1->addChildren("hello1");
@@ -51,11 +51,12 @@ return new class
 
         $div = $schema->addElement("div");
         $div->addChildren("testing a testing");
+ 
 
-
-        $schema->addDivider("Divider 1");
+         $schema->addDivider("Divider 1");
 
         $schema->addInput("input_1")->label("Input 1")->clearable()->placeholder("Input 1")->help("Input 1 Help");
+  
         $schema->addPassword("password_1")->label("Password 1")->clearable()->placeholder("Password 1")->help("Password 1 Help");
 
         $schema->addInputNumber("input_number_1")->label("Input Number 1");

@@ -8,6 +8,8 @@ class ElTable extends ComponentNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
+        $this->property['$cmp'] = 'ElTable';
+
         parent::__construct('ElTable', $property, $translator);
     }
 
@@ -23,7 +25,7 @@ class ElTable extends ComponentNode
      */
     public function data($data)
     {
-        $this->props['data'] = $data;
+        $this->setProperty('data', $data);
         return $this;
     }
 
