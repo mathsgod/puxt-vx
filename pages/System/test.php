@@ -15,8 +15,8 @@ return new class
         $schema = $vx->createSchema();
 
 
-        $table=$schema->addTable()->data(User::Query()->toArray())->size("small");
-        
+        $table = $schema->addTable()->data(User::Query()->toArray())->size("small");
+        //$table->height(100);
         $table->addTableColumn()->label("ID")->prop("username");
         $table->addTableColumn()->label("First name")->prop("first_name")->sortable();
 
