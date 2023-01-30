@@ -16,7 +16,7 @@ class ElTableColumn extends ComponentNode
      */
     public function type(string $type)
     {
-        $this->setProperty('type', $type);
+        $this->setProp('type', $type);
         return $this;
     }
 
@@ -25,7 +25,7 @@ class ElTableColumn extends ComponentNode
      */
     public function index(int $index)
     {
-        $this->setProperty('index', $index);
+        $this->setProp('index', $index);
         return $this;
     }
 
@@ -34,7 +34,7 @@ class ElTableColumn extends ComponentNode
      */
     public function label(string $label)
     {
-        $this->setProperty('label', $label);
+        $this->setProp('label', $label);
         return $this;
     }
 
@@ -43,7 +43,7 @@ class ElTableColumn extends ComponentNode
      */
     public function columnKey(string $columnKey)
     {
-        $this->setProperty('column-key', $columnKey);
+        $this->setProp('column-key', $columnKey);
         return $this;
     }
 
@@ -52,7 +52,7 @@ class ElTableColumn extends ComponentNode
      */
     public function prop(string $prop)
     {
-        $this->setProperty('prop', $prop);
+        $this->setProp('prop', $prop);
         return $this;
     }
 
@@ -61,7 +61,7 @@ class ElTableColumn extends ComponentNode
      */
     public function width(string|int $width)
     {
-        $this->setProperty('width', $width);
+        $this->setProp('width', $width);
         return $this;
     }
 
@@ -70,7 +70,7 @@ class ElTableColumn extends ComponentNode
      */
     public function minWidth(string|int $minWidth)
     {
-        $this->setProperty('min-width', $minWidth);
+        $this->setProp('min-width', $minWidth);
         return $this;
     }
 
@@ -79,7 +79,7 @@ class ElTableColumn extends ComponentNode
      */
     public function fixed(string|bool $fixed)
     {
-        $this->setProperty('fixed', $fixed);
+        $this->setProp('fixed', $fixed);
         return $this;
     }
 
@@ -88,7 +88,7 @@ class ElTableColumn extends ComponentNode
      */
     public function sortable(bool $sortable = true)
     {
-        $this->setProperty('sortable', $sortable);
+        $this->setProp('sortable', $sortable);
         return $this;
     }
 
@@ -97,7 +97,7 @@ class ElTableColumn extends ComponentNode
      */
     public function sortOrders(array $sortOrders)
     {
-        $this->setProperty('sort-orders', $sortOrders);
+        $this->setProp('sort-orders', $sortOrders);
         return $this;
     }
 
@@ -106,7 +106,7 @@ class ElTableColumn extends ComponentNode
      */
     public function resizable(bool $resizable = true)
     {
-        $this->setProperty('resizable', $resizable);
+        $this->setProp('resizable', $resizable);
         return $this;
     }
 
@@ -115,7 +115,7 @@ class ElTableColumn extends ComponentNode
      */
     public function showOverflowTooltip(bool $showOverflowTooltip = true)
     {
-        $this->setProperty('show-overflow-tooltip', $showOverflowTooltip);
+        $this->setProp('show-overflow-tooltip', $showOverflowTooltip);
         return $this;
     }
 
@@ -124,7 +124,7 @@ class ElTableColumn extends ComponentNode
      */
     public function align(string $align)
     {
-        $this->setProperty('align', $align);
+        $this->setProp('align', $align);
         return $this;
     }
 
@@ -133,7 +133,7 @@ class ElTableColumn extends ComponentNode
      */
     public function headerAlign(string $headerAlign)
     {
-        $this->setProperty('header-align', $headerAlign);
+        $this->setProp('header-align', $headerAlign);
         return $this;
     }
 
@@ -142,7 +142,7 @@ class ElTableColumn extends ComponentNode
      */
     public function className(string $className)
     {
-        $this->setProperty('class-name', $className);
+        $this->setProp('class-name', $className);
         return $this;
     }
 
@@ -151,7 +151,7 @@ class ElTableColumn extends ComponentNode
      */
     public function labelClassName(string $labelClassName)
     {
-        $this->setProperty('label-class-name', $labelClassName);
+        $this->setProp('label-class-name', $labelClassName);
         return $this;
     }
 
@@ -160,7 +160,7 @@ class ElTableColumn extends ComponentNode
      */
     public function reserveSelection(bool $reserveSelection = true)
     {
-        $this->setProperty('reserve-selection', $reserveSelection);
+        $this->setProp('reserve-selection', $reserveSelection);
         return $this;
     }
 }

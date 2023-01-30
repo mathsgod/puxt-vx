@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormTextarea extends FormKitComponentNode
+class ElFormTextarea extends FormKitNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {

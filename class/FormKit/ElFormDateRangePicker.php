@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormDateRangePicker extends FormKitComponentNode
+class ElFormDateRangePicker extends FormKitNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {

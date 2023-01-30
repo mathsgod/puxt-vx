@@ -389,7 +389,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             $response = $router->dispatch($request);
         } catch (Throwable $e) {
             if ($this->config->debug) {
-                $response = new HtmlResponse($e->getMessage(), 500);
+                $response = new HtmlResponse($e->getMessage() . "\n" . $e->getFile() . "\n" . $e->getLine(), 500);
             } else {
                 $response = new HtmlResponse("Change the debug mode to true to see the error message", 500);
             }

@@ -4,16 +4,18 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ComponentNode extends SchemaNode
+class ComponentBaseNode extends SchemaBaseNode
 {
 
     public $props = [];
+    protected $translator;
+
 
     public function __construct(string $cmp, array $props = [], ?TranslatorInterface $translator = null)
     {
         $this->props = $props;
         $this->property['$cmp'] = $cmp;
-        parent::__construct($translator);
+        $this->translator = $translator;
     }
 
 

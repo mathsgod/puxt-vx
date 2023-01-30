@@ -3,7 +3,7 @@
 namespace FormKit;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormCheckbox extends FormKitComponentNode
+class ElFormCheckbox extends FormKitNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {

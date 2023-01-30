@@ -13,13 +13,13 @@ class ElTag extends ComponentNode
 
     public function type(string $type)
     {
-        $this->setProperty('type', $type);
+        $this->setProp('type', $type);
         return $this;
     }
 
     public function closable(bool $closable)
     {
-        $this->setProperty('closable', $closable);
+        $this->setProp('closable', $closable);
         return $this;
     }
 }

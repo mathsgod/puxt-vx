@@ -3,264 +3,67 @@
 namespace FormKit;
 
 use JsonSerializable;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FormKitNode extends SchemaNode
+class FormKitNode implements JsonSerializable
 {
+    protected $property = [];
+    private $translator;
 
-    public function addLink()
+    public function __construct(string $formkit, array $property = [], ?TranslatorInterface $translator = null)
     {
-        $component = new ElLink([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        $this->property = array_merge([
+            '$formkit' => $formkit
+        ], $property);
+        $this->translator = $translator;
     }
 
-    public function addRow()
+    public function jsonSerialize()
     {
-        $component = new ElRow([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->property;
     }
 
-    public function addDescriptions()
+    public function label(string $label)
     {
-        $component = new ElDescriptions([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-    public function addTable()
-    {
-        $component = new ElTable([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-    public function addTag()
-    {
-        $component = new ElTag([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-    public function addTimeline()
-    {
-        $component = new ElTimeline([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-    public function addCard()
-    {
-        $component = new ElCard([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-
-
-
-    public function addUpload(string $name)
-    {
-        $formkit = new ElFormUpload([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addTransfer(string $name)
-    {
-        $formkit = new ElFormTransfer([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addTimePicker(string $name)
-    {
-        $formkit = new ElFormTimePicker([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addTimeSelect(string $name)
-    {
-        $formkit = new ElFormTimeSelect([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addTextarea(string $name)
-    {
-        $formkit = new ElFormTextarea([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addSlider(string $name)
-    {
-        $formkit = new ElFormSlider([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addRate(string $name)
-    {
-        $formkit = new ElFormRate([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addDateRangePicker(string $name)
-    {
-        $formkit = new ElFormDateRangePicker([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addColorPicker(string $name)
-    {
-        $formkit = new ElFormColorPicker([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-
-    public function addDatePicker(string $name)
-    {
-        $formkit = new ElFormDatePicker([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addPassword(string $name)
-    {
-        $formkit = new ElFormPassword([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addSelect(string $name)
-    {
-        $formkit = new ElFormSelect([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addCheckbox(string $name)
-    {
-        $formkit = new ElFormCheckbox([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
-
-    public function addDivider(?string $label = null)
-    {
-        $component = new ComponentNode("elDivider", [], $this->translator);
-
-        if ($label) {
-            $component->children($label);
+        $this->property['label'] = $label;
+        if ($this->translator) {
+            $this->property['label'] = $this->translator->trans($label);
         }
-
-        $this->children[] = $component;
-        return $component;
+        return $this;
     }
 
-    public function addRadioGroup(string $name)
+    public function validation(string $validation)
     {
-        $formkit = new ElFormRadioGroup([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
+        $this->property['validation'] = $validation;
+        return $this;
     }
 
-    public function addSwitch(string $name)
+    public function validationLabel(string $validationLabel)
     {
-        $formkit = new ElFormSwitch([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
+        $this->property['validationLabel'] = $validationLabel;
+        return $this;
     }
 
-    public function addItem(array $item)
+    public function help(string $help)
     {
-        $this->children[] = $item;
+        $this->property['help'] = $help;
+        return $this;
     }
 
-    public function addInput(string $name)
+    public function options(array $options)
     {
-        $formkit = new ElFormInput([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
+        $this->property['options'] = $options;
+        return $this;
+    }
+    public function placeholder(string $placeholder)
+    {
+        $this->property['placeholder'] = $placeholder;
+        return $this;
     }
 
-    public function addInputNumber(string $name)
+    public function children(array|string $children)
     {
-        $formkit = new ElFormInputNumber([
-            "name" => $name,
-        ], $this->translator);
-
-        $this->children[] = $formkit;
-
-        return $formkit;
+        $this->property['children'] = $children;
+        return $this;
     }
 }

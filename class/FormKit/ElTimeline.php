@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElTimeline extends ComponentNode
+class ElTimeline extends ComponentBaseNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
