@@ -31,12 +31,15 @@ class ElementNode extends SchemaNode
 
     public function jsonSerialize()
     {
-        return array_merge(
-            $this->property,
-            [
-                "attrs" => $this->attrs,
-                "children" => $this->children
-            ]
-        );
+        $json = $this->property;
+
+        if ($this->attrs) {
+            $json['attrs'] = $this->attrs;
+        }
+
+        if ($this->children) {
+            $json['children'] = $this->children;
+        }
+        return $json;
     }
 }
