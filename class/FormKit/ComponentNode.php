@@ -19,6 +19,17 @@ class ComponentNode extends SchemaNode
 
     public function jsonSerialize()
     {
+        $json = $this->property;
+        if ($this->props) {
+            $json['props'] = $this->props;
+        }
+
+        if ($this->children) {
+            $json['children'] = $this->children;
+        }
+
+        return $json;
+
         return array_merge(
             $this->property,
             [

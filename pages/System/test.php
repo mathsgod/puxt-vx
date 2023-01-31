@@ -5,21 +5,58 @@
  * Date: 2022-09-14 
  */
 
+use Laminas\Diactoros\Response\EmptyResponse;
 use VX\User;
 
 return new class
 {
+    function post()
+    {
+        return new EmptyResponse(200);
+    }
+    
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
 
+        $form = $schema->addForm();
+        $form->action("/System/test");
+        $form->value(["username" => "test"]);
+        $form->addInput("username")->label("Username")->validation("required");
+
+
+        return ["schema" => $schema];
+
+        /*        $schema->addComponent("FormKit", [
+            "type" => "VxForm",
+        ]);
+
+         */
+
+
+
+        /*   $table = $schema->addComponent("VxTable", [
+            "query" => "MailLog?fields[]=body&sort[]=maillog_id:desc"
+        ]);
+
+        $col = $schema->createComponent("VxColumn", [
+            "label" => "ID",
+            "prop" => "maillog_id",
+            "sortable" => true,
+            "width" => 100,
+        ]);
+
+        $table->addChildren($col);
+
+
+        return ["schema" => $schema]; */
 
 
 
         $table = $schema->addTable()->data(User::Query()->toArray())->size("small");
         //$table->height(100);
-        $table->addTableColumn()->label("ID")->prop("username");
-        $table->addTableColumn()->label("First name")->prop("first_name")->sortable();
+        $table->addColumn()->label("ID")->prop("username");
+        $table->addColumn()->label("First name")->prop("first_name")->sortable();
 
 
 

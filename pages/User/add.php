@@ -44,4 +44,24 @@ return new class
 
         return new EmptyResponse(200);
     }
+
+    public function get(VX $vx)
+    {
+        $schema = $vx->createSchema();
+        $form = $schema->addForm();
+
+        $form->addInput("Username", "username")->validation("required");
+        $form->addPassword("Password", "password")->validation("required");
+
+
+        $form->addInput("First Name", "first_name")->validation("required");
+
+
+
+
+
+
+
+        return $schema;
+    }
 };

@@ -26,37 +26,18 @@ return new class
     function get()
     {
         $schema = new FormKit\Schema;
-        $schema->addFormKit("elFormInput", [
-            "label" => "Subject",
-            "name" => "subject",
-            "validation" => "required"
+        $form = $schema->addForm();
+        $form->value([
+            "subject" => "Test Subject",
+            "content" => "This is a test email"
         ]);
+        $form->action("/System/mail-test");
 
-        $schema->addFormKit("elFormInput", [
-            "label" => "From",
-            "name" => "from",
-            "validation" => "required|email"
-        ]);
+        $form->addInput("Subject", "subject")->validation("required");
+        $form->addInput("From", "from")->validation("required|email");
+        $form->addInput("To", "email")->validation("required|email");
+        $form->addTextarea("Content", "content")->validation("required");
 
-        $schema->addFormKit("elFormInput", [
-            "label" => "To",
-            "name" => "email",
-            "validation" => "required|email"
-        ]);
-
-        $schema->addFormKit("elFormTextarea", [
-            "label" => "Content",
-            "name" => "content",
-            "validation" => "required"
-        ]);
-
-
-        return [
-            "data" => [
-                "subject" => "Test Subject",
-                "content" => "This is a test email",
-            ],
-            "schema" => $schema
-        ];
+        return $schema;
     }
 };

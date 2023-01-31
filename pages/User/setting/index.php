@@ -13,21 +13,26 @@ return new class
     {
 
         $schema = new Schema;
-        $schema->addInput("username")->label("Username")->validation("required");
-        $schema->addInput("email")->label("Email")->validation("required|email");
-        $schema->addInput("first_name")->label("First name")->validation("required");
-        $schema->addInput("last_name")->label("Last name");
 
-        $user = $vx->user;
-        return [
-            "schema" => $schema,
-            "data" => [
-                "user_id" => $user->getIdentity(),
-                "username" => $user->username,
-                "email" => $user->email,
-                "first_name" => $user->first_name,
-                "last_name" => $user->last_name,
-            ]
-        ];
+        $form = $schema->addForm();
+        $form->showBack(false);
+
+        $form->action($vx->user->uri());
+
+        $form->value([
+            "username" => $vx->user->username,
+            "email" => $vx->user->email,
+            "first_name" => $vx->user->first_name,
+            "last_name" => $vx->user->last_name,
+        ]);
+
+        $form->header("General");
+
+        $form->addInput("Username", "username")->validation("required");
+        $form->addInput("Email", "email")->validation("required|email");
+        $form->addInput("First name", "first_name")->validation("required");
+        $form->addInput("Last name", "last_name");
+
+        return $schema;
     }
 };

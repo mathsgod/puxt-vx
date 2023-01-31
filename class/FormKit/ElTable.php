@@ -11,7 +11,7 @@ class ElTable extends ComponentBaseNode
         parent::__construct("ElTable", $props, $translator);
     }
 
-    public function addTableColumn()
+    public function addColumn()
     {
         $column = new ElTableColumn([], $this->translator);
         $this->children[] = $column;

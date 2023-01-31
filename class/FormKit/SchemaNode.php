@@ -14,8 +14,29 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function addMenu()
+    {
+        $menu = new ElMenu([], $this->translator);
+        $this->children[] = $menu;
+        return $menu;
+    }
 
-  /*   public function children(array|string|JsonSerializable $children)
+    public function addVxTable()
+    {
+        $table = new VxTable([], $this->translator);
+        $this->children[] = $table;
+        return $table;
+    }
+
+    public function addForm()
+    {
+        $form = new VxForm([], $this->translator);
+        $this->children[] = $form;
+        return $form;
+    }
+
+
+    /*   public function children(array|string|JsonSerializable $children)
     {
         $this->children = $children;
         return $this;
@@ -32,6 +53,11 @@ abstract class SchemaNode extends SchemaBaseNode
         $item = new ElementNode($el, $property, $this->translator);
         $this->children[] = $item;
         return $item;
+    }
+
+    public function createComponent(string $cmp, array $property = []): ComponentNode
+    {
+        return new ComponentNode($cmp, $property);
     }
 
     public function addComponent(string $cmp, array $property = [])
@@ -53,8 +79,11 @@ abstract class SchemaNode extends SchemaBaseNode
         return array_merge($this->property, ["children" => $this->children]);
     }
 
-    public function addChildren(string|JsonSerializable $children)
+    public function addChildren(string|JsonSerializable|null $children)
     {
+        if ($children === null) {
+            return $this;
+        }
         $this->children[] = $children;
         return $this;
     }
@@ -80,7 +109,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addTable()
+    public function addElTable()
     {
         $component = new ElTable([], $this->translator);
         $this->children[] = $component;
@@ -108,147 +137,195 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-
-
-
-    public function addUpload(string $name)
+    public function addUpload(string $label, string $name)
     {
         $formkit = new ElFormUpload([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addTransfer(string $name)
+    public function addTransfer(string $label, string $name)
     {
         $formkit = new ElFormTransfer([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addTimePicker(string $name)
+    public function addTimePicker(string $label, string $name)
     {
         $formkit = new ElFormTimePicker([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addTimeSelect(string $name)
+    public function addTimeSelect(string $label, string $name)
     {
         $formkit = new ElFormTimeSelect([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addTextarea(string $name)
+    public function addTextarea(string $label, string $name)
     {
         $formkit = new ElFormTextarea([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addSlider(string $name)
+    public function addSlider(string $label, string $name)
     {
         $formkit = new ElFormSlider([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addRate(string $name)
+    public function addRate(string $label, string $name)
     {
         $formkit = new ElFormRate([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addDateRangePicker(string $name)
+    public function addDateRangePicker(string $label, string $name)
     {
         $formkit = new ElFormDateRangePicker([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addColorPicker(string $name)
+    public function addColorPicker(string $label, string $name)
     {
         $formkit = new ElFormColorPicker([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
 
-    public function addDatePicker(string $name)
+    public function addDatePicker(string $label, string $name)
     {
         $formkit = new ElFormDatePicker([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addPassword(string $name)
+    public function addPassword(string $label, string $name)
     {
         $formkit = new ElFormPassword([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addSelect(string $name)
+    public function addSelect(string $label, string $name)
     {
         $formkit = new ElFormSelect([
             "name" => $name,
         ], $this->translator);
 
+        if ($label) {
+            $formkit->label($label);
+        }
+
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addCheckbox(string $name)
+    public function addCheckbox(string $label, string $name)
     {
         $formkit = new ElFormCheckbox([
             "name" => $name,
         ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
 
         $this->children[] = $formkit;
 
@@ -257,7 +334,7 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addDivider(?string $label = null)
     {
-        $component = new ComponentNode("elDivider", [], $this->translator);
+        $component = new ElDivider([], $this->translator);
 
         if ($label) {
             $component->addChildren($label);
@@ -267,22 +344,30 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addRadioGroup(string $name)
+    public function addRadioGroup(string $label, string $name)
     {
         $formkit = new ElFormRadioGroup([
             "name" => $name,
         ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
 
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addSwitch(string $name)
+    public function addSwitch(string $label, string $name)
     {
         $formkit = new ElFormSwitch([
             "name" => $name,
         ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
 
         $this->children[] = $formkit;
 
@@ -294,22 +379,30 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->children[] = $item;
     }
 
-    public function addInput(string $name)
+    public function addInput(string $label, string $name)
     {
         $formkit = new ElFormInput([
             "name" => $name,
         ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
 
         $this->children[] = $formkit;
 
         return $formkit;
     }
 
-    public function addInputNumber(string $name)
+    public function addInputNumber(string $label, string $name)
     {
         $formkit = new ElFormInputNumber([
             "name" => $name,
         ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
 
         $this->children[] = $formkit;
 

@@ -4,16 +4,29 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElDescriptions extends ComponentNode
+class ElDescriptions extends ComponentBaseNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
         parent::__construct('ElDescriptions', $property, $translator);
     }
 
-    public function addDescriptionsItem()
+    public function addItem(?string $label = null, ?string $content = null)
+    {
+        $item = $this->addDescriptionsItem($label);
+        if ($content) {
+            $item->addChildren($content);
+        }
+        return $item;
+    }
+
+    public function addDescriptionsItem(?string $label = null)
     {
         $item = new ElDescriptionsItem([], $this->translator);
+        if ($label) {
+            $item->label($label);
+        }
+
         $this->children[] = $item;
         return $item;
     }
@@ -23,13 +36,13 @@ class ElDescriptions extends ComponentNode
      */
     public function border(bool $border = true)
     {
-        $this->setProperty('border', $border);
+        $this->setProp('border', $border);
         return $this;
     }
 
     public function column(int $column)
     {
-        $this->setProperty('column', $column);
+        $this->setProp('column', $column);
         return $this;
     }
 
@@ -38,13 +51,13 @@ class ElDescriptions extends ComponentNode
      */
     public function direction(string $direction)
     {
-        $this->setProperty('direction', $direction);
+        $this->setProp('direction', $direction);
         return $this;
     }
 
     public function size(string $size)
     {
-        $this->setProperty('size', $size);
+        $this->setProp('size', $size);
         return $this;
     }
 
@@ -53,13 +66,13 @@ class ElDescriptions extends ComponentNode
      */
     public function title(bool $title = true)
     {
-        $this->setProperty('title', $title);
+        $this->setProp('title', $title);
         return $this;
     }
 
     public function extra(string $extra)
     {
-        $this->setProperty('extra', $extra);
+        $this->setProp('extra', $extra);
         return $this;
     }
 }

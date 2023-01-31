@@ -6,7 +6,7 @@
  */
 return new class
 {
-    function get(VX $vx)
+    function getData()
     {
         $data = [];
         foreach ($_SERVER as $name => $value) {
@@ -16,5 +16,16 @@ return new class
             ];
         }
         return $data;
+    }
+
+    function get(VX $vx)
+    {
+        $schema = $vx->createSchema();
+        $table = $schema->addElTable();
+        $table->size("small");
+        $table->data($this->getData());
+        $table->addColumn()->label("Name")->prop("name")->sortable()->width(200);
+        $table->addColumn()->label("Value")->prop("value")->sortable();
+        return $schema;
     }
 };

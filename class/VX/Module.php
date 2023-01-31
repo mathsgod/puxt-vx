@@ -197,7 +197,7 @@ class Module implements MenuItemInterface
         foreach ($this->getMenus() as $menu) {
             $menus[] = $menu->getPermission();
         }
-        
+
 
         $children[] = [
             "label" => "[menu]",
@@ -261,7 +261,7 @@ class Module implements MenuItemInterface
             ];
         }, $this->files));
 
-  /*       //get all children value
+        /*       //get all children value
         $values = array_map(function ($item) {
             return $item["value"];
         }, $children);
@@ -453,16 +453,21 @@ class Module implements MenuItemInterface
                 });
 
 
-                $fpath = $this->name . "/" . $file->path;
                 $path = $this->name . "/{id:number}/" . $file->path;
                 $path = str_replace("@", ":", $path);
 
-                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that, $fpath, $security) {
+                $route->map($method, $path, function (ServerRequestInterface $request, array $args) use ($file, $that) {
                     $this->vx->object_id = $args["id"];
                     $this->vx->module = $that;
 
                     $twig = $this->vx->getTwig(new \Twig\Loader\FilesystemLoader(dirname($file->file)));
                     $request = $request->withAttribute("twig", $twig);
+
+                    $service = $this->vx->getServiceManager();
+                    $service->setFactory($this->class, function () use ($args) {
+                        return $this->getObject($args["id"]);
+                    });
+
 
                     return $file->handle($request);
                 });

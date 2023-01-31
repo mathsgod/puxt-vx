@@ -10,169 +10,6 @@ use VX\Config;
 
 return new class
 {
-
-    function schema()
-    {
-
-        $schema = new FormKit\Schema();
-
-        $schema->addFormKit("elFormInput", [
-            "label" => "API url",
-            "name" => "vx_url",
-        ]);
-
-        $schema->addFormKit("elFormInput", [
-            "label" => "Company",
-            "name" => "company",
-        ]);
-
-        $schema->addFormKit("elFormInput", [
-            "label" => "Company Logo",
-            "name" => "company_logo",
-        ]);
-
-        $schema->addFormKit("elFormInput", [
-            "label" => "Copyright name",
-            "name" => "copyright_name",
-        ]);
-
-        $schema->addFormKit("elFormInput", [
-            "label" => "Copyright year",
-            "name" => "copyright_year",
-        ]);
-
-        $schema->addFormKit("elFormInput", [
-            "label" => "Copyright url",
-            "name" => "copyright_url",
-        ]);
-
-        //login
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "Login"
-        ]);
-
-        $schema->addFormKit("elFormSelect", [
-            "label" => "Login Version",
-            "name" => "login_version",
-            "options" => [
-                [
-                    "label" => "Basic",
-                    "value" => "v1"
-                ], [
-                    "label" => "Cover",
-                    "value" => "v2"
-                ]
-            ],
-            "validation" => "required"
-        ]);
-
-
-        $schema->addFormKit("elFormCheckbox", [
-            "label" => "Allow remember me",
-            "name" => "allow_remember_me",
-        ]);
-
-
-        //token
-
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "Token"
-        ]);
-
-        $schema->addFormKit("elFormInputNumber", [
-            "label" => "Access token expire",
-            "name" => "access_token_expire",
-            "validation" => "required"
-        ]);
-
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "Authentication failed lock"
-        ]);
-
-        $schema->addFormKit("elFormSwitch", [
-            "label" => "Authentication lock",
-            "name" => "authentication_lock",
-        ]);
-
-        $schema->addFormKit("elFormInputNumber", [
-            "label" => "Authentication lock time",
-            "name" => "authentication_lock_time",
-            "validation" => "required"
-        ]);
-
-        $schema->addFormKit("elFormSwitch", [
-            "label" => "JWT blacklist",
-            "name" => "jwt_blacklist",
-        ]);
-
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "2 Step verification"
-        ]);
-
-        $schema->addFormKit("elFormSwitch", [
-            "label" => "2 Step verification",
-            "name" => "two_step_verification",
-        ]);
-
-
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "Biomatric authentication"
-        ]);
-
-        $schema->addFormKit("elFormSwitch", [
-            "label" => "Biometric authentication",
-            "name" => "biometric_authentication",
-            "help" => "Require https"
-        ]);
-
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "File manager"
-        ]);
-
-        $schema->addFormKit("elFormSwitch", [
-            "label" => "Show file manage",
-            "name" => "file_manager_show",
-        ]);
-
-
-        $schema->addComponent("ElDivider", [
-            "props" => [
-                "contentPosition" => "left"
-            ],
-            "children" => "UI"
-        ]);
-
-        $schema->addFormKit("elFormInputNumber", [
-            "label" => "Menu width",
-            "name" => "menu_width",
-            "validation" => "required"
-        ]);
-
-        $schema->addFormKit("elFormSwitch", [
-            "label" => "Theme customizer",
-            "name" => "theme_customizer",
-        ]);
-
-        return $schema;
-    }
     function post(VX $vx)
     {
         foreach ($vx->_post as $name => $value) {
@@ -184,6 +21,66 @@ return new class
     }
 
     function get(VX $vx)
+    {
+        $schema = $vx->createSchema();
+        $form = $schema->addForm();
+        $form->action("/System/setting");
+        $form->value($this->getData($vx));
+
+        $form->addInput("API url", "vx_url");
+        $form->addInput("Company", "company");
+        $form->addInput("Company Logo", "company_logo");
+        $form->addInput("Copyright name", "copyright_name");
+        $form->addInput("Copyright year", "copyright_year");
+        $form->addInput("Copyright url", "copyright_url");
+
+        $form->addDivider("Login")->contentPosition("left");
+        $form->addSelect("Login Version", "login_version")->options([
+            [
+                "label" => "Basic",
+                "value" => "v1"
+            ], [
+                "label" => "Cover",
+                "value" => "v2"
+            ]
+        ])->validation("required");
+
+        $form->addSwitch("Allow remember me", "allow_remember_me");
+
+
+        //token
+        $form->addDivider("Token")->contentPosition("left");
+        $form->addInputNumber("Access token expire", "access_token_expire")->validation("required");
+
+
+        $form->addDivider("Authentication")->contentPosition("left");
+        $form->addSwitch("Authentication lock", "authentication_lock");
+        $form->addInputNumber("Authentication lock time", "authentication_lock_time")->validation("required");
+
+
+        $form->addDivider("JWT blacklist")->contentPosition("left");
+        $form->addSwitch("JWT blacklist", "jwt_blacklist");
+
+        $form->addDivider("2 Step verification")->contentPosition("left");
+        $form->addSwitch("2 Step verification", "two_step_verification");
+
+
+        $form->addDivider("Biomatric authentication")->contentPosition("left");
+        $form->addSwitch("Biometric authentication", "biometric_authentication")->help("Require https");
+
+        $form->addDivider("File manager")->contentPosition("left");
+        $form->addSwitch("Show file manage", "file_manager_show");
+
+        $form->addDivider("UI")->contentPosition("left");
+        $form->addInputNumber("Menu width", "menu_width")->validation("required");
+        $form->addSwitch("Theme customizer", "theme_customizer");
+
+
+
+        return $schema;
+    }
+
+    function getData(VX $vx)
     {
         $config = $vx->config["VX"];
         $config["two_step_verification"] = boolval($config["two_step_verification"]);
@@ -238,6 +135,6 @@ return new class
         }, ARRAY_FILTER_USE_KEY);
 
 
-        return ["data" => $config, "schema" => $this->schema()];
+        return $config;
     }
 };

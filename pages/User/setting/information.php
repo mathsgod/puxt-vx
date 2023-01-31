@@ -5,27 +5,26 @@
  * Date: 2022-05-12 
  */
 
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 return new class
 {
-    function get(VX $vx, TranslatorInterface $translator)
+    function get(VX $vx)
     {
         $schema = $vx->createSchema();
-        $schema->addInput("phone")->label("Phone");
-        $schema->addInput("addr1")->label("Address1");
-        $schema->addInput("addr2")->label("Address2");
-        $schema->addInput("addr3")->label("Address3");
 
-        return [
-            "schema" => $schema,
-            "data" => [
-                "user_id" => $vx->user->getIdentity(),
-                "phone" => $vx->user->phone,
-                "addr1" => $vx->user->addr1,
-                "addr2" => $vx->user->addr2,
-                "addr3" => $vx->user->addr3,
-            ]
-        ];
+        $form = $schema->addForm()->showBack(false)->action($vx->user->uri());
+        $form->header("Information");
+        $form->value([
+            "phone" => $vx->user->phone,
+            "addr1" => $vx->user->addr1,
+            "addr2" => $vx->user->addr2,
+            "addr3" => $vx->user->addr3,
+        ]);
+        $form->addInput("Phone", "phone");
+        $form->addInput("Address1", "addr1");
+        $form->addInput("Address2", "addr2");
+        $form->addInput("Address3", "addr3");
+
+        return $schema;
     }
 };

@@ -5,23 +5,23 @@ namespace FormKit;
 use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FormKitNode implements JsonSerializable
+class FormKitNode extends SchemaNode
 {
-    protected $property = [];
-    private $translator;
 
     public function __construct(string $formkit, array $property = [], ?TranslatorInterface $translator = null)
     {
         $this->property = array_merge([
             '$formkit' => $formkit
         ], $property);
-        $this->translator = $translator;
+        parent::__construct($translator);
     }
 
-    public function jsonSerialize()
+    public function id(string $id)
     {
-        return $this->property;
+        $this->property['id'] = $id;
+        return $this;
     }
+
 
     public function label(string $label)
     {
@@ -32,7 +32,7 @@ class FormKitNode implements JsonSerializable
         return $this;
     }
 
-    public function validation(string $validation)
+    public function validation(string|array $validation)
     {
         $this->property['validation'] = $validation;
         return $this;

@@ -32,32 +32,33 @@ return new class
         }
 
         $schema = $vx->createSchema();
-        $schema->addDivider("Form");
-        $schema->addRadioGroup("form_size")->label("Size")->options([
+        $form = $schema->addForm();
+        $form->value($style);
+        $form->showBack(false)->header("Style");
+        $form->action("/User/setting/style");
+        $form->addDivider("Form");
+        $form->addRadioGroup("Size", "form_size")->options([
             "large" => "Large",
             "default" => "Default",
             "small" => "Small",
         ])->validation("required");
 
-        $schema->addDivider("Table");
-        $schema->addRadioGroup("table_size")->label("Size")->options([
+        $form->addDivider("Table");
+        $form->addRadioGroup("Size", "table_size")->options([
             "large" => "Large",
             "default" => "Default",
             "small" => "Small",
         ])->validation("required");
-        $schema->addSwitch("table_border")->label("Border");
+        $form->addSwitch("Border", "table_border");
 
-        $schema->addDivider("Descriptions");
+        $form->addDivider("Descriptions");
 
-        $schema->addRadioGroup("descriptions_size")->label("Size")->options([
+        $form->addRadioGroup("Size", "descriptions_size")->options([
             "large" => "Large",
             "default" => "Default",
             "small" => "Small",
         ])->validation("required");
 
-        return [
-            "data" => $style,
-            "schema" => $schema
-        ];
+        return $schema;
     }
 };

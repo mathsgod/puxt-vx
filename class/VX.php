@@ -1000,7 +1000,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     function getServiceManager()
     {
-        return $this->puxt->getServiceManager();
+        return $this->service;
     }
 
     // login with username, password and code, throw exception if failed

@@ -18,6 +18,12 @@ class ComponentBaseNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function setClass(string $class)
+    {
+        $this->setProp('class', $class);
+        return $this;
+    }
+
 
     public function jsonSerialize()
     {
