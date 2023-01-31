@@ -1,11 +1,7 @@
 <?php
-
 namespace FormKit;
 
-use JsonSerializable;
-use Symfony\Component\CssSelector\XPath\TranslatorInterface;
-
-class Schema extends SchemaNode implements JsonSerializable
+class Schema extends SchemaNode
 {
 
     public function jsonSerialize()
