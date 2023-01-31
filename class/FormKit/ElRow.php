@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElRow extends ComponentNode
+class ElRow extends ComponentBaseNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
