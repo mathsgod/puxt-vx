@@ -21,6 +21,19 @@ return new class
         $p = p($pinfo);
         $p->find("table")->addClass("table");
 
-        $this->pinfo = (string)$p;
+        //$this->pinfo = (string)$p;
+
+
+        $schema = $vx->createSchema();
+        $card = $schema->addCard()->bodyStyle(["padding" => "0px"]);
+        $card->addElement("iframe")->attrs([
+            "srcdoc" => (string)$p,
+            "class" => "h-[80vh] border-none",
+            "width" => "100%"
+        ]);
+
+
+
+        return $schema;
     }
 };

@@ -130,11 +130,19 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addCard()
+    public function addElCard()
     {
         $component = new ElCard([], $this->translator);
+
         $this->children[] = $component;
         return $component;
+    }
+
+    public function addCard()
+    {
+        $card = $this->addElCard();
+        $card->shadow("never");
+        return $card;
     }
 
     public function addUpload(string $label, string $name)

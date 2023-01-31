@@ -23,6 +23,12 @@ class ElementNode extends SchemaNode
         return $this;
     }
 
+    public function attrs(array $attrs)
+    {
+        $this->attrs = $attrs;
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         return array_merge(

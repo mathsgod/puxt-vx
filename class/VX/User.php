@@ -322,4 +322,13 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
     {
         return $this->first_name . " " . $this->last_name;
     }
+
+    public function toArray(?array $fields = []): array
+    {
+        $arr = parent::toArray($fields);
+        //remove password
+        unset($arr["password"]);
+        return $arr;
+        
+    }
 }

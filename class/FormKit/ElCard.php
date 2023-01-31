@@ -23,4 +23,10 @@ class ElCard extends ComponentNode
         $this->props['shadow'] = $shadow;
         return $this;
     }
+
+    public function bodyStyle(array $bodyStyle)
+    {
+        $this->props['bodyStyle'] = $bodyStyle;
+        return $this;
+    }
 }
