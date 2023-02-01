@@ -16,7 +16,19 @@ class VxColumn extends ComponentBaseNode
         $this->setProp('searchable', true);
         return $this;
     }
-    
+
+    public function searchType(string $type)
+    {
+        $this->setProp('search-type', $type);
+        return $this;
+    }
+
+    public function searchOptions(array $options)
+    {
+        $this->setProp('search-options', $options);
+        return $this;
+    }
+
     /**
      * type of the column. If set to selection, the column will display checkbox. If set to index, the column will display index of the row (staring from 1). If set to expand, the column will display expand icon.
      */

@@ -6,6 +6,7 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use VX\Security\RoleRepositoryInterface;
 use VX\User;
 use VX\UserRole;
 
@@ -45,20 +46,68 @@ return new class
         return new EmptyResponse(200);
     }
 
-    public function get(VX $vx)
+    public function get(VX $vx, RoleRepositoryInterface $roles)
     {
         $schema = $vx->createSchema();
         $form = $schema->addForm();
+        $form->value([
+            "status" => "0",
+            "language" => "en",
+            "join_date" => date("Y-m-d"),
+            "role" => ["Users"],
+        ]);
 
+        ///$form->addInput("Username", "username")->validation("required|matches:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$@!%&*?])(?=.*\d)/|length:12");
         $form->addInput("Username", "username")->validation("required");
-        $form->addPassword("Password", "password")->validation("required");
+        $form->addPassword("Password", "password")
+            ->validation($vx->getPasswordValidation())
+            ->validationMessages($vx->getPasswordValidationMessages());
+
+        $form->addInput("First name", "first_name")->validation("required");
+        $form->addInput("Last name", "last_name");
+
+        $form->addInput("Email", "email")->validation("required|email");
+        $form->addInput("Phone", "phone");
+        $form->addInput("Address 1", "address1");
+        $form->addInput("Address 2", "address2");
+        $form->addInput("Address 3", "address3");
+        $form->addDatePicker("Join date", "join_date")->validation("required");
+        $form->addDatePicker("Expiry date", "expiry_date");
+        $form->addSelect("Status", "status")->options([
+            [
+                "label" => "Active",
+                "value" => "0"
+            ],
+            [
+                "label" => "Inactive",
+                "value" => "1"
+            ]
+        ])->validation("required");
+        $form->addSelect("Language", "language")->options([
+            [
+                "label" => "English",
+                "value" => "en"
+            ],
+            [
+                "label" => "中文",
+                "value" => "zh-hk"
+            ]
+        ])->validation("required");
+        $form->addInput("Default page", "default_page");
 
 
-        $form->addInput("First Name", "first_name")->validation("required");
+        $rs = [];
+        foreach ($roles->findAll() as $r) {
+            if ($r->getName() == "Everyone") continue;
+            if ($r->getName() == "Guests") continue;
+            if ($r->getName() == "Administrators" && !$vx->user->is("Administrators")) continue;
+            $rs[] = [
+                "label" => $r->getName(),
+                "value" => $r->getName()
+            ];
+        }
 
-
-
-
+        $form->addSelect("Role", "role")->options($rs)->validation("required")->multiple();
 
 
 

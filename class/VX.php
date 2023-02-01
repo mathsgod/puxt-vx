@@ -831,15 +831,93 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     public function isValidPassword(string $password): bool
     {
-        foreach ($this->getPasswordPolicy() as $policy) {
-            //regexp check for password
-            if (!preg_match('/' . $policy["pattern"] . '/', $password)) {
+
+        if ($this->config->VX->password_upper_case) {
+            if (!preg_match("/[A-Z]/", $password)) {
                 return false;
             }
         }
 
+        if ($this->config->VX->password_lower_case) {
+            if (!preg_match("/[a-z]/", $password)) {
+                return false;
+            }
+        }
+
+        if ($this->config->VX->password_number) {
+            if (!preg_match("/[0-9]/", $password)) {
+                return false;
+            }
+        }
+
+        if ($this->config->VX->password_special_char) {
+            if (!preg_match("/[^a-zA-Z0-9]/", $password)) {
+                return false;
+            }
+        }
+
+        if ($this->config->VX->password_min_length) {
+            if (strlen($password) < $this->config->VX->password_min_length) {
+                return false;
+            }
+        }
         return true;
     }
+
+
+    public function getPasswordValidation()
+    {
+        $validation = [];
+        $validation[] = "required";
+
+        if ($this->config->VX->password_upper_case) {
+            $validation[] = "containUpper";
+        }
+
+        if ($this->config->VX->password_lower_case) {
+            $validation[] = "containLower";
+        }
+
+        if ($this->config->VX->password_number) {
+            $validation[] = "containNumber";
+        }
+
+        if ($this->config->VX->password_special_character) {
+            $validation[] = "containSpecial";
+        }
+
+        if ($this->config->VX->password_length) {
+            $validation[] = "min:" . $this->config->VX->password_length;
+        }
+
+        return implode("|", $validation);
+    }
+
+    public function getPasswordValidationMessages()
+    {
+        $messages = [];
+        if ($this->config->VX->password_length) {
+            $messages["min"] = "Password must be at least " . $this->config->VX->password_length . " characters long";
+        }
+
+        if ($this->config->VX->password_upper_case) {
+            $messages["containUpper"] = "Must contain at least one uppercase letter";
+        }
+
+        if ($this->config->VX->password_lower_case) {
+            $messages["containLower"] = "Must contain at least one lowercase letter";
+        }
+
+        if ($this->config->VX->password_number) {
+            $messages["containNumber"] = "Must contain at least one number";
+        }
+
+        if ($this->config->VX->password_special_character) {
+            $messages["containSpecial"] = "Must contain at least one special character";
+        }
+        return $messages;
+    }
+
 
     public function getPasswordPolicy(): array
     {

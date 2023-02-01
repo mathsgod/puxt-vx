@@ -44,6 +44,12 @@ class FormKitNode extends SchemaNode
         return $this;
     }
 
+    public function validationMessages(array $validationMessages)
+    {
+        $this->property['validationMessages'] = $validationMessages;
+        return $this;
+    }
+
     public function help(string $help)
     {
         $this->property['help'] = $help;

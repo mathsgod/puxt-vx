@@ -76,6 +76,15 @@ return new class
         $form->addSwitch("Theme customizer", "theme_customizer");
 
 
+        $form->addDivider("Password policy")->contentPosition("left");
+        $form->addInputNumber("Minimum length", "password_length");
+        $form->addSwitch("Upper case", "password_upper_case");
+        $form->addSwitch("Lower case", "password_lower_case");
+        $form->addSwitch("Number", "password_number");
+        $form->addSwitch("Special character", "password_special_character");
+
+
+
 
         return $schema;
     }
@@ -93,11 +102,16 @@ return new class
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
         $config["access_token_expire"] = $config["access_token_expire"];
         $config["theme_customizer"] = boolval($config["theme_customizer"]);
+        $config["password_upper_case"] = boolval($config["password_upper_case"]);
+        $config["password_lower_case"] = boolval($config["password_lower_case"]);
+        $config["password_number"] = boolval($config["password_number"]);
+        $config["password_special_character"] = boolval($config["password_special_character"]);
 
         /** @var \Laminas\Config\Config $config */
         //filter out the configs that are not in the form
         $config = array_filter($config->toArray(), function ($key) {
             return in_array($key, [
+                "vx_url",
                 "company",
                 "company_logo",
                 "company_logo_url",
@@ -129,7 +143,12 @@ return new class
                 "access_token_expire",
                 "refresh_token_expire",
                 "menu_width",
-                "theme_customizer"
+                "theme_customizer",
+                "password_length",
+                "password_upper_case",
+                "password_lower_case",
+                "password_number",
+                "password_special_character"
 
             ]);
         }, ARRAY_FILTER_USE_KEY);
