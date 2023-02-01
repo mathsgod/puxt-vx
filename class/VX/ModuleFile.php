@@ -29,8 +29,7 @@ class ModuleFile implements RequestHandlerInterface, AssertionInterface
         if ($user->is("Administrators")) {
             return true;
         }
-
-        return $security->isGranted($user, $permission);
+        return $security->isGranted($user, $permission) ||  $security->isGranted($user, $this->module->name . "/*");
     }
 
     function handle(ServerRequestInterface $request): ResponseInterface

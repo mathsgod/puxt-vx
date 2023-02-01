@@ -254,6 +254,11 @@ class Module implements MenuItemInterface
             }
         }
 
+        $children[] = [
+            "value" => $this->name . "/*",
+            "label" => "*"
+        ];
+
         $children = array_merge($children,  array_map(function (ModuleFile $file) {
             return [
                 "value" => $this->name . "/" . $file->path,
@@ -473,36 +478,6 @@ class Module implements MenuItemInterface
                 });
             }
         }
-    }
-
-
-    function getRouterMap()
-    {
-        $map = [];
-
-
-        $methods = ["GET", "POST", "PATCH", "DELETE"];
-        foreach ($methods as $method) {
-            foreach ($this->files as $file) {
-                $map[] = [
-                    "method" => $method,
-                    "path" => $this->name . "/" . $file->path,
-                    "handler" => $file,
-                    "file" => $file->file
-                ];
-
-                $map[] = [
-                    "method" => $method,
-                    "path" => $this->name . "/{id:number}/" . $file->path,
-                    "handler" => $file,
-                    "file" => $file->file
-                ];
-            }
-        }
-
-
-
-        return $map;
     }
 
     /**

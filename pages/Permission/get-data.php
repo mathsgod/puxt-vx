@@ -25,7 +25,7 @@ return new class
         }
         return $result;
     }
-    function get(VX $vx)
+    function get(VX $vx, Security $security)
     {
 
         $data = [];
@@ -48,25 +48,23 @@ return new class
             return $ds;
         }
 
-        //preset permission
+        //all permission
+        $permissions = [];
+        foreach (Permission::Query()->toArray() as $p) {
+            $permissions[] = $p->value;
+        }
 
-        $preset_security = $vx->getPresetSecurity();
         $preset = array_merge(...array_values($vx->getPresetPermissions()));
-        foreach ($preset as $value) {
-            if ($preset_security->getRbac()->isGranted($vx->_get["role"], $value)) {
+        $permissions = array_values(array_merge($permissions, $preset));
+
+        foreach ($permissions as $value) {
+            if ($security->getRbac()->isGranted($vx->_get["role"], $value)) {
                 $data[] = [
                     "value" => $value,
                 ];
             }
         }
 
-
-        foreach (Permission::Query(["role" => $vx->_get["role"]]) as $p) {
-            if (in_array($p->value, $preset)) continue;
-            $data[] = [
-                "value" => $p->value,
-            ];
-        }
         return $data;
     }
 };

@@ -423,26 +423,20 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
                 $permissions[$group][] = $p;
             }
         }
-        return $permissions;
-    }
-
-    public function getPresetSecurity(): Security
-    {
-        $security = new Security;
 
         foreach ($this->roles->findAll() as $role) {
-            $security->addRole($role, $role->getParents());
-        }
+            if (!isset($permissions[$role->getName()])) {
+                $permissions[$role->getName()] = [];
+            }
 
-        foreach ($this->getPresetPermissions() as $role => $permission) {
-            foreach ($permission as $p) {
-                $security->getRole($role)->addPermission($p);
+            foreach ($role->getChildren() as $child) {
+                $permissions[$role->getName()] = array_merge($permissions[$role->getName()], $permissions[$child->getName()]);
             }
         }
 
-
-        return $security;
+        return $permissions;
     }
+
 
     public function getSecurity(): Security
     {
