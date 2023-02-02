@@ -12,7 +12,7 @@ return new class
 
         $table = $schema->addVxTable();
         $table->query("UserLog?populate[User][fields][]=first_name?sort[]=userlog_id:desc");
-        $table->addColumn("ID", "userlog_id")->sortable()->width(100)->searchable();
+        $table->addColumn("ID", "userlog_id")->sortable()->width(20)->searchable();
 
         $table->addColumn("User", "User.first_name");
         $table->addColumn("Login time", "login_dt")->sortable()->searchable()->searchType("date");
@@ -23,7 +23,7 @@ return new class
             ["value" => "Success", "label" => "Success"],
             ["value" => "Fail", "label" => "Fail"]
         ]);
-        $table->addColumn("User agent", "user_agent")->sortable()->searchable();
+        $table->addColumn("User agent", "user_agent")->sortable()->searchable()->showOverflowTooltip();
 
 
         return $schema;

@@ -34,4 +34,10 @@ class VxForm extends FormKitNode
         $this->setProperty("show-back", $showBack);
         return $this;
     }
+
+    public function enctype(string $enctype)
+    {
+        $this->setProperty("enctype", $enctype);
+        return $this;
+    }
 }

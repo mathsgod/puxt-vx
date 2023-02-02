@@ -12,7 +12,6 @@ return new class
 {
     function post(VX $vx)
     {
-
         $mail = $vx->getMailer();
         $mail->Subject = $vx->_post["subject"];
         $mail->setFrom($vx->_post["from"]);

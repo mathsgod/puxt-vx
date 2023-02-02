@@ -9,20 +9,36 @@ use Laminas\Diactoros\Response\EmptyResponse;
 
 return new class
 {
-    function post()
+    function post(VX $vx)
     {
-        return new EmptyResponse(200);
+
+        outp($vx->_post);
+        outp($vx->_files);
+        die();
+        return new EmptyResponse();
+        die();
+        return new EmptyResponse(201);
     }
 
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
         $form = $schema->addForm();
+        $form->value(["name" => "test"]);
         $form->action("/System/abc");
 
-
         $form->addInput("Name", "name")->validation("required");
-        $form->addInput("Email", "email")->validation("required|email");
+        $form->addInput("Email", "email");
+
+        //$form->addFileInput("File", "file");
+
+        $form->addFileInput("File", "file")->validation("required");
+
+        //$form->addFormKitComponent("vxFormFileInput", ["label" => "File", "name" => "file"]);
+
+        //$form->addUpload("Upload", "upload")->addChildren("Upload");
+
+        //$schema->addComponent("router-link", ["to" => "/System/def"])->addChildren("Router Link");
 
         return $schema;
 

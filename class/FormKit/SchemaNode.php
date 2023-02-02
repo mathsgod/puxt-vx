@@ -35,6 +35,12 @@ abstract class SchemaNode extends SchemaBaseNode
         return $form;
     }
 
+    /*     public function addFileInput(){
+        $fileInput = new FileInput([], $this->translator);
+        $this->children[] = $fileInput;
+        return $fileInput;
+    } */
+
 
     /*   public function children(array|string|JsonSerializable $children)
     {
@@ -60,9 +66,9 @@ abstract class SchemaNode extends SchemaBaseNode
         return new ComponentNode($cmp, $property);
     }
 
-    public function addComponent(string $cmp, array $property = [])
+    public function addComponent(string $cmp, array $props = [])
     {
-        $node = new ComponentNode($cmp, $property);
+        $node = new ComponentNode($cmp, $props);
         $this->children[] = $node;
         return $node;
     }
@@ -147,6 +153,10 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addUpload(string $label, string $name)
     {
+        if ($this instanceof VxForm) {
+            $this->enctype("multipart/form-data");
+        }
+
         $formkit = new ElFormUpload([
             "name" => $name,
         ], $this->translator);
@@ -345,6 +355,9 @@ abstract class SchemaNode extends SchemaBaseNode
         $component = new ElDivider([], $this->translator);
 
         if ($label) {
+            if ($this->translator) {
+                $label = $this->translator->trans($label);
+            }
             $component->addChildren($label);
         }
 
@@ -385,6 +398,21 @@ abstract class SchemaNode extends SchemaBaseNode
     public function addItem(array $item)
     {
         $this->children[] = $item;
+    }
+
+    public function addFileInput(string $label, string $name)
+    {
+        $formkit = new VxFormFileInput([
+            "name" => $name,
+        ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
+
+        $this->children[] = $formkit;
+
+        return $formkit;
     }
 
     public function addInput(string $label, string $name)
