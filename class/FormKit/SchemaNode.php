@@ -80,10 +80,6 @@ abstract class SchemaNode extends SchemaBaseNode
         return $node;
     }
 
-    public function jsonSerialize()
-    {
-        return array_merge($this->property, ["children" => $this->children]);
-    }
 
     public function addChildren(string|JsonSerializable|null $children)
     {
@@ -149,6 +145,21 @@ abstract class SchemaNode extends SchemaBaseNode
         $card = $this->addElCard();
         $card->shadow("never");
         return $card;
+    }
+
+    public function addTinymce(string $label, string $name)
+    {
+        $component = new VxFormTinymce([
+            "name" => $name,
+        ], $this->translator);
+
+        if ($label) {
+            $component->label($label);
+        }
+        
+        $this->children[] = $component;
+
+        return $component;
     }
 
     public function addUpload(string $label, string $name)
@@ -398,6 +409,21 @@ abstract class SchemaNode extends SchemaBaseNode
     public function addItem(array $item)
     {
         $this->children[] = $item;
+    }
+
+    public function addCodeInput(string $label, string $name)
+    {
+        $formkit = new VxFormCodeInput([
+            "name" => $name,
+        ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
+
+        $this->children[] = $formkit;
+
+        return $formkit;
     }
 
     public function addFileInput(string $label, string $name)

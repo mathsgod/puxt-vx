@@ -27,16 +27,22 @@ return new class
         $form->value(["name" => "test"]);
         $form->action("/System/abc");
 
+
+
         $form->addInput("Name", "name")->validation("required");
         $form->addInput("Email", "email");
 
         //$form->addFileInput("File", "file");
 
-        $form->addFileInput("File", "file")->validation("required");
+        $form->addFileInput("File", "file");
+
+        $form->addCodeInput("Code", "code")->language("javascript")->height("300px");
 
         //$form->addFormKitComponent("vxFormFileInput", ["label" => "File", "name" => "file"]);
 
-        //$form->addUpload("Upload", "upload")->addChildren("Upload");
+        $form->addUpload("Upload", "upload")->addChildren("Upload");
+
+        $form->addTinymce("Tinymce", "tinymce")->height("200");
 
         //$schema->addComponent("router-link", ["to" => "/System/def"])->addChildren("Router Link");
 

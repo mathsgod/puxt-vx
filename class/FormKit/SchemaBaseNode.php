@@ -49,11 +49,11 @@ abstract class SchemaBaseNode implements JsonSerializable
 
     public function jsonSerialize()
     {
-        return array_merge(
-            $this->property,
-            [
-                "children" => $this->children
-            ]
-        );
+        $json = [];
+        $json = $this->property;
+        if ($this->children) {
+            $json['children'] = $this->children;
+        }
+        return $json;
     }
 }
