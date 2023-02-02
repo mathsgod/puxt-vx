@@ -14,6 +14,20 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function addSubmit()
+    {
+        $submit = new Submit([], $this->translator);
+        $this->children[] = $submit;
+        return $submit;
+    }
+
+    public function addGroup()
+    {
+        $group = new Group($this->translator);
+        $this->children[] = $group;
+        return $group;
+    }
+
     public function addMenu()
     {
         $menu = new ElMenu([], $this->translator);
@@ -156,7 +170,7 @@ abstract class SchemaNode extends SchemaBaseNode
         if ($label) {
             $component->label($label);
         }
-        
+
         $this->children[] = $component;
 
         return $component;

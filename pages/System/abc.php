@@ -23,6 +23,19 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
+        $schema->addFormKitComponent("text", ["label" => "Name", "name" => "name", "validation" => "required", "value" => "test"]);
+        $schema->addSubmit();
+
+        /*         $group = $schema->addCard()->addGroup();
+        $group->value(["name" => "testabc"]);
+        $group->addInput("Name", "name")->validation("required");
+ */
+        //$group->addFormKitComponent("text", ["label" => "Name", "name" => "name", "validation" => "required"]);
+
+        return $schema;
+
+
+
         $form = $schema->addForm();
         $form->value(["name" => "test"]);
         $form->action("/System/abc");
