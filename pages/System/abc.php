@@ -25,6 +25,14 @@ return new class
     {
         $schema = $vx->createSchema();
 
+        $form=$schema->addElForm();
+
+        $fi = $form->addElFormItem()->label("Test");
+
+        $fi->addElInput(null, "name")->validation("required");
+        return $schema;
+        return;
+
 
         $form = $schema->addForm();
         $form->action("/System/abc");
@@ -32,7 +40,8 @@ return new class
         $form->value(["users" => User::Query()->toArray()]);
 
 
-        $repeater = $form->addRepeater("Users","users")->min(0);
+
+        $repeater = $form->addRepeater("Users", "users")->min(0)->help("test is help test");
 
         $repeater->addInput("Username", "username")->validation("required");
         $repeater->addInput("Email", "email");

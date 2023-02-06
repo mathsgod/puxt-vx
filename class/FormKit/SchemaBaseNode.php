@@ -10,6 +10,11 @@ abstract class SchemaBaseNode implements JsonSerializable
     protected $property = [];
     protected $children = [];
 
+    public function id(string $id)
+    {
+        $this->property['id'] = $id;
+        return $this;
+    }
 
     public function if(string $if)
     {

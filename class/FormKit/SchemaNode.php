@@ -14,11 +14,52 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function addText(?string $label = null, string $name)
+    {
+        $color = new Text($this->translator);
+        if ($label) {
+            $color->label($label);
+        }
+
+
+        $color->name($name);
+        $this->children[] = $color;
+        return $color;
+    }
+
+
     public function addSubmit()
     {
         $submit = new Submit([], $this->translator);
         $this->children[] = $submit;
         return $submit;
+    }
+
+    public function addElForm()
+    {
+        $form = new ElForm([], $this->translator);
+        $this->children[] = $form;
+        return $form;
+    }
+
+    public function addElFormItem()
+    {
+        $item = new ElFormItem([], $this->translator);
+        $this->children[] = $item;
+        return $item;
+    }
+
+    public function addColor(string $label, string $name)
+    {
+        $color = new Color($this->translator);
+        if ($label) {
+            $color->label($label);
+        }
+
+
+        $color->name($name);
+        $this->children[] = $color;
+        return $color;
     }
 
     public function addRepeater(string $label, ?string $name = null)
@@ -28,7 +69,7 @@ abstract class SchemaNode extends SchemaBaseNode
         if ($label) {
             $repeater->label($label);
         }
-        
+
         if ($name) {
             $repeater->name($name);
         }
@@ -488,6 +529,21 @@ abstract class SchemaNode extends SchemaBaseNode
     public function addInputNumber(string $label, string $name)
     {
         $formkit = new ElFormInputNumber([
+            "name" => $name,
+        ], $this->translator);
+
+        if ($label) {
+            $formkit->label($label);
+        }
+
+        $this->children[] = $formkit;
+
+        return $formkit;
+    }
+
+    public function addElInput(?string $label = null, string $name)
+    {
+        $formkit = new ElInput([
             "name" => $name,
         ], $this->translator);
 

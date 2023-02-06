@@ -40,4 +40,10 @@ class VxForm extends FormKitNode
         $this->setProperty("enctype", $enctype);
         return $this;
     }
+
+    public function labelWidth(string $labelWidth)
+    {
+        $this->setProperty("label-width", $labelWidth);
+        return $this;
+    }
 }
