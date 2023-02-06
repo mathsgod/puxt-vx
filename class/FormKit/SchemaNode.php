@@ -21,6 +21,21 @@ abstract class SchemaNode extends SchemaBaseNode
         return $submit;
     }
 
+    public function addRepeater(string $label, ?string $name = null)
+    {
+        $repeater = new VxRepeater([], $this->translator);
+
+        if ($label) {
+            $repeater->label($label);
+        }
+        
+        if ($name) {
+            $repeater->name($name);
+        }
+        $this->children[] = $repeater;
+        return $repeater;
+    }
+
     public function addGroup()
     {
         $group = new Group($this->translator);

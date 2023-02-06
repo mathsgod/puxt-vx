@@ -15,9 +15,4 @@ class Group extends SchemaNode
         parent::__construct($translator);
     }
 
-    public function value($value)
-    {
-        $this->setProperty("value", $value);
-        return $this;
-    }
 }

@@ -2,7 +2,6 @@
 
 namespace FormKit;
 
-use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormKitNode extends SchemaNode

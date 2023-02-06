@@ -6,6 +6,7 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use VX\User;
 
 return new class
 {
@@ -23,8 +24,45 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
-        $schema->addFormKitComponent("text", ["label" => "Name", "name" => "name", "validation" => "required", "value" => "test"]);
-        $schema->addSubmit();
+
+
+        $form = $schema->addForm();
+        $form->action("/System/abc");
+
+        $form->value(["users" => User::Query()->toArray()]);
+
+
+        $repeater = $form->addRepeater("Users","users")->min(0);
+
+        $repeater->addInput("Username", "username")->validation("required");
+        $repeater->addInput("Email", "email");
+
+
+        return $schema;
+
+
+
+
+        $form = $schema->addForm();
+        $form->action("/System/abc");
+
+        $list = $form->addFormKitComponent("list", ["value" => [
+            ["name" => "test1", "mobile" => "123"],
+            ["name" => "test2", "mobile" => "456"],
+            ["name" => "test3", "mobile" => "789"],
+
+        ], "name" => "mylist"]);
+
+        $group = $list->addGroup()->name("group1");
+        $group->addInput("Name", "name")->validation("required");
+        $group->addInput("Mobile", "mobile")->validation("required");
+
+
+
+
+
+        //        $schema->addFormKitComponent("text", ["label" => "Name", "name" => "name", "validation" => "required", "value" => "test"]);
+        //      $schema->addSubmit();
 
         /*         $group = $schema->addCard()->addGroup();
         $group->value(["name" => "testabc"]);
