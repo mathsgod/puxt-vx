@@ -29,14 +29,6 @@ class ComponentNode extends SchemaNode
         }
 
         return $json;
-
-        return array_merge(
-            $this->property,
-            [
-                "props" => $this->props,
-                "children" => $this->children
-            ]
-        );
     }
 
     public function setProp(string $key, $value)

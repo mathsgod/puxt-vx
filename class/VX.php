@@ -992,6 +992,20 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         if ($mail_from = $this->config["VX"]["mail_from"]) {
             $mailer->setFrom($mail_from);
         }
+
+        if ($this->config["VX"]["smtp"]) {
+            $mailer->isSMTP();
+            $mailer->Host = $this->config["VX"]["smtp_host"];
+            if ($this->config["VX"]["smtp_auth"]) {
+                $mailer->SMTPAuth = true;
+            }
+            $mailer->Username = $this->config["VX"]["smtp_username"];
+            $mailer->Password = $this->config["VX"]["smtp_password"];
+            $mailer->SMTPSecure = $this->config["VX"]["smtp_secure"];
+            $mailer->Port = $this->config["VX"]["smtp_port"];
+        }
+
+
         return $mailer;
     }
 

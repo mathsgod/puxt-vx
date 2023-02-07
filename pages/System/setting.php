@@ -48,6 +48,18 @@ return new class
         $form->addSwitch("Allow remember me", "allow_remember_me");
 
 
+        //smtp
+        $form->addDivider("SMTP")->contentPosition("left");
+        $form->addComponent("div")->addChildren("User smtp to send email");
+        $form->addSwitch("SMTP", "smtp");
+        $form->addInput("Host", "smtp_host");
+        $form->addInput("Username", "smtp_username");
+        $form->addInput("Password", "smtp_password");
+        $form->addInput("Port", "smtp_port");
+        $form->addSwitch("Auth", "smtp_auth");
+        $form->addSwitch("Secure", "smtp_secure");
+
+
         //token
         $form->addDivider("Token")->contentPosition("left");
         $form->addInputNumber("Access token expire", "access_token_expire")->validation("required");
@@ -100,12 +112,13 @@ return new class
         $config["authentication_lock_time"] = intval($config["authentication_lock_time"]);
         $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
-        $config["access_token_expire"] = $config["access_token_expire"];
+        $config["access_token_expire"] = intval($config["access_token_expire"]);
         $config["theme_customizer"] = boolval($config["theme_customizer"]);
         $config["password_upper_case"] = boolval($config["password_upper_case"]);
         $config["password_lower_case"] = boolval($config["password_lower_case"]);
         $config["password_number"] = boolval($config["password_number"]);
         $config["password_special_character"] = boolval($config["password_special_character"]);
+        $config["menu_width"] = intval($config["menu_width"]);
 
         /** @var \Laminas\Config\Config $config */
         //filter out the configs that are not in the form
@@ -128,14 +141,16 @@ return new class
                 "allow_remember_me",
                 "authentication_lock_time",
                 "smtp",
-                "smtp-username",
-                "smtp-password",
-                "smtp-post",
-                "smtp-auto-tls",
+                "smtp_username",
+                "smtp_password",
+                "smtp_post",
+                "smtp_auth",
+                "smtp_secure",
+                "smtp_host",
+                "smtp_port",
+
                 "return-path",
-                "password-length",
                 "log-save",
-                "development",
                 "file_manager_show",
                 "allow_rememeber_me",
                 "file_manager_preview",

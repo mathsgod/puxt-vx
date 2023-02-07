@@ -24,16 +24,18 @@ class ComponentBaseNode extends SchemaBaseNode
         return $this;
     }
 
-
     public function jsonSerialize()
     {
-        return array_merge(
-            $this->property,
-            [
-                "props" => $this->props,
-                "children" => $this->children
-            ]
-        );
+        $json = $this->property;
+        if ($this->props) {
+            $json['props'] = $this->props;
+        }
+
+        if ($this->children) {
+            $json['children'] = $this->children;
+        }
+
+        return $json;
     }
 
     public function setProp(string $key, $value)
