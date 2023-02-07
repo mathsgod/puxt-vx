@@ -17,16 +17,6 @@ search-form: false
 
 domain:
 
-smtp:
-smtp-username:
-smtp-password:
-smtp-port:
-smtp-auto-tls: true
-
-return-path:
-
-password-length: 6
-
 log-save: true
 
 auth-lockout: true

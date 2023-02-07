@@ -50,7 +50,7 @@ return new class
 
         //smtp
         $form->addDivider("SMTP")->contentPosition("left");
-        $form->addComponent("div")->addChildren("User smtp to send email");
+        $form->addElement("div")->addChildren("User smtp to send email");
         $form->addSwitch("SMTP", "smtp");
         $form->addInput("Host", "smtp_host");
         $form->addInput("Username", "smtp_username");
@@ -133,7 +133,7 @@ return new class
                 "copyright_name",
                 "login_version",
                 "search-form",
-                "domain",
+
                 "two_step_verification",
                 "biometric_authentication",
                 "file_manager_show",
@@ -150,7 +150,6 @@ return new class
                 "smtp_port",
 
                 "return-path",
-                "log-save",
                 "file_manager_show",
                 "allow_rememeber_me",
                 "file_manager_preview",
@@ -159,6 +158,7 @@ return new class
                 "refresh_token_expire",
                 "menu_width",
                 "theme_customizer",
+
                 "password_length",
                 "password_upper_case",
                 "password_lower_case",

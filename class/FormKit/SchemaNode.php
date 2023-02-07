@@ -27,6 +27,16 @@ abstract class SchemaNode extends SchemaBaseNode
         return $color;
     }
 
+    public function addButton(?string $text = null)
+    {
+        $button = new ElButton([], $this->translator);
+        $this->children[] = $button;
+        if ($text) {
+            $button->addChildren($text);
+        }
+        return $button;
+    }
+
 
     public function addSubmit()
     {

@@ -992,6 +992,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         if ($mail_from = $this->config["VX"]["mail_from"]) {
             $mailer->setFrom($mail_from);
         }
+        
 
         if ($this->config["VX"]["smtp"]) {
             $mailer->isSMTP();
