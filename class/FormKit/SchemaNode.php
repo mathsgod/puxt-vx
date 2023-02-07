@@ -118,7 +118,13 @@ abstract class SchemaNode extends SchemaBaseNode
         return $this;
     } */
 
-    public function props(array $props)
+    public function property(string $name, $value)
+    {
+        $this->property[$name] = $value;
+        return $this;
+    }
+
+    public function props(string $props)
     {
         $this->property['props'] = $props;
         return $this;

@@ -46,4 +46,10 @@ class VxForm extends FormKitNode
         $this->setProperty("label-width", $labelWidth);
         return $this;
     }
+
+    public function bodyClass(string $bodyClass)
+    {
+        $this->setProperty("body-class", $bodyClass);
+        return $this;
+    }
 }

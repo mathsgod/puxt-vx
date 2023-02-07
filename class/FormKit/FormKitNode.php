@@ -21,6 +21,12 @@ class FormKitNode extends SchemaNode
         return $this;
     }
 
+    public function outerClass(string $outerClass)
+    {
+        $this->property['outerClass'] = $outerClass;
+        return $this;
+    }
+
 
     public function label(string $label)
     {

@@ -26,6 +26,7 @@ return new class
     {
         $schema = new FormKit\Schema;
         $form = $schema->addForm();
+
         $form->value([
             "subject" => "Test Subject",
             "content" => "This is a test email"

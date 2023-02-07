@@ -887,7 +887,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         }
 
         if ($this->config->VX->password_length) {
-            $validation[] = "min:" . $this->config->VX->password_length;
+            $validation[] = "length:" . $this->config->VX->password_length;
         }
 
         return implode("|", $validation);
@@ -897,7 +897,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         $messages = [];
         if ($this->config->VX->password_length) {
-            $messages["min"] = "Password must be at least " . $this->config->VX->password_length . " characters long";
+            $messages["length"] = "Password must be at least " . $this->config->VX->password_length . " characters long";
         }
 
         if ($this->config->VX->password_upper_case) {
@@ -921,46 +921,11 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     public function getPasswordPolicy(): array
     {
-        $rules = [];
 
-
-        if ($this->config["VX"]["password policy"]["min length"]) {
-            $rules[] = [
-                "pattern" => "^.{" . $this->config["VX"]["password policy"]["min length"] . ",}$",
-                "message" => "Password must be at least " . $this->config["VX"]["password policy"]["min length"] . " characters long"
-            ];
-        }
-
-        if ($this->config["VX"]["password policy"]["uppercase character"]) {
-            $rules[] = [
-                "pattern" => "^(?=.*[A-Z])",
-                "message" => "Password must include at least one uppercase character"
-            ];
-        }
-
-
-        if ($this->config["VX"]["password policy"]["lowercase character"]) {
-            $rules[] = [
-                "pattern" => "^(?=.*[a-z])",
-                "message" => "Password must include at least one lowercase character"
-            ];
-        }
-
-        if ($this->config["VX"]["password policy"]["special character"]) {
-            $rules[] = [
-                "pattern" => "^(?=.*[#$@!%&*?])",
-                "message" => "Password must include at least one special character or symbol"
-            ];
-        }
-
-        if ($this->config["VX"]["password policy"]["digit"]) {
-            $rules[] = [
-                "pattern" => "^(?=.*\d)",
-                "message" => "Password must include at least one digit"
-            ];
-        }
-
-        return $rules;
+        return [
+            'validation' => $this->getPasswordValidation(),
+            'messages' => $this->getPasswordValidationMessages()
+        ];
     }
 
     public function resetPassword(string $password, string $token)
@@ -1002,8 +967,6 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             ],
             "reset_link" => $reset_link
         ]);
-
-
 
         $mailer = $this->getMailer();
         $mailer->setFrom("no-reply@" . $_SERVER["SERVER_NAME"]);
