@@ -25,7 +25,34 @@ return new class
     {
         $schema = $vx->createSchema();
 
-        $form=$schema->addElForm();
+        $result = $schema->addResult()->title("test")->subTitle("test2")->icon("success");
+
+        $template = $result->addElement("template");
+
+        $template->attr("#extra", true);
+        $template->addElement("div")->addChildren("extra information");
+
+
+
+
+        $empty = $schema->addEmpty()->imageSize(100);
+
+
+        $collapse = $schema->addCard()->addCollapse()->accordion()->value("t2");
+
+        $collapse->addItem("Title1", "t1")->addChildren("test");
+        $collapse->addItem("Title2", "t2")->addChildren("test2");
+
+        return $schema;
+
+
+
+        $badge = $schema->addBadge()->value(10)->type("primary");
+        $badge->addButton("test");
+
+        return $schema;
+
+        $form = $schema->addElForm();
 
         $fi = $form->addElFormItem()->label("Test");
 

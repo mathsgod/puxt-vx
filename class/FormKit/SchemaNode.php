@@ -14,6 +14,20 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function addCollapse()
+    {
+        $collapse = new ElCollapse([], $this->translator);
+        $this->children[] = $collapse;
+        return $collapse;
+    }
+
+    public function addBadge()
+    {
+        $badge = new ElBadge([], $this->translator);
+        $this->children[] = $badge;
+        return $badge;
+    }
+
     public function addText(?string $label = null, string $name)
     {
         $color = new Text($this->translator);
@@ -166,6 +180,20 @@ abstract class SchemaNode extends SchemaBaseNode
         return $node;
     }
 
+
+    public function addResult()
+    {
+        $result = new ElResult([], $this->translator);
+        $this->children[] = $result;
+        return $result;
+    }
+
+    public function addEmpty()
+    {
+        $empty = new ElEmpty();
+        $this->children[] = $empty;
+        return $empty;
+    }
 
     public function addChildren(string|JsonSerializable|null $children)
     {

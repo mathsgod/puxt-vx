@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class VxColumn extends ComponentBaseNode
+class VxColumn extends ComponentNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
