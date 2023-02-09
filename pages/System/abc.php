@@ -25,6 +25,8 @@ return new class
     {
         $schema = $vx->createSchema();
 
+        $schema->addChildren($schema->createElement("a"));
+
         $result = $schema->addResult()->title("test")->subTitle("test2")->icon("success");
 
         $template = $result->addElement("template");
@@ -141,7 +143,7 @@ return new class
         $schema->addCheckbox("Checkbox", "cb1")->id("cb1");
 
 
-        $div = $schema->addElement("div")->addChildren("div content");
+        $div = $schema->addElement("div")->children("div content");
         $div->if('$get(cb1).value');
 
 

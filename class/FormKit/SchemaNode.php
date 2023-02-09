@@ -203,14 +203,6 @@ abstract class SchemaNode extends SchemaBaseNode
         return $empty;
     }
 
-    public function addChildren(string|JsonSerializable|null $children)
-    {
-        if ($children === null) {
-            return $this;
-        }
-        $this->children[] = $children;
-        return $this;
-    }
 
     public function addLink()
     {

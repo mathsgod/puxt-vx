@@ -23,7 +23,7 @@ class VxRepeater extends FormKitNode
         $this->property['min'] = $min;
         return $this;
     }
-    public function addButton(bool $addButton)
+    public function addControl(bool $addButton)
     {
         $this->property['add-button'] = $addButton;
         return $this;
