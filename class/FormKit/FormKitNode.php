@@ -71,10 +71,4 @@ class FormKitNode extends SchemaNode
         $this->property['placeholder'] = $placeholder;
         return $this;
     }
-
-    public function children(array|string $children)
-    {
-        $this->property['children'] = $children;
-        return $this;
-    }
 }
