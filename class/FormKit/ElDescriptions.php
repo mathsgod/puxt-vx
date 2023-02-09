@@ -20,6 +20,17 @@ class ElDescriptions extends ComponentBaseNode
         return $item;
     }
 
+    public function item(?string $label = null, $content = null)
+    {
+        $item = $this->addItem($label);
+        if ($content) {
+            $item->addChildren($content);
+        }
+
+        return $this;
+    }
+
+
     public function addDescriptionsItem(?string $label = null)
     {
         $item = new ElDescriptionsItem([], $this->translator);

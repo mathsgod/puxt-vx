@@ -135,12 +135,15 @@ abstract class SchemaNode extends SchemaBaseNode
         return $fileInput;
     } */
 
-
-    /*   public function children(array|string|JsonSerializable $children)
+    /**
+     * Append a child node, and return the self object.
+     */
+    public function children(array|string|JsonSerializable $children)
     {
-        $this->children = $children;
+        $this->children[] = $children;
         return $this;
-    } */
+    }
+
 
     public function property(string $name, $value)
     {
