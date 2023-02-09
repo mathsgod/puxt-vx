@@ -169,6 +169,11 @@ abstract class SchemaNode extends SchemaBaseNode
         return new ComponentNode($cmp, $property);
     }
 
+    public function createElement(string $el, array $property = []): ElementNode
+    {
+        return new ElementNode($el, $property, $this->translator);
+    }
+
     public function addComponent(string $cmp, array $props = [])
     {
         $node = new ComponentNode($cmp, $props);
