@@ -50,6 +50,7 @@ return new class
     {
         $schema = $vx->createSchema();
         $form = $schema->addForm();
+        $form->action("/User/add");
         $form->value([
             "status" => "0",
             "language" => "en",
