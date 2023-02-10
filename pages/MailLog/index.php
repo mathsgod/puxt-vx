@@ -11,42 +11,19 @@ return new class
 
         $schema = $vx->createSchema();
 
-        $schema->addComponent("VxColumn", [
-            "label" => "ID",
-            "prop" => "maillog_id",
-            "sortable" => true,
-            "width" => 100,
-        ]);
+        $table = $schema->addVxTable();
+        $table->query("MailLog?fields[]=body&sort[]=maillog_id:desc");
 
-        $schema->addComponent("VxColumn", [
-            "label" => "From",
-            "prop" => "from",
-            "sortable" => true,
-            "searchable" => true,
-        ]);
+        $iframe = $table->addColumn()->type("expand")->addElement("iframe");
 
-        $schema->addComponent("VxColumn", [
-            "label" => "To",
-            "prop" => "to",
-            "sortable" => true,
-            "searchable" => true,
-        ]);
+        $iframe->attr("srcdoc", '$row.body');
 
-        $schema->addComponent("VxColumn", [
-            "label" => "Subject",
-            "prop" => "subject",
-            "sortable" => true,
-            "searchable" => true,
-        ]);
+        $table->addColumn("ID", "maillog_id")->sortable()->width(100);
+        $table->addColumn("From", "from")->sortable()->searchable();
+        $table->addColumn("To", "to")->sortable()->searchable();
+        $table->addColumn("Subject", "subject")->sortable()->searchable();
+        $table->addColumn("Time", "created_time")->sortable()->searchable()->searchType("date");
 
-        $schema->addComponent("VxColumn", [
-            "label" => "Time",
-            "prop" => "created_time",
-            "sortable" => true,
-            "searchable" => true,
-            "search-type" => "date"
-        ]);
-
-        return ["schema" => $schema];
+        return $schema;
     }
 };
