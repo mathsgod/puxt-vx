@@ -45,9 +45,12 @@ abstract class SchemaBaseNode implements JsonSerializable
      * @param T $children
      * @return T
      */
-    public function addChildren(string|JsonSerializable $children)
+    public function addChildren($children)
     {
-        $this->children[] = $children;
+        if ($children !== null) {
+            $this->children[] = $children;
+        }
+
         return $children;
     }
 

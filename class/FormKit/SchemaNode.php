@@ -14,6 +14,22 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function addVxTree(?string $name = null)
+    {
+        $elTree = new VxTree();
+        if ($name) {
+            $elTree->name($name);
+        }
+        $this->children[] = $elTree;
+        return $elTree;
+    }
+    public function addElTree()
+    {
+        $elTree = new ElTree();
+        $this->children[] = $elTree;
+        return $elTree;
+    }
+
     public function addHidden(?string $name)
     {
         $hidden = new Hidden();
