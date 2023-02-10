@@ -820,6 +820,18 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         return $this->translator;
     }
 
+    public function generateAccessToken(UserInterface $user)
+    {
+        $identity = JWT::encode([
+            "jti" => Uuid::uuid4()->toString(),
+            "type" => "access_token",
+            "iat" => time(),
+            "exp" => time() + $this->config->VX->access_token_time ?? 3600 * 8,
+            "id" => $user->getIdentity()
+        ], $_ENV["JWT_SECRET"], "HS256");
+        return $identity;
+    }
+
     public function findWebauthnUserByUsername(string $username): ?PublicKeyCredentialUserEntity
     {
         $user = User::Query(["username" => $username])->first();
@@ -992,7 +1004,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         if ($mail_from = $this->config["VX"]["mail_from"]) {
             $mailer->setFrom($mail_from);
         }
-        
+
 
         if ($this->config["VX"]["smtp"]) {
             $mailer->isSMTP();
