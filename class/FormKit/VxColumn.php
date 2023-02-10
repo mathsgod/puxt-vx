@@ -181,4 +181,10 @@ class VxColumn extends ComponentNode
         $this->setProp('reserve-selection', $reserveSelection);
         return $this;
     }
+
+    public function filters(array $filters)
+    {
+        $this->setProp('filters', $filters);
+        return $this;
+    }
 }

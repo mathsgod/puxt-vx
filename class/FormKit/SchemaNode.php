@@ -14,6 +14,16 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    public function addHidden(?string $name)
+    {
+        $hidden = new Hidden();
+        if ($name) {
+            $hidden->name($name);
+        }
+        $this->children[] = $hidden;
+        return $hidden;
+    }
+
     public function addCollapse()
     {
         $collapse = new ElCollapse([], $this->translator);

@@ -28,7 +28,7 @@ abstract class SchemaBaseNode implements JsonSerializable
         return $this;
     }
 
-    public function for(string $for)
+    public function for(array $for)
     {
         $this->property['for'] = $for;
         return $this;

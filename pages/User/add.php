@@ -25,7 +25,7 @@ return new class
             "address2" => $vx->_post["address2"],
             "address3" => $vx->_post["address3"],
             "join_date" => $vx->_post["join_date"],
-            "status" => $vx->_post["status"],
+            "status" => intval($vx->_post["status"]),
             "expiry_date" => $vx->_post["expiry_date"],
             "language" => $vx->_post["language"],
             "default_page" => $vx->_post["default_page"],
