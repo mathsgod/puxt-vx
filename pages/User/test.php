@@ -5,34 +5,32 @@
  * @date 2022-12-20 
  */
 
+use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Laminas\Diactoros\Response\TextResponse;
 use VX\Security\Security;
 use VX\User;
 
 return new class
 {
-
-    function get(VX $vx, Security $security, User $user)
+    function post(VX $vx)
     {
+        //return new TextResponse("testing", 400);
+        throw new Exception("testing error");
 
-        $stub = require_once dirname(__DIR__) . "/Role/get-data.php";
-
-        $schema = $vx->createSchema();
-
-        $form = $schema->addForm();
-        $form->value([
-            "user_id" => $user->user_id,
-            "roles" => $user->getRoles()
+        return new EmptyResponse();
+        return new EmptyResponse(204, [
+            "location" => "/System/setting"
         ]);
-        $form->action("/auth/change-role");
+    }
 
-        $form->addHidden("user_id");
-        $tree = $form->addVxTree("roles")
-            ->showCheckbox()
-            ->defaultExpandAll()
-            ->nodeKey("name");
-
-        $data = $stub->get($vx, $security);
-        $tree->data($data);
+    function get(VX $vx)
+    {
+        $schema = $vx->createSchema();
+        $form = $schema->addForm();
+        $form->action("/User/test");
+        $form->backOnSuccess(false);
 
 
         return $schema;

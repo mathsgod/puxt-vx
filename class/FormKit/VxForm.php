@@ -11,6 +11,12 @@ class VxForm extends FormKitNode
         parent::__construct("vxForm", $property, $translator);
     }
 
+    public function backOnSuccess(bool $backOnSuccess)
+    {
+        $this->setProperty("back-on-success", $backOnSuccess);
+        return $this;
+    }
+
     public function value($value)
     {
         $this->setProperty("value", $value);

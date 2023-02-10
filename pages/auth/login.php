@@ -1,7 +1,7 @@
 <?php
 
 use Laminas\Diactoros\Response\EmptyResponse;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\TextResponse;
 
 /**
  * Created by: Raymond Chong
@@ -19,7 +19,7 @@ return new class
         try {
             $token = $vx->login();
         } catch (Exception $e) {
-            return new HtmlResponse($e->getMessage(), 401);
+            return new TextResponse($e->getMessage(), 401);
         }
 
         //generate cookie string

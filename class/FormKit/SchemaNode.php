@@ -154,6 +154,7 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->children[] = $form;
         return $form;
     }
+    
 
     /*     public function addFileInput(){
         $fileInput = new FileInput([], $this->translator);
