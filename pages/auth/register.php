@@ -1,6 +1,7 @@
 <?php
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
 use VX\PublicKeyCredentialSourceRepository;
 use VX\User;
@@ -9,11 +10,14 @@ use Webauthn\PublicKeyCredentialRpEntity;
 
 return new class
 {
-    function post(VX $vx)
+    function post(VX $vx, ServerRequestInterface $request)
     {
         $token = $vx->_get["token"];
-        $token = $vx->jwtDecode($token);
-        $user = User::Get($token->user_id);
+        $token = $vx->decodeJWT($token);
+        $user = User::Get($token->id);
+        if (!$user) {
+            throw new Exception("user not found", 400);
+        }
 
         $server = $vx->getWebAuthnServer();
 
@@ -24,7 +28,7 @@ return new class
         $publicKeyCredentialSource = $server->loadAndCheckAttestationResponse(
             json_encode($vx->_post),
             $publicKeyCredentialCreationOptions,
-            $vx->request
+            $request
         );
 
         //$repo->saveCredentialSource($publicKeyCredentialSource);

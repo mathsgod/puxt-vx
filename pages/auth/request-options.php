@@ -16,6 +16,7 @@ return new class
     function post(VX $vx)
     {
 
+        
         $source = new PublicKeyCredentialSourceRepository();
         $server = $vx->getWebAuthnServer();
 

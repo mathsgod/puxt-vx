@@ -11,8 +11,11 @@ return new class
     public function post(VX $vx)
     {
         $token = $vx->_get["token"];
-        $token = $vx->jwtDecode($token);
-        $user = User::Get($token->user_id);
+        $token = $vx->decodeJWT($token);
+        $user = User::Get($token->id);
+        if (!$user) {
+            throw new Exception("user not found", 400);
+        }
 
         $server = $vx->getWebAuthnServer();
         $userEntity = new PublicKeyCredentialUserEntity($user->username, $user->user_id, $user->first_name . " " . $user->last_name);

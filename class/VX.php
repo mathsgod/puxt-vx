@@ -532,6 +532,8 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         return  JWT::decode($token, new Key($_ENV["JWT_SECRET"], "HS256"));
     }
 
+    
+
     function getAccessToken(): string
     {
         if ($access_token = $_COOKIE["access_token"]) {
