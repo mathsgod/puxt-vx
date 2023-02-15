@@ -1,12 +1,13 @@
 <?php
 
 namespace FormKit;
+
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormCheckbox extends FormKitNode
+class ElTextarea extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormCheckbox', $property, $translator);
+        parent::__construct('el-textarea', $property, $translator);
     }
 }

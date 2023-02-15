@@ -25,6 +25,17 @@ return new class
     {
         $schema = $vx->createSchema();
 
+        $form = $schema->addForm();
+        $form->addInput("Name", "name")->validation("required");
+        $form->addCheckbox("Checkbox", "cb1");
+        $form->addInputNumber("Number", "number")->validation("required");
+        $form->addDatePicker("Date", "date");
+        $form->addDateRangePicker("Date Range", "date_range");
+
+
+        //$schema->addCodeInput("Code", "code")->language("javascript")->height("300px");
+        return $schema;
+
         $schema->addChildren($schema->createElement("a"));
 
         $result = $schema->addResult()->title("test")->subTitle("test2")->icon("success");

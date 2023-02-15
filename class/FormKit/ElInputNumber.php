@@ -4,11 +4,11 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormInputNumber extends FormKitNode
+class ElInputNumber extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormInputNumber', $property, $translator);
+        parent::__construct('el-input-number', $property, $translator);
     }
 
     public function min(int $min)

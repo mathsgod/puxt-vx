@@ -4,16 +4,16 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormSelect extends FormKitNode
+class ElCheckbox extends FormKitNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormSelect', $property, $translator);
+        parent::__construct('el-checkbox', $property, $translator);
     }
 
-    public function multiple()
+    public function formItem(bool $value = true)
     {
-        $this->property['multiple'] = true;
+        $this->setProperty("form-item", $value);
         return $this;
     }
 }

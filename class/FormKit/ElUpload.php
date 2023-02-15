@@ -4,10 +4,10 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormColorPicker extends FormKitNode
+class ElUpload extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormColorPicker', $property, $translator);
+        parent::__construct('el-upload', $property, $translator);
     }
 }

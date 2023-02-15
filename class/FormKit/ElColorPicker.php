@@ -4,16 +4,16 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormInput extends FormKitNode
+class ElColorPicker extends FormKitNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormInput', $property, $translator);
+        parent::__construct('el-color-picker', $property, $translator);
     }
 
-    public function clearable()
+    public function formItem(bool $value = true)
     {
-        $this->property['clearable'] = true;
+        $this->setProperty("form-item", $value);
         return $this;
     }
 }

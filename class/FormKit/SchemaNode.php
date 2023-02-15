@@ -154,7 +154,7 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->children[] = $form;
         return $form;
     }
-    
+
 
     /*     public function addFileInput(){
         $fileInput = new FileInput([], $this->translator);
@@ -309,9 +309,11 @@ abstract class SchemaNode extends SchemaBaseNode
             $this->enctype("multipart/form-data");
         }
 
-        $formkit = new ElFormUpload([
+        $formkit = new ElUpload([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -324,9 +326,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addTransfer(string $label, string $name)
     {
-        $formkit = new ElFormTransfer([
+        $formkit = new ElTransfer([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -339,9 +343,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addTimePicker(string $label, string $name)
     {
-        $formkit = new ElFormTimePicker([
+        $formkit = new ElTimePicker([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -354,9 +360,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addTimeSelect(string $label, string $name)
     {
-        $formkit = new ElFormTimeSelect([
+        $formkit = new ElTimeSelect([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -369,9 +377,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addTextarea(string $label, string $name)
     {
-        $formkit = new ElFormTextarea([
+        $formkit = new ElTextarea([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -384,9 +394,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addSlider(string $label, string $name)
     {
-        $formkit = new ElFormSlider([
+        $formkit = new ElSlider([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -399,9 +411,10 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addRate(string $label, string $name)
     {
-        $formkit = new ElFormRate([
+        $formkit = new ElRate([
             "name" => $name,
         ], $this->translator);
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -414,9 +427,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addDateRangePicker(string $label, string $name)
     {
-        $formkit = new ElFormDateRangePicker([
+        $formkit = new ElDateRangePicker([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -429,9 +444,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addColorPicker(string $label, string $name)
     {
-        $formkit = new ElFormColorPicker([
+        $formkit = new ElColorPicker([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -445,9 +462,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addDatePicker(string $label, string $name)
     {
-        $formkit = new ElFormDatePicker([
+        $formkit = new ElDatePicker([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -459,9 +478,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addPassword(string $label, string $name)
     {
-        $formkit = new ElFormPassword([
+        $formkit = new ElPassword([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -474,9 +495,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addSelect(string $label, string $name)
     {
-        $formkit = new ElFormSelect([
+        $formkit = new ElSelect([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -489,9 +512,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addCheckbox(string $label, string $name)
     {
-        $formkit = new ElFormCheckbox([
+        $formkit = new ElCheckbox([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -519,9 +544,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addRadioGroup(string $label, string $name)
     {
-        $formkit = new ElFormRadioGroup([
+        $formkit = new ElRadioGroup([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -534,9 +561,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addSwitch(string $label, string $name)
     {
-        $formkit = new ElFormSwitch([
+        $formkit = new ElSwitch([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
@@ -584,9 +613,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addInput(string $label, string $name)
     {
-        $formkit = new ElFormInput([
+        $formkit = new ElInput([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem(true);
 
         if ($label) {
             $formkit->label($label);
@@ -599,9 +630,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addInputNumber(string $label, string $name)
     {
-        $formkit = new ElFormInputNumber([
+        $formkit = new ElInputNumber([
             "name" => $name,
         ], $this->translator);
+
+        $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);

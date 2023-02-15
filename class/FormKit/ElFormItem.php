@@ -8,7 +8,7 @@ class ElFormItem extends ComponentNode
 {
     public function __construct(array $props = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('ElFormItem', $props, $translator);
+        parent::__construct('el-form-item', $props, $translator);
     }
 
     public function label(string $label)

@@ -4,16 +4,16 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormPassword extends FormKitNode
+class ElSelect extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormPassword', $property, $translator);
+        parent::__construct('elFormSelect', $property, $translator);
     }
 
-    public function clearable()
+    public function multiple()
     {
-        $this->property['clearable'] = true;
+        $this->property['multiple'] = true;
         return $this;
     }
 }

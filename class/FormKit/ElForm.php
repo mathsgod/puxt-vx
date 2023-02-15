@@ -8,6 +8,6 @@ class ElForm extends FormKitNode
 {
     public function __construct(array $property = [], Translator $translator = null)
     {
-        parent::__construct("elForm", $property, $translator);
+        parent::__construct("el-form", $property, $translator);
     }
 }

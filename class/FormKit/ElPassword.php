@@ -4,11 +4,11 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElInput extends ElInputNode
+class ElPassword extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct("el-input", $property, $translator);
+        parent::__construct('el-password', $property, $translator);
     }
 
     public function clearable()

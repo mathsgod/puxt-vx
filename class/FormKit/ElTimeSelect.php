@@ -4,10 +4,10 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormUpload extends FormKitNode
+class ElTimeSelect extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormUpload', $property, $translator);
+        parent::__construct('el-time-select', $property, $translator);
     }
 }

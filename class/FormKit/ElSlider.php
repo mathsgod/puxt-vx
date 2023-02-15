@@ -4,10 +4,10 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormRadioGroup extends FormKitNode
+class ElSlider extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormRadioGroup', $property, $translator);
+        parent::__construct('el-slider', $property, $translator);
     }
 }

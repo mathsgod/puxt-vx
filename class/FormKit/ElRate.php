@@ -4,10 +4,10 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElFormSwitch extends FormKitNode
+class ElRate extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormSwitch', $property, $translator);
+        parent::__construct('el-rate', $property, $translator);
     }
 }
