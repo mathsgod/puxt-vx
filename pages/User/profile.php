@@ -87,16 +87,16 @@ return new class
 
         $schema->addDescriptions()
             ->item("Username", $user->name)
-            ->item("First Name", $user->first_name)
-            ->item("Last Name", $user->last_name)
+            ->item("First name", $user->first_name)
+            ->item("Last name", $user->last_name)
             ->item("Email", $user->email)
             ->item("Phone", $user->phone)
             ->item("Address 1", $user->addr1)
             ->item("Address 2", $user->addr2)
             ->item("Address 3", $user->addr3)
-            ->item("Join Date", $user->join_date)
+            ->item("Join date", $user->join_date)
             ->item("Language", $user->language)
-            ->item("Default Page", $user->default_page)
+            ->item("Default page", $user->default_page)
             ->item("Roles", join(",", $user->getRoles()));
 
         $row = $schema->addRow()->setClass("mt-2")->gutter(8);
