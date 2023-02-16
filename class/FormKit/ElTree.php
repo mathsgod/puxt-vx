@@ -2,11 +2,11 @@
 
 namespace FormKit;
 
-class ElTree extends ComponentBaseNode
+class ElTree extends ElInputNode
 {
     public function __construct()
     {
-        parent::__construct("ElTree", [], null);
+        parent::__construct("el-tree", [], null);
     }
 
 
@@ -15,7 +15,7 @@ class ElTree extends ComponentBaseNode
      */
     public function data(array $data)
     {
-        $this->props['data'] = $data;
+        $this->property['data'] = $data;
         return $this;
     }
 
@@ -24,7 +24,7 @@ class ElTree extends ComponentBaseNode
      */
     public function emptyText(string $emptyText)
     {
-        $this->props['empty-text'] = $emptyText;
+        $this->property['empty-text'] = $emptyText;
         return $this;
     }
 
@@ -33,16 +33,16 @@ class ElTree extends ComponentBaseNode
      */
     public function nodeKey(string $nodeKey)
     {
-        $this->props['node-key'] = $nodeKey;
+        $this->property['node-key'] = $nodeKey;
         return $this;
     }
 
     /**
      * props
      */
-    public function props(array $props)
+    public function _props(array $props)
     {
-        $this->props['props'] = $props;
+        $this->property['props'] = $props;
         return $this;
     }
 
@@ -51,7 +51,7 @@ class ElTree extends ComponentBaseNode
      */
     public function highlightCurrent(bool $highlightCurrent = true)
     {
-        $this->props['highlight-current'] = $highlightCurrent;
+        $this->property['highlight-current'] = $highlightCurrent;
         return $this;
     }
 
@@ -60,7 +60,7 @@ class ElTree extends ComponentBaseNode
      */
     public function defaultExpandAll(bool $defaultExpandAll = true)
     {
-        $this->props['default-expand-all'] = $defaultExpandAll;
+        $this->property['default-expand-all'] = $defaultExpandAll;
         return $this;
     }
 
@@ -69,7 +69,7 @@ class ElTree extends ComponentBaseNode
      */
     public function expandOnClickNode(bool $expandOnClickNode = true)
     {
-        $this->props['expand-on-click-node'] = $expandOnClickNode;
+        $this->property['expand-on-click-node'] = $expandOnClickNode;
         return $this;
     }
 
@@ -78,7 +78,7 @@ class ElTree extends ComponentBaseNode
      */
     public function checkOnClickNode(bool $checkOnClickNode = true)
     {
-        $this->props['check-on-click-node'] = $checkOnClickNode;
+        $this->property['check-on-click-node'] = $checkOnClickNode;
         return $this;
     }
 
@@ -87,7 +87,7 @@ class ElTree extends ComponentBaseNode
      */
     public function autoExpandParent(bool $autoExpandParent = true)
     {
-        $this->props['auto-expand-parent'] = $autoExpandParent;
+        $this->property['auto-expand-parent'] = $autoExpandParent;
         return $this;
     }
 
@@ -96,7 +96,7 @@ class ElTree extends ComponentBaseNode
      */
     public function defaultExpandedKeys(array $defaultExpandedKeys)
     {
-        $this->props['default-expanded-keys'] = $defaultExpandedKeys;
+        $this->property['default-expanded-keys'] = $defaultExpandedKeys;
         return $this;
     }
 
@@ -105,7 +105,7 @@ class ElTree extends ComponentBaseNode
      */
     public function showCheckbox(bool $showCheckbox = true)
     {
-        $this->props['show-checkbox'] = $showCheckbox;
+        $this->property['show-checkbox'] = $showCheckbox;
         return $this;
     }
 
@@ -114,7 +114,7 @@ class ElTree extends ComponentBaseNode
      */
     public function checkStrictly(bool $checkStrictly = true)
     {
-        $this->props['check-strictly'] = $checkStrictly;
+        $this->property['check-strictly'] = $checkStrictly;
         return $this;
     }
 
@@ -123,7 +123,7 @@ class ElTree extends ComponentBaseNode
      */
     public function defaultCheckedKeys(array $defaultCheckedKeys)
     {
-        $this->props['default-checked-keys'] = $defaultCheckedKeys;
+        $this->property['default-checked-keys'] = $defaultCheckedKeys;
         return $this;
     }
 
@@ -132,7 +132,7 @@ class ElTree extends ComponentBaseNode
      */
     public function currentNodeKey(string $currentNodeKey)
     {
-        $this->props['current-node-key'] = $currentNodeKey;
+        $this->property['current-node-key'] = $currentNodeKey;
         return $this;
     }
 
@@ -141,7 +141,7 @@ class ElTree extends ComponentBaseNode
      */
     public function accordion(bool $accordion = true)
     {
-        $this->props['accordion'] = $accordion;
+        $this->property['accordion'] = $accordion;
         return $this;
     }
 
@@ -150,7 +150,7 @@ class ElTree extends ComponentBaseNode
      */
     public function indent(int $indent)
     {
-        $this->props['indent'] = $indent;
+        $this->property['indent'] = $indent;
         return $this;
     }
 
@@ -159,7 +159,7 @@ class ElTree extends ComponentBaseNode
      */
     public function icon(string $icon)
     {
-        $this->props['icon'] = $icon;
+        $this->property['icon'] = $icon;
         return $this;
     }
 
@@ -168,7 +168,7 @@ class ElTree extends ComponentBaseNode
      */
     public function draggable(bool $draggable = true)
     {
-        $this->props['draggable'] = $draggable;
+        $this->property['draggable'] = $draggable;
         return $this;
     }
 }

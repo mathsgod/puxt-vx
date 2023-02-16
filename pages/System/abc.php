@@ -31,7 +31,18 @@ return new class
         $form->addInputNumber("Number", "number")->validation("required");
         $form->addDatePicker("Date", "date");
         $form->addDateRangePicker("Date Range", "date_range");
-
+        $form->addTimePicker("Time", "time");
+        $form->addRate("Rate", "rate");
+        $form->addSlider("Slider", "slider");
+        $form->addSwitch("Switch", "switch");
+        $form->addColorPicker("Color", "color");
+        $form->addTransfer("Transfer", "transfer");
+        $form->addRadioGroup("Radio", "radio")->options(["a" => "A", "b" => "B"]);
+        $form->addCheckboxGroup("Checkbox", "checkbox")->options(["a" => "A", "b" => "B"]);
+        $form->addTree("Tree", "tree")->nodeKey("label")->data([
+            ["label" => "test1", "children" => [["label" => "test1-1"]]],
+            ["label" => "test2", "children" => [["label" => "test2-1"]]],
+        ]);
 
         //$schema->addCodeInput("Code", "code")->language("javascript")->height("300px");
         return $schema;

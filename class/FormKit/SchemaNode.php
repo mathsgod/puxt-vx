@@ -14,12 +14,16 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
-    public function addVxTree(?string $name = null)
+    public function addTree(?string $label = null, ?string $name = null)
     {
-        $elTree = new VxTree();
+        $elTree = new ElTree();
+        if ($label) {
+            $elTree->label($label);
+        }
         if ($name) {
             $elTree->name($name);
         }
+        $elTree->formItem();
         $this->children[] = $elTree;
         return $elTree;
     }
@@ -545,6 +549,23 @@ abstract class SchemaNode extends SchemaBaseNode
     public function addRadioGroup(string $label, string $name)
     {
         $formkit = new ElRadioGroup([
+            "name" => $name,
+        ], $this->translator);
+
+        $formkit->formItem();
+
+        if ($label) {
+            $formkit->label($label);
+        }
+
+        $this->children[] = $formkit;
+
+        return $formkit;
+    }
+
+    public function addCheckboxGroup(string $label, string $name)
+    {
+        $formkit = new ElCheckboxGroup([
             "name" => $name,
         ], $this->translator);
 
