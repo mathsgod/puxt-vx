@@ -8,7 +8,7 @@ class ElSelect extends ElInputNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
-        parent::__construct('elFormSelect', $property, $translator);
+        parent::__construct('el-select', $property, $translator);
     }
 
     public function multiple()
