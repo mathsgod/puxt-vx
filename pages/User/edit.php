@@ -31,16 +31,19 @@ return new class
             "default_page" => $user->default_page,
         ]);
 
-        $form->addInput("Username", "username")->validation("required");
+        $row = $form->addRow();
+        $col = $row->addCol()->md(12);
+        $col->addInput("Username", "username")->validation("required");
+        $col->addInput("First name", "first_name")->validation("required");
+        $col->addInput("Last name", "last_name");
+        $col->addInput("Email", "email")->validation("required|email");
 
-        $form->addInput("First name", "first_name")->validation("required");
-        $form->addInput("Last name", "last_name");
+        $col = $row->addCol()->md(12);
+        $col->addInput("Phone", "phone");
+        $col->addInput("Address 1", "address1");
+        $col->addInput("Address 2", "address2");
+        $col->addInput("Address 3", "address3");
 
-        $form->addInput("Email", "email")->validation("required|email");
-        $form->addInput("Phone", "phone");
-        $form->addInput("Address 1", "address1");
-        $form->addInput("Address 2", "address2");
-        $form->addInput("Address 3", "address3");
         $form->addDatePicker("Join date", "join_date")->validation("required");
         $form->addDatePicker("Expiry date", "expiry_date");
         $form->addSelect("Status", "status")->options(["Active", "Inactive"])->validation("required");

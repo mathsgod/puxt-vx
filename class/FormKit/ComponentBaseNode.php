@@ -7,7 +7,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ComponentBaseNode extends SchemaBaseNode
 {
 
-    public $props = [];
+    protected $props = [];
     protected $translator;
 
 

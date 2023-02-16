@@ -13,6 +13,13 @@ class ElTimelineItem extends ComponentNode
 
     public function timestamp($value)
     {
-        return $this->setProperty('timestamp', $value);
+        $this->props['timestamp'] = $value;
+        return $this;
+    }
+
+    public function type(string $value)
+    {
+        $this->props['type'] = $value;
+        return $this;
     }
 }

@@ -52,36 +52,42 @@ return new class
         $form = $schema->addForm();
         $form->action("/User/add");
         $form->value([
-            "status" => "0",
+            "status" => 0,
             "language" => "en",
             "join_date" => date("Y-m-d"),
             "role" => ["Users"],
         ]);
 
-        ///$form->addInput("Username", "username")->validation("required|matches:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[#$@!%&*?])(?=.*\d)/|length:12");
-        $form->addInput("Username", "username")->validation("required");
-        $form->addPassword("Password", "password")
+        $row = $form->addRow();
+
+        $col = $row->addCol()->md(12);
+        
+        $col->addInput("Username", "username")->validation("required");
+        $col->addPassword("Password", "password")
             ->validation($vx->getPasswordValidation())
             ->validationMessages($vx->getPasswordValidationMessages());
 
-        $form->addInput("First name", "first_name")->validation("required");
-        $form->addInput("Last name", "last_name");
+        $col->addInput("First name", "first_name")->validation("required");
+        $col->addInput("Last name", "last_name");
 
-        $form->addInput("Email", "email")->validation("required|email");
-        $form->addInput("Phone", "phone");
-        $form->addInput("Address 1", "address1");
-        $form->addInput("Address 2", "address2");
-        $form->addInput("Address 3", "address3");
+        $col->addInput("Email", "email")->validation("required|email");
+
+        $col = $row->addCol()->md(12);
+        $col->addInput("Phone", "phone");
+        $col->addInput("Address 1", "address1");
+        $col->addInput("Address 2", "address2");
+        $col->addInput("Address 3", "address3");
+        
         $form->addDatePicker("Join date", "join_date")->validation("required");
         $form->addDatePicker("Expiry date", "expiry_date");
         $form->addSelect("Status", "status")->options([
             [
                 "label" => "Active",
-                "value" => "0"
+                "value" => 0
             ],
             [
                 "label" => "Inactive",
-                "value" => "1"
+                "value" => 1
             ]
         ])->validation("required");
         $form->addSelect("Language", "language")->options([

@@ -253,6 +253,8 @@ abstract class SchemaNode extends SchemaBaseNode
     public function addDescriptions()
     {
         $component = new ElDescriptions([], $this->translator);
+        $component->column(1)->border();
+
         $this->children[] = $component;
         return $component;
     }
@@ -286,9 +288,12 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addCard()
+    public function addCard(?string $header = null)
     {
         $card = $this->addElCard();
+        if ($header) {
+            $card->header($header);
+        }
         $card->shadow("never");
         return $card;
     }

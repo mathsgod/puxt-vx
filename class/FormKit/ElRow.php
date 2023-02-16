@@ -20,25 +20,25 @@ class ElRow extends ComponentBaseNode
 
     public function gutter(int $gutter)
     {
-        $this->setProperty('gutter', $gutter);
+        $this->props['gutter'] = $gutter;
         return $this;
     }
 
     public function justify(string $justify)
     {
-        $this->setProperty('justify', $justify);
+        $this->props['justify'] = $justify;
         return $this;
     }
 
     public function align(string $align)
     {
-        $this->setProperty('align', $align);
+        $this->props['align'] = $align;
         return $this;
     }
 
     public function tag(string $tag)
     {
-        $this->setProperty('tag', $tag);
+        $this->props['tag'] = $tag;
         return $this;
     }
 }

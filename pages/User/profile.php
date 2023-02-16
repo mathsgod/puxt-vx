@@ -79,26 +79,57 @@ return new class
 
         return $data;
     }
+
     function get(VX $vx)
     {
         $user = $vx->user;
-        return [
-            "profile" => [
-                "username" => $user->username,
-                "first_name" => $user->first_name,
-                "last_name" => $user->last_name,
-                "email" => $user->email,
-                "phone" => $user->phone,
-                "addr1" => $user->addr1,
-                "addr2" => $user->addr2,
-                "addr3" => $user->addr3,
-                "join_date" => $user->join_date,
-                "language" => $user->language,
-                "default_page" => $user->default_page,
-                "getRoles" => join(",", $user->getRoles())
-            ],
-            "timelines" => $this->getTimeline($vx),
-            "userlogs" => $this->getUserLog($vx)
-        ];
+        $schema = $vx->createSchema();
+
+        $schema->addDescriptions()
+            ->item("Username", $user->name)
+            ->item("First Name", $user->first_name)
+            ->item("Last Name", $user->last_name)
+            ->item("Email", $user->email)
+            ->item("Phone", $user->phone)
+            ->item("Address 1", $user->addr1)
+            ->item("Address 2", $user->addr2)
+            ->item("Address 3", $user->addr3)
+            ->item("Join Date", $user->join_date)
+            ->item("Language", $user->language)
+            ->item("Default Page", $user->default_page)
+            ->item("Roles", join(",", $user->getRoles()));
+
+        $row = $schema->addRow()->setClass("mt-2")->gutter(8);
+
+        $col = $row->addCol()->md(8);
+
+
+        $card = $col->addCard("Timeline");
+        $timeline = $card->addTimeline();
+        foreach ($this->getTimeline($vx) as $d) {
+            $timeline->addTimelineItem()
+                ->timestamp($d["time"])
+                ->children($d["content"]);
+        }
+
+
+        $card = $row->addCol()->md(16)->addCard("User Log");
+        $timeline = $card->addTimeline();
+        foreach ($this->getUserLog($vx) as $d) {
+            $item = $timeline->addTimelineItem()
+                ->timestamp($d["time"])
+                ->type($d["type"]);
+
+            if ($d["data"]) {
+
+                $item->addCard($d["header"])->addDescriptions()
+                    ->item("IP", $d["data"]["ip"])
+                    ->item("User Agent", $d["data"]["user_agent"]);
+            } else {
+                $item->children($d["header"]);
+            }
+        }
+
+        return $schema;
     }
 };
