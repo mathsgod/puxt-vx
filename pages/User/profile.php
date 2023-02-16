@@ -86,7 +86,7 @@ return new class
         $schema = $vx->createSchema();
 
         $schema->addDescriptions()
-            ->item("Username", $user->name)
+            ->item("Username", $user->username)
             ->item("First name", $user->first_name)
             ->item("Last name", $user->last_name)
             ->item("Email", $user->email)
