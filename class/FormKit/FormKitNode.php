@@ -4,6 +4,8 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+// formkit node
+// https://formkit.com/essentials/schema#formkit-inputs
 class FormKitNode extends SchemaNode
 {
 
@@ -18,6 +20,12 @@ class FormKitNode extends SchemaNode
     public function id(string $id)
     {
         $this->property['id'] = $id;
+        return $this;
+    }
+
+    public function name($value)
+    {
+        $this->property["name"] = $value;
         return $this;
     }
 

@@ -252,9 +252,12 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addDescriptions()
     {
-        $component = new ElDescriptions([], $this->translator);
-        $component->column(1)->border();
+        return $this->addElDescriptions()->column(1)->border();
+    }
 
+    public function addElDescriptions()
+    {
+        $component = new ElDescriptions([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
@@ -537,6 +540,13 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
+    public function addElDivider()
+    {
+        $component = new ElDivider([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
     public function addDivider(?string $label = null)
     {
         $component = new ElDivider([], $this->translator);
@@ -548,6 +558,13 @@ abstract class SchemaNode extends SchemaBaseNode
             $component->addChildren($label);
         }
 
+        $this->children[] = $component;
+        return $component;
+    }
+
+    public function addElRadioGroup()
+    {
+        $component = new ElRadioGroup([], $this->translator);
         $this->children[] = $component;
         return $component;
     }

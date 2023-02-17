@@ -2,14 +2,10 @@
 
 namespace FormKit;
 
-class Hidden extends SchemaNode
+class Hidden extends FormKitNode
 {
     public function __construct()
     {
-        $this->property = array_merge([
-            '$formkit' => "hidden"
-        ]);
-
-        parent::__construct();
+        parent::__construct("hidden");
     }
 }

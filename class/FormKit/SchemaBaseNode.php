@@ -67,11 +67,7 @@ abstract class SchemaBaseNode implements JsonSerializable
         return $this;
     }
 
-    public function name($value)
-    {
-        $this->property["name"] = $value;
-        return $this;
-    }
+    
 
     public function jsonSerialize()
     {

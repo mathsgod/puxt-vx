@@ -22,4 +22,10 @@ class InputNode extends SchemaBaseNode
         }
         return $this;
     }
+
+    public function name($value)
+    {
+        $this->property["name"] = $value;
+        return $this;
+    }
 }
