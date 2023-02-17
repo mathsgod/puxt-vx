@@ -22,7 +22,7 @@ abstract class SchemaBaseNode implements JsonSerializable
         return $this;
     }
 
-    public function then(string $then)
+    public function then(string|array $then)
     {
         $this->property['then'] = $then;
         return $this;
@@ -34,7 +34,7 @@ abstract class SchemaBaseNode implements JsonSerializable
         return $this;
     }
 
-    public function else(string $else)
+    public function else(string|array $else)
     {
         $this->property['else'] = $else;
         return $this;
@@ -67,7 +67,7 @@ abstract class SchemaBaseNode implements JsonSerializable
         return $this;
     }
 
-    
+
 
     public function jsonSerialize()
     {

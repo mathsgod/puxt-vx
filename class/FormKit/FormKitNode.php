@@ -130,4 +130,29 @@ class FormKitNode extends SchemaNode
         $this->property['options'] = $options;
         return $this;
     }
+
+    //styling
+    function outerClass(string $outerClass)
+    {
+        $this->property['outerClass'] = $outerClass;
+        return $this;
+    }
+
+    function labelClass(string $labelClass)
+    {
+        $this->property['labelClass'] = $labelClass;
+        return $this;
+    }
+
+    function helpClass(string|array $helpClass)
+    {
+        $this->property['helpClass'] = $helpClass;
+        return $this;
+    }
+
+    function classes(array $classes)
+    {
+        $this->property['classes'] = $classes;
+        return $this;
+    }
 }
