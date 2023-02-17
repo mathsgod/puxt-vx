@@ -24,6 +24,18 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
+        $card = $schema->addFKForm();
+        $card->addText("Input1", "input1")->validation("required")->prefixIcon("email")->suffixIcon("search")->placeholder("Input1");
+        $card->addFKSelect("Select", "select")->options(["a" => "A", "b" => "B"])->placeholder("Select")->selectIcon("search");
+        $card->addFKRadio("Radio", "radio")->options(["a" => "A", "b" => "B"]);
+        $card->addFKEmail("Email", "email")->placeholder("Email");
+        $card->addFKFile("File", "file");
+        $card->addFKCheckbox("Checkbox", "checkbox")->options(["a" => "A", "b" => "B"]);
+        $card->addFKDate("Date", "date");
+        $card->addFKDatetimeLocal("Datetime Local", "datetime_local");
+
+
+        return $schema;
 
         $table = $schema->addElTable();
         $table->data(User::Query()->limit(10)->toArray());

@@ -4,17 +4,17 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class Group extends FormKitNode
+class FKList extends FormKitNode
 {
     public function __construct(?TranslatorInterface $translator = null)
     {
-        parent::__construct('group', [], $translator);
+        parent::__construct('list', [], $translator);
     }
 
     /**
-     * Disables all the inputs in the group.
+     * Disables all the inputs in the list.
      */
-    public function disabled(bool $disabled = true)
+    function disabled(bool $disabled = true)
     {
         $this->property['disabled'] = $disabled;
         return $this;

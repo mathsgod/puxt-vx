@@ -14,6 +14,205 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    function addFKTime(?string $label = null, ?string $name = null)
+    {
+        $time = new Time($this->translator);
+        if ($label) {
+            $time->label($label);
+        }
+        if ($name) {
+            $time->name($name);
+        }
+        $this->children[] = $time;
+        return $time;
+    }
+
+    function addFKTextarea(?string $label = null, ?string $name = null)
+    {
+        $textarea = new Textarea($this->translator);
+        if ($label) {
+            $textarea->label($label);
+        }
+        if ($name) {
+            $textarea->name($name);
+        }
+        $this->children[] = $textarea;
+        return $textarea;
+    }
+
+    function addFKTel(?string $label = null, ?string $name = null)
+    {
+        $tel = new Tel($this->translator);
+        if ($label) {
+            $tel->label($label);
+        }
+        if ($name) {
+            $tel->name($name);
+        }
+        $this->children[] = $tel;
+        return $tel;
+    }
+
+    function addFKSearch(?string $label = null, ?string $name = null)
+    {
+        $search = new Search($this->translator);
+        if ($label) {
+            $search->label($label);
+        }
+        if ($name) {
+            $search->name($name);
+        }
+        $this->children[] = $search;
+        return $search;
+    }
+
+    function addFKRange(?string $label = null, ?string $name = null)
+    {
+        $range = new Range($this->translator);
+        if ($label) {
+            $range->label($label);
+        }
+        if ($name) {
+            $range->name($name);
+        }
+        $this->children[] = $range;
+        return $range;
+    }
+
+    function addFKPassword(?string $label = null, ?string $name = null)
+    {
+        $password = new Password($this->translator);
+        if ($label) {
+            $password->label($label);
+        }
+        if ($name) {
+            $password->name($name);
+        }
+        $this->children[] = $password;
+        return $password;
+    }
+
+    function addFKNumber(?string $label = null, ?string $name = null)
+    {
+        $number = new Number($this->translator);
+        if ($label) {
+            $number->label($label);
+        }
+        if ($name) {
+            $number->name($name);
+        }
+        $this->children[] = $number;
+        return $number;
+    }
+
+    function addList()
+    {
+        $list = new FKList();
+        $this->children[] = $list;
+        return $list;
+    }
+
+    function addFKForm()
+    {
+        $form = new Form($this->translator);
+        $this->children[] = $form;
+        return $form;
+    }
+
+    function addFKDatetimeLocal(?string $label = null, ?string $name = null)
+    {
+        $date = new DatetimeLocal($this->translator);
+        if ($label) {
+            $date->label($label);
+        }
+        if ($name) {
+            $date->name($name);
+        }
+        $this->children[] = $date;
+        return $date;
+    }
+
+    function addFKDate(?string $label = null, ?string $name = null)
+    {
+        $date = new Date($this->translator);
+        if ($label) {
+            $date->label($label);
+        }
+        if ($name) {
+            $date->name($name);
+        }
+        $this->children[] = $date;
+        return $date;
+    }
+
+    function addFKCheckbox(?string $label = null, ?string $name = null)
+    {
+        $checkbox = new Checkbox($this->translator);
+        if ($label) {
+            $checkbox->label($label);
+        }
+        if ($name) {
+            $checkbox->name($name);
+        }
+        $this->children[] = $checkbox;
+        return $checkbox;
+    }
+
+    function addFKFile(?string $label = null, ?string $name = null)
+    {
+        $file = new File($this->translator);
+        if ($label) {
+            $file->label($label);
+        }
+        if ($name) {
+            $file->name($name);
+        }
+        $this->children[] = $file;
+        return $file;
+    }
+
+
+    function addFKEmail(?string $label = null, ?string $name = null)
+    {
+        $email = new Email($this->translator);
+        if ($label) {
+            $email->label($label);
+        }
+        if ($name) {
+            $email->name($name);
+        }
+        $this->children[] = $email;
+        return $email;
+    }
+
+    function addFKRadio(?string $label = null, ?string $name = null)
+    {
+        $radio = new Radio($this->translator);
+        if ($label) {
+            $radio->label($label);
+        }
+        if ($name) {
+            $radio->name($name);
+        }
+        $this->children[] = $radio;
+        return $radio;
+    }
+
+    function addFKSelect(?string $label = null, ?string $name = null)
+    {
+        $select = new Select($this->translator);
+        if ($label) {
+            $select->label($label);
+        }
+        if ($name) {
+            $select->name($name);
+        }
+        $this->children[] = $select;
+        return $select;
+    }
+
+
+
     public function addTree(?string $label = null, ?string $name = null)
     {
         $elTree = new ElTree();
