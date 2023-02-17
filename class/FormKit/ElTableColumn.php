@@ -11,6 +11,13 @@ class ElTableColumn extends ComponentNode
         parent::__construct('ElTableColumn', $property, $translator);
     }
 
+    public function addColumn()
+    {
+        $column = new ElTableColumn([], $this->translator);
+        $this->children[] = $column;
+        return $column;
+    }
+
     /**
      * type of the column. If set to selection, the column will display checkbox. If set to index, the column will display index of the row (staring from 1). If set to expand, the column will display expand icon.
      */

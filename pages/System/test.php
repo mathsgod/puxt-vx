@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Created by: Raymond Chong
- * Date: 2022-09-14 
+ * @author Raymond Chong
+ * @date 2023-01-30 
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
@@ -10,136 +10,179 @@ use VX\User;
 
 return new class
 {
-    function post()
+    function post(VX $vx)
     {
-        return new EmptyResponse(200);
+
+        outp($vx->_post);
+        outp($vx->_files);
+        die();
+        return new EmptyResponse();
+        die();
+        return new EmptyResponse(201);
     }
-    
+
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
 
+        $table = $schema->addElTable();
+        $table->data(User::Query()->limit(10)->toArray());
+        $table->addColumn()->label("Name")->prop("username");
+
+        $col = $table->addColumn()->label("Top1")->sortable();
+        $col = $col->addColumn()->label("Grouped");
+        $col->addColumn()->label("Email")->prop("email")->sortable();
+        $col->addColumn()->label("First name")->prop("first_name")->sortable();
+
+
+
+        return $schema;
+
+
         $form = $schema->addForm();
-        $form->action("/System/test");
-        $form->value(["username" => "test"]);
-        $form->addInput("username")->label("Username")->validation("required");
-
-
-        return ["schema" => $schema];
-
-        /*        $schema->addComponent("FormKit", [
-            "type" => "VxForm",
+        $form->addInput("Name", "name")->validation("required");
+        $form->addCheckbox("Checkbox", "cb1");
+        $form->addInputNumber("Number", "number")->validation("required");
+        $form->addDatePicker("Date", "date");
+        $form->addDateRangePicker("Date Range", "date_range");
+        $form->addTimePicker("Time", "time");
+        $form->addRate("Rate", "rate");
+        $form->addSlider("Slider", "slider");
+        $form->addSwitch("Switch", "switch");
+        $form->addColorPicker("Color", "color");
+        $form->addTransfer("Transfer", "transfer");
+        $form->addRadioGroup("Radio", "radio")->options(["a" => "A", "b" => "B"]);
+        $form->addCheckboxGroup("Checkbox", "checkbox")->options(["a" => "A", "b" => "B"]);
+        $form->addTree("Tree", "tree")->nodeKey("label")->data([
+            ["label" => "test1", "children" => [["label" => "test1-1"]]],
+            ["label" => "test2", "children" => [["label" => "test2-1"]]],
         ]);
 
-         */
+        //$schema->addCodeInput("Code", "code")->language("javascript")->height("300px");
+        return $schema;
 
+        $schema->addChildren($schema->createElement("a"));
 
+        $result = $schema->addResult()->title("test")->subTitle("test2")->icon("success");
 
-        /*   $table = $schema->addComponent("VxTable", [
-            "query" => "MailLog?fields[]=body&sort[]=maillog_id:desc"
-        ]);
+        $template = $result->addElement("template");
 
-        $col = $schema->createComponent("VxColumn", [
-            "label" => "ID",
-            "prop" => "maillog_id",
-            "sortable" => true,
-            "width" => 100,
-        ]);
-
-        $table->addChildren($col);
-
-
-        return ["schema" => $schema]; */
-
-
-
-        $table = $schema->addTable()->data(User::Query()->toArray())->size("small");
-        //$table->height(100);
-        $table->addColumn()->label("ID")->prop("username");
-        $table->addColumn()->label("First name")->prop("first_name")->sortable();
+        $template->attr("#extra", true);
+        $template->addElement("div")->addChildren("extra information");
 
 
 
 
+        $empty = $schema->addEmpty()->imageSize(100);
 
-        $schema->addTag()->type("primary")->addChildren("hello");
 
-        $schema->addCheckbox("show_card")->label("Show Card");
+        $collapse = $schema->addCard()->addCollapse()->accordion()->value("t2");
 
-        $card = $schema->addCard()->header("Card 1")->shadow("never");
+        $collapse->addItem("Title1", "t1")->addChildren("test");
+        $collapse->addItem("Title2", "t2")->addChildren("test2");
 
-        $card->if('$show_card');
-
-        $card->addChildren("test");
-
-        $timeline = $card->addTimeline();
-
-        $timeline->addTimelineItem()->timestamp("2022-01-20")->addChildren("test");
-        $timeline->addTimelineItem()->timestamp("2022-01-21")->addChildren("test2");
-        $timeline->addTimelineItem()->timestamp("2022-01-22")->addChildren("test2");
-        $timeline->addTimelineItem()->timestamp("2022-01-23")->addChildren("test3");
-        $item = $timeline->addTimelineItem()->timestamp("2022-01-23");
-        $card = $item->addCard()->header("Card 2")->shadow("never")->addChildren("card body");
+        return $schema;
 
 
 
-        $h1 = $schema->addElement("h1");
-        $h1->addChildren("hello1");
-        $h1->addChildren("hello2");
+        $badge = $schema->addBadge()->value(10)->type("primary");
+        $badge->addButton("test");
 
-        $div = $schema->addElement("div");
-        $div->addChildren("testing a testing");
+        return $schema;
 
+        $form = $schema->addElForm();
 
-        $schema->addDivider("Divider 1");
+        $fi = $form->addElFormItem()->label("Test");
 
-        $schema->addInput("input_1")->label("Input 1")->clearable()->placeholder("Input 1")->help("Input 1 Help");
-
-        $schema->addPassword("password_1")->label("Password 1")->clearable()->placeholder("Password 1")->help("Password 1 Help");
-
-        $schema->addInputNumber("input_number_1")->label("Input Number 1");
-        $schema->addInputNumber("input_number_2")->label("Input Number 2")->min(10)->max(20)->step(2);
+        $fi->addElInput(null, "name")->validation("required");
+        return $schema;
+        return;
 
 
-        $schema->addSelect("select_1")->label("Select 1")->options(["option 1", "option 2", "option 3"]);
-        $schema->addSelect("select_2")->label("Select 2")->options(["option 1", "option 2", "option 3"])->multiple();
+        $form = $schema->addForm();
+        $form->action("/System/abc");
 
-        $schema->addSwitch("switch_1")->label("Switch 1")->help("Switch 1 Help");
-
-        $schema->addCheckbox("checkbox_1")->label("Checkbox 1")->help("Checkbox 1 Help");
-
-        $schema->addRadioGroup("radio_group_1")->label("Radio Group 1")->options(["option 1", "option 2", "option 3"]);
+        $form->value(["users" => User::Query()->toArray()]);
 
 
-        $schema->addDatePicker("date_picker_1")->label("Date Picker 1")->help("Date Picker 1 Help");
-        $schema->addColorPicker("color_picker_1")->label("Color Picker 1")->help("Color Picker 1 Help");
 
-        $schema->addDateRangePicker("date_range_picker_1")->label("Date Range Picker 1")->help("Date Range Picker 1 Help");
+        $repeater = $form->addRepeater("Users", "users")->min(0)->help("test is help test");
 
-        $schema->addRate("rate_1")->label("Rate 1")->help("Rate 1 Help");
+        $repeater->addInput("Username", "username")->validation("required");
+        $repeater->addInput("Email", "email");
 
-        $schema->addSlider("slider_1")->label("Slider 1")->help("Slider 1 Help");
 
-        $schema->addTextarea("textarea_1")->label("Textarea 1")->help("Textarea 1 Help");
+        return $schema;
 
-        $schema->addTimeSelect("time_select_1")->label("Time Select 1")->help("Time Select 1 Help");
 
-        $schema->addTimePicker("time_picker_1")->label("Time Picker 1")->help("Time Picker 1 Help");
 
-        $schema->addTransfer("transfer_1")->label("Transfer 1")->help("Transfer 1 Help");
 
-        $schema->addUpload("upload_1")->label("Upload 1")->help("Upload 1 Help");
+        $form = $schema->addForm();
+        $form->action("/System/abc");
 
-        $card = $schema->addComponent("ElCard");
-        $card->addInput("input_1")->label("Input 1")->clearable()->placeholder("Input 1")->help("Input 1 Help");
-        $card->addDatePicker("date_picker_1")->label("Date Picker 1")->help("Date Picker 1 Help");
+        $list = $form->addFormKitComponent("list", ["value" => [
+            ["name" => "test1", "mobile" => "123"],
+            ["name" => "test2", "mobile" => "456"],
+            ["name" => "test3", "mobile" => "789"],
 
-        /* $s = new Schema();
-        $s->addInput("input_1")->label("Input 1")->clearable()->placeholder("Input 1")->help("Input 1 Help");
-        $card->children($s);
+        ], "name" => "mylist"]);
+
+        $group = $list->addGroup()->name("group1");
+        $group->addInput("Name", "name")->validation("required");
+        $group->addInput("Mobile", "mobile")->validation("required");
+
+
+
+
+
+        //        $schema->addFormKitComponent("text", ["label" => "Name", "name" => "name", "validation" => "required", "value" => "test"]);
+        //      $schema->addSubmit();
+
+        /*         $group = $schema->addCard()->addGroup();
+        $group->value(["name" => "testabc"]);
+        $group->addInput("Name", "name")->validation("required");
  */
+        //$group->addFormKitComponent("text", ["label" => "Name", "name" => "name", "validation" => "required"]);
+
+        return $schema;
 
 
-        return ["schema" => $schema];
+
+        $form = $schema->addForm();
+        $form->value(["name" => "test"]);
+        $form->action("/System/abc");
+
+
+
+        $form->addInput("Name", "name")->validation("required");
+        $form->addInput("Email", "email");
+
+        //$form->addFileInput("File", "file");
+
+        $form->addFileInput("File", "file");
+
+        $form->addCodeInput("Code", "code")->language("javascript")->height("300px");
+
+        //$form->addFormKitComponent("vxFormFileInput", ["label" => "File", "name" => "file"]);
+
+        $form->addUpload("Upload", "upload")->addChildren("Upload");
+
+        $form->addTinymce("Tinymce", "tinymce")->height("200");
+
+        //$schema->addComponent("router-link", ["to" => "/System/def"])->addChildren("Router Link");
+
+        return $schema;
+
+
+        $schema->addElement("h1")->addChildren("Hello World");
+
+        $schema->addCheckbox("Checkbox", "cb1")->id("cb1");
+
+
+        $div = $schema->addElement("div")->children("div content");
+        $div->if('$get(cb1).value');
+
+
+        return $schema;
     }
 };

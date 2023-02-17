@@ -54,9 +54,9 @@ return new class
 
         $table->addColumn("Join date", "join_date")->sortable();
 
-        $table->addColumn("Language", "language")->sortable()->filters([
-            ["text" => "en", "value" => "en"],
-            ["text" => "zh-hk", "value" => "zh-hk"],
+        $table->addColumn("Language", "language")->sortable()->searchable("select")->searchOptions([
+            ["label" => "en", "value" => "en"],
+            ["label" => "zh-hk", "value" => "zh-hk"],
         ])->addComponent("XSelect")
             ->setProp("name", "language")
             ->setProp("modelValue", '$row.language')

@@ -11,9 +11,11 @@ class VxColumn extends ComponentNode
         parent::__construct("VxColumn", $property, $translator);
     }
 
-    public function searchable()
+    public function searchable(?string $type = "text")
     {
         $this->setProp('searchable', true);
+        $this->setProp('search-type', $type);
+
         return $this;
     }
 

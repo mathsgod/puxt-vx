@@ -17,7 +17,7 @@ return new class
         $table->addColumn("ID", "eventlog_id")->sortable()->width(100);
         $table->addColumn("Class", "class")->sortable()->searchable();
         $table->addColumn("Action", "action")->sortable()->searchable();
-        $table->addColumn("Created time", "created_time")->sortable()->searchable();
+        $table->addColumn("Created time", "created_time")->sortable()->searchable()->searchType("date");
         $table->addColumn("Created by", "User.username")->sortable()->searchable();
 
         return $schema;
