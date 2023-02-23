@@ -23,6 +23,19 @@ class AuthenticationAdapter implements AdapterInterface
         $this->config = $config;
     }
 
+    private function passwordVerify(string $password, string $hash)
+    {
+        $p = substr($hash, 0, 2);
+        if ($p == '$5' || $p == '$6') { //for compatibility with old raymond framework
+            $pass = "";
+            $md5 = md5($password);
+            eval(base64_decode("JHBhc3MgPSBtZDUoc3Vic3RyKHN1YnN0cigkbWQ1LC0xNiksLTgpLnN1YnN0cihzdWJzdHIoJG1kNSwtMTYpLDAsLTgpLnN1YnN0cihzdWJzdHIoJG1kNSwwLC0xNiksLTgpLnN1YnN0cihzdWJzdHIoJG1kNSwwLC0xNiksMCwtOCkpOw=="));
+            return crypt($pass, $hash) == $hash;
+        } else {
+            return password_verify($password, $hash);
+        }
+    }
+
     public function authenticate()
     {
         //get the request body
@@ -69,7 +82,7 @@ class AuthenticationAdapter implements AdapterInterface
 
         //check password
 
-        if (!password_verify($password, $user->password)) {
+        if (!$this->passwordVerify($password, $user->password)) {
             $ul->result = "FAIL";
             $ul->save();
 
