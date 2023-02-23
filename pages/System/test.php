@@ -24,6 +24,16 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
+
+        $tabs = $schema->addElTabs()->type("border-card");
+        $pane1 = $tabs->addPane("Pane1");
+        $pane1->addChildren("hello");
+
+        $pane2 = $tabs->addPane("Pane2");
+        $pane2->addChildren("hello2");
+
+
+
         $card = $schema->addFKForm();
         $card->addText("Input1", "input1")->validation("required")->prefixIcon("email")->suffixIcon("search")->placeholder("Input1");
         $card->addFKSelect("Select", "select")->options(["a" => "A", "b" => "B"])->placeholder("Select")->selectIcon("search");

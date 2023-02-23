@@ -14,6 +14,7 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    // FormKit Input Components
     function addFKTime(?string $label = null, ?string $name = null)
     {
         $time = new Time($this->translator);
@@ -211,7 +212,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $select;
     }
 
-
+    //--------------------------------------------------------------------------------
 
     public function addTree(?string $label = null, ?string $name = null)
     {
@@ -902,5 +903,19 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->children[] = $formkit;
 
         return $formkit;
+    }
+
+    function addTabs()
+    {
+        $tabs = $this->addElTabs();
+        $tabs->type("border-card");
+        return $tabs;
+    }
+
+    function addElTabs()
+    {
+        $component = new ElTabs([], $this->translator);
+        $this->children[] = $component;
+        return $component;
     }
 }
