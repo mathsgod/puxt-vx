@@ -710,6 +710,7 @@ abstract class SchemaNode extends SchemaBaseNode
         $formkit = new ElSelect([
             "name" => $name,
         ], $this->translator);
+        $formkit->filterable()->clearable();
 
         $formkit->formItem();
 
