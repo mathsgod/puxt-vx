@@ -25,7 +25,7 @@ class ElMenu extends ComponentBaseNode
         if ($index) {
             $item->index($index);
         }
-        return $item;
+        return $this;
     }
 
     public function mode(string $mode)
