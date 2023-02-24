@@ -18,6 +18,16 @@ class ElMenu extends ComponentBaseNode
         return $item;
     }
 
+    public function item(string $label, ?string $index)
+    {
+        $item = $this->addMenuItem();
+        $item->addChildren($label);
+        if ($index) {
+            $item->index($index);
+        }
+        return $item;
+    }
+
     public function mode(string $mode)
     {
         $this->setProp('mode', $mode);
@@ -72,7 +82,7 @@ class ElMenu extends ComponentBaseNode
         return $this;
     }
 
-    public function router(bool $router)
+    public function router(bool $router = true)
     {
         $this->setProp('router', $router);
         return $this;

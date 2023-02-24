@@ -341,6 +341,11 @@ abstract class SchemaNode extends SchemaBaseNode
 
     public function addMenu()
     {
+        return $this->addElMenu()->router(true);
+    }
+
+    public function addElMenu()
+    {
         $menu = new ElMenu([], $this->translator);
         $this->children[] = $menu;
         return $menu;
