@@ -14,6 +14,25 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    //Vx Component
+    function addVxLink(?string $label, ?string $to)
+    {
+        $link = new VxLink($this->translator);
+        if($label){
+            $link->label($label);
+        }
+
+        if($to){
+            $link->to($to);
+        }
+        
+        $this->children[] = $link;
+        return $link;
+    }
+
+    }
+
+
     // FormKit Input Components
     function addFKTime(?string $label = null, ?string $name = null)
     {
