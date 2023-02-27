@@ -6,12 +6,17 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\TextResponse;
 use VX\User;
 
 return new class
 {
     function post(VX $vx)
     {
+
+        return new TextResponse("Success response");
+
+        return new TextResponse("Error response", 400);
 
         outp($vx->_post);
         outp($vx->_files);

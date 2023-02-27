@@ -11,6 +11,30 @@ class VxLink extends ComponentNode
         parent::__construct("VxLink", $props, $translator);
     }
 
+    function confirmOptions(array $confirmOptions)
+    {
+        $this->setProp('confirm-options', $confirmOptions);
+        return $this;
+    }
+
+    function confirmTitle(string $confirmTitle)
+    {
+        $this->setProp('confirm-title', $confirmTitle);
+        return $this;
+    }
+
+    function confirmMessage(string $confirmMessage)
+    {
+        $this->setProp('confirm-message', $confirmMessage);
+        return $this;
+    }
+
+    function confirm(bool $confirm = true)
+    {
+        $this->setProp('confirm', $confirm);
+        return $this;
+    }
+
     function label(string $label)
     {
         $this->setProp('label', $label);
