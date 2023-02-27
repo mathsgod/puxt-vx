@@ -14,6 +14,17 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
+    //Quasar Components
+    function addQIcon(?string $name = null)
+    {
+        $icon = new QIcon();
+        if ($name) {
+            $icon->name($name);
+        }
+        $this->children[] = $icon;
+        return $icon;
+    }
+
     //Vx Component
     function addVxLink(?string $label, ?string $to)
     {
