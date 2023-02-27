@@ -143,6 +143,7 @@ return new class
             "company-url" => $config["company_url"],
             "login_version" => $config["login_version"],
             "allow_remember_me" => boolval($config["allow_remember_me"]),
+            "disable_forgot_password" => boolval($config["disable_forgot_password"]),
             "css" => [],
             "js" => [],
 
