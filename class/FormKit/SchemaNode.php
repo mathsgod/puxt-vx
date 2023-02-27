@@ -351,6 +351,13 @@ abstract class SchemaNode extends SchemaBaseNode
         return $statistic;
     }
 
+    function addElCountdown()
+    {
+        $countdown = new ElCountdown([], $this->translator);
+        $this->children[] = $countdown;
+        return $countdown;
+    }
+
     public function addElMenu()
     {
         $menu = new ElMenu([], $this->translator);
