@@ -46,6 +46,7 @@ return new class
         ])->validation("required");
 
         $form->addSwitch("Allow remember me", "allow_remember_me");
+        $form->addSwitch("Disable forgot password", "disable_forgot_password");
 
 
         //smtp
@@ -109,6 +110,7 @@ return new class
         $config["file_manager_show"] = boolval($config["file_manager_show"]);
         $config["authentication_lock"] = boolval($config["authentication_lock"]);
         $config["allow_remember_me"] = boolval($config["allow_remember_me"]);
+        $config["disable_forgot_password"] = boolval($config["disable_forgot_password"]);
         $config["authentication_lock_time"] = intval($config["authentication_lock_time"]);
         $config["file_manager_preview"] = boolval($config["file_manager_preview"]);
         $config["jwt_blacklist"] = boolval($config["jwt_blacklist"]);
@@ -139,6 +141,7 @@ return new class
                 "file_manager_show",
                 "authentication_lock",
                 "allow_remember_me",
+                "disable_forget_password",
                 "authentication_lock_time",
                 "smtp",
                 "smtp_username",
