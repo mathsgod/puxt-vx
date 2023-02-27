@@ -26,7 +26,7 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
     //Vx Component
-    function addVxLink(?string $label, ?string $to)
+    function addVxLink(?string $label = null, ?string $to = null)
     {
         $link = new VxLink([], $this->translator);
         if ($label) {
