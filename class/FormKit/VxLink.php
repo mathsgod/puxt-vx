@@ -11,6 +11,12 @@ class VxLink extends ComponentNode
         parent::__construct("VxLink", $props, $translator);
     }
 
+    function action(string $action)
+    {
+        $this->setProp('action', $action);
+        return $this;
+    }
+
     function confirmOptions(array $confirmOptions)
     {
         $this->setProp('confirm-options', $confirmOptions);
