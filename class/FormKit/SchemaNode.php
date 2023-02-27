@@ -9,7 +9,7 @@ abstract class SchemaNode extends SchemaBaseNode
 {
     protected $translator;
 
-    public function __construct(?TranslatorInterface $translator = null)
+    function __construct(?TranslatorInterface $translator = null)
     {
         $this->translator = $translator;
     }
@@ -17,7 +17,7 @@ abstract class SchemaNode extends SchemaBaseNode
     //Quasar Components
     function addQIcon(?string $name = null)
     {
-        $icon = new QIcon();
+        $icon = new QIcon([]);
         if ($name) {
             $icon->name($name);
         }
@@ -28,19 +28,17 @@ abstract class SchemaNode extends SchemaBaseNode
     //Vx Component
     function addVxLink(?string $label, ?string $to)
     {
-        $link = new VxLink($this->translator);
-        if($label){
+        $link = new VxLink([], $this->translator);
+        if ($label) {
             $link->label($label);
         }
 
-        if($to){
+        if ($to) {
             $link->to($to);
         }
-        
+
         $this->children[] = $link;
         return $link;
-    }
-
     }
 
 
@@ -244,7 +242,7 @@ abstract class SchemaNode extends SchemaBaseNode
 
     //--------------------------------------------------------------------------------
 
-    public function addTree(?string $label = null, ?string $name = null)
+    function addTree(?string $label = null, ?string $name = null)
     {
         $elTree = new ElTree();
         if ($label) {
@@ -258,14 +256,14 @@ abstract class SchemaNode extends SchemaBaseNode
         return $elTree;
     }
 
-    public function addElTree()
+    function addElTree()
     {
         $elTree = new ElTree();
         $this->children[] = $elTree;
         return $elTree;
     }
 
-    public function addHidden(?string $name)
+    function addHidden(?string $name)
     {
         $hidden = new Hidden();
         if ($name) {
@@ -275,21 +273,21 @@ abstract class SchemaNode extends SchemaBaseNode
         return $hidden;
     }
 
-    public function addCollapse()
+    function addCollapse()
     {
         $collapse = new ElCollapse([], $this->translator);
         $this->children[] = $collapse;
         return $collapse;
     }
 
-    public function addBadge()
+    function addBadge()
     {
         $badge = new ElBadge([], $this->translator);
         $this->children[] = $badge;
         return $badge;
     }
 
-    public function addText(?string $label = null, string $name)
+    function addText(?string $label = null, string $name)
     {
         $color = new Text($this->translator);
         if ($label) {
@@ -302,7 +300,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $color;
     }
 
-    public function addButton(?string $text = null)
+    function addButton(?string $text = null)
     {
         $button = new ElButton([], $this->translator);
         $this->children[] = $button;
@@ -313,28 +311,28 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
 
-    public function addSubmit()
+    function addSubmit()
     {
         $submit = new Submit([], $this->translator);
         $this->children[] = $submit;
         return $submit;
     }
 
-    public function addElForm()
+    function addElForm()
     {
         $form = new ElForm([], $this->translator);
         $this->children[] = $form;
         return $form;
     }
 
-    public function addElFormItem()
+    function addElFormItem()
     {
         $item = new ElFormItem([], $this->translator);
         $this->children[] = $item;
         return $item;
     }
 
-    public function addColor(string $label, string $name)
+    function addColor(string $label, string $name)
     {
         $color = new Color($this->translator);
         if ($label) {
@@ -347,7 +345,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $color;
     }
 
-    public function addRepeater(string $label, ?string $name = null)
+    function addRepeater(string $label, ?string $name = null)
     {
         $repeater = new VxRepeater([], $this->translator);
 
@@ -362,14 +360,14 @@ abstract class SchemaNode extends SchemaBaseNode
         return $repeater;
     }
 
-    public function addGroup()
+    function addGroup()
     {
         $group = new Group($this->translator);
         $this->children[] = $group;
         return $group;
     }
 
-    public function addMenu()
+    function addMenu()
     {
         return $this->addElMenu()->router(true);
     }
@@ -388,21 +386,21 @@ abstract class SchemaNode extends SchemaBaseNode
         return $countdown;
     }
 
-    public function addElMenu()
+    function addElMenu()
     {
         $menu = new ElMenu([], $this->translator);
         $this->children[] = $menu;
         return $menu;
     }
 
-    public function addVxTable()
+    function addVxTable()
     {
         $table = new VxTable([], $this->translator);
         $this->children[] = $table;
         return $table;
     }
 
-    public function addForm()
+    function addForm()
     {
         $form = new VxForm([], $this->translator);
         $this->children[] = $form;
@@ -410,7 +408,7 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
 
-    /*     public function addFileInput(){
+    /*     function addFileInput(){
         $fileInput = new FileInput([], $this->translator);
         $this->children[] = $fileInput;
         return $fileInput;
@@ -419,50 +417,50 @@ abstract class SchemaNode extends SchemaBaseNode
     /**
      * Append a child node, and return the self object.
      */
-    public function children(array|string|JsonSerializable $children)
+    function children(array|string|JsonSerializable $children)
     {
         $this->children[] = $children;
         return $this;
     }
 
 
-    public function property(string $name, $value)
+    function property(string $name, $value)
     {
         $this->property[$name] = $value;
         return $this;
     }
 
-    public function props(string $props)
+    function props(string $props)
     {
         $this->property['props'] = $props;
         return $this;
     }
 
-    public function addElement(string $el, array $property = [])
+    function addElement(string $el, array $property = [])
     {
         $item = new ElementNode($el, $property, $this->translator);
         $this->children[] = $item;
         return $item;
     }
 
-    public function createComponent(string $cmp, array $property = []): ComponentNode
+    function createComponent(string $cmp, array $property = []): ComponentNode
     {
         return new ComponentNode($cmp, $property);
     }
 
-    public function createElement(string $el, array $property = []): ElementNode
+    function createElement(string $el, array $property = []): ElementNode
     {
         return new ElementNode($el, $property, $this->translator);
     }
 
-    public function addComponent(string $cmp, array $props = [])
+    function addComponent(string $cmp, array $props = [])
     {
         $node = new ComponentNode($cmp, $props);
         $this->children[] = $node;
         return $node;
     }
 
-    public function addFormKitComponent(string $formkit, array $property = [])
+    function addFormKitComponent(string $formkit, array $property = [])
     {
         $node = new FormKitNode($formkit, $property, $this->translator);
         $this->children[] = $node;
@@ -470,14 +468,14 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
 
-    public function addResult()
+    function addResult()
     {
         $result = new ElResult([], $this->translator);
         $this->children[] = $result;
         return $result;
     }
 
-    public function addEmpty()
+    function addEmpty()
     {
         $empty = new ElEmpty();
         $this->children[] = $empty;
@@ -485,54 +483,54 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
 
-    public function addLink()
+    function addLink()
     {
         $component = new ElLink([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addRow()
+    function addRow()
     {
         $component = new ElRow([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addDescriptions()
+    function addDescriptions()
     {
         return $this->addElDescriptions()->column(1)->border();
     }
 
-    public function addElDescriptions()
+    function addElDescriptions()
     {
         $component = new ElDescriptions([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addElTable()
+    function addElTable()
     {
         $component = new ElTable([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addTag()
+    function addTag()
     {
         $component = new ElTag([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addTimeline()
+    function addTimeline()
     {
         $component = new ElTimeline([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addElCard()
+    function addElCard()
     {
         $component = new ElCard([], $this->translator);
 
@@ -540,7 +538,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addCard(?string $header = null)
+    function addCard(?string $header = null)
     {
         $card = $this->addElCard();
         if ($header) {
@@ -550,7 +548,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $card;
     }
 
-    public function addTinymce(string $label, string $name)
+    function addTinymce(string $label, string $name)
     {
         $component = new VxFormTinymce([
             "name" => $name,
@@ -565,7 +563,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addUpload(string $label, string $name)
+    function addUpload(string $label, string $name)
     {
         if ($this instanceof VxForm) {
             $this->enctype("multipart/form-data");
@@ -586,7 +584,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addTransfer(string $label, string $name)
+    function addTransfer(string $label, string $name)
     {
         $formkit = new ElTransfer([
             "name" => $name,
@@ -603,7 +601,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addTimePicker(string $label, string $name)
+    function addTimePicker(string $label, string $name)
     {
         $formkit = new ElTimePicker([
             "name" => $name,
@@ -620,7 +618,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addTimeSelect(string $label, string $name)
+    function addTimeSelect(string $label, string $name)
     {
         $formkit = new ElTimeSelect([
             "name" => $name,
@@ -637,7 +635,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addTextarea(string $label, string $name)
+    function addTextarea(string $label, string $name)
     {
         $formkit = new ElTextarea([
             "name" => $name,
@@ -654,7 +652,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addSlider(string $label, string $name)
+    function addSlider(string $label, string $name)
     {
         $formkit = new ElSlider([
             "name" => $name,
@@ -671,7 +669,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addRate(string $label, string $name)
+    function addRate(string $label, string $name)
     {
         $formkit = new ElRate([
             "name" => $name,
@@ -687,7 +685,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addDateRangePicker(string $label, string $name)
+    function addDateRangePicker(string $label, string $name)
     {
         $formkit = new ElDateRangePicker([
             "name" => $name,
@@ -704,7 +702,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addColorPicker(string $label, string $name)
+    function addColorPicker(string $label, string $name)
     {
         $formkit = new ElColorPicker([
             "name" => $name,
@@ -722,7 +720,7 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
 
-    public function addDatePicker(string $label, string $name)
+    function addDatePicker(string $label, string $name)
     {
         $formkit = new ElDatePicker([
             "name" => $name,
@@ -738,7 +736,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addPassword(string $label, string $name)
+    function addPassword(string $label, string $name)
     {
         $formkit = new ElPassword([
             "name" => $name,
@@ -755,7 +753,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addSelect(string $label, string $name)
+    function addSelect(string $label, string $name)
     {
         $formkit = new ElSelect([
             "name" => $name,
@@ -773,7 +771,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addCheckbox(string $label, string $name)
+    function addCheckbox(string $label, string $name)
     {
         $formkit = new ElCheckbox([
             "name" => $name,
@@ -790,14 +788,14 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addElDivider()
+    function addElDivider()
     {
         $component = new ElDivider([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addDivider(?string $label = null)
+    function addDivider(?string $label = null)
     {
         $component = new ElDivider([], $this->translator);
 
@@ -812,14 +810,14 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    public function addElRadioGroup()
+    function addElRadioGroup()
     {
         $component = new ElRadioGroup([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
 
-    public function addRadioGroup(string $label, string $name)
+    function addRadioGroup(string $label, string $name)
     {
         $formkit = new ElRadioGroup([
             "name" => $name,
@@ -836,7 +834,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addCheckboxGroup(string $label, string $name)
+    function addCheckboxGroup(string $label, string $name)
     {
         $formkit = new ElCheckboxGroup([
             "name" => $name,
@@ -853,7 +851,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addSwitch(string $label, string $name)
+    function addSwitch(string $label, string $name)
     {
         $formkit = new ElSwitch([
             "name" => $name,
@@ -870,12 +868,12 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addItem(array $item)
+    function addItem(array $item)
     {
         $this->children[] = $item;
     }
 
-    public function addCodeInput(string $label, string $name)
+    function addCodeInput(string $label, string $name)
     {
         $formkit = new VxFormCodeInput([
             "name" => $name,
@@ -890,7 +888,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addFileInput(string $label, string $name)
+    function addFileInput(string $label, string $name)
     {
         $formkit = new VxFormFileInput([
             "name" => $name,
@@ -905,7 +903,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addInput(string $label, string $name)
+    function addInput(string $label, string $name)
     {
         $formkit = new ElInput([
             "name" => $name,
@@ -922,7 +920,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addInputNumber(string $label, string $name)
+    function addInputNumber(string $label, string $name)
     {
         $formkit = new ElInputNumber([
             "name" => $name,
@@ -939,7 +937,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    public function addElInput(?string $label = null, string $name)
+    function addElInput(?string $label = null, string $name)
     {
         $formkit = new ElInput([
             "name" => $name,
