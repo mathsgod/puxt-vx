@@ -965,4 +965,11 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->children[] = $component;
         return $component;
     }
+
+    function addElSpace()
+    {
+        $component = new ElSpace([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
 }
