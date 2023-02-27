@@ -4,7 +4,7 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElMenuItem extends ComponentBaseNode
+class ElMenuItem extends ComponentNode
 {
     public function __construct(array $property = [], ?TranslatorInterface $translator = null)
     {
