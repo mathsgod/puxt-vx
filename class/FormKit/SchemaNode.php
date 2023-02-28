@@ -2,11 +2,14 @@
 
 namespace FormKit;
 
+use FormKit\Quasar\QuasarTrait;
 use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class SchemaNode extends SchemaBaseNode
 {
+    use QuasarTrait;
+    
     protected $translator;
 
     function __construct(?TranslatorInterface $translator = null)
@@ -14,16 +17,18 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->translator = $translator;
     }
 
-    //Quasar Components
-    function addQIcon(?string $name = null)
+ 
+
+
+
+    function addRouterLink()
     {
-        $icon = new QIcon([]);
-        if ($name) {
-            $icon->name($name);
-        }
-        $this->children[] = $icon;
-        return $icon;
+        $link = new RouterLink([], $this->translator);
+        $this->children[] = $link;
+        return $link;
     }
+
+   
 
     //Vx Component
     function addVxLink(?string $label = null, ?string $to = null)
@@ -969,6 +974,13 @@ abstract class SchemaNode extends SchemaBaseNode
     function addElSpace()
     {
         $component = new ElSpace([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addVxSchema()
+    {
+        $component = new VxSchema([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
