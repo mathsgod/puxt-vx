@@ -30,6 +30,8 @@ return new class
     {
         $schema = $vx->createSchema();
 
+        $schema->addElTag()->children("test");
+
         $tabs = $schema->addElTabs()->type("border-card");
         $pane1 = $tabs->addPane("Pane1");
         $pane1->addChildren("hello");

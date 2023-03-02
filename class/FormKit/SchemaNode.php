@@ -2,6 +2,9 @@
 
 namespace FormKit;
 
+use FormKit\Element\ElButton;
+use FormKit\Element\ElementTrait;
+use FormKit\Element\ElTag;
 use FormKit\Quasar\QuasarTrait;
 use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -9,6 +12,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class SchemaNode extends SchemaBaseNode
 {
     use QuasarTrait;
+    use ElementTrait;
     
     protected $translator;
 
@@ -16,10 +20,6 @@ abstract class SchemaNode extends SchemaBaseNode
     {
         $this->translator = $translator;
     }
-
- 
-
-
 
     function addRouterLink()
     {
@@ -384,19 +384,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $statistic;
     }
 
-    function addElCountdown()
-    {
-        $countdown = new ElCountdown([], $this->translator);
-        $this->children[] = $countdown;
-        return $countdown;
-    }
-
-    function addElMenu()
-    {
-        $menu = new ElMenu([], $this->translator);
-        $this->children[] = $menu;
-        return $menu;
-    }
+ 
 
     function addVxTable()
     {
@@ -535,13 +523,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $component;
     }
 
-    function addElCard()
-    {
-        $component = new ElCard([], $this->translator);
 
-        $this->children[] = $component;
-        return $component;
-    }
 
     function addCard(?string $header = null)
     {

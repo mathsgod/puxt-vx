@@ -7,6 +7,7 @@
 return new class
 {
     function get(VX $vx)
+
     {
 
         return [
