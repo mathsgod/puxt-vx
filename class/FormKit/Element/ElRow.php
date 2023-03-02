@@ -1,7 +1,8 @@
 <?php
 
-namespace FormKit;
+namespace FormKit\Element;
 
+use FormKit\ComponentBaseNode;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElRow extends ComponentBaseNode

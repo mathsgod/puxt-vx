@@ -4,20 +4,75 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+    function addElRow()
+    {
+        $component = new ElRow([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+    function addElCollapse()
+    {
+        $collapse = new ElCollapse([], $this->translator);
+        $this->children[] = $collapse;
+        return $collapse;
+    }
+
+    function addElResult()
+    {
+        $result = new ElResult([], $this->translator);
+        $this->children[] = $result;
+        return $result;
+    }
+
+    function addElEmpty()
+    {
+        $empty = new ElEmpty();
+        $this->children[] = $empty;
+        return $empty;
+    }
+
+    function addElLink()
+    {
+        $component = new ElLink([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElSpace()
+    {
+        $component = new ElSpace([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElDivider()
+    {
+        $component = new ElDivider([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElBadge()
+    {
+        $badge = new ElBadge([], $this->translator);
+        $this->children[] = $badge;
+        return $badge;
+    }
+
     function addElDescriptions()
     {
         $component = new ElDescriptions([], $this->translator);
         $this->children[] = $component;
         return $component;
     }
-    
+
     function addElStatistic()
     {
         $statistic = new ElStatistic([], $this->translator);
         $this->children[] = $statistic;
         return $statistic;
     }
-    
+
     function addElTag()
     {
         $component = new ElTag([], $this->translator);
@@ -52,6 +107,4 @@ trait ElementTrait
         $this->children[] = $countdown;
         return $countdown;
     }
-
-    
 }

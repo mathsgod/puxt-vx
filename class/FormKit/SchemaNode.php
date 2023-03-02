@@ -2,6 +2,7 @@
 
 namespace FormKit;
 
+use FormKit\Element\ElBadge;
 use FormKit\Element\ElButton;
 use FormKit\Element\ElementTrait;
 use FormKit\Element\ElTag;
@@ -13,7 +14,7 @@ abstract class SchemaNode extends SchemaBaseNode
 {
     use QuasarTrait;
     use ElementTrait;
-    
+
     protected $translator;
 
     function __construct(?TranslatorInterface $translator = null)
@@ -27,8 +28,6 @@ abstract class SchemaNode extends SchemaBaseNode
         $this->children[] = $link;
         return $link;
     }
-
-   
 
     //Vx Component
     function addVxLink(?string $label = null, ?string $to = null)
@@ -280,7 +279,7 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addCollapse()
     {
-        $collapse = new ElCollapse([], $this->translator);
+        $collapse = $this->addElCollapse();
         $this->children[] = $collapse;
         return $collapse;
     }
@@ -455,14 +454,14 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addResult()
     {
-        $result = new ElResult([], $this->translator);
+        $result = $this->addElResult();
         $this->children[] = $result;
         return $result;
     }
 
     function addEmpty()
     {
-        $empty = new ElEmpty();
+        $empty = $this->addElEmpty();
         $this->children[] = $empty;
         return $empty;
     }
@@ -470,14 +469,14 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addLink()
     {
-        $component = new ElLink([], $this->translator);
+        $component = $this->addElLink();
         $this->children[] = $component;
         return $component;
     }
 
     function addRow()
     {
-        $component = new ElRow([], $this->translator);
+        $component = $this->addElRow();
         $this->children[] = $component;
         return $component;
     }
@@ -760,16 +759,9 @@ abstract class SchemaNode extends SchemaBaseNode
         return $formkit;
     }
 
-    function addElDivider()
-    {
-        $component = new ElDivider([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
     function addDivider(?string $label = null)
     {
-        $component = new ElDivider([], $this->translator);
+        $component = $this->addElDivider();
 
         if ($label) {
             if ($this->translator) {
@@ -934,13 +926,6 @@ abstract class SchemaNode extends SchemaBaseNode
     function addElTabs()
     {
         $component = new ElTabs([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-    function addElSpace()
-    {
-        $component = new ElSpace([], $this->translator);
         $this->children[] = $component;
         return $component;
     }

@@ -1,6 +1,8 @@
 <?php
 
-namespace FormKit;
+namespace FormKit\Element;
+
+use FormKit\ComponentNode;
 
 class ElResult extends ComponentNode
 {
