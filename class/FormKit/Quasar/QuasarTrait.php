@@ -27,4 +27,11 @@ trait QuasarTrait
         $this->children[] = $table;
         return $table;
     }
+
+    function addQBadge()
+    {
+        $badge = new QBadge([], $this->translator);
+        $this->children[] = $badge;
+        return $badge;
+    }
 }

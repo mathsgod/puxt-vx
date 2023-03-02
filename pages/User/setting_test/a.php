@@ -16,6 +16,8 @@ return new class
         //$schema->addQIcon("home")->size("xl");
         //$schema->addChildren("User/testing/a");
 
+        $schema->addQBadge()->label("Badge")->color("primary")->outline();
+
         $table = $schema->addQTable()->flat()->bordered()->square();
         $table->rowKey("user_id");
         $table->columns([
