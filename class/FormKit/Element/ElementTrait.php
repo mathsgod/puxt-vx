@@ -4,6 +4,13 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+    function addElStatistic()
+    {
+        $statistic = new ElStatistic([], $this->translator);
+        $this->children[] = $statistic;
+        return $statistic;
+    }
+    
     function addElTag()
     {
         $component = new ElTag([], $this->translator);
@@ -38,4 +45,6 @@ trait ElementTrait
         $this->children[] = $countdown;
         return $countdown;
     }
+
+    
 }

@@ -377,14 +377,6 @@ abstract class SchemaNode extends SchemaBaseNode
         return $this->addElMenu()->router(true);
     }
 
-    function addElStatistic()
-    {
-        $statistic = new ElStatistic([], $this->translator);
-        $this->children[] = $statistic;
-        return $statistic;
-    }
-
- 
 
     function addVxTable()
     {
