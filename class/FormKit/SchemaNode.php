@@ -486,12 +486,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $this->addElDescriptions()->column(1)->border();
     }
 
-    function addElTable()
-    {
-        $component = new ElTable([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
+   
 
     function addTag()
     {
@@ -923,12 +918,6 @@ abstract class SchemaNode extends SchemaBaseNode
         return $tabs;
     }
 
-    function addElTabs()
-    {
-        $component = new ElTabs([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
 
     function addVxSchema()
     {

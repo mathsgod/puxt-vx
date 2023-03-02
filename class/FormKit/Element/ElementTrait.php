@@ -4,6 +4,27 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+    function addElScrollbar()
+    {
+        $component = new ElScrollbar([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElTabs()
+    {
+        $component = new ElTabs([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElTable()
+    {
+        $component = new ElTable([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
     function addElRow()
     {
         $component = new ElRow([], $this->translator);

@@ -1,7 +1,8 @@
 <?php
 
-namespace FormKit;
+namespace FormKit\Element;
 
+use FormKit\ComponentNode;
 use Symfony\Component\CssSelector\XPath\TranslatorInterface;
 
 class ElScrollbar extends ComponentNode
