@@ -487,13 +487,6 @@ abstract class SchemaNode extends SchemaBaseNode
         return $this->addElDescriptions()->column(1)->border();
     }
 
-    function addElDescriptions()
-    {
-        $component = new ElDescriptions([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
     function addElTable()
     {
         $component = new ElTable([], $this->translator);

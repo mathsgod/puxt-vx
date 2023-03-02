@@ -4,6 +4,13 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+    function addElDescriptions()
+    {
+        $component = new ElDescriptions([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+    
     function addElStatistic()
     {
         $statistic = new ElStatistic([], $this->translator);
