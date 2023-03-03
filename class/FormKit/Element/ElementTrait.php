@@ -4,6 +4,13 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+    function addElContainer()
+    {
+        $component = new ElContainer([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
     function addElScrollbar()
     {
         $component = new ElScrollbar([], $this->translator);
