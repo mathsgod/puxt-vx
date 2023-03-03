@@ -29,6 +29,20 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
+        $schema->addElAvatar();
+
+        $schema->addElBacktop();
+
+        $container = $schema->addElContainer();
+        $container->addAside()->children("Aside");
+
+        $c2=$container->addContainer();
+
+        $c2->addHeader()->children("Header");
+
+
+        $c2->addMain()->children("Main");
+        $c2->addFooter()->children("Footer");
 
         $schema->addElTag()->children("test");
 

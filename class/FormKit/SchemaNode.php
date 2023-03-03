@@ -486,7 +486,7 @@ abstract class SchemaNode extends SchemaBaseNode
         return $this->addElDescriptions()->column(1)->border();
     }
 
-   
+
 
     function addTag()
     {
@@ -497,7 +497,7 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addTimeline()
     {
-        $component = new ElTimeline([], $this->translator);
+        $component = $this->addElTimeline();
         $this->children[] = $component;
         return $component;
     }

@@ -4,6 +4,56 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+
+    function addElBacktop()
+    {
+        $component = new ElBacktop([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElAffix()
+    {
+        $component = new ElAffix([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElTimeline()
+    {
+        $component = new ElTimeline([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElSkeleton()
+    {
+        $component = new ElSkeleton([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElProgress()
+    {
+        $component = new ElProgress([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElImage()
+    {
+        $component = new ElImage([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElAvatar()
+    {
+        $component = new ElAvatar([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
     function addElContainer()
     {
         $component = new ElContainer([], $this->translator);
