@@ -482,11 +482,10 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addCard(?string $header = null)
     {
-        $card = $this->addElCard();
+        $card = $this->addElCard()->shadow("never");
         if ($header) {
             $card->header($header);
         }
-        $card->shadow("never");
         return $card;
     }
 
