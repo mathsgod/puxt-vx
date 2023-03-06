@@ -365,7 +365,7 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addMenu()
     {
-        return $this->addElMenu()->router(true);
+        return $this->addElMenu()->router(true)->mode("horizontal");
     }
 
 
