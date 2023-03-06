@@ -5,14 +5,15 @@
  * Date: 2021-07-06 
  */
 
+use Psr\Http\Message\ServerRequestInterface;
 use VX\FileManager;
 use VX\FileManager\Event\BeforeUploadFile;
 
 return new class
 {
-    function post(VX $vx)
+    function post(VX $vx, ServerRequestInterface $request)
     {
-        $file = $vx->request->getUploadedFiles()["file"];
+        $file = $request->getUploadedFiles()["file"];
 
         if (!$file) {
             throw new Exception("No file uploaded", 400);

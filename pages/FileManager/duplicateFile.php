@@ -9,7 +9,7 @@ return new class
     function post(VX $vx)
     {
 
-        $fs = $vx->getFileManager();
+        $fs = $vx->getFileSystem();
 
         $source = $vx->_post["path"];
         $ext = pathinfo($source, PATHINFO_EXTENSION);
