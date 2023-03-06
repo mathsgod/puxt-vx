@@ -12,6 +12,13 @@ class ElTabs extends ComponentBaseNode
         parent::__construct("ElTabs", $props, $translator);
     }
 
+    function addTabPane()
+    {
+        $pane = new ElTabPane();
+        $this->children[] = $pane;
+        return $pane;
+    }
+
     function addPane(?string $label = null)
     {
         $pane = new ElTabPane();

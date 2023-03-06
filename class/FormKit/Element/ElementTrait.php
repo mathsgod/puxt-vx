@@ -4,6 +4,26 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
+    function addElSteps()
+    {
+        $component = new ElSteps([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElPageHeader()
+    {
+        $component = new ElPageHeader([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addElBreadcrumb()
+    {
+        $component = new ElBreadcrumb([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
 
     function addElBacktop()
     {

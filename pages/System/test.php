@@ -29,6 +29,31 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
+
+        $ph = $schema->addElPageHeader();
+
+
+
+        $ph->title("Title");
+
+        $t = $schema->createElement("template");
+     /*    $t->attr("#content", true);
+        $t->addChildren("Content"); */
+
+    /*     $t = $schema->createComponent("template");
+        $t->setProp("v-slot:content", true);
+        $t->addChildren("Content");
+ */
+
+        $ph->addChildren($t);
+
+        $b = $schema->addElBreadcrumb();
+        $b->addBreadcrumbItem()->to("/User")->children("test");
+        $b->addBreadcrumbItem()->to("/User/1/view")->children("test2");
+        $b->addBreadcrumbItem()->to("/User/1/view")->children("test3");
+
+
+
         $schema->addElAvatar();
 
         $schema->addElBacktop();
@@ -36,7 +61,7 @@ return new class
         $container = $schema->addElContainer();
         $container->addAside()->children("Aside");
 
-        $c2=$container->addContainer();
+        $c2 = $container->addContainer();
 
         $c2->addHeader()->children("Header");
 

@@ -12,7 +12,14 @@ class ElMenu extends ComponentBaseNode
         parent::__construct("ElMenu", $property, $translator);
     }
 
-    public function addMenuItem()
+    function addSubMenu()
+    {
+        $component = new ElSubMenu([], $this->translator);
+        $this->children[] = $component;
+        return $component;
+    }
+
+    function addMenuItem()
     {
         $item = new ElMenuItem([], $this->translator);
         $this->children[] = $item;
