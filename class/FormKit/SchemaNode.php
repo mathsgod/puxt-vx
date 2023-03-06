@@ -2,10 +2,7 @@
 
 namespace FormKit;
 
-use FormKit\Element\ElBadge;
-use FormKit\Element\ElButton;
 use FormKit\Element\ElementTrait;
-use FormKit\Element\ElTag;
 use FormKit\Quasar\QuasarTrait;
 use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -279,16 +276,12 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addCollapse()
     {
-        $collapse = $this->addElCollapse();
-        $this->children[] = $collapse;
-        return $collapse;
+        return $this->addElCollapse();
     }
 
     function addBadge()
     {
-        $badge = new ElBadge([], $this->translator);
-        $this->children[] = $badge;
-        return $badge;
+        return $this->addElBadge();
     }
 
     function addText(?string $label = null, string $name)
@@ -306,8 +299,7 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addButton(?string $text = null)
     {
-        $button = new ElButton([], $this->translator);
-        $this->children[] = $button;
+        $button = $this->addElButton();
         if ($text) {
             $button->addChildren($text);
         }
@@ -454,31 +446,22 @@ abstract class SchemaNode extends SchemaBaseNode
 
     function addResult()
     {
-        $result = $this->addElResult();
-        $this->children[] = $result;
-        return $result;
+        return  $this->addElResult();
     }
 
     function addEmpty()
     {
-        $empty = $this->addElEmpty();
-        $this->children[] = $empty;
-        return $empty;
+        return $this->addElEmpty();
     }
-
 
     function addLink()
     {
-        $component = $this->addElLink();
-        $this->children[] = $component;
-        return $component;
+        return $this->addElLink();
     }
 
     function addRow()
     {
-        $component = $this->addElRow();
-        $this->children[] = $component;
-        return $component;
+        return $this->addElRow();
     }
 
     function addDescriptions()
@@ -487,22 +470,15 @@ abstract class SchemaNode extends SchemaBaseNode
     }
 
 
-
     function addTag()
     {
-        $component = new ElTag([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->addElTag();
     }
 
     function addTimeline()
     {
-        $component = $this->addElTimeline();
-        $this->children[] = $component;
-        return $component;
+        return $this->addElTimeline();
     }
-
-
 
     function addCard(?string $header = null)
     {
