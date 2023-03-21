@@ -10,6 +10,22 @@ class VxActionColumn extends ComponentBaseNode
         parent::__construct("VxTableActionColumn", $property);
     }
 
+    public function addEditButton(){
+        $this->setProp('edit', true);
+        return $this;
+    }
+
+    public function addViewButton(){
+        $this->setProp('view', true);
+        return $this;
+    }
+
+    public function addDeleteButton(){
+        $this->setProp('delete', true);
+        return $this;
+    }
+    
+
     public function view(bool $view = true)
     {
         $this->setProp('view', $view);
