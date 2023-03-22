@@ -20,7 +20,7 @@ return new class
 
         $table->query("User?fields[]=initial&fields[]=getStatus&fields[]=getRoles");
 
-        $table->addActionColumn()->showDelete()->showEdit()->showView();
+        $table->addActionColumn()->addEditButton()->addViewButton()->addDeleteButton();
         $table->addColumn("Username", "username")->sortable()->searchable();
         $col = $table->addColumn("First name", "first_name")->sortable()->searchable();
 
@@ -31,6 +31,7 @@ return new class
             ->setProp("action", '$: "' . $path . '"+$row.user_id');
 
         $table->addColumn("Last name", "last_name")->sortable()->searchable();
+
 
         $column = $table->addColumn();
 
@@ -52,7 +53,7 @@ return new class
             ->if('$key==getRoles')
             ->children('$item');
 
-        $table->addColumn("Join date", "join_date")->sortable();
+        $table->addColumn("Join date", "join_date")->sortable()->searchable("date");
 
         $table->addColumn("Language", "language")->sortable()->searchable("select")->searchOptions([
             ["label" => "en", "value" => "en"],

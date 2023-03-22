@@ -257,9 +257,12 @@ abstract class SchemaNode extends SchemaBaseNode
         return $elTree;
     }
 
-    function addElTree()
+    function addElTree(?string $name)
     {
         $elTree = new ElTree();
+        if ($name) {
+            $elTree->name($name);
+        }
         $this->children[] = $elTree;
         return $elTree;
     }

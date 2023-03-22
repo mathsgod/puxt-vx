@@ -25,11 +25,14 @@ return new class
         ]);
         $form->action("/auth/change-role");
 
+
         $form->addHidden("user_id");
-        $tree = $form->addVxTree("roles")
+
+        $tree = $form->addElTree("roles")
             ->showCheckbox()
             ->defaultExpandAll()
             ->nodeKey("name");
+            
 
         $data = $stub->get($vx, $security);
         $tree->data($data);
