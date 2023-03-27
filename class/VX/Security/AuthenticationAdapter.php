@@ -44,6 +44,8 @@ class AuthenticationAdapter implements AdapterInterface
         $content = $this->request->getBody()->getContents();
         if ($this->request->getHeaderLine('Content-Type') == 'application/json') {
             $body = json_decode($content, true);
+        } else {
+            $body = $this->request->getParsedBody();
         }
 
 

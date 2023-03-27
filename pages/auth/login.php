@@ -1,6 +1,7 @@
 <?php
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\TextResponse;
 
 /**
@@ -11,7 +12,7 @@ return new class
 {
     function get()
     {
-        return ["login page"];
+        return new HtmlResponse(file_get_contents(__DIR__ . "/login.html"));
     }
 
     function post(VX $vx)
