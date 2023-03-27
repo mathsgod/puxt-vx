@@ -39,3 +39,47 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . index.php [L]
 ```
 
+## File Manager
+
+Support local, s3, hostlink-storage to store files.
+
+### local
+```ini
+VX_FILE_MANAGER_0=local
+VX_FILE_MANAGER_0_PATH=/var/www/html/uploads
+```
+
+### s3
+```
+composer require league/flysystem-aws-s3-v3:^3.0
+composer require aws/aws-sdk-php
+```
+
+```ini
+VX_FILE_MANAGER_0=s3
+VX_FILE_MANAGER_0_KEY=your-key
+VX_FILE_MANAGER_0_SECRET=your-secret
+VX_FILE_MANAGER_0_REGION=your-region
+VX_FILE_MANAGER_0_BUCKET=your-bucket
+VX_FILE_MANAGER_0_PREFIX=your-prefix
+VX_FILE_MANAGER_0_ENDPOINT=your-endpoint
+```
+
+
+### hostlink-storage
+```
+composer require hostlink/hostlink-storage-adapter
+```
+
+```ini
+VX_FILE_MANAGER_0=hostlink-storage
+VX_FILE_MANAGER_0_TOKEN=your-token
+VX_FILE_MANAGER_0_ENDPOINT=your-endpoint
+```
+
+### multiple file manager
+For multiple file manager, use `VX_FILE_MANAGER_1`, `VX_FILE_MANAGER_2`, etc.
+
+```php
+$fs=$vx->getFileSystem(1); // use file manager 1
+```

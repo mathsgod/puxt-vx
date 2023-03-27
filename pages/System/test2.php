@@ -7,8 +7,10 @@
 return new class
 {
     function get(VX $vx)
-
     {
+        $fs=$vx->getFileSystem();
+        
+        die();
 
         return [
             "hello" => "world"

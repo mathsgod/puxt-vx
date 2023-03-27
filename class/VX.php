@@ -708,61 +708,64 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     function getFileSystem(int $index = 0)
     {
-        $fm_config = $this->config["VX"]["file_manager"][$index];
+        $type = $_ENV["VX_FILE_MANAGER_{$index}"] ?? "local";
 
-        if (!$fm_config) {
-            $fm_config = $this->config["VX"]["file_manager"];
-            $fm_config["type"] = "local";
-        }
+        switch ($type) {
+            case "local":
+                $path = $_ENV["VX_FILE_MANAGER_{$index}_PATH"] ?? $this->root . DIRECTORY_SEPARATOR . "uploads";
+                $visibilityConverter = PortableVisibilityConverter::fromArray([
+                    'file' => [
+                        'public' => 0640,
+                        'private' => 0640,
+                    ],
+                    'dir' => [
+                        'public' => 0777,
+                        'private' => 0777,
+                    ],
+                ]);
 
-        if ($fm_config["type"] == "local") {
+                $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($path, $visibilityConverter);
+                $filesystem = new League\Flysystem\Filesystem($adapter);
+                return $filesystem;
+                break;
+            case "s3":
+                $key = $_ENV["VX_FILE_MANAGER_{$index}_KEY"] ?? "";
+                $secret = $_ENV["VX_FILE_MANAGER_{$index}_SECRET"] ?? "";
+                $region = $_ENV["VX_FILE_MANAGER_{$index}_REGION"] ?? "";
+                $bucket = $_ENV["VX_FILE_MANAGER_{$index}_BUCKET"] ?? "";
+                $endpoint = $_ENV["VX_FILE_MANAGER_{$index}_ENDPOINT"] ?? "";
+                $prefix = $_ENV["VX_FILE_MANAGER_{$index}_PREFIX"] ?? "";
 
-            $root = $this->root . DIRECTORY_SEPARATOR . "uploads";
-            if ($fm_config["root"]) {
-                $root = $fm_config["root"];
-            }
+                $client = new Aws\S3\S3Client([
+                    'version' => 'latest',
+                    'region' => $region,
+                    'endpoint' => $endpoint,
+                    'use_path_style_endpoint' => true,
+                    'credentials' => [
+                        'key' => $key,
+                        'secret' => $secret,
+                    ],
+                ]);
 
-            $visibility = [
-                'file' => [
-                    'public' => 0640,
-                    'private' => 0640,
-                ],
-                'dir' => [
-                    'public' => 0777,
-                    'private' => 0777,
-                ],
-            ];
+                $adapter = new \League\Flysystem\AwsS3V3\AwsS3V3Adapter(
+                    $client,
+                    $bucket,
+                    $prefix,
+                    new League\Flysystem\AwsS3V3\PortableVisibilityConverter(
+                        // Optional default for directories
+                        League\Flysystem\Visibility::PRIVATE // or ::PRIVATE
+                    )
+                );
 
-            if ($fm_config["visibility"]) {
-                $visibility = $fm_config["visibility"];
-            }
-            $visibilityConverter = PortableVisibilityConverter::fromArray($visibility);
+                return new League\Flysystem\Filesystem($adapter);
+                break;
+            case "hostlink-storage":
+                $token = $_ENV["VX_FILE_MANAGER_{$index}_TOKEN"] ?? "";
+                $endpoint = $_ENV["VX_FILE_MANAGER_{$index}_ENDPOINT"] ?? "";
 
-            $adapter = new League\Flysystem\Local\LocalFilesystemAdapter($root, $visibilityConverter);
-            $fs = new League\Flysystem\Filesystem($adapter);
-            return $fs;
-        }
-
-        if ($fm_config["type"] == "hostlink-storage") {
-
-            $adapter = new HL\Storage\Adapter($fm_config["token"], $fm_config["endpoint"]);
-            $fs = new League\Flysystem\Filesystem($adapter);
-            return $fs;
-        }
-
-        if ($fm_config["type"] == "aws s3") {
-            $s3client = new \Aws\S3\S3Client($fm_config["client"]);
-            $adapter = new \League\Flysystem\AwsS3V3\AwsS3V3Adapter(
-                $s3client,
-                $fm_config["bucket"],
-                $fm_config["prefix"] ?? "",
-                new League\Flysystem\AwsS3V3\PortableVisibilityConverter(
-                    // Optional default for directories
-                    League\Flysystem\Visibility::PRIVATE // or ::PRIVATE
-                )
-            );
-
-            return new League\Flysystem\Filesystem($adapter);
+                $adapter = new HL\Storage\Adapter($token, $endpoint);
+                $fs = new League\Flysystem\Filesystem($adapter);
+                return $fs;
         }
     }
 
