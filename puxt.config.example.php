@@ -1,10 +1,6 @@
 <?php
 
 return [
-    "modules" => [
-        "puxt-vx",
-    ],
-
     "database" => [
         "hostname" => "",
         "username" => "",
