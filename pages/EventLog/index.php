@@ -12,7 +12,7 @@ return new class
         $table = $schema->addVxTable();
         $table->query("EventLog?sort[]=eventlog_id:desc");
 
-        $table->addActionColumn()->showView();
+        $table->addActionColumn()->addViewButton();
 
         $table->addColumn("ID", "eventlog_id")->sortable()->width(100);
         $table->addColumn("Class", "class")->sortable()->searchable();
