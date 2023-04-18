@@ -30,17 +30,21 @@ return new class
     {
         $schema = $vx->createSchema();
 
+        $schema->addElText()->children("Hello World")->type("primary")->size("large")->truncated(true)->tag("h1");
+
         $ph = $schema->addElPageHeader();
+
+
 
 
 
         $ph->title("Title");
 
         $t = $schema->createElement("template");
-     /*    $t->attr("#content", true);
+        /*    $t->attr("#content", true);
         $t->addChildren("Content"); */
 
-    /*     $t = $schema->createComponent("template");
+        /*     $t = $schema->createComponent("template");
         $t->setProp("v-slot:content", true);
         $t->addChildren("Content");
  */
