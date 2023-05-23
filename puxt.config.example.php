@@ -1,13 +1,6 @@
 <?php
 
 return [
-    "database" => [
-        "hostname" => "",
-        "username" => "",
-        "password" => "",
-        "database" => "",
-    ],
-
     "VX" => [
         "jwt" => [
             "secret" => ""
