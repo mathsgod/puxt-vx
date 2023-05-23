@@ -15,6 +15,10 @@ class Authentication implements AuthenticationInterface
 {
     public function authenticate(ServerRequestInterface $request): ?UserInterface
     {
+
+        $body = $request->getParsedBody();
+
+
         $cookies = $request->getCookieParams();
         $access_token = $cookies["access_token"];
 

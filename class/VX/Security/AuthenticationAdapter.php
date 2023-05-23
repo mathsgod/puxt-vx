@@ -10,6 +10,7 @@ use Laminas\Authentication\Result;
 use Laminas\Config\Config;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
+use VX\AuthLock;
 use VX\User;
 use VX\UserLog;
 
@@ -48,7 +49,6 @@ class AuthenticationAdapter implements AdapterInterface
             $body = $this->request->getParsedBody();
         }
 
-
         if ($token = $body["token"]) {
             //token is jwt
             try {
@@ -63,6 +63,11 @@ class AuthenticationAdapter implements AdapterInterface
         $username = $body['username'];
         $password = $body['password'];
         $code = $body['code'];
+
+        //check username is locked
+        if (AuthLock::IsLocked($_SERVER['REMOTE_ADDR'], $username)) {
+            return new Result(Result::FAILURE, null, ["User and IP address locked"]);
+        }
 
         //check if the username and password are correct
 
@@ -87,7 +92,7 @@ class AuthenticationAdapter implements AdapterInterface
         if (!$this->passwordVerify($password, $user->password)) {
             $ul->result = "FAIL";
             $ul->save();
-
+            AuthLock::Add($_SERVER['REMOTE_ADDR'], $username);
             return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ["User not found or incorrect password"]);
         }
 
@@ -122,6 +127,10 @@ class AuthenticationAdapter implements AdapterInterface
 
         $ul->result = "SUCCESS";
         $ul->save();
+
+
+        //clear auth lock
+        AuthLock::Clear($_SERVER['REMOTE_ADDR'], $username);
 
 
         //create Token

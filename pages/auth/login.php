@@ -3,6 +3,7 @@
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\TextResponse;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Created by: Raymond Chong
@@ -15,23 +16,23 @@ return new class
         return new HtmlResponse(file_get_contents(__DIR__ . "/login.html"));
     }
 
-    function post(VX $vx)
+    function post(VX $vx, ServerRequestInterface $request)
     {
         try {
-            $token = $vx->login();
+            $token = $vx->login($request);
         } catch (Exception $e) {
             return new TextResponse($e->getMessage(), 401);
         }
 
         //generate cookie string
-        $access_token_string = "access_token=" . $token  . "; path=" . $vx->base_path . "; SameSite=None; HttpOnly;Secure ";
-        //$refresh_token_string = "refresh_token=" . $token["refresh_token"] . "; path=" . $vx->base_path . "auth/renew-token; SameSite=None; HttpOnly;Secure";
+        $access_token_string = "access_token=" . $token  . "; path=/; HttpOnly";
+        //$refresh_token_string = "refresh_token=" . $token["refresh_token"] . "; path=" . $vx->base_path . "auth/renew-token; SameSite=None; HttpOnly;";
 
-        /*         if ($vx->request->getUri()->getScheme() == "https") {
+        if ($request->getUri()->getScheme() == "https") {
             $access_token_string .= "; SameSite=None; Secure";
-            $refresh_token_string .= "; SameSite=None; Secure";
         }
- */
+
+        //set cookie
         $response = new EmptyResponse(200);
         $response = $response->withAddedHeader("Set-Cookie", $access_token_string);
         //$response = $response->withAddedHeader("Set-Cookie", $refresh_token_string);

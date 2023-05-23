@@ -2,44 +2,47 @@
 
 namespace VX;
 
-use Exception;
-
 class AuthLock extends Model
 {
-    public static function IsLockedIP(string $ip, int $time): bool
+    public static function IsLocked(string $ip, string $identity): bool
     {
-        return self::Query(["ip" => $ip])
-            ->where("value>=3")
-            ->where("date_add(`time`,Interval " . $time . " second) > now()")
-            ->count() > 0;
+        $q = self::Query(["ip" => $ip, "identity" => $identity]);
+        $q->where->expression("expiry >?", [date("Y-m-d H:i:s")]);
+        return $q->count() > 0;
     }
 
-    public static function ClearLockedIP(string $ip)
+    public static function Clear(string $ip, string $identity)
     {
-        $a = self::Get(["ip" => $ip]);
-
-        if ($a) {
+        foreach (self::Query(["ip" => $ip, "identity" => $identity]) as $a) {
             $a->delete();
         }
     }
 
-    public static function LockIP(string $ip)
+    public static function Add(string $ip, string $identity)
     {
+        $a = AuthLock::Get([
+            "ip" => $ip,
+            "identity" => $identity
+        ]);
 
-        return;
-        $a = AuthLock::Query([
-            "ip" => $ip
-        ])->first();
-
-        if ($a) {
-            $a->value++;
+        if (!$a) {
+            $a = AuthLock::Create([
+                "ip" => $ip,
+                "identity" => $identity,
+                "value" => 1
+            ]);
         } else {
-            $a->ip = $ip;
-            $a->value = 0;
+            $a->value++;
         }
         $a->time = date("Y-m-d H:i:s");
 
-        //no checking
+        if ($a->value % 5 == 0) {
+            //value/5 1=15 ,2=20, 3=25
+            $times = 10 + ($a->value / 5) * 5;
+            $a->expiry = date("Y-m-d H:i:s", strtotime("+{$times} minutes"));
+        }
+
+
         $a->save();
     }
 }

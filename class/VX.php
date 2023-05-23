@@ -399,11 +399,11 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
         }
 
-        $response = $response
+     /*    $response = $response
             ->withHeader("Access-Control-Allow-Credentials", "true")
             ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
             ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")
-            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location");
+            ->withHeader("Access-Control-Expose-Headers", "location, Content-Location"); */
 
         return $response;
     }
@@ -1076,15 +1076,6 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     {
         $adatper = $this->service->get(AdapterInterface::class);
         $result = $this->auth->authenticate($adatper);
-
-        $ip = $_SERVER['REMOTE_ADDR'];
-
-        if ($this->config["VX"]["authentication_lock"]) {
-            $time = $this->config["VX"]["authentication_lock_time"];
-            if (AuthLock::IsLockedIP($ip, $time)) {
-                throw new Exception("IP locked $time seconds", 403);
-            }
-        }
 
         if (!$result->isValid()) {
             //failed
