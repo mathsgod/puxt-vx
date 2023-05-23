@@ -600,7 +600,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
     private function loadConfig()
     {
         $parser = new Parser;
-        $config = $parser->parseFile($this->vx_root . "/default.config.yml");
+        $config = $parser->parseFile($this->vx_root . "/config.yml");
 
 
 
