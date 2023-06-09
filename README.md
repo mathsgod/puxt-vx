@@ -83,3 +83,10 @@ For multiple file manager, use `VX_FILE_MANAGER_1`, `VX_FILE_MANAGER_2`, etc.
 ```php
 $fs=$vx->getFileSystem(1); // use file manager 1
 ```
+
+
+## Debug mode
+To enable debug mode, set `VX_DEBUG=1` in `.env` file.
+```ini
+VX_DEBUG=1
+```
