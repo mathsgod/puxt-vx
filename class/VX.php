@@ -388,10 +388,10 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         try {
             $response = $router->dispatch($request);
         } catch (Throwable $e) {
-            if ($this->config->debug) {
+            if ($_ENV["VX_DEBUG"]) {
                 $response = new HtmlResponse($e->getMessage() . "\n" . $e->getFile() . "\n" . $e->getLine(), 500);
             } else {
-                $response = new HtmlResponse("Change the debug mode to true to see the error message", 500);
+                $response = new HtmlResponse("Change the debug mode (VX_DEBUG) to true to see the error message", 500);
             }
         }
 
@@ -399,7 +399,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
             $response = $response->withHeader("Access-Control-Allow-Origin", $_SERVER["HTTP_ORIGIN"]);
         }
 
-     /*    $response = $response
+        /*    $response = $response
             ->withHeader("Access-Control-Allow-Credentials", "true")
             ->withHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
             ->withHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, HEAD, DELETE")

@@ -28,6 +28,8 @@ return new class
 
     function get(VX $vx)
     {
+        throw new \Exception("test by exception");
+        die();
         $schema = $vx->createSchema();
 
         $schema->addElText()->children("Hello World")->type("primary")->size("large")->truncated(true)->tag("h1");
