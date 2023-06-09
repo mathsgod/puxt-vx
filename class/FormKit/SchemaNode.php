@@ -743,7 +743,6 @@ abstract class SchemaNode extends SchemaBaseNode
             $component->addChildren($label);
         }
 
-        $this->children[] = $component;
         return $component;
     }
 
