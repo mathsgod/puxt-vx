@@ -55,17 +55,20 @@ return new class
 
         $table->addColumn("Join date", "join_date")->sortable()->searchable("date");
 
-        $table->addColumn("Language", "language")->sortable()->searchable("select")->searchOptions([
-            ["label" => "en", "value" => "en"],
-            ["label" => "zh-hk", "value" => "zh-hk"],
-        ])->addComponent("XSelect")
+        $languages = [];
+        foreach ($vx->languages as $l) {
+            $languages[] = [
+                "label" => $l["name"],
+                "value" => $l["locale"]
+            ];
+        }
+
+        $table->addColumn("Language", "language")->sortable()->searchable("select")->searchOptions($languages)
+            ->addComponent("XSelect")
             ->setProp("name", "language")
             ->setProp("modelValue", '$row.language')
             ->setProp("action", '$: "' . $path . '"+$row.user_id')
-            ->setProp("options", [
-                ["label" => "English", "value" => "en"],
-                ["label" => "中文", "value" => "zh-hk"],
-            ]);
+            ->setProp("options", $languages);
 
         $table->addColumn("Status", "getStatus")->sortable();
 
