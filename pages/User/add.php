@@ -61,7 +61,7 @@ return new class
         $row = $form->addRow();
 
         $col = $row->addCol()->md(12);
-        
+
         $col->addInput("Username", "username")->validation("required");
         $col->addPassword("Password", "password")
             ->validation($vx->getPasswordValidation())
@@ -77,7 +77,7 @@ return new class
         $col->addInput("Address 1", "address1");
         $col->addInput("Address 2", "address2");
         $col->addInput("Address 3", "address3");
-        
+
         $form->addDatePicker("Join date", "join_date")->validation("required");
         $form->addDatePicker("Expiry date", "expiry_date");
         $form->addSelect("Status", "status")->options([
@@ -90,16 +90,16 @@ return new class
                 "value" => 1
             ]
         ])->validation("required");
-        $form->addSelect("Language", "language")->options([
-            [
-                "label" => "English",
-                "value" => "en"
-            ],
-            [
-                "label" => "中文",
-                "value" => "zh-hk"
-            ]
-        ])->validation("required");
+
+        $languages = [];
+        foreach ($vx->languages as $l) {
+            $languages[] = [
+                "label" => $l["name"],
+                "value" => $l["locale"]
+            ];
+        }
+
+        $form->addSelect("Language", "language")->options($languages)->validation("required");
         $form->addInput("Default page", "default_page");
 
 
