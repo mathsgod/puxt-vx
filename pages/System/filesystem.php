@@ -5,9 +5,9 @@
  * @date 2023-06-09 
  */
 
-use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\ResponseFactory;
 use League\Flysystem\StorageAttributes;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 return new class
 {
@@ -48,7 +48,7 @@ return new class
         }
     }
 
-    function get(VX $vx)
+    function get(VX $vx, TranslatorInterface $translator)
     {
         $schema = $vx->createSchema();
 
