@@ -23,9 +23,10 @@ return new class
         } catch (Exception $e) {
             return new TextResponse($e->getMessage(), 401);
         }
+        $path = $vx->base_path;
 
         //generate cookie string
-        $access_token_string = "access_token=" . $token  . "; path=/; HttpOnly";
+        $access_token_string = "access_token={$token}; path={$path}; HttpOnly";
         //$refresh_token_string = "refresh_token=" . $token["refresh_token"] . "; path=" . $vx->base_path . "auth/renew-token; SameSite=None; HttpOnly;";
 
         if ($request->getUri()->getScheme() == "https") {

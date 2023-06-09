@@ -27,15 +27,16 @@ return new class
         $vx->invalidateJWT($vx->getAccessToken());
 
         //$vx->invalidateJWT($vx->getRefreshToken());
+        $resp = new EmptyResponse(200);
 
-        $resp = new EmptyResponse();
 
-        $access_token_string = "access_token=; path=" . $vx->base_path . "; httponly";
+        $path = $vx->base_path;
+
+        $access_token_string = "access_token=; path={$path}; httponly; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         //$refresh_token_string = "refresh_token=; path=" . $vx->base_path . "auth/renew-token; httponly";
 
         if ($request->getUri()->getScheme() == "https") {
-            $access_token_string .= "; Secure";
-            //  $refresh_token_string .= "; Secure";
+            $access_token_string .= "; SameSite=None; Secure";
         }
 
         $resp = $resp->withAddedHeader("Set-Cookie", $access_token_string);
