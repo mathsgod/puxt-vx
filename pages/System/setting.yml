@@ -19,6 +19,10 @@ menu:
     link: /System/mail-test
     label: Mail test
     icon: far fa-envelope
+  File system:
+    link: /System/filesystem
+    label: File system
+    icon: fa fa-folder
   Database:
     link: /System/database
     label: Database
