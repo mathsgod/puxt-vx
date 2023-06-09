@@ -90,3 +90,15 @@ To enable debug mode, set `VX_DEBUG=1` in `.env` file.
 ```ini
 VX_DEBUG=1
 ```
+
+
+## Language
+To enable language, set `VX_LANGUAGE_0_NAME` and `VX_LANGUAGE_0_LOCALE` in `.env` file.
+```ini
+
+VX_LANGUAGE_0_NAME=English
+VX_LANGUAGE_0_LOCALE=en
+
+VX_LANGUAGE_1_NAME=中文
+VX_LANGUAGE_1_LOCALE=zh-hk
+```

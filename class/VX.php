@@ -137,6 +137,8 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     public $roles;
 
+    public $languages = [];
+
     public function __construct(ServiceManager $service, Config $config)
     {
         $this->service = $service;
@@ -148,7 +150,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
         $this->vx_root = dirname(__DIR__);
         $this->root =  $service->get(PUXT\App::class)->root;
-        $this->base_path = rtrim($config->VX->base_path ?? "/api", "/");
+        $this->base_path = rtrim($_ENV["VX_BASE_PATH"] ?? "/api", "/");
 
 
         //load translator
@@ -191,6 +193,7 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         $this->loadModules();
 
         $this->loadConfig();
+        $this->loadLanguage();
 
         Model::$_vx = $this;
 
@@ -614,15 +617,28 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
         foreach (\VX\Config::Query() as $c) {
             $this->config->VX[$c->name] = $c->value;
         }
+    }
 
+    private function loadLanguage()
+    {
+        $i = 0;
+        while ($_ENV["VX_LANGUAGE_{$i}_NAME"]) {
+            $this->languages[] = [
+                "name" => $_ENV["VX_LANGUAGE_{$i}_NAME"],
+                "locale" => $_ENV["VX_LANGUAGE_{$i}_LOCALE"],
+            ];
+            $i++;
+        }
 
-        //check langauge
-        if (!$this->config->VX->language) {
-            $this->config->VX->language =  [
-                "en" => "English",
+        if (count($this->languages) == 0) {
+            $this->languages[] = [
+                "name" => "English",
+                "locale" => "en",
             ];
         }
     }
+
+
 
     public function getModule(string $name): ?Module
     {

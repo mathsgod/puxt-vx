@@ -74,8 +74,11 @@ return new class
             $data["menus"] = $menu->getMenuByUser($vx->user);
 
             //language 
-            $data["language"] = $vx->config->VX->language->toArray();
-
+            $data["language"] = [];
+            foreach($vx->languages as $language){
+                $data["language"][$language['locale']]= $language['name'];
+            }
+            
             //user
             $user = $vx->user;
 
