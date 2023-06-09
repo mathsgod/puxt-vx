@@ -66,7 +66,7 @@ return new class
             $fm[] = ["type" => "local", "download" => "/api/System/filesystem?_entry=download&index=0"];
         }
 
-        $table = $schema->addElTable();
+        $table = $schema->addCard()->addElTable();
         $table->data($fm);
         $table->addColumn()->label("Type")->prop("type");
 
