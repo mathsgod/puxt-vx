@@ -25,8 +25,10 @@ return new class
         }
         $path = $vx->base_path;
 
+        $max_age = $vx->config->VX->access_token_time ?? 3600 * 8;
+
         //generate cookie string
-        $access_token_string = "access_token={$token}; path={$path}; HttpOnly";
+        $access_token_string = "access_token={$token}; path={$path}; max-age={$max_age}; HttpOnly";
         //$refresh_token_string = "refresh_token=" . $token["refresh_token"] . "; path=" . $vx->base_path . "auth/renew-token; SameSite=None; HttpOnly;";
 
         if ($request->getUri()->getScheme() == "https") {
