@@ -28,6 +28,8 @@ return new class
 
     function get(VX $vx)
     {
+
+        return;
         throw new \Exception("test by exception");
         die();
         $schema = $vx->createSchema();

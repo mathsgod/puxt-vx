@@ -11,21 +11,38 @@ return new class
 {
     function get(VX $vx, EventLog $eventlog)
     {
-        $scheam = $vx->createSchema();
+        $schema = $vx->createSchema();
 
-        $desc = $scheam->addDescriptions()->border()->column(1);
 
-        $desc->addItem("Eventlog id", $eventlog->eventlog_id);
-        $desc->addItem("Class", $eventlog->class);
-        $desc->addItem("Action", $eventlog->action);
-        $desc->addItem("Created time", $eventlog->created_time);
+        $div = $schema->addElement("div")->attrs(["class" => "row q-col-gutter-md"]);
+        $list = $div->addElement("div")->attrs(["class" => "col-12 col-md-6"])->addQCard()->flat()
+            ->addQList()->separator();
 
-        $item = $desc->addItem("Source");
-        $item->addElement("pre")->addChildren(json_encode($eventlog->source, JSON_PRETTY_PRINT));
+        $item = $list->addQItem();
+        $item->addSection("Eventlog id");
+        $item->addSection($eventlog->eventlog_id)->side();
 
-        $item = $desc->addItem("Target");
-        $item->addElement("pre")->addChildren(json_encode($eventlog->target, JSON_PRETTY_PRINT));
+        $item = $list->addQItem();
+        $item->addSection("Class");
+        $item->addSection($eventlog->class)->side();
 
-        return $scheam;
+        $item = $list->addQItem();
+        $item->addSection("Action");
+        $item->addSection($eventlog->action)->side();
+
+        $item = $list->addQItem();
+        $item->addSection("Created time");
+        $item->addSection($eventlog->created_time)->side();
+
+
+        $card = $div->addElement("div")->attrs(["class" => "col-12"])->addQCard()->flat();
+        $card->addSection()->addChildren("Source");
+        $card->addSection()->addElement("pre")->addChildren(json_encode($eventlog->source, JSON_PRETTY_PRINT));
+
+        $card = $div->addElement("div")->attrs(["class" => "col-12"])->addQCard()->flat();
+        $card->addSection()->addChildren("Target");
+        $card->addSection()->addElement("pre")->addChildren(json_encode($eventlog->target, JSON_PRETTY_PRINT));
+
+        return $schema;
     }
 };

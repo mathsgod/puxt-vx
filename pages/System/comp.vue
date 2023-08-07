@@ -1,5 +1,30 @@
 <template>
     <div>
+        <q-toolbar>
+            <q-btn label="test" color="primary" rounded outline icon="add" to="/User/add" />
+        </q-toolbar>
+
+        <q-card flat>
+            <q-list separator>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label>test</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-item-label>side</q-item-label>
+                    </q-item-section>
+                </q-item>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label>test</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-item-label>side</q-item-label>
+                    </q-item-section>
+                </q-item>
+            </q-list>
+        </q-card>
+
         <el-card>
             card
         </el-card>
