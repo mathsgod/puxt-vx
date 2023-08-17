@@ -6,15 +6,9 @@ use FormKit\ComponentBaseNode;
 
 class QTabs extends ComponentBaseNode
 {
-    public function __construct(array $property = [])
-    {
-        parent::__construct("QTabs", $property);
-    }
 
-    function addRouteTab()
+    function addRouteTab(): QRouteTab
     {
-        $tab = new QRouteTab();
-        $this->children[] = $tab;
-        return $tab;
+        return $this->appendHTML('<q-route-tab></q-route-tab>')[0];
     }
 }

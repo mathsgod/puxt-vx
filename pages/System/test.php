@@ -28,29 +28,10 @@ return new class
 
     function get(VX $vx)
     {
-
-        return new TextResponse(
-            <<<EOT
-            [
-                {
-                    "\$el": "div",
-                    "attrs": [],
-                    "children": [
-                        "Hello",
-                        {
-                            "\$el": "div",
-                            "attrs": [],
-                            "children": [
-                                "World"
-                            ]
-                        }
-                    ]
-                }
-            ]
-EOT
-        );
         $schema = $vx->createSchema();
 
+        $schema->addCard('hello');
+  
         $schema->addQCard()->addSection()->addChildren("test");
         $schema->addQBtn()->children("testing");
 

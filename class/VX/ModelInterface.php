@@ -9,7 +9,7 @@ interface ModelInterface
     public function save();
     public function delete();
     public function bind($obj);
-    static function Load(int $id): ?static;
+    static function Load(int $id);
 
     public function _id();
 }

@@ -1,103 +1,97 @@
 <?php
 
-namespace FormKit;
-
-use Symfony\Contracts\Translation\TranslatorInterface;
+namespace FormKit\Element\Inputs;
 
 class ElDatePicker extends ElInputNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('el-date-picker', $property, $translator);
-    }
 
     public function type(string $type)
     {
-        $this->property['type'] = $type;
+        $this->setAttribute('type', $type);
         return $this;
     }
 
     public function format(string $format)
     {
-        $this->property['format'] = $format;
+        $this->setAttribute('format', $format);
         return $this;
     }
 
     public function placeholder(string $placeholder)
     {
-        $this->property['placeholder'] = $placeholder;
+        $this->setAttribute('placeholder', $placeholder);
         return $this;
     }
 
     public function valueFormat(string $valueFormat)
     {
-        $this->property['valueFormat'] = $valueFormat;
+        $this->setAttribute('valueFormat', $valueFormat);
         return $this;
     }
 
     public function rangeSeparator(string $rangeSeparator)
     {
-        $this->property['rangeSeparator'] = $rangeSeparator;
+        $this->setAttribute('rangeSeparator', $rangeSeparator);
         return $this;
     }
 
     public function startPlaceholder(string $startPlaceholder)
     {
-        $this->property['startPlaceholder'] = $startPlaceholder;
+        $this->setAttribute('startPlaceholder', $startPlaceholder);
         return $this;
     }
 
     public function endPlaceholder(string $endPlaceholder)
     {
-        $this->property['endPlaceholder'] = $endPlaceholder;
+        $this->setAttribute('endPlaceholder', $endPlaceholder);
         return $this;
     }
 
     public function defaultValue(string $defaultValue)
     {
-        $this->property['defaultValue'] = $defaultValue;
+        $this->setAttribute('defaultValue', $defaultValue);
         return $this;
     }
 
     public function defaultTime(string $defaultTime)
     {
-        $this->property['defaultTime'] = $defaultTime;
+        $this->setAttribute('defaultTime', $defaultTime);
         return $this;
     }
 
     public function editable(bool $editable)
     {
-        $this->property['editable'] = $editable;
+        $this->setAttribute('editable', $editable);
         return $this;
     }
 
     public function clearable(bool $clearable)
     {
-        $this->property['clearable'] = $clearable;
+        $this->setAttribute('clearable', $clearable);
         return $this;
     }
 
     public function size(string $size)
     {
-        $this->property['size'] = $size;
+        $this->setAttribute('size', $size);
         return $this;
     }
 
     public function popperClass(string $popperClass)
     {
-        $this->property['popperClass'] = $popperClass;
+        $this->setAttribute('popperClass', $popperClass);
         return $this;
     }
 
     public function pickerOptions(array $pickerOptions)
     {
-        $this->property['pickerOptions'] = $pickerOptions;
+        $this->setAttribute(':pickerOptions', json_encode($pickerOptions));
         return $this;
     }
 
     public function align(string $align)
     {
-        $this->property['align'] = $align;
+        $this->setAttribute('align', $align);
         return $this;
     }
 }

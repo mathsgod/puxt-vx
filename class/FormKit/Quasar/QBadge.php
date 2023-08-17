@@ -7,27 +7,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QBadge extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('QBadge', $property, $translator);
-    }
 
     // Content
     function floating(bool $floating = true)
     {
-        $this->props["floating"] = $floating;
+        $this->attributes["floating"] = $floating;
         return $this;
     }
 
     function multiLine(bool $multiLine = true)
     {
-        $this->props["multi-line"] = $multiLine;
+        $this->attributes["multi-line"] = $multiLine;
         return $this;
     }
 
     function label(string|int $label)
     {
-        $this->props["label"] = $label;
+        $this->attributes["label"] = $label;
         return $this;
     }
 
@@ -36,38 +32,38 @@ class QBadge extends ComponentNode
      */
     function align(string $align)
     {
-        $this->props["align"] = $align;
+        $this->attributes["align"] = $align;
         return $this;
     }
 
     // Style
     function color(string $color)
     {
-        $this->props["color"] = $color;
+        $this->attributes["color"] = $color;
         return $this;
     }
 
     function textColor(string $textColor)
     {
-        $this->props["text-color"] = $textColor;
+        $this->attributes["text-color"] = $textColor;
         return $this;
     }
 
     function transparent(bool $transparent = true)
     {
-        $this->props["transparent"] = $transparent;
+        $this->attributes["transparent"] = $transparent;
         return $this;
     }
 
     function outline(bool $outline = true)
     {
-        $this->props["outline"] = $outline;
+        $this->attributes["outline"] = $outline;
         return $this;
     }
 
     function rounded(bool $rounded = true)
     {
-        $this->props["rounded"] = $rounded;
+        $this->attributes["rounded"] = $rounded;
         return $this;
     }
 }

@@ -3,7 +3,6 @@
 namespace FormKit\Element;
 
 use FormKit\ComponentNode;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElAffix extends ComponentNode
 {

@@ -4,69 +4,52 @@ namespace FormKit\Quasar;
 
 trait QuasarTrait
 {
-    function addQBtn()
+    function addQBtn(): QBtn
     {
-        $btn = new QBtn([], $this->translator);
-        $this->children[] = $btn;
-        return $btn;
+        return $this->appendHTML('<q-btn></q-btn>')[0];
     }
 
-    function addQToolbar()
+    function addQToolbar(): QToolbar
     {
-        $toolbar = new QToolbar([], $this->translator);
-        $this->children[] = $toolbar;
-        return $toolbar;
+        return $this->appendHTML('<q-toolbar></q-toolbar>')[0];
     }
 
-    function addQCard()
+    function addQCard(): QCard
     {
-        $card = new QCard([], $this->translator);
-        $this->children[] = $card;
-        return $card;
+        return $this->appendHTML('<q-card></q-card>')[0];
     }
 
-    function addQItem()
+    function addQItem(): QItem
     {
-        $item = new QItem([], $this->translator);
-        $this->children[] = $item;
-        return $item;
+        return $this->appendHTML('<q-item></q-item>')[0];
     }
 
-    function addQList()
+    function addQList(): QList
     {
-        $list = new QList([], $this->translator);
-        $this->children[] = $list;
-        return $list;
+        return $this->appendHTML('<q-list></q-list>')[0];
     }
 
-    function addQTabs()
+    function addQTabs(): QTabs
     {
-        $tabs = new QTabs([], $this->translator);
-        $this->children[] = $tabs;
-        return $tabs;
+        return $this->appendHTML('<q-tabs></q-tabs>')[0];
     }
 
-    function addQIcon(?string $name = null)
+    function addQIcon(?string $name = null): QIcon
     {
-        $icon = new QIcon([]);
+        $icon = $this->appendHTML('<q-icon></q-icon>')[0];
         if ($name) {
             $icon->name($name);
         }
-        $this->children[] = $icon;
         return $icon;
     }
 
-    function addQTable()
+    function addQTable(): QTable
     {
-        $table = new QTable([], $this->translator);
-        $this->children[] = $table;
-        return $table;
+        return $this->appendHTML('<q-table></q-table>')[0];
     }
 
-    function addQBadge()
+    function addQBadge(): QBadge
     {
-        $badge = new QBadge([], $this->translator);
-        $this->children[] = $badge;
-        return $badge;
+        return $this->appendHTML('<q-badge></q-badge>')[0];
     }
 }

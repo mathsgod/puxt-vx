@@ -1,31 +1,28 @@
 <?php
 
-namespace FormKit;
+namespace FormKit\Element\Inputs;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElInputNumber extends ElInputNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('el-input-number', $property, $translator);
-    }
+
 
     public function min(int $min)
     {
-        $this->property['min'] = $min;
+        $this->setAttribute('min', $min);
         return $this;
     }
 
     public function max(int $max)
     {
-        $this->property['max'] = $max;
+        $this->setAttribute('max', $max);
         return $this;
     }
 
     public function step(int $step)
     {
-        $this->property['step'] = $step;
+        $this->setAttribute('step', $step);
         return $this;
     }
 }

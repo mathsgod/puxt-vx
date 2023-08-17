@@ -10,7 +10,7 @@ class ElTableColumn extends ComponentNode
 
     public function addColumn(): ElTableColumn
     {
-        return $this->appendHTML('<el-table-column></el-table-column>');
+        return $this->appendHTML('<el-table-column></el-table-column>')[0];
     }
 
     /**

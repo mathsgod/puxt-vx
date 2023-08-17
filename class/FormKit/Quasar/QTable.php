@@ -6,84 +6,80 @@ use FormKit\ComponentBaseNode;
 
 class QTable extends ComponentBaseNode
 {
-    public function __construct(array $property = [])
-    {
-        parent::__construct("QTable", $property);
-    }
 
     // Behavior
     function fullscreen(bool $fullscreen = true)
     {
-        $this->props["fullscreen"] = $fullscreen;
+        $this->attributes["fullscreen"] = $fullscreen;
         return $this;
     }
 
     function grid(bool $grid = true)
     {
-        $this->props["grid"] = $grid;
+        $this->attributes["grid"] = $grid;
         return $this;
     }
 
     function gridHeader(bool $gridHeader = true)
     {
-        $this->props["grid-header"] = $gridHeader;
+        $this->attributes["grid-header"] = $gridHeader;
         return $this;
     }
 
     // Content
     function title(string $title)
     {
-        $this->props["title"] = $title;
+        $this->attributes["title"] = $title;
         return $this;
     }
 
     function hideHeader(bool $hideHeader = true)
     {
-        $this->props["hide-header"] = $hideHeader;
+        $this->attributes["hide-header"] = $hideHeader;
         return $this;
     }
 
     function hideNoData(bool $hideNoData = true)
     {
-        $this->props["hide-no-data"] = $hideNoData;
+        $this->attributes["hide-no-data"] = $hideNoData;
         return $this;
     }
 
     function hidePagination(bool $hidePagination = true)
     {
-        $this->props["hide-pagination"] = $hidePagination;
+        $this->attributes["hide-pagination"] = $hidePagination;
         return $this;
     }
 
     //horizontal|vertical|cell|none
     function sperator(string $sperator)
     {
-        $this->props["sperator"] = $sperator;
+        $this->attributes["sperator"] = $sperator;
         return $this;
     }
 
     function wrapCells(bool $wrapCells = true)
     {
-        $this->props["wrap-cells"] = $wrapCells;
+        $this->attributes["wrap-cells"] = $wrapCells;
         return $this;
     }
 
     function noResultsLabel(string $noResultsLabel)
     {
-        $this->props["no-results-label"] = $noResultsLabel;
+        $this->attributes["no-results-label"] = $noResultsLabel;
         return $this;
     }
 
     //General
     function rows(array $rows)
     {
-        $this->props["rows"] = $rows;
+        $this->attributes["rows"] = $rows;
         return $this;
     }
-    
+
     function rowKey(string $rowKey)
     {
-        $this->props["row-key"] = $rowKey;
+        $this->attributes["row-key"] = $rowKey;
         return $this;
     }
 
@@ -91,37 +87,37 @@ class QTable extends ComponentBaseNode
     // Style
     function color(string $color)
     {
-        $this->props["color"] = $color;
+        $this->attributes["color"] = $color;
         return $this;
     }
 
     function dense(bool $dense = true)
     {
-        $this->props["dense"] = $dense;
+        $this->attributes["dense"] = $dense;
         return $this;
     }
 
     function dark(bool $dark = true)
     {
-        $this->props["dark"] = $dark;
+        $this->attributes["dark"] = $dark;
         return $this;
     }
 
     function flat(bool $flat = true)
     {
-        $this->props["flat"] = $flat;
+        $this->attributes["flat"] = $flat;
         return $this;
     }
 
     function bordered(bool $bordered = true)
     {
-        $this->props["bordered"] = $bordered;
+        $this->attributes["bordered"] = $bordered;
         return $this;
     }
 
     function square(bool $square = true)
     {
-        $this->props["square"] = $square;
+        $this->attributes["square"] = $square;
         return $this;
     }
 
@@ -132,7 +128,7 @@ class QTable extends ComponentBaseNode
 
     function columns(array $columns)
     {
-        $this->props["columns"] = $columns;
+        $this->attributes["columns"] = $columns;
         return $this;
     }
 }

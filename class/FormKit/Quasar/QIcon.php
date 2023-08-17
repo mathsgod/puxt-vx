@@ -6,17 +6,13 @@ use FormKit\ComponentBaseNode;
 
 class QIcon extends ComponentBaseNode
 {
-    public function __construct()
-    {
-        parent::__construct('QIcon');
-    }
 
     /**
      * HTML tag to render, unless no icon is supplied or it's an svg icon
      */
     function tag(string $tag)
     {
-        $this->props["tag"] = $tag;
+        $this->attributes["tag"] = $tag;
         return $this;
     }
 
@@ -25,7 +21,7 @@ class QIcon extends ComponentBaseNode
      */
     function left(bool $left = true)
     {
-        $this->props["left"] = $left;
+        $this->attributes["left"] = $left;
         return $this;
     }
 
@@ -34,7 +30,7 @@ class QIcon extends ComponentBaseNode
      */
     function right(bool $right = true)
     {
-        $this->props["right"] = $right;
+        $this->attributes["right"] = $right;
         return $this;
     }
 
@@ -43,7 +39,7 @@ class QIcon extends ComponentBaseNode
      */
     function name(string $name)
     {
-        $this->props["name"] = $name;
+        $this->attributes["name"] = $name;
         return $this;
     }
 
@@ -52,7 +48,7 @@ class QIcon extends ComponentBaseNode
      */
     function size(string $size)
     {
-        $this->props["size"] = $size;
+        $this->attributes["size"] = $size;
         return $this;
     }
 
@@ -61,7 +57,7 @@ class QIcon extends ComponentBaseNode
      */
     function color(string $color)
     {
-        $this->props["color"] = $color;
+        $this->attributes["color"] = $color;
         return $this;
     }
 }

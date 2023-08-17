@@ -7,10 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QBtn extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('QBtn', $property, $translator);
-    }
 
     public function to(string $to)
     {

@@ -1,17 +1,17 @@
 <?php
 
 namespace FormKit;
-
 use FormKit\Element\ElementTrait;
 use FormKit\Quasar\QuasarTrait;
 use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use TheCodingMachine\GraphQLite\Annotations\Input;
 
 class SchemaNode extends \FormKit\Schema
 {
     use QuasarTrait;
     use ElementTrait;
+
+
 
     protected $translator;
 
@@ -20,6 +20,20 @@ class SchemaNode extends \FormKit\Schema
         $this->translator = $translator;
         parent::__construct();
         $this->registerClass("router-link", RouterLink::class);
+
+        foreach (glob(__DIR__ . "/Element/*.php") as $file) {
+            $class = basename($file, ".php");
+            //to kebab-case
+            $kebabCase = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class));
+            $this->registerClass($kebabCase, "FormKit\\Element\\" . $class);
+        }
+
+        foreach (glob(__DIR__ . "/Quasar/*.php") as $file) {
+            $class = basename($file, ".php");
+            //to kebab-case
+            $kebabCase = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class));
+            $this->registerClass($kebabCase, "FormKit\\Quasar\\" . $class);
+        }
     }
 
     function addRouterLink(): RouterLink
@@ -414,11 +428,6 @@ class SchemaNode extends \FormKit\Schema
     function createComponent(string $cmp, array $property = []): ComponentNode
     {
         return new ComponentNode($cmp, $property);
-    }
-
-    function createElement(string $el, array $property = []): ElementNode
-    {
-        return new ElementNode($el, $property, $this->translator);
     }
 
     function addComponent(string $cmp, array $props = [])

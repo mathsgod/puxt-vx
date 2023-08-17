@@ -1,61 +1,54 @@
 <?php
 
-namespace FormKit;
-
-use Symfony\Contracts\Translation\TranslatorInterface;
+namespace FormKit\Element\Inputs;
 
 class ElDateRangePicker extends ElInputNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('el-date-range-picker', $property, $translator);
-    }
-
     public function type(string $type)
     {
-        $this->property['type'] = $type;
+        $this->setAttribute('type', $type);
         return $this;
     }
 
     public function format(string $format)
     {
-        $this->property['format'] = $format;
+        $this->setAttribute('format', $format);
         return $this;
     }
 
     public function placeholder(string $placeholder)
     {
-        $this->property['placeholder'] = $placeholder;
+        $this->setAttribute('placeholder', $placeholder);
         return $this;
     }
 
     public function valueFormat(string $valueFormat)
     {
-        $this->property['valueFormat'] = $valueFormat;
+        $this->setAttribute('valueFormat', $valueFormat);
         return $this;
     }
 
     public function rangeSeparator(string $rangeSeparator)
     {
-        $this->property['rangeSeparator'] = $rangeSeparator;
+        $this->setAttribute('rangeSeparator', $rangeSeparator);
         return $this;
     }
 
     public function startPlaceholder(string $startPlaceholder)
     {
-        $this->property['startPlaceholder'] = $startPlaceholder;
+        $this->setAttribute('startPlaceholder', $startPlaceholder);
         return $this;
     }
 
     public function endPlaceholder(string $endPlaceholder)
     {
-        $this->property['endPlaceholder'] = $endPlaceholder;
+        $this->setAttribute('endPlaceholder', $endPlaceholder);
         return $this;
     }
 
     public function defaultValue(string $defaultValue)
     {
-        $this->property['defaultValue'] = $defaultValue;
+        $this->setAttribute('defaultValue', $defaultValue);
         return $this;
     }
 }

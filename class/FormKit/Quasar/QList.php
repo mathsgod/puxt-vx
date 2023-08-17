@@ -7,10 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QList extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('QList', $property, $translator);
-    }
 
     public function separator(bool $sperator = true)
     {
@@ -22,11 +18,9 @@ class QList extends ComponentBaseNode
         return $this->setProp("dense", $dense);
     }
 
-    public function addItem()
+    public function addItem(): QItem
     {
-        $item = new QItem([], $this->translator);
-        $this->children[] = $item;
-        return $item;
+        return $this->appendHTML('<q-item></q-item>')[0];
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace FormKit;
 
+use DOMNode;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ComponentNode extends Component
@@ -18,6 +19,17 @@ class ComponentNode extends Component
         } else {
             $this->setAttribute($key, $value);
         }
+        return $this;
+    }
+
+    public function addChildren($children)
+    {
+        return $this->append($children);
+    }
+
+    public function children($children)
+    {
+        $this->append($children);
         return $this;
     }
 }
