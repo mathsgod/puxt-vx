@@ -1,22 +1,18 @@
 <?php
 
-namespace FormKit;
+namespace FormKit\Element\Inputs;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElSelect extends ElInputNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('el-select', $property, $translator);
-    }
 
     /**
      * whether multiple-select is activated
      */
     function multiple(bool $multiple = true)
     {
-        $this->property['multiple'] = $multiple;
+        $this->setAttribute('multiple', $multiple);
         return $this;
     }
 
@@ -25,7 +21,7 @@ class ElSelect extends ElInputNode
      */
     function disabled(bool $disabled = true)
     {
-        $this->property['disabled'] = $disabled;
+        $this->setAttribute('disabled', $disabled);
         return $this;
     }
 
@@ -34,7 +30,7 @@ class ElSelect extends ElInputNode
      */
     function valueKey(string $valueKey)
     {
-        $this->property['value-key'] = $valueKey;
+        $this->setAttribute('value-key', $valueKey);
         return $this;
     }
 
@@ -43,7 +39,7 @@ class ElSelect extends ElInputNode
      */
     function size(string $size)
     {
-        $this->property['size'] = $size;
+        $this->setAttribute('size', $size);
         return $this;
     }
 
@@ -52,7 +48,7 @@ class ElSelect extends ElInputNode
      */
     function clearable(bool $clearable = true)
     {
-        $this->property['clearable'] = $clearable;
+        $this->setAttribute('clearable', $clearable);
         return $this;
     }
 
@@ -61,7 +57,7 @@ class ElSelect extends ElInputNode
      */
     function collapseTags(bool $collapseTags = true)
     {
-        $this->property['collapse-tags'] = $collapseTags;
+        $this->setAttribute('collapse-tags', $collapseTags);
         return $this;
     }
 
@@ -70,7 +66,7 @@ class ElSelect extends ElInputNode
      */
     function collapseTagsTooltip(bool $collapseTagsTooltip = true)
     {
-        $this->property['collapse-tags-tooltip'] = $collapseTagsTooltip;
+        $this->setAttribute('collapse-tags-tooltip', $collapseTagsTooltip);
         return $this;
     }
 
@@ -79,7 +75,7 @@ class ElSelect extends ElInputNode
      */
     function multipleLimit(int $multipleLimit)
     {
-        $this->property['multiple-limit'] = $multipleLimit;
+        $this->setAttribute('multiple-limit', $multipleLimit);
         return $this;
     }
 
@@ -88,7 +84,7 @@ class ElSelect extends ElInputNode
      */
     function effect(string $effect)
     {
-        $this->property['effect'] = $effect;
+        $this->setAttribute('effect', $effect);
         return $this;
     }
 
@@ -97,7 +93,7 @@ class ElSelect extends ElInputNode
      */
     function autocomplete(string $autocomplete)
     {
-        $this->property['autocomplete'] = $autocomplete;
+        $this->setAttribute('autocomplete', $autocomplete);
         return $this;
     }
 
@@ -106,7 +102,7 @@ class ElSelect extends ElInputNode
      */
     function placeholder(string $placeholder)
     {
-        $this->property['placeholder'] = $placeholder;
+        $this->setAttribute('placeholder', $placeholder);
         return $this;
     }
 
@@ -115,7 +111,7 @@ class ElSelect extends ElInputNode
      */
     function filterable(bool $filterable = true)
     {
-        $this->property['filterable'] = $filterable;
+        $this->setAttribute('filterable', $filterable);
         return $this;
     }
 
@@ -124,7 +120,7 @@ class ElSelect extends ElInputNode
      */
     function allowCreate(bool $allowCreate = true)
     {
-        $this->property['allow-create'] = $allowCreate;
+        $this->setAttribute('allow-create', $allowCreate);
         return $this;
     }
 
@@ -133,7 +129,7 @@ class ElSelect extends ElInputNode
      */
     function remote(bool $remote = true)
     {
-        $this->property['remote'] = $remote;
+        $this->setAttribute('remote', $remote);
         return $this;
     }
 
@@ -142,7 +138,7 @@ class ElSelect extends ElInputNode
      */
     function remoteShowSuffix(bool $remoteShowSuffix = true)
     {
-        $this->property['remote-show-suffix'] = $remoteShowSuffix;
+        $this->setAttribute('remote-show-suffix', $remoteShowSuffix);
         return $this;
     }
 
@@ -151,7 +147,7 @@ class ElSelect extends ElInputNode
      */
     function loading(bool $loading = true)
     {
-        $this->property['loading'] = $loading;
+        $this->setAttribute('loading', $loading);
         return $this;
     }
 
@@ -160,7 +156,7 @@ class ElSelect extends ElInputNode
      */
     function loadingText(string $loadingText)
     {
-        $this->property['loading-text'] = $loadingText;
+        $this->setAttribute('loading-text', $loadingText);
         return $this;
     }
 
@@ -169,7 +165,7 @@ class ElSelect extends ElInputNode
      */
     function noMatchText(string $noMatchText)
     {
-        $this->property['no-match-text'] = $noMatchText;
+        $this->setAttribute('no-match-text', $noMatchText);
         return $this;
     }
 
@@ -178,7 +174,7 @@ class ElSelect extends ElInputNode
      */
     function noDataText(string $noDataText)
     {
-        $this->property['no-data-text'] = $noDataText;
+        $this->setAttribute('no-data-text', $noDataText);
         return $this;
     }
 
@@ -187,7 +183,7 @@ class ElSelect extends ElInputNode
      */
     function popperClass(string $popperClass)
     {
-        $this->property['popper-class'] = $popperClass;
+        $this->setAttribute('popper-class', $popperClass);
         return $this;
     }
 
@@ -196,7 +192,7 @@ class ElSelect extends ElInputNode
      */
     function reserveKeyword(bool $reserveKeyword = true)
     {
-        $this->property['reserve-keyword'] = $reserveKeyword;
+        $this->setAttribute('reserve-keyword', $reserveKeyword);
         return $this;
     }
 
@@ -205,7 +201,7 @@ class ElSelect extends ElInputNode
      */
     function defaultFirstOption(bool $defaultFirstOption = true)
     {
-        $this->property['default-first-option'] = $defaultFirstOption;
+        $this->setAttribute('default-first-option', $defaultFirstOption);
         return $this;
     }
 
@@ -214,7 +210,7 @@ class ElSelect extends ElInputNode
      */
     function teleported(bool $teleported = true)
     {
-        $this->property['teleported'] = $teleported;
+        $this->setAttribute('teleported', $teleported);
         return $this;
     }
 
@@ -223,7 +219,7 @@ class ElSelect extends ElInputNode
      */
     function persistent(bool $persistent = true)
     {
-        $this->property['persistent'] = $persistent;
+        $this->setAttribute('persistent', $persistent);
         return $this;
     }
 
@@ -232,7 +228,7 @@ class ElSelect extends ElInputNode
      */
     function automaticDropdown(bool $automaticDropdown = true)
     {
-        $this->property['automatic-dropdown'] = $automaticDropdown;
+        $this->setAttribute('automatic-dropdown', $automaticDropdown);
         return $this;
     }
 
@@ -241,7 +237,7 @@ class ElSelect extends ElInputNode
      */
     function clearIcon(string $clearIcon)
     {
-        $this->property['clear-icon'] = $clearIcon;
+        $this->setAttribute('clear-icon', $clearIcon);
         return $this;
     }
 
@@ -250,7 +246,7 @@ class ElSelect extends ElInputNode
      */
     function fitInputWidth(bool $fitInputWidth = true)
     {
-        $this->property['fit-input-width'] = $fitInputWidth;
+        $this->setAttribute('fit-input-width', $fitInputWidth);
         return $this;
     }
 
@@ -259,7 +255,7 @@ class ElSelect extends ElInputNode
      */
     function suffixIcon(string $suffixIcon)
     {
-        $this->property['suffix-icon'] = $suffixIcon;
+        $this->setAttribute('suffix-icon', $suffixIcon);
         return $this;
     }
 
@@ -268,7 +264,7 @@ class ElSelect extends ElInputNode
      */
     function tagType(string $tagType)
     {
-        $this->property['tag-type'] = $tagType;
+        $this->setAttribute('tag-type', $tagType);
         return $this;
     }
 
@@ -277,7 +273,7 @@ class ElSelect extends ElInputNode
      */
     function validateEvent(bool $validateEvent = true)
     {
-        $this->property['validate-event'] = $validateEvent;
+        $this->setAttribute('validate-event', $validateEvent);
         return $this;
     }
 
@@ -286,7 +282,7 @@ class ElSelect extends ElInputNode
      */
     function placement(string $placement)
     {
-        $this->property['placement'] = $placement;
+        $this->setAttribute('placement', $placement);
         return $this;
     }
 }

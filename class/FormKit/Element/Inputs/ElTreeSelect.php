@@ -1,23 +1,18 @@
 <?php
 
-namespace FormKit;
+namespace FormKit\Element\Inputs;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElTreeSelect extends ElInputNode
 {
 
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("el-tree-select", $props, $translator);
-    }
-
     /**
      * tree data
      */
     public function data(array $data)
     {
-        $this->property['data'] = $data;
+        $this->setAttribute(':data', json_encode($data, JSON_UNESCAPED_UNICODE));
         return $this;
     }
 
@@ -26,7 +21,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function emptyText(string $emptyText)
     {
-        $this->property['empty-text'] = $emptyText;
+        $this->setAttribute('empty-text', $emptyText);
         return $this;
     }
 
@@ -35,7 +30,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function nodeKey(string $nodeKey)
     {
-        $this->property['node-key'] = $nodeKey;
+        $this->setAttribute('node-key', $nodeKey);
         return $this;
     }
 
@@ -44,7 +39,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function _props(array $props)
     {
-        $this->property['props'] = $props;
+        $this->setAttribute(':props', json_encode($props, JSON_UNESCAPED_UNICODE));
         return $this;
     }
 
@@ -53,7 +48,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function highlightCurrent(bool $highlightCurrent = true)
     {
-        $this->property['highlight-current'] = $highlightCurrent;
+        $this->setAttribute('highlight-current', $highlightCurrent);
         return $this;
     }
 
@@ -62,7 +57,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function defaultExpandAll(bool $defaultExpandAll = true)
     {
-        $this->property['default-expand-all'] = $defaultExpandAll;
+        $this->setAttribute('default-expand-all', $defaultExpandAll);
         return $this;
     }
 
@@ -71,7 +66,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function expandOnClickNode(bool $expandOnClickNode = true)
     {
-        $this->property['expand-on-click-node'] = $expandOnClickNode;
+        $this->setAttribute('expand-on-click-node', $expandOnClickNode);
         return $this;
     }
 
@@ -80,7 +75,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function checkOnClickNode(bool $checkOnClickNode = true)
     {
-        $this->property['check-on-click-node'] = $checkOnClickNode;
+        $this->setAttribute('check-on-click-node', $checkOnClickNode);
         return $this;
     }
 
@@ -89,7 +84,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function autoExpandParent(bool $autoExpandParent = true)
     {
-        $this->property['auto-expand-parent'] = $autoExpandParent;
+        $this->setAttribute('auto-expand-parent', $autoExpandParent);
         return $this;
     }
 
@@ -98,7 +93,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function defaultExpandedKeys(array $defaultExpandedKeys)
     {
-        $this->property['default-expanded-keys'] = $defaultExpandedKeys;
+        $this->setAttribute(':default-expanded-keys', json_encode($defaultExpandedKeys, JSON_UNESCAPED_UNICODE));
         return $this;
     }
 
@@ -107,7 +102,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function showCheckbox(bool $showCheckbox = true)
     {
-        $this->property['show-checkbox'] = $showCheckbox;
+        $this->setAttribute('show-checkbox', $showCheckbox);
         return $this;
     }
 
@@ -116,7 +111,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function checkStrictly(bool $checkStrictly = true)
     {
-        $this->property['check-strictly'] = $checkStrictly;
+        $this->setAttribute('check-strictly', $checkStrictly);
         return $this;
     }
 
@@ -125,7 +120,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function defaultCheckedKeys(array $defaultCheckedKeys)
     {
-        $this->property['default-checked-keys'] = $defaultCheckedKeys;
+        $this->setAttribute(':default-checked-keys', json_encode($defaultCheckedKeys, JSON_UNESCAPED_UNICODE));
         return $this;
     }
 
@@ -134,7 +129,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function currentNodeKey(string $currentNodeKey)
     {
-        $this->property['current-node-key'] = $currentNodeKey;
+        $this->setAttribute('current-node-key', $currentNodeKey);
         return $this;
     }
 
@@ -143,7 +138,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function accordion(bool $accordion = true)
     {
-        $this->property['accordion'] = $accordion;
+        $this->setAttribute('accordion', $accordion);
         return $this;
     }
 
@@ -152,7 +147,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function indent(int $indent)
     {
-        $this->property['indent'] = $indent;
+        $this->setAttribute('indent', $indent);
         return $this;
     }
 
@@ -161,7 +156,7 @@ class ElTreeSelect extends ElInputNode
      */
     public function icon(string $icon)
     {
-        $this->property['icon'] = $icon;
+        $this->setAttribute('icon', $icon);
         return $this;
     }
 
@@ -170,13 +165,13 @@ class ElTreeSelect extends ElInputNode
      */
     public function draggable(bool $draggable = true)
     {
-        $this->property['draggable'] = $draggable;
+        $this->setAttribute('draggable', $draggable);
         return $this;
     }
 
     public function multiple()
     {
-        $this->property['multiple'] = true;
+        $this->setAttribute('multiple', true);
         return $this;
     }
 }
