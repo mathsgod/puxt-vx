@@ -4,212 +4,153 @@ namespace FormKit\Element;
 
 trait ElementTrait
 {
-    function addElText()
+    function addElText(): ElText
     {
-        $component = new ElText([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-text></el-text>')[0];
     }
 
-    function addElSteps()
+    function addElSteps(): ElSteps
     {
-        $component = new ElSteps([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-steps></el-steps>')[0];
     }
 
-    function addElPageHeader()
+    function addElPageHeader(): ElPageHeader
     {
-        $component = new ElPageHeader([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-page-header></el-page-header>')[0];
     }
 
-    function addElBreadcrumb()
+    function addElBreadcrumb(): ElBreadcrumb
     {
-        $component = new ElBreadcrumb([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-breadcrumb></el-breadcrumb>')[0];
     }
 
-    function addElBacktop()
+    function addElBacktop(): ElBacktop
     {
-        $component = new ElBacktop([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-backtop></el-backtop>')[0];
     }
 
-    function addElAffix()
+    function addElAffix(): ElAffix
     {
-        $component = new ElAffix([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-affix></el-affix>')[0];
     }
 
-    function addElTimeline()
+    function addElTimeline(): ElTimeline
     {
-        $component = new ElTimeline([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-timeline></el-timeline>')[0];
     }
 
-    function addElSkeleton()
+    function addElSkeleton(): ElSkeleton
     {
-        $component = new ElSkeleton([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-skeleton></el-skeleton>')[0];
     }
 
-    function addElProgress()
+    function addElProgress(): ElProgress
     {
-        $component = new ElProgress([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-progress></el-progress>')[0];
     }
 
-    function addElImage()
+    function addElImage(): ElImage
     {
-        $component = new ElImage([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-image></el-image>')[0];
     }
 
-    function addElAvatar()
+    function addElAvatar(): ElAvatar
     {
-        $component = new ElAvatar([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-avatar></el-avatar>')[0];
     }
 
-    function addElContainer()
+    function addElContainer(): ElContainer
     {
-        $component = new ElContainer([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-container></el-container>')[0];
     }
 
-    function addElScrollbar()
+    function addElScrollbar(): ElScrollbar
     {
-        $component = new ElScrollbar([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-scrollbar></el-scrollbar>')[0];
     }
 
-    function addElTabs()
+    function addElTabs(): ElTabs
     {
-        $component = new ElTabs([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-tabs></el-tabs>')[0];
     }
 
-    function addElTable()
+    function addElTable(): ElTable
     {
-        $component = new ElTable([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-table></el-table>')[0];
     }
 
-    function addElRow()
+    function addElRow(): ElRow
     {
-        $component = new ElRow([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-row></el-row>')[0];
     }
-    function addElCollapse()
+    function addElCollapse(): ElCollapse
     {
-        $collapse = new ElCollapse([], $this->translator);
-        $this->children[] = $collapse;
-        return $collapse;
+        return $this->appendHTML('<el-collapse></el-collapse>')[0];
     }
 
-    function addElResult()
+    function addElResult(): ElResult
     {
-        $result = new ElResult([], $this->translator);
-        $this->children[] = $result;
-        return $result;
+        return $this->appendHTML('<el-result></el-result>')[0];
     }
 
-    function addElEmpty()
+    function addElEmpty(): ElEmpty
     {
-        $empty = new ElEmpty();
-        $this->children[] = $empty;
-        return $empty;
+        return $this->appendHTML('<el-empty></el-empty>')[0];
     }
 
-    function addElLink()
+    function addElLink(): ElLink
     {
-        $component = new ElLink([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-link></el-link>')[0];
     }
 
-    function addElSpace()
+    function addElSpace(): ElSpace
     {
-        $component = new ElSpace([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-space></el-space>')[0];
     }
 
-    function addElDivider()
+    function addElDivider(): ElDivider
     {
-        $component = new ElDivider([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-divider></el-divider>')[0];
     }
 
-    function addElBadge()
+    function addElBadge(): ElBadge
     {
-        $badge = new ElBadge([], $this->translator);
-        $this->children[] = $badge;
-        return $badge;
+        return $this->appendHTML('<el-badge></el-badge>')[0];
     }
 
-    function addElDescriptions()
+    function addElDescriptions(): ElDescriptions
     {
-        $component = new ElDescriptions([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-descriptions></el-descriptions>')[0];
     }
 
-    function addElStatistic()
+    function addElStatistic(): ElStatistic
     {
-        $statistic = new ElStatistic([], $this->translator);
-        $this->children[] = $statistic;
-        return $statistic;
+        return $this->appendHTML('<el-statistic></el-statistic>')[0];
     }
 
-    function addElTag()
+    function addElTag(): ElTag
     {
-        $component = new ElTag([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-tag></el-tag>')[0];
     }
 
-    function addElCard()
+
+    function addElCard(): ElCard
     {
-        $component = new ElCard([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-card></el-card>')[0];
     }
 
-    function addElButton()
+    function addElButton(): ElButton
     {
-        $component = new ElButton([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-button></el-button>')[0];
     }
 
-    function addElMenu()
+    function addElMenu(): ElMenu
     {
-        $menu = new ElMenu([], $this->translator);
-        $this->children[] = $menu;
-        return $menu;
+        return $this->appendHTML('<el-menu></el-menu>')[0];
     }
 
-    function addElCountdown()
+    function addElCountdown(): ElCountdown
     {
-        $countdown = new ElCountdown([], $this->translator);
-        $this->children[] = $countdown;
-        return $countdown;
+        return $this->appendHTML('<el-countdown></el-countdown>')[0];
     }
 }
