@@ -7,25 +7,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElTabs extends ComponentBaseNode
 {
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
+    function addTabPane(): ElTabPane
     {
-        parent::__construct("ElTabs", $props, $translator);
-    }
-
-    function addTabPane()
-    {
-        $pane = new ElTabPane();
-        $this->children[] = $pane;
-        return $pane;
+        return $this->appendHTML('<el-tab-pane></el-tab-pane>')[0];
     }
 
     function addPane(?string $label = null)
     {
-        $pane = new ElTabPane();
+        $pane = $this->addTabPane();
         if ($label) {
             $pane->label($label);
         }
-        $this->children[] = $pane;
         return $pane;
     }
 

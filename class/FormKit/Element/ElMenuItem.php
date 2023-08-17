@@ -7,10 +7,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElMenuItem extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElMenuItem", $property, $translator);
-    }
+
 
     public function route(string $route)
     {

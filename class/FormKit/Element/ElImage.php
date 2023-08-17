@@ -8,86 +8,97 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElImage extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElImage', $property, $translator);
-    }
-
     function src(string $src)
     {
-        $this->props['src'] = $src;
+        $this->setAttribute('src', $src);
         return $this;
     }
 
     function fit(string $fit)
     {
-        $this->props['fit'] = $fit;
+        $this->setAttribute('fit', $fit);
         return $this;
     }
 
     function hideOnClickModal(bool $value = true)
     {
-        $this->props['hide-on-click-modal'] = $value;
+        if ($value) {
+            $this->setAttribute('hide-on-click-modal', '');
+        } else {
+            $this->removeAttribute('hide-on-click-modal');
+        }
         return $this;
     }
 
     function loading(string $loading)
     {
-        $this->props['loading'] = $loading;
+        $this->setAttribute('loading', $loading);
         return $this;
     }
 
     function lazy(bool $value = true)
     {
-        $this->props['lazy'] = $value;
+        if ($value) {
+            $this->setAttribute('lazy', '');
+        } else {
+            $this->removeAttribute('lazy');
+        }
         return $this;
     }
 
     function scrollContainer(string $scrollContainer)
     {
-        $this->props['scroll-container'] = $scrollContainer;
+        $this->setAttribute('scroll-container', $scrollContainer);
         return $this;
     }
 
     function alt(string $alt)
     {
-        $this->props['alt'] = $alt;
+        $this->setAttribute('alt', $alt);
         return $this;
     }
 
     function referrerPolicy(string $referrerPolicy)
     {
-        $this->props['referrer-policy'] = $referrerPolicy;
+        $this->setAttribute('referrer-policy', $referrerPolicy);
         return $this;
     }
 
     function previewSrcList(array $previewSrcList)
     {
-        $this->props['preview-src-list'] = $previewSrcList;
+        $this->setAttribute(':preview-src-list', json_encode($previewSrcList));
         return $this;
     }
 
     function zIndex(int $zIndex)
     {
-        $this->props['z-index'] = $zIndex;
+        $this->setAttribute('z-index', $zIndex);
         return $this;
     }
 
     function initialIndex(int $initialIndex)
     {
-        $this->props['initial-index'] = $initialIndex;
+        $this->setAttribute('initial-index', $initialIndex);
         return $this;
     }
 
     function closeOnPressEscape(bool $value = true)
     {
-        $this->props['close-on-press-escape'] = $value;
+        if ($value) {
+            $this->setAttribute('close-on-press-escape', '');
+        } else {
+            $this->removeAttribute('close-on-press-escape');
+        }
         return $this;
     }
 
     function previewTeleported(bool $value = true)
     {
-        $this->props['preview-teleported'] = $value;
+        if ($value) {
+            $this->setAttribute('preview-teleported', '');
+        } else {
+            $this->removeAttribute('preview-teleported');
+        }
         return $this;
     }
 }

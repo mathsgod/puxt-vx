@@ -6,8 +6,9 @@ use FormKit\Element\ElementTrait;
 use FormKit\Quasar\QuasarTrait;
 use JsonSerializable;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use TheCodingMachine\GraphQLite\Annotations\Input;
 
-abstract class SchemaNode extends SchemaBaseNode
+class SchemaNode extends \FormKit\Schema
 {
     use QuasarTrait;
     use ElementTrait;
@@ -17,13 +18,13 @@ abstract class SchemaNode extends SchemaBaseNode
     function __construct(?TranslatorInterface $translator = null)
     {
         $this->translator = $translator;
+        parent::__construct();
+        $this->registerClass("router-link", RouterLink::class);
     }
 
-    function addRouterLink()
+    function addRouterLink(): RouterLink
     {
-        $link = new RouterLink([], $this->translator);
-        $this->children[] = $link;
-        return $link;
+        return $this->appendHTML("<router-link></router-link>")[0];
     }
 
     //Vx Component
@@ -46,199 +47,187 @@ abstract class SchemaNode extends SchemaBaseNode
     // FormKit Input Components
     function addFKTime(?string $label = null, ?string $name = null)
     {
-        $time = new Time($this->translator);
+        $input = $this->appendHTML("<form-kit type='time'></form-kit>")[0];
         if ($label) {
-            $time->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $time->name($name);
+            $input->name($name);
         }
-        $this->children[] = $time;
-        return $time;
+        return $input;
     }
 
-    function addFKTextarea(?string $label = null, ?string $name = null)
+    function addFKTextarea(?string $label = null, ?string $name = null): Inputs\Textarea
     {
-        $textarea = new Textarea($this->translator);
+        $input = $this->appendHTML("<form-kit type='textarea'></form-kit>")[0];
         if ($label) {
-            $textarea->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $textarea->name($name);
+            $input->name($name);
         }
-        $this->children[] = $textarea;
-        return $textarea;
+        return $input;
     }
 
-    function addFKTel(?string $label = null, ?string $name = null)
+    function addFKTel(?string $label = null, ?string $name = null): Inputs\Tel
     {
-        $tel = new Tel($this->translator);
+        $input = $this->appendHTML("<form-kit type='tel'></form-kit>")[0];
         if ($label) {
-            $tel->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $tel->name($name);
+            $input->name($name);
         }
-        $this->children[] = $tel;
-        return $tel;
+        return $input;
     }
 
-    function addFKSearch(?string $label = null, ?string $name = null)
+    function addFKSearch(?string $label = null, ?string $name = null): Inputs\Search
     {
-        $search = new Search($this->translator);
+        $input = $this->appendHTML("<form-kit type='search'></form-kit>")[0];
         if ($label) {
-            $search->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $search->name($name);
+            $input->name($name);
         }
-        $this->children[] = $search;
-        return $search;
+        return $input;
     }
 
-    function addFKRange(?string $label = null, ?string $name = null)
+    function addFKRange(?string $label = null, ?string $name = null): Inputs\Range
     {
-        $range = new Range($this->translator);
+        $input = $this->appendHTML("<form-kit type='range'></form-kit>")[0];
         if ($label) {
-            $range->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $range->name($name);
+            $input->name($name);
         }
-        $this->children[] = $range;
-        return $range;
+        return $input;
     }
 
-    function addFKPassword(?string $label = null, ?string $name = null)
+    function addFKPassword(?string $label = null, ?string $name = null): Inputs\Password
     {
-        $password = new Password($this->translator);
+        $input = $this->appendHTML("<form-kit type='password'></form-kit>")[0];
         if ($label) {
-            $password->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $password->name($name);
+            $input->name($name);
         }
-        $this->children[] = $password;
-        return $password;
+        return $input;
     }
 
-    function addFKNumber(?string $label = null, ?string $name = null)
+    function addFKNumber(?string $label = null, ?string $name = null): Inputs\Number
     {
-        $number = new Number($this->translator);
+        $input = $this->appendHTML("<form-kit type='number'></form-kit>")[0];
         if ($label) {
-            $number->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $number->name($name);
+            $input->name($name);
         }
-        $this->children[] = $number;
-        return $number;
+        return $input;
     }
 
-    function addList()
+    function addList(): Inputs\_List
     {
-        $list = new FKList();
-        $this->children[] = $list;
-        return $list;
+        $input = $this->appendHTML("<form-kit type='list'></form-kit>")[0];
+        return $input;
     }
 
-    function addFKForm()
+    function addFKForm(): Inputs\Form
     {
-        $form = new Form($this->translator);
-        $this->children[] = $form;
-        return $form;
+        $input = $this->appendHTML("<form-kit type='form'></form-kit>")[0];
+        return $input;
     }
 
-    function addFKDatetimeLocal(?string $label = null, ?string $name = null)
+    function addFKDatetimeLocal(?string $label = null, ?string $name = null): Inputs\DatetimeLocal
     {
-        $date = new DatetimeLocal($this->translator);
+        $input = $this->appendHTML("<form-kit type='datetime-local'></form-kit>")[0];
         if ($label) {
-            $date->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $date->name($name);
+            $input->name($name);
         }
-        $this->children[] = $date;
-        return $date;
+        return $input;
     }
 
-    function addFKDate(?string $label = null, ?string $name = null)
+    function addFKDate(?string $label = null, ?string $name = null): Inputs\Date
     {
-        $date = new Date($this->translator);
+        $input = $this->appendHTML("<form-kit type='date'></form-kit>")[0];
         if ($label) {
-            $date->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $date->name($name);
+            $input->name($name);
         }
-        $this->children[] = $date;
-        return $date;
+        return $input;
     }
 
-    function addFKCheckbox(?string $label = null, ?string $name = null)
+    function addFKCheckbox(?string $label = null, ?string $name = null): Inputs\Checkbox
     {
-        $checkbox = new Checkbox($this->translator);
+        $input = $this->appendHTML("<form-kit type='checkbox'></form-kit>")[0];
         if ($label) {
-            $checkbox->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $checkbox->name($name);
+            $input->name($name);
         }
-        $this->children[] = $checkbox;
-        return $checkbox;
+        return $input;
     }
 
-    function addFKFile(?string $label = null, ?string $name = null)
+    function addFKFile(?string $label = null, ?string $name = null): Inputs\File
     {
-        $file = new File($this->translator);
+        $input = $this->appendHTML("<form-kit type='file'></form-kit>")[0];
         if ($label) {
-            $file->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $file->name($name);
+            $input->name($name);
         }
-        $this->children[] = $file;
-        return $file;
+
+        return $input;
     }
 
 
-    function addFKEmail(?string $label = null, ?string $name = null)
+    function addFKEmail(?string $label = null, ?string $name = null): Inputs\Email
     {
-        $email = new Email($this->translator);
+        $input = $this->appendHTML("<form-kit type='email'></form-kit>")[0];
         if ($label) {
-            $email->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $email->name($name);
+            $input->name($name);
         }
-        $this->children[] = $email;
-        return $email;
+
+        return $input;
     }
 
-    function addFKRadio(?string $label = null, ?string $name = null)
+    function addFKRadio(?string $label = null, ?string $name = null): Inputs\Radio
     {
-        $radio = new Radio($this->translator);
+        $input = $this->appendHTML("<form-kit type='radio'></form-kit>")[0];
         if ($label) {
-            $radio->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $radio->name($name);
+            $input->name($name);
         }
-        $this->children[] = $radio;
-        return $radio;
+
+        return $input;
     }
 
-    function addFKSelect(?string $label = null, ?string $name = null)
+    function addFKSelect(?string $label = null, ?string $name = null): Inputs\Select
     {
-        $select = new Select($this->translator);
+        $input = $this->appendHTML("<form-kit type='select'></form-kit>")[0];
         if ($label) {
-            $select->label($label);
+            $input->label($label);
         }
         if ($name) {
-            $select->name($name);
+            $input->name($name);
         }
-        $this->children[] = $select;
-        return $select;
+
+        return $input;
     }
 
     //--------------------------------------------------------------------------------
@@ -470,6 +459,11 @@ abstract class SchemaNode extends SchemaBaseNode
     function addDescriptions()
     {
         return $this->addElDescriptions()->column(1)->border();
+    }
+
+    function addLists()
+    {
+        return $this->addQList()->separator();
     }
 
 

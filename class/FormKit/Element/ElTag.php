@@ -7,41 +7,39 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElTag extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElTag', $property, $translator);
-    }
+    
 
     /**
      * success/info/warning/danger
      */
     function type(string $type)
     {
-        $this->props["type"] = $type;
+
+        $this->attributes["type"] = $type;
         return $this;
     }
 
     function closable(bool $closable = true)
     {
-        $this->props["closable"] = $closable;
+        $this->attributes["closable"] = $closable;
         return $this;
     }
 
     function disableTransitions(bool $disableTransitions = true)
     {
-        $this->props["disable-transitions"] = $disableTransitions;
+        $this->attributes["disable-transitions"] = $disableTransitions;
         return $this;
     }
 
     function hit(bool $hit = true)
     {
-        $this->props["hit"] = $hit;
+        $this->attributes["hit"] = $hit;
         return $this;
     }
 
     function color(string $color)
     {
-        $this->props["color"] = $color;
+        $this->attributes["color"] = $color;
         return $this;
     }
 
@@ -50,7 +48,7 @@ class ElTag extends ComponentNode
      */
     function size(string $size)
     {
-        $this->props["size"] = $size;
+        $this->attributes["size"] = $size;
         return $this;
     }
 
@@ -59,7 +57,7 @@ class ElTag extends ComponentNode
      */
     function effect(string $effect)
     {
-        $this->props["effect"] = $effect;
+        $this->attributes["effect"] = $effect;
         return $this;
     }
 
@@ -68,7 +66,7 @@ class ElTag extends ComponentNode
      */
     function round(bool $round = true)
     {
-        $this->props["round"] = $round;
+        $this->attributes["round"] = $round;
         return $this;
     }
 }

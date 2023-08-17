@@ -2,55 +2,40 @@
 
 namespace FormKit\Element;
 
-use FormKit\ComponentBaseNode;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use FormKit\ComponentNode;
 
 
-class ElContainer extends ComponentBaseNode
+class ElContainer extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
+
+    function addHeader(): ElHeader
     {
-        parent::__construct('ElContainer', $property, $translator);
+        return $this->appendHTML('<el-header></el-header>')[0];
     }
 
-    function addHeader()
+    function addMain(): ElMain
     {
-        $header = new ElHeader([], $this->translator);
-        $this->children[] = $header;
-        return $header;
+        return $this->appendHTML('<el-main></el-main>')[0];
     }
 
-    function addMain()
+    function addFooter(): ElFooter
     {
-        $main = new ElMain([], $this->translator);
-        $this->children[] = $main;
-        return $main;
+        return $this->appendHTML('<el-footer></el-footer>')[0];
     }
 
-    function addFooter()
+    function addAside(): ElAside
     {
-        $footer = new ElFooter([], $this->translator);
-        $this->children[] = $footer;
-        return $footer;
+        return $this->appendHTML('<el-aside></el-aside>')[0];
     }
 
-    function addAside()
+    function addContainer(): ElContainer
     {
-        $aside = new ElAside([], $this->translator);
-        $this->children[] = $aside;
-        return $aside;
-    }
-
-    function addContainer()
-    {
-        $container = new ElContainer([], $this->translator);
-        $this->children[] = $container;
-        return $container;
+        return $this->appendHTML('<el-container></el-container>')[0];
     }
 
     function direction(string $direction)
     {
-        $this->props['direction'] = $direction;
+        $this->setAttribute('direction', $direction);
         return $this;
     }
 }

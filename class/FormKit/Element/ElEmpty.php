@@ -6,17 +6,12 @@ use FormKit\ComponentNode;
 
 class ElEmpty extends ComponentNode
 {
-    public function __construct()
-    {
-        parent::__construct('ElEmpty');
-    }
-
     /**
      * image URL
      */
     function image(string $value)
     {
-        $this->props['image'] = $value;
+        $this->setAttribute('image', $value);
         return $this;
     }
 
@@ -25,7 +20,7 @@ class ElEmpty extends ComponentNode
      */
     function description(string $value)
     {
-        $this->props['description'] = $value;
+        $this->setAttribute('description', $value);
         return $this;
     }
 
@@ -34,7 +29,7 @@ class ElEmpty extends ComponentNode
      */
     function imageSize(int $value)
     {
-        $this->props['imageSize'] = $value;
+        $this->setAttribute('image-size', $value);
         return $this;
     }
 }

@@ -7,17 +7,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElSkeleton extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElSkeleton", $property, $translator);
-    }
 
     /**
      * whether showing the animation
      */
     function animated(bool $animated = true)
     {
-        $this->props['animated'] = $animated;
+        $this->attributes['animated'] = $animated;
         return $this;
     }
 
@@ -26,7 +22,7 @@ class ElSkeleton extends ComponentNode
      */
     function count(int $count)
     {
-        $this->props['count'] = $count;
+        $this->attributes['count'] = $count;
         return $this;
     }
 
@@ -35,7 +31,7 @@ class ElSkeleton extends ComponentNode
      */
     function loading(bool $loading = true)
     {
-        $this->props['loading'] = $loading;
+        $this->attributes['loading'] = $loading;
         return $this;
     }
 
@@ -44,7 +40,7 @@ class ElSkeleton extends ComponentNode
      */
     function rows(int $rows)
     {
-        $this->props['rows'] = $rows;
+        $this->attributes['rows'] = $rows;
         return $this;
     }
 
@@ -53,7 +49,7 @@ class ElSkeleton extends ComponentNode
      */
     function throttle(int $throttle)
     {
-        $this->props['throttle'] = $throttle;
+        $this->attributes['throttle'] = $throttle;
         return $this;
     }
 }

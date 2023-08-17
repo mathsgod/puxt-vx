@@ -7,95 +7,85 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElSubMenu extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
+
+    function addSubMenu(): ElSubMenu
     {
-        parent::__construct('ElSubMenu', $property, $translator);
+        return $this->appendHTML('<el-sub-menu></el-sub-menu>')[0];
     }
 
-    function addSubMenu()
+    function addMenuItem(): ElMenuItem
     {
-        $component = new ElSubMenu([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-menu-item></el-menu-item>')[0];
     }
 
-    function addMenuItem()
+    function addMenuItemGroup(): ElMenuItemGroup
     {
-        $item = new ElMenuItem([], $this->translator);
-        $this->children[] = $item;
-        return $item;
-    }
-
-    function addMenuItemGroup()
-    {
-        $component = new ElMenuItemGroup([], $this->translator);
-        $this->children[] = $component;
-        return $component;
+        return $this->appendHTML('<el-menu-item-group></el-menu-item-group>')[0];
     }
 
     function index(string $value)
     {
-        $this->props['index'] = $value;
-        return $this;
+        $this->setAttribute('index', $value);
     }
 
     function popperClass(string $value)
     {
-        $this->props['popper-class'] = $value;
+
+        $this->attributes['popper-class'] = $value;
         return $this;
     }
 
     function showTimeout(int $value)
     {
-        $this->props['show-timeout'] = $value;
+        $this->attributes['show-timeout'] = $value;
         return $this;
     }
 
     function hideTimeout(int $value)
     {
-        $this->props['hide-timeout'] = $value;
+        $this->attributes['hide-timeout'] = $value;
         return $this;
     }
 
     function disabled(bool $value = true)
     {
-        $this->props['disabled'] = $value;
+        $this->attributes['disabled'] = $value;
         return $this;
     }
 
     function teleported(bool $value = true)
     {
-        $this->props['teleported'] = $value;
+        $this->attributes['teleported'] = $value;
         return $this;
     }
 
     function popperOffset(int $value)
     {
-        $this->props['popper-offset'] = $value;
+        $this->attributes['popper-offset'] = $value;
         return $this;
     }
 
     function expandCloseIcon(string $value)
     {
-        $this->props['expand-close-icon'] = $value;
+        $this->attributes['expand-close-icon'] = $value;
         return $this;
     }
 
     function expandOpenIcon(string $value)
     {
-        $this->props['expand-open-icon'] = $value;
+        $this->attributes['expand-open-icon'] = $value;
         return $this;
     }
 
     function collapseCloseIcon(string $value)
     {
-        $this->props['collapse-close-icon'] = $value;
+        $this->attributes['collapse-close-icon'] = $value;
         return $this;
     }
 
     function collapseOpenIcon(string $value)
     {
-        $this->props['collapse-open-icon'] = $value;
+        $this->attributes['collapse-open-icon'] = $value;
         return $this;
     }
 }

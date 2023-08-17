@@ -4,19 +4,12 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ComponentBaseNode extends SchemaBaseNode
+class ComponentBaseNode extends Component
 {
 
     protected $props = [];
     protected $translator;
 
-
-    public function __construct(string $cmp, array $props = [], ?TranslatorInterface $translator = null)
-    {
-        $this->props = $props;
-        $this->property['$cmp'] = $cmp;
-        $this->translator = $translator;
-    }
 
     public function setClass(string $class)
     {
@@ -24,19 +17,6 @@ class ComponentBaseNode extends SchemaBaseNode
         return $this;
     }
 
-    public function jsonSerialize()
-    {
-        $json = $this->property;
-        if ($this->props) {
-            $json['props'] = $this->props;
-        }
-
-        if ($this->children) {
-            $json['children'] = $this->children;
-        }
-
-        return $json;
-    }
 
     public function setProp(string $key, $value)
     {

@@ -32,7 +32,8 @@
         "ramsey/uuid": "^4.4",
         "laminas/laminas-servicemanager": "^3.20",
         "laminas/laminas-authentication": "^2.13",
-        "laminas/laminas-permissions-rbac": "^3.4"
+        "laminas/laminas-permissions-rbac": "^3.4",
+        "mathsgod/formkit-php": "^1.0"
     },
     "autoload": {
         "psr-4": {

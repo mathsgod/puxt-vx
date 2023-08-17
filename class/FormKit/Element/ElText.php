@@ -7,35 +7,32 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElText extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElText', $property, $translator);
-    }
+  
 
     //'primary' | 'success' | 'warning' | 'danger' | 'info'
     function type(string $type)
     {
-        $this->props["type"] = $type;
+        $this->attributes["type"] = $type;
         return $this;
     }
 
     //'large' | 'default' | 'small'
     function size(string $size)
     {
-        $this->props["size"] = $size;
+        $this->attributes["size"] = $size;
         return $this;
     }
 
     function truncated(bool $truncated = true)
     {
-        $this->props["truncated"] = $truncated;
+        $this->attributes["truncated"] = $truncated;
         return $this;
     }
 
     //custom element tag
     function tag(string $tag)
     {
-        $this->props["tag"] = $tag;
+        $this->attributes["tag"] = $tag;
         return $this;
     }
 }

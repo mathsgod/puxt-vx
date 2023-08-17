@@ -9,12 +9,13 @@ class ElementNode extends SchemaNode
 
     protected $attrs = [];
 
-    public function __construct(string $cmp, array $property = [], ?TranslatorInterface $translator = null)
+    public function __construct(string $cmp, array $property = [], array $children = [])
     {
         $this->property = $property;
         $this->property['$el'] = $cmp;
+        $this->children = $children;
 
-        parent::__construct($translator);
+        //parent::__construct($translator);
     }
 
     public function attr(string $name, $value)

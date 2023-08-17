@@ -29,6 +29,35 @@ return new class
     function get(VX $vx)
     {
 
+        return new TextResponse(
+            <<<EOT
+            [
+                {
+                    "\$el": "div",
+                    "attrs": [],
+                    "children": [
+                        "Hello",
+                        {
+                            "\$el": "div",
+                            "attrs": [],
+                            "children": [
+                                "World"
+                            ]
+                        }
+                    ]
+                }
+            ]
+EOT
+        );
+        $schema = $vx->createSchema();
+
+        $schema->addQCard()->addSection()->addChildren("test");
+        $schema->addQBtn()->children("testing");
+
+
+        $schema->addElText()->children("Hello World")->type("primary")->size("large")->truncated(true)->tag("h1");
+
+        return $schema;
         return;
         throw new \Exception("test by exception");
         die();

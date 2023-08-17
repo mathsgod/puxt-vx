@@ -8,17 +8,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ElStatistic extends ComponentNode
 {
 
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElStatistic", $props, $translator);
-    }
 
     /**
      * Setting the decimal point
      */
     function decimalSperation(string $decimalSperation)
     {
-        $this->setProp('decimal-seperation', $decimalSperation);
+        $this->setAttribute('decimal-seperation', $decimalSperation);
         return $this;
     }
 
@@ -27,7 +23,7 @@ class ElStatistic extends ComponentNode
      */
     function groupSperation(string $groupSperation)
     {
-        $this->setProp('group-seperation', $groupSperation);
+        $this->setAttribute('group-seperation', $groupSperation);
         return $this;
     }
 
@@ -36,7 +32,7 @@ class ElStatistic extends ComponentNode
      */
     function precision(int $precision)
     {
-        $this->setProp('precision', $precision);
+        $this->setAttribute('precision', $precision);
         return $this;
     }
 
@@ -45,7 +41,7 @@ class ElStatistic extends ComponentNode
      */
     function prefix(string $prefix)
     {
-        $this->setProp('prefix', $prefix);
+        $this->setAttribute('prefix', $prefix);
         return $this;
     }
 
@@ -54,7 +50,7 @@ class ElStatistic extends ComponentNode
      */
     function suffix(string $suffix)
     {
-        $this->setProp('suffix', $suffix);
+        $this->setAttribute('suffix', $suffix);
         return $this;
     }
 
@@ -63,7 +59,7 @@ class ElStatistic extends ComponentNode
      */
     function title(string $title)
     {
-        $this->setProp('title', $title);
+        $this->setAttribute('title', $title);
         return $this;
     }
 
@@ -72,7 +68,7 @@ class ElStatistic extends ComponentNode
      */
     function valueStyle(string|array $valueStyle)
     {
-        $this->setProp('value-style', $valueStyle);
+        $this->setAttribute('value-style', $valueStyle);
         return $this;
     }
 }

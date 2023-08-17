@@ -7,11 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElDescriptionsItem extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElDescriptionsItem', $property, $translator);
-    }
-
     /**
      * label text
      */

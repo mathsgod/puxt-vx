@@ -3,25 +3,18 @@
 namespace FormKit\Element;
 
 use FormKit\ComponentBaseNode;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElMenuItemGroup extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElMenuItemGroup", $property, $translator);
-    }
 
     function addMenuItem()
     {
-        $item = new ElMenuItem([], $this->translator);
-        $this->children[] = $item;
-        return $item;
+        return $this->appendHTML('<el-menu-item></el-menu-item>')[0];
     }
 
     function title(string $value)
     {
-        $this->props['title'] = $value;
+        $this->setAttribute('title', $value);
         return $this;
     }
 }

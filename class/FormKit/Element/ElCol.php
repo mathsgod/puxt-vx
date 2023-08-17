@@ -7,11 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElCol extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElCol', $property, $translator);
-    }
-
     public function span(int $span)
     {
         $this->setProp('span', $span);

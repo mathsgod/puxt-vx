@@ -7,16 +7,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElTable extends ComponentBaseNode
 {
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElTable", $props, $translator);
-    }
 
-    public function addColumn()
+    public function addColumn(): ElTableColumn
     {
-        $column = new ElTableColumn([], $this->translator);
-        $this->children[] = $column;
-        return $column;
+        return $this->appendHTML('<el-table-column></el-table-column>')[0];
     }
 
     /**

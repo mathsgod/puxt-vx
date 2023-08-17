@@ -85,6 +85,22 @@ return new class
         $user = $vx->user;
         $schema = $vx->createSchema();
 
+/*         $schema->addHTML("<h1>Profile</h1>");
+
+        return $schema;
+
+        return;
+
+ */        $card = $schema->addQCard()->flat();
+        $lists = $card->addLists();
+        $lists->item("Username", $user->username);
+        $lists->item("First name", $user->first_name);
+        $lists->item("Last name", $user->last_name);
+        $lists->item("Email", $user->email);
+        $lists->item("Phone", $user->phone);
+
+
+
         $schema->addDescriptions()
             ->item("Username", $user->username)
             ->item("First name", $user->first_name)

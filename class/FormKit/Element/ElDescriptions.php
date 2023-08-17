@@ -2,21 +2,18 @@
 
 namespace FormKit\Element;
 
-use FormKit\ComponentBaseNode;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use FormKit\ComponentNode;
 
-class ElDescriptions extends ComponentBaseNode
+class ElDescriptions extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
+    public function addItem(?string $label = null, ?string $content = null): ElDescriptionsItem
     {
-        parent::__construct('ElDescriptions', $property, $translator);
-    }
-
-    public function addItem(?string $label = null, ?string $content = null)
-    {
-        $item = $this->addDescriptionsItem($label);
+        $item = $this->appendHTML('<el-descriptions-item></el-descriptions-item>')[0];
+        if ($label) {
+            $item->label($label);
+        }
         if ($content) {
-            $item->addChildren($content);
+            $item->append($content);
         }
         return $item;
     }
@@ -25,7 +22,7 @@ class ElDescriptions extends ComponentBaseNode
     {
         $item = $this->addItem($label);
         if ($content) {
-            $item->addChildren($content);
+            $item->append($content);
         }
 
         return $this;
@@ -34,12 +31,10 @@ class ElDescriptions extends ComponentBaseNode
 
     public function addDescriptionsItem(?string $label = null)
     {
-        $item = new ElDescriptionsItem([], $this->translator);
+        $item = $this->appendHTML('<el-descriptions-item></el-descriptions-item>')[0];
         if ($label) {
             $item->label($label);
         }
-
-        $this->children[] = $item;
         return $item;
     }
 

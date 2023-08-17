@@ -7,10 +7,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElDivider extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElDivider", $property, $translator);
-    }
+
 
     public function contentPosition(string $contentPosition)
     {

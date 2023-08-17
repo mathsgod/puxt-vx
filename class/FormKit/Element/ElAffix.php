@@ -7,14 +7,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElAffix extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElAffix', $property, $translator);
-    }
 
     function offset(int $value)
     {
-        $this->props['offset'] = $value;
+        $this->setAttribute('offset', $value);
         return $this;
     }
 
@@ -23,7 +19,7 @@ class ElAffix extends ComponentNode
      */
     function position(string $value)
     {
-        $this->props['position'] = $value;
+        $this->setAttribute('position', $value);
         return $this;
     }
 
@@ -32,13 +28,13 @@ class ElAffix extends ComponentNode
      */
     function target(string $value)
     {
-        $this->props['target'] = $value;
+        $this->setAttribute('target', $value);
         return $this;
     }
 
     function zIndex(int $value)
     {
-        $this->props['z-index'] = $value;
+        $this->setAttribute('zIndex', $value);
         return $this;
     }
 }

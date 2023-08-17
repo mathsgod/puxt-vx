@@ -7,29 +7,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElMenu extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
+
+    function addSubMenu(): ElSubMenu
     {
-        parent::__construct("ElMenu", $property, $translator);
+        return $this->appendHTML('<el-sub-menu></el-sub-menu>')[0];
     }
 
-    function addSubMenu()
+    function addMenuItem(): ElMenuItem
     {
-        $component = new ElSubMenu([], $this->translator);
-        $this->children[] = $component;
-        return $component;
-    }
-
-    function addMenuItem()
-    {
-        $item = new ElMenuItem([], $this->translator);
-        $this->children[] = $item;
-        return $item;
+        return $this->appendHTML('<el-menu-item></el-menu-item>')[0];
     }
 
     public function item(string $label, ?string $index)
     {
         $item = $this->addMenuItem();
-        $item->addChildren($label);
+        $item->append($label);
         if ($index) {
             $item->index($index);
         }

@@ -7,14 +7,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElProgress extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElProgress", $property, $translator);
-    }
-
     function percentage(int $percentage)
     {
-        $this->props['percentage']= $percentage;
+        $this->attributes['percentage'] = $percentage;
         return $this;
     }
 
@@ -23,19 +18,19 @@ class ElProgress extends ComponentNode
      */
     function type(string $type)
     {
-        $this->props['type']= $type;
+        $this->attributes['type'] = $type;
         return $this;
     }
 
     function strokeWidth(int $strokeWidth)
     {
-        $this->props['stroke-width']= $strokeWidth;
+        $this->attributes['stroke-width'] = $strokeWidth;
         return $this;
     }
 
     function textInside(bool $textInside)
     {
-        $this->props['text-inside']= $textInside;
+        $this->attributes['text-inside'] = $textInside;
         return $this;
     }
 
@@ -44,37 +39,37 @@ class ElProgress extends ComponentNode
      */
     function status(string $status)
     {
-        $this->props['status']= $status;
+        $this->attributes['status'] = $status;
         return $this;
     }
 
     function indeterminate(bool $indeterminate)
     {
-        $this->props['indeterminate']= $indeterminate;
+        $this->attributes['indeterminate'] = $indeterminate;
         return $this;
     }
 
     function duration(int $duration)
     {
-        $this->props['duration']= $duration;
+        $this->attributes['duration'] = $duration;
         return $this;
     }
 
     function color(string $color)
     {
-        $this->props['color']= $color;
+        $this->attributes['color'] = $color;
         return $this;
     }
 
     function width(int $width)
     {
-        $this->props['width']= $width;
+        $this->attributes['width'] = $width;
         return $this;
     }
 
     function showText(bool $showText)
     {
-        $this->props['show-text']= $showText;
+        $this->attributes['show-text'] = $showText;
         return $this;
     }
 
@@ -83,14 +78,13 @@ class ElProgress extends ComponentNode
      */
     function strokeLinecap(string $strokeLinecap)
     {
-        $this->props['stroke-linecap']= $strokeLinecap;
+        $this->attributes['stroke-linecap'] = $strokeLinecap;
         return $this;
     }
 
     function format(string $format)
     {
-        $this->props['format']= $format;
+        $this->attributes['format'] = $format;
         return $this;
     }
-
 }

@@ -7,17 +7,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElBreadcrumbItem extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElBreadcrumbItem', $property, $translator);
-    }
 
     /**
      * target route of the link, same as to of vue-router
      */
     function to(string $value)
     {
-        $this->props['to'] = $value;
+        $this->setAttribute('to', $value);
         return $this;
     }
 
@@ -26,7 +22,7 @@ class ElBreadcrumbItem extends ComponentNode
      */
     function replace(bool $value = true)
     {
-        $this->props['replace'] = $value;
+        $this->setAttribute('replace', $value);
         return $this;
     }
 }

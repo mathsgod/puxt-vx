@@ -8,26 +8,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElCard extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElCard', $property, $translator);
-    }
 
     public function header(string $header)
     {
-        $this->props['header'] = $header;
+        $this->setAttribute('header', $header);
         return $this;
     }
 
     public function shadow(string $shadow)
     {
-        $this->props['shadow'] = $shadow;
+        $this->setAttribute('shadow', $shadow);
         return $this;
     }
 
     public function bodyStyle(array $bodyStyle)
     {
-        $this->props['bodyStyle'] = $bodyStyle;
+        $this->setAttribute(':body-style', json_encode($bodyStyle));
         return $this;
     }
 }

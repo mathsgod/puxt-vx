@@ -7,11 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElCountdown extends ComponentNode
 {
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElCountdown", $props, $translator);
-    }
-
     function format(string $format)
     {
         $this->setProp('format', $format);

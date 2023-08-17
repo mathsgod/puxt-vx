@@ -2,90 +2,99 @@
 
 namespace FormKit\Element;
 
-use FormKit\ComponentBaseNode;
+use FormKit\ComponentNode;
 
-class ElButton extends ComponentBaseNode
+class ElButton extends ComponentNode
 {
-    public function __construct()
-    {
-        parent::__construct("ElButton");
-    }
-
     function size(string $size)
     {
-        $this->props['size'] = $size;
+        $this->setAttribute('size', $size);
         return $this;
     }
 
     function text(bool $text)
     {
-        $this->props['text'] = $text;
+        $this->setAttribute('text', $text);
         return $this;
     }
 
     function bg(bool $bg)
     {
-        $this->props['bg'] = $bg;
+        $this->setAttribute('bg', $bg);
         return $this;
     }
 
     function link(bool $bg)
     {
-        $this->props['link'] = $bg;
+        $this->setAttribute('link', $bg);
         return $this;
     }
 
     function type(string $type)
     {
-        $this->props['type'] = $type;
+        $this->setAttribute('type', $type);
         return $this;
     }
 
     function plain(bool $plain)
     {
-        $this->props['plain'] = $plain;
+        $this->setAttribute('plain', $plain);
         return $this;
     }
 
     function round(bool $round)
     {
-        $this->props['round'] = $round;
+        $this->setAttribute('round', $round);
         return $this;
     }
 
     function icon(string $icon)
     {
-        $this->props['icon'] = $icon;
+        $this->setAttribute('icon', $icon);
         return $this;
     }
 
     function circle(bool $circle)
     {
-        $this->props['circle'] = $circle;
+        $this->setAttribute('circle', $circle);
         return $this;
     }
 
     function disabled(bool $disabled)
     {
-        $this->props['disabled'] = $disabled;
+        if ($disabled) {
+            $this->setAttribute('disabled', 'disabled');
+        } else {
+            $this->removeAttribute('disabled');
+        }
         return $this;
     }
 
     function loading(bool $loading)
     {
-        $this->props['loading'] = $loading;
+        if ($loading) {
+            $this->setAttribute('loading', 'loading');
+        } else {
+            $this->removeAttribute('loading');
+        }
+
         return $this;
     }
 
     function autofocus(bool $autofocus)
     {
-        $this->props['autofocus'] = $autofocus;
+        if ($autofocus) {
+            $this->setAttribute('autofocus', 'autofocus');
+        } else {
+            $this->removeAttribute('autofocus');
+        }
+
         return $this;
     }
 
     function nativeType(string $nativeType)
     {
-        $this->props['nativeType'] = $nativeType;
+        $this->setAttribute('native-type', $nativeType);
         return $this;
     }
 }

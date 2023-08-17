@@ -7,26 +7,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElTimelineItem extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElTimelineItem', $property, $translator);
-    }
-
     function timestamp($value)
     {
-        $this->props['timestamp'] = $value;
+        $this->attributes['timestamp'] = $value;
         return $this;
     }
 
     function hideTimestamp(bool $value = true)
     {
-        $this->props['hide-timestamp'] = $value;
+        $this->attributes['hide-timestamp'] = $value;
         return $this;
     }
 
     function center(bool $value = true)
     {
-        $this->props['center'] = $value;
+        $this->attributes['center'] = $value;
         return $this;
     }
 
@@ -35,7 +30,7 @@ class ElTimelineItem extends ComponentNode
      */
     function placement(string $value)
     {
-        $this->props['placement'] = $value;
+        $this->attributes['placement'] = $value;
         return $this;
     }
 
@@ -44,7 +39,7 @@ class ElTimelineItem extends ComponentNode
      */
     function type(string $value)
     {
-        $this->props['type'] = $value;
+        $this->attributes['type'] = $value;
         return $this;
     }
 
@@ -53,7 +48,7 @@ class ElTimelineItem extends ComponentNode
      */
     function color(string $value)
     {
-        $this->props['color'] = $value;
+        $this->attributes['color'] = $value;
         return $this;
     }
 
@@ -62,19 +57,19 @@ class ElTimelineItem extends ComponentNode
      */
     function size(string $value)
     {
-        $this->props['size'] = $value;
+        $this->attributes['size'] = $value;
         return $this;
     }
 
     function icon(string $value)
     {
-        $this->props['icon'] = $value;
+        $this->attributes['icon'] = $value;
         return $this;
     }
 
     function hollow(bool $value = true)
     {
-        $this->props['hollow'] = $value;
+        $this->attributes['hollow'] = $value;
         return $this;
     }
 }

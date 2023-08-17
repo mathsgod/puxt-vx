@@ -2,34 +2,26 @@
 
 namespace FormKit\Element;
 
-use FormKit\ComponentBaseNode;
+use FormKit\ComponentNode;
 
-class ElCollapse extends ComponentBaseNode
+class ElCollapse extends ComponentNode
 {
-    public function __construct()
-    {
-        parent::__construct('ElCollapse');
-    }
-
     public function addItem(?string $title = null, ?string $name = null)
     {
-        $item = new ElCollapseItem();
+        $item = $this->appendHTML('<el-collapse-item></el-collapse-item>')[0];
         if ($title) {
             $item->title($title);
         }
 
         if ($name) {
-            $item->setProp("name", $name);
+            $item->setAttribute('name', $name);
         }
-
-
-        $this->addChildren($item);
         return $item;
     }
 
     function accordion(bool $value = true)
     {
-        $this->props['accordion'] = $value;
+        $this->setAttribute('accordion', $value);
         return $this;
     }
 }

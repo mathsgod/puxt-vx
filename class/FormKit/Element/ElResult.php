@@ -6,17 +6,13 @@ use FormKit\ComponentNode;
 
 class ElResult extends ComponentNode
 {
-    public function __construct()
-    {
-        parent::__construct('ElResult');
-    }
 
     /**
      * title
      */
     function title(string $value)
     {
-        $this->props['title'] = $value;
+        $this->attributes['title'] = $value;
         return $this;
     }
 
@@ -25,7 +21,7 @@ class ElResult extends ComponentNode
      */
     function subTitle(string $value)
     {
-        $this->props['sub-title'] = $value;
+        $this->attributes['sub-title'] = $value;
         return $this;
     }
 
@@ -34,7 +30,7 @@ class ElResult extends ComponentNode
      */
     function icon(string $value)
     {
-        $this->props['icon'] = $value;
+        $this->attributes['icon'] = $value;
         return $this;
     }
 }

@@ -7,11 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElTabPane extends ComponentNode
 {
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElTabPane", $props, $translator);
-    }
-
     /**
      * title of the tab
      */

@@ -7,17 +7,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElSpace extends ComponentNode
 {
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("ElSpace", $props, $translator);
-    }
+
 
     /**
      * Controls the alignment of items, https://developer.mozilla.org/en-US/docs/Web/CSS/align-items
      */
     function alignment(string $align)
     {
-        $this->props['align'] = $align;
+        $this->attributes['align'] = $align;
         return $this;
     }
 
@@ -26,7 +23,7 @@ class ElSpace extends ComponentNode
      */
     function class(string|array $class)
     {
-        $this->props['class'] = $class;
+        $this->attributes['class'] = $class;
         return $this;
     }
 
@@ -36,7 +33,7 @@ class ElSpace extends ComponentNode
      */
     function direction(string $direction)
     {
-        $this->props['direction'] = $direction;
+        $this->attributes['direction'] = $direction;
         return $this;
     }
 
@@ -45,7 +42,7 @@ class ElSpace extends ComponentNode
      */
     function prefixCls(string $prefixCls)
     {
-        $this->props['prefixCls'] = $prefixCls;
+        $this->attributes['prefixCls'] = $prefixCls;
         return $this;
     }
 
@@ -54,7 +51,7 @@ class ElSpace extends ComponentNode
      */
     function style(string|array $style)
     {
-        $this->props['style'] = $style;
+        $this->attributes['style'] = $style;
         return $this;
     }
 
@@ -63,7 +60,7 @@ class ElSpace extends ComponentNode
      */
     function spacer(string|int $spacer)
     {
-        $this->props['spacer'] = $spacer;
+        $this->attributes['spacer'] = $spacer;
         return $this;
     }
 
@@ -74,7 +71,7 @@ class ElSpace extends ComponentNode
      */
     function size(string|int|array $size)
     {
-        $this->props['size'] = $size;
+        $this->attributes['size'] = $size;
         return $this;
     }
 
@@ -83,7 +80,7 @@ class ElSpace extends ComponentNode
      */
     function wrap(bool $wrap = true)
     {
-        $this->props['wrap'] = $wrap;
+        $this->attributes['wrap'] = $wrap;
         return $this;
     }
 
@@ -92,7 +89,7 @@ class ElSpace extends ComponentNode
      */
     function fill(bool $fill = true)
     {
-        $this->props['fill'] = $fill;
+        $this->attributes['fill'] = $fill;
         return $this;
     }
 
@@ -101,7 +98,7 @@ class ElSpace extends ComponentNode
      */
     function fillRatio(int $fillRatio)
     {
-        $this->props['fill-ratio'] = $fillRatio;
+        $this->attributes['fill-ratio'] = $fillRatio;
         return $this;
     }
 }

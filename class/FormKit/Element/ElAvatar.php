@@ -8,17 +8,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElAvatar extends ComponentNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct('ElAvatar', $property, $translator);
-    }
 
     /**
      * 'large' | 'default' | 'small'
      */
     function size(string|int $size)
     {
-        $this->props['size'] = $size;
+        $this->setAttribute('size', $size);
         return $this;
     }
 
@@ -27,31 +23,31 @@ class ElAvatar extends ComponentNode
      */
     function shape(string $shape)
     {
-        $this->props['shape'] = $shape;
+        $this->setAttribute("shape", $shape);
         return $this;
     }
 
     function src(string $src)
     {
-        $this->props['src'] = $src;
+        $this->setAttribute('src', $src);
         return $this;
     }
 
     function srcSet(string $srcSet)
     {
-        $this->props['src-set'] = $srcSet;
+        $this->setAttribute('srcSet', $srcSet);
         return $this;
     }
 
     function alt(string $alt)
     {
-        $this->props['alt'] = $alt;
+        $this->setAttribute('alt', $alt);
         return $this;
     }
 
     function icon(string $icon)
     {
-        $this->props['icon'] = $icon;
+        $this->setAttribute('icon', $icon);
         return $this;
     }
 
@@ -60,7 +56,7 @@ class ElAvatar extends ComponentNode
      */
     function fit(string $fit)
     {
-        $this->props['fit'] = $fit;
+        $this->setAttribute('fit', $fit);
         return $this;
     }
 }

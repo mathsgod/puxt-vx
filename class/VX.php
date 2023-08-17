@@ -1129,6 +1129,6 @@ class VX implements AdapterAwareInterface, MiddlewareInterface, LoggerAwareInter
 
     function createSchema()
     {
-        return new \FormKit\Schema($this->translator);
+        return new \FormKit\SchemaNode($this->translator);
     }
 }
