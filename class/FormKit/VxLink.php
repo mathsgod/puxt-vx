@@ -6,10 +6,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VxLink extends ComponentNode
 {
-    public function __construct(array $props = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("VxLink", $props, $translator);
-    }
 
     function action(string $action)
     {

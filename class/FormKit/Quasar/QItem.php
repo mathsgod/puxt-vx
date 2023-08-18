@@ -8,7 +8,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class QItem extends ComponentNode
 {
 
-    public function addSection(string $string)
+    public function addSection(?string $string = null)
     {
         $section = $this->appendHTML('<q-item-section></q-item-section>')[0];
 

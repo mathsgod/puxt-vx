@@ -24,6 +24,7 @@ return new class
 
         $list = $div->addElement("div")->attrs(["class" => "col-12 col-md-6"])->addQCard()->flat()
             ->addQList()->separator();
+
         $item = $list->addQItem();
         $item->addSection("Username");
         $item->addSection($user->username)->side();

@@ -18,7 +18,7 @@ class QList extends ComponentBaseNode
         return $this->setProp("dense", $dense);
     }
 
-    public function addItem(): QItem
+    public function addQItem(): QItem
     {
         return $this->appendHTML('<q-item></q-item>')[0];
     }
@@ -26,7 +26,7 @@ class QList extends ComponentBaseNode
 
     public function item(?string $label = null, $content = null)
     {
-        $item = $this->addItem();
+        $item = $this->addQItem();
         if ($label) {
             $item->addSection($label);
         }

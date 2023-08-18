@@ -2,45 +2,42 @@
 
 namespace FormKit;
 
+use FormKit\Quasar\QuasarTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElementNode extends SchemaNode
+class ElementNode extends \FormKit\SchemaDOMNode
 {
-
-    protected $attrs = [];
-
-    public function __construct(string $cmp, array $property = [], array $children = [])
-    {
-        $this->property = $property;
-        $this->property['$el'] = $cmp;
-        $this->children = $children;
-
-        //parent::__construct($translator);
-    }
+    use QuasarTrait;
 
     public function attr(string $name, $value)
     {
-        $this->attrs[$name] = $value;
+        $this->setAttribute($name, $value);
         return $this;
     }
 
     public function attrs(array $attrs)
     {
-        $this->attrs = $attrs;
+        foreach ($attrs as $name => $value) {
+            $this->setAttribute($name, $value);
+        }
         return $this;
     }
 
-    public function jsonSerialize()
+    function addElement(string $el, array $property = []): ElementNode
     {
-        $json = $this->property;
+        $element = $this->appendElement($el);
 
-        if ($this->attrs) {
-            $json['attrs'] = $this->attrs;
+        foreach ($property as $key => $value) {
+            $element->setAttribute($key, $value);
         }
 
-        if ($this->children) {
-            $json['children'] = $this->children;
-        }
-        return $json;
+        return $element;
+    }
+
+    function addChildren($children)
+    {
+        $this->appendHTML($children);
+
+        return $this;
     }
 }

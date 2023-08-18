@@ -6,6 +6,60 @@ trait FormKitTrait
 {
     use Element\ElementTrait;
 
+    function addInputNumber(string $label, string $name)
+    {
+
+        $formkit = $this->appendHTML("<form-kit type='el-input-number'></form-kit>")[0];
+        $formkit->name($name);
+        $formkit->formItem();
+        $formkit->label($label);
+        return $formkit;
+    }
+
+
+    function addElement(string $el, array $property = []): ElementNode
+    {
+        $element = $this->appendElement($el);
+
+        foreach ($property as $key => $value) {
+            $element->setAttribute($key, $value);
+        }
+
+        return $element;
+    }
+
+    function addSwitch(string $label, string $name)
+    {
+        $formkit = $this->appendHTML("<form-kit type='el-switch'></form-kit>")[0];
+        $formkit->formItem();
+        $formkit->name($name);
+
+        if ($label) {
+            $formkit->label($label);
+        }
+
+        $this->children[] = $formkit;
+
+        return $formkit;
+    }
+
+
+    function addDivider(?string $label = null)
+    {
+        $component = $this->addElDivider();
+
+
+        if ($label) {
+            if ($this->translator) {
+                $label = $this->translator->trans($label);
+            }
+            $component->appendHTML($label);
+        }
+
+        return $component;
+    }
+
+
     function addVxTable(): VxTable
     {
         return $this->appendHTML("<vx-table></vx-table>")[0];

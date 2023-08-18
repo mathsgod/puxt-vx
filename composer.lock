@@ -2065,16 +2065,16 @@
         },
         {
             "name": "mathsgod/formkit-php",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/formkit-php.git",
-                "reference": "919cf931fca8c8c98339001e81d98f17b890ba4d"
+                "reference": "9b6e2ee585a77ad82dae2fcc61e9eb685f6b2edc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/formkit-php/zipball/919cf931fca8c8c98339001e81d98f17b890ba4d",
-                "reference": "919cf931fca8c8c98339001e81d98f17b890ba4d",
+                "url": "https://api.github.com/repos/mathsgod/formkit-php/zipball/9b6e2ee585a77ad82dae2fcc61e9eb685f6b2edc",
+                "reference": "9b6e2ee585a77ad82dae2fcc61e9eb685f6b2edc",
                 "shasum": ""
             },
             "type": "library",
@@ -2095,9 +2095,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mathsgod/formkit-php/issues",
-                "source": "https://github.com/mathsgod/formkit-php/tree/1.0.6"
+                "source": "https://github.com/mathsgod/formkit-php/tree/1.0.7"
             },
-            "time": "2023-08-18T08:47:40+00:00"
+            "time": "2023-08-18T09:05:03+00:00"
         },
         {
             "name": "mathsgod/p-query",

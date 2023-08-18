@@ -49,6 +49,8 @@ class SchemaNode extends \FormKit\Schema
         $this->registerClass("vx-table", VxTable::class);
         $this->registerClass("vx-table-action-column", VxActionColumn::class);
         $this->registerClass("vx-column", VxColumn::class);
+
+        $this->registerDefaultDOMNodeClass(ElementNode::class);
     }
 
     function addRouterLink(): RouterLink
@@ -391,11 +393,16 @@ class SchemaNode extends \FormKit\Schema
         return $this;
     }
 
-    function addElement(string $el, array $property = [])
+    function addElement(string $el, array $property = []): ElementNode
     {
-        $item = new ElementNode($el, $property, $this->translator);
-        $this->children[] = $item;
-        return $item;
+        $element = $this->appendElement($el);
+
+
+        foreach ($property as $key => $value) {
+            $element->setAttribute($key, $value);
+        }
+
+        return $element;
     }
 
     function createComponent(string $cmp, array $property = []): ComponentNode
@@ -663,19 +670,7 @@ class SchemaNode extends \FormKit\Schema
         return $formkit;
     }
 
-    function addDivider(?string $label = null)
-    {
-        $component = $this->addElDivider();
-
-        if ($label) {
-            if ($this->translator) {
-                $label = $this->translator->trans($label);
-            }
-            $component->addChildren($label);
-        }
-
-        return $component;
-    }
+  
 
     function addElRadioGroup()
     {
@@ -718,22 +713,6 @@ class SchemaNode extends \FormKit\Schema
         return $formkit;
     }
 
-    function addSwitch(string $label, string $name)
-    {
-        $formkit = new ElSwitch([
-            "name" => $name,
-        ], $this->translator);
-
-        $formkit->formItem();
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
 
     function addItem(array $item)
     {

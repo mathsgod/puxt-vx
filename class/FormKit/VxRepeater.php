@@ -4,40 +4,49 @@ namespace FormKit;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class VxRepeater extends FormKitNode
+class VxRepeater extends FormKitInputs
 {
-
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("vxRepeater", $property, $translator);
-    }
 
     public function max(int $max)
     {
-        $this->property['max'] = $max;
+        $this->setAttribute(':max', json_encode($max));
         return $this;
     }
 
     public function min(int $min)
     {
-        $this->property['min'] = $min;
+        $this->setAttribute(':min', json_encode($min));
         return $this;
     }
+
     public function addControl(bool $addButton)
     {
-        $this->property['add-button'] = $addButton;
+        if ($addButton) {
+            $this->setAttribute('add-button', '');
+        } else {
+            $this->removeAttribute('add-button');
+        }
+
         return $this;
     }
 
     public function removeControl(bool $removeControl)
     {
-        $this->property['remove-button'] = $removeControl;
+        if ($removeControl) {
+            $this->setAttribute('remove-button', '');
+        } else {
+            $this->removeAttribute('remove-button');
+        }
+
         return $this;
     }
 
     public function downControl(bool $downControl)
     {
-        $this->property['down-control'] = $downControl;
-        return $this;
+        if ($downControl) {
+            $this->setAttribute('down-control', '');
+        } else {
+            $this->removeAttribute('down-control');
+        }
     }
 }

@@ -3,11 +3,13 @@
 namespace FormKit;
 
 use DOMNode;
+use FormKit\Quasar\QuasarTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ComponentNode extends Component
 {
     use FormKitTrait;
+    use QuasarTrait;
 
     protected $translator;
     public function setProp(string $key, $value)
