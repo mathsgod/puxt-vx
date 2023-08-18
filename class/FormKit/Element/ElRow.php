@@ -2,10 +2,10 @@
 
 namespace FormKit\Element;
 
-use FormKit\ComponentBaseNode;
+use FormKit\ComponentNode;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ElRow extends ComponentBaseNode
+class ElRow extends ComponentNode
 {
     public function addCol(): ElCol
     {
@@ -14,25 +14,25 @@ class ElRow extends ComponentBaseNode
 
     public function gutter(int $gutter)
     {
-        $this->attributes['gutter'] = $gutter;
+        $this->setAttribute('gutter', $gutter);
         return $this;
     }
 
     public function justify(string $justify)
     {
-        $this->attributes['justify'] = $justify;
+        $this->setAttribute('justify', $justify);
         return $this;
     }
 
     public function align(string $align)
     {
-        $this->attributes['align'] = $align;
+        $this->setAttribute('align', $align);
         return $this;
     }
 
     public function tag(string $tag)
     {
-        $this->attributes['tag'] = $tag;
+        $this->setAttribute('tag', $tag);
         return $this;
     }
 }

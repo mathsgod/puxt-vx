@@ -7,6 +7,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ComponentNode extends Component
 {
+    use FormKitTrait;
+
     protected $translator;
     public function setProp(string $key, $value)
     {
@@ -17,7 +19,12 @@ class ComponentNode extends Component
                 $this->removeAttribute($key);
             }
         } else {
-            $this->setAttribute($key, $value);
+
+            if (is_array($value)) {
+                $this->setAttribute(":{$key}", json_encode($value, JSON_UNESCAPED_UNICODE));
+            } else {
+                $this->setAttribute($key, $value);
+            }
         }
         return $this;
     }
@@ -31,5 +38,16 @@ class ComponentNode extends Component
     {
         $this->append($children);
         return $this;
+    }
+    public function addComponent(string $name): ComponentNode
+    {
+        //check to kebab case
+        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name));
+
+        $schema = $this->ownerDocument;
+        $schema->registerClass($name, ComponentNode::class);
+
+
+        return $this->appendHTML("<{$name}></{$name}>")[0];
     }
 }

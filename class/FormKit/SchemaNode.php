@@ -1,6 +1,7 @@
 <?php
 
 namespace FormKit;
+
 use FormKit\Element\ElementTrait;
 use FormKit\Quasar\QuasarTrait;
 use JsonSerializable;
@@ -10,6 +11,7 @@ class SchemaNode extends \FormKit\Schema
 {
     use QuasarTrait;
     use ElementTrait;
+    use FormKitTrait;
 
 
 
@@ -28,12 +30,25 @@ class SchemaNode extends \FormKit\Schema
             $this->registerClass($kebabCase, "FormKit\\Element\\" . $class);
         }
 
+        foreach (glob(__DIR__ . "/Element/Inputs/*.php") as $file) {
+            $class = basename($file, ".php");
+            //to kebab-case
+            $kebabCase = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class));
+            $this->registerInputClass($kebabCase, "FormKit\\Element\\Inputs\\" . $class);
+        }
+
         foreach (glob(__DIR__ . "/Quasar/*.php") as $file) {
             $class = basename($file, ".php");
             //to kebab-case
             $kebabCase = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class));
             $this->registerClass($kebabCase, "FormKit\\Quasar\\" . $class);
         }
+
+
+        $this->registerInputClass("vxForm", VxForm::class);
+        $this->registerClass("vx-table", VxTable::class);
+        $this->registerClass("vx-table-action-column", VxActionColumn::class);
+        $this->registerClass("vx-column", VxColumn::class);
     }
 
     function addRouterLink(): RouterLink
@@ -248,7 +263,7 @@ class SchemaNode extends \FormKit\Schema
 
     function addTree(?string $label = null, ?string $name = null)
     {
-        $elTree = new ElTree();
+        $elTree = $this->addElTree($name);
         if ($label) {
             $elTree->label($label);
         }
@@ -256,27 +271,16 @@ class SchemaNode extends \FormKit\Schema
             $elTree->name($name);
         }
         $elTree->formItem();
-        $this->children[] = $elTree;
         return $elTree;
     }
 
-    function addElTree(?string $name)
-    {
-        $elTree = new ElTree();
-        if ($name) {
-            $elTree->name($name);
-        }
-        $this->children[] = $elTree;
-        return $elTree;
-    }
 
     function addHidden(?string $name)
     {
-        $hidden = new Hidden();
+        $hidden = $this->appendHTML("<form-kit type='hidden'></form-kit>")[0];
         if ($name) {
             $hidden->name($name);
         }
-        $this->children[] = $hidden;
         return $hidden;
     }
 
@@ -292,15 +296,12 @@ class SchemaNode extends \FormKit\Schema
 
     function addText(?string $label = null, string $name)
     {
-        $color = new Text($this->translator);
+        $text = $this->appendHTML("<el-text></el-text>")[0];
         if ($label) {
-            $color->label($label);
+            $text->label($label);
         }
-
-
-        $color->name($name);
-        $this->children[] = $color;
-        return $color;
+        $text->name($name);
+        return $text;
     }
 
     function addButton(?string $text = null)
@@ -312,38 +313,26 @@ class SchemaNode extends \FormKit\Schema
         return $button;
     }
 
-
     function addSubmit()
     {
-        $submit = new Submit([], $this->translator);
-        $this->children[] = $submit;
-        return $submit;
+        return $this->appendHTML("<form-kit type='submit'></form-kit>")[0];
     }
 
     function addElForm()
     {
-        $form = new ElForm([], $this->translator);
-        $this->children[] = $form;
-        return $form;
+        return $this->appendHTML("<el-form></el-form>")[0];
     }
 
     function addElFormItem()
     {
-        $item = new ElFormItem([], $this->translator);
-        $this->children[] = $item;
-        return $item;
+        return $this->appendHTML("<el-form-item></el-form-item>")[0];
     }
 
     function addColor(string $label, string $name)
     {
-        $color = new Color($this->translator);
-        if ($label) {
-            $color->label($label);
-        }
-
-
+        $color = $this->append("<form-kit type='color'></form-kit>")[0];
+        $color->label($label);
         $color->name($name);
-        $this->children[] = $color;
         return $color;
     }
 
@@ -364,9 +353,7 @@ class SchemaNode extends \FormKit\Schema
 
     function addGroup()
     {
-        $group = new Group($this->translator);
-        $this->children[] = $group;
-        return $group;
+        return $this->appendHTML("<form-kit type='group'></form-kit>")[0];
     }
 
     function addMenu()
@@ -374,20 +361,6 @@ class SchemaNode extends \FormKit\Schema
         return $this->addElMenu()->router(true)->mode("horizontal");
     }
 
-
-    function addVxTable()
-    {
-        $table = new VxTable([], $this->translator);
-        $this->children[] = $table;
-        return $table;
-    }
-
-    function addForm()
-    {
-        $form = new VxForm([], $this->translator);
-        $this->children[] = $form;
-        return $form;
-    }
 
 
     /*     function addFileInput(){
@@ -460,10 +433,6 @@ class SchemaNode extends \FormKit\Schema
         return $this->addElLink();
     }
 
-    function addRow()
-    {
-        return $this->addElRow();
-    }
 
     function addDescriptions()
     {
@@ -601,107 +570,66 @@ class SchemaNode extends \FormKit\Schema
 
     function addSlider(string $label, string $name)
     {
-        $formkit = new ElSlider([
-            "name" => $name,
-        ], $this->translator);
+        $formkit = $this->appendHTML("<form-kit type='el-slider'></form-kit>")[0];
 
         $formkit->formItem();
 
         if ($label) {
             $formkit->label($label);
         }
-
-        $this->children[] = $formkit;
 
         return $formkit;
     }
 
     function addRate(string $label, string $name)
     {
-        $formkit = new ElRate([
-            "name" => $name,
-        ], $this->translator);
+        $formkit = $this->appendHTML("<form-kit type='el-rate'></form-kit>")[0];
         $formkit->formItem();
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
+        $formkit->label($label);
+        $formkit->name($name);
         return $formkit;
     }
 
     function addDateRangePicker(string $label, string $name)
     {
-        $formkit = new ElDateRangePicker([
-            "name" => $name,
-        ], $this->translator);
-
+        $formkit = $this->appendHTML("<form-kit type='el-date-picker'></form-kit>")[0];
         $formkit->formItem();
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
+        $formkit->label($label);
+        $formkit->name($name);
         return $formkit;
     }
 
     function addColorPicker(string $label, string $name)
     {
-        $formkit = new ElColorPicker([
-            "name" => $name,
-        ], $this->translator);
-
+        $formkit = $this->appendHTML("<form-kit type='el-color-picker'></form-kit>")[0];
         $formkit->formItem();
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
+        $formkit->label($label);
+        $formkit->name($name);
         return $formkit;
     }
 
 
     function addDatePicker(string $label, string $name)
     {
-        $formkit = new ElDatePicker([
-            "name" => $name,
-        ], $this->translator);
-
+        $formkit = $this->appendHTML("<form-kit type='el-date-picker'></form-kit>")[0];
         $formkit->formItem();
-
-        if ($label) {
-            $formkit->label($label);
-        }
-        $this->children[] = $formkit;
-
+        $formkit->label($label);
+        $formkit->name($name);
         return $formkit;
     }
 
     function addPassword(string $label, string $name)
     {
-        $formkit = new ElPassword([
-            "name" => $name,
-        ], $this->translator);
-
+        $formkit = $this->appendHTML("<form-kit type='el-input'></form-kit>")[0];
         $formkit->formItem();
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
+        $formkit->label($label);
+        $formkit->name($name);
         return $formkit;
     }
 
     function addSelect(string $label, string $name)
     {
+
         $formkit = new ElSelect([
             "name" => $name,
         ], $this->translator);
@@ -844,18 +772,8 @@ class SchemaNode extends \FormKit\Schema
 
     function addInput(string $label, string $name)
     {
-        $formkit = new ElInput([
-            "name" => $name,
-        ], $this->translator);
-
-        $formkit->formItem(true);
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
+        $formkit = $this->addElInput($label, $name);
+        $formkit->formItem();
         return $formkit;
     }
 
@@ -876,20 +794,6 @@ class SchemaNode extends \FormKit\Schema
         return $formkit;
     }
 
-    function addElInput(?string $label = null, string $name)
-    {
-        $formkit = new ElInput([
-            "name" => $name,
-        ], $this->translator);
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
-
-        return $formkit;
-    }
 
     function addTabs()
     {

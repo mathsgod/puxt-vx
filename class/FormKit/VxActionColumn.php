@@ -5,26 +5,25 @@ namespace FormKit;
 
 class VxActionColumn extends ComponentBaseNode
 {
-    public function __construct(array $property = [])
-    {
-        parent::__construct("VxTableActionColumn", $property);
-    }
 
-    public function addEditButton(){
+    public function addEditButton()
+    {
         $this->setProp('edit', true);
         return $this;
     }
 
-    public function addViewButton(){
+    public function addViewButton()
+    {
         $this->setProp('view', true);
         return $this;
     }
 
-    public function addDeleteButton(){
+    public function addDeleteButton()
+    {
         $this->setProp('delete', true);
         return $this;
     }
-    
+
 
     public function view(bool $view = true)
     {

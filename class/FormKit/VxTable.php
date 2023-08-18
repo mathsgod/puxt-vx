@@ -6,27 +6,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VxTable extends ComponentBaseNode
 {
-    public function __construct(array $property = [], ?TranslatorInterface $translator = null)
-    {
-        parent::__construct("VxTable", $property, $translator);
-    }
 
     public function query(string $query)
     {
-        $this->setProp('query', $query);
+        $this->setAttribute('query', $query);
         return $this;
     }
 
-    public function addActionColumn()
+    public function addActionColumn(): VxActionColumn
     {
-        $column = new VxActionColumn([], $this->translator);
-        $this->children[] = $column;
-        return $column;
+        return $this->appendHTML("<vx-table-action-column></vx-table-action-column>")[0];
     }
 
-    public function addColumn(?string $label = null, ?string $prop = null)
+    public function addColumn(?string $label = null, ?string $prop = null): VxColumn
     {
-        $column = new VxColumn([], $this->translator);
+
+        $column = $this->appendHTML("<vx-column></vx-column>")[0];
 
         if ($label) {
             $column->label($label);
@@ -35,8 +30,6 @@ class VxTable extends ComponentBaseNode
         if ($prop) {
             $column->prop($prop);
         }
-
-        $this->children[] = $column;
         return $column;
     }
 }

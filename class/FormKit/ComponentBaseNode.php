@@ -20,7 +20,24 @@ class ComponentBaseNode extends Component
 
     public function setProp(string $key, $value)
     {
-        $this->props[$key] = $value;
+        if (is_bool($value)) {
+            if ($value === true) {
+                $this->setAttribute($key, "");
+            } else {
+                $this->removeAttribute($key);
+            }
+        } elseif (is_array($value)) {
+            $this->setAttribute(":$key", json_encode($value, JSON_UNESCAPED_UNICODE));
+        }else{
+            $this->setAttribute($key, $value);
+        }
+
         return $this;
+    }
+
+    public function addComponent(string $name)
+    {
+        $schema = $this->ownerDocument;
+        $schema->registerClass($name, Component::class);
     }
 }

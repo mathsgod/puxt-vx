@@ -2,8 +2,44 @@
 
 namespace FormKit\Element;
 
+use FormKit\Element\Inputs\ElInput;
+use FormKit\Element\Inputs\ElSelect;
+use FormKit\Element\Inputs\ElTree;
+
 trait ElementTrait
 {
+
+    function addElSelect(?string $label = null, string $name): ElSelect
+    {
+        $select = $this->appendHTML('<form-kit type="el-select"></form-kit>')[0];
+
+        if ($label) {
+            $select->label($label);
+        }
+
+        if ($name) {
+            $select->name($name);
+        }
+
+        return $select;
+    }
+
+    function addElInput(?string $label = null, string $name): ElInput
+    {
+        $input = $this->appendHTML('<form-kit type="el-input"></form-kit>')[0];
+
+        if ($label) {
+            $input->label($label);
+        }
+
+        if ($name) {
+            $input->name($name);
+        }
+
+        return $input;
+    }
+
+
     function addElText(): ElText
     {
         return $this->appendHTML('<el-text></el-text>')[0];
@@ -152,5 +188,14 @@ trait ElementTrait
     function addElCountdown(): ElCountdown
     {
         return $this->appendHTML('<el-countdown></el-countdown>')[0];
+    }
+
+    function addElTree(?string $name): ElTree
+    {
+        $tree = $this->appendHTML('<el-tree></el-tree>')[0];
+        if ($name) {
+            $tree->name($name);
+        }
+        return $tree;
     }
 }

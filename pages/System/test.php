@@ -6,6 +6,7 @@
  */
 
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\Response\TextResponse;
 use VX\User;
 
@@ -30,8 +31,41 @@ return new class
     {
         $schema = $vx->createSchema();
 
+        $form = $schema->addForm();
+
+        $col = $form->addRow();
+
+        /*     echo json_encode($schema->childNodes[0], JSON_PRETTY_PRINT);
+        die();
+        //     $col->addInput("Username", "username");
+        /* 
+        if($schema->childNodes[0] instanceof FormKit\FormKitInputs){
+            outp("yes");
+        }
+        die();
+     */
+
+        /*      echo $schema->saveHTML();
+     die(); */
+
+        //check schema is json serializable
+
+      /*   if ($schema instanceof JsonSerializable) {
+            return new JsonResponse($schema, 200, [], JsonResponse::DEFAULT_JSON_FLAGS | JSON_UNESCAPED_UNICODE);
+        }
+        die();
+ */
+
+       // echo json_encode($schema);die;
+
+
+        
+        return $schema;
+
+        return;
+
         $schema->addCard('hello');
-  
+
         $schema->addQCard()->addSection()->addChildren("test");
         $schema->addQBtn()->children("testing");
 
@@ -61,7 +95,8 @@ return new class
         /*     $t = $schema->createComponent("template");
         $t->setProp("v-slot:content", true);
         $t->addChildren("Content");
- */
+
+        */
 
         $ph->addChildren($t);
 

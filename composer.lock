@@ -2065,16 +2065,16 @@
         },
         {
             "name": "mathsgod/formkit-php",
-            "version": "1.0.1",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/formkit-php.git",
-                "reference": "3bc37a22e4f675887bd7a1fbf39a2f2412d2b98a"
+                "reference": "919cf931fca8c8c98339001e81d98f17b890ba4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/formkit-php/zipball/3bc37a22e4f675887bd7a1fbf39a2f2412d2b98a",
-                "reference": "3bc37a22e4f675887bd7a1fbf39a2f2412d2b98a",
+                "url": "https://api.github.com/repos/mathsgod/formkit-php/zipball/919cf931fca8c8c98339001e81d98f17b890ba4d",
+                "reference": "919cf931fca8c8c98339001e81d98f17b890ba4d",
                 "shasum": ""
             },
             "type": "library",
@@ -2095,9 +2095,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mathsgod/formkit-php/issues",
-                "source": "https://github.com/mathsgod/formkit-php/tree/1.0.1"
+                "source": "https://github.com/mathsgod/formkit-php/tree/1.0.6"
             },
-            "time": "2023-08-17T08:37:51+00:00"
+            "time": "2023-08-18T08:47:40+00:00"
         },
         {
             "name": "mathsgod/p-query",
@@ -8138,26 +8138,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mathsgod/puxt.git",
-                "reference": "a1c7675f0c805e5b1a48dce053e3dfd54ce01296"
+                "reference": "70abe331a59ef7b5ae6fc88ad9328baf5c523d74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/a1c7675f0c805e5b1a48dce053e3dfd54ce01296",
-                "reference": "a1c7675f0c805e5b1a48dce053e3dfd54ce01296",
+                "url": "https://api.github.com/repos/mathsgod/puxt/zipball/70abe331a59ef7b5ae6fc88ad9328baf5c523d74",
+                "reference": "70abe331a59ef7b5ae6fc88ad9328baf5c523d74",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-config": "^3.7",
-                "laminas/laminas-di": "^3.11",
+                "laminas/laminas-di": "^3.3",
                 "laminas/laminas-diactoros": "^2.11",
                 "laminas/laminas-httphandlerrunner": "^2.1",
-                "laminas/laminas-servicemanager": "^3.20",
-                "laminas/laminas-stratigility": "^3.9",
+                "laminas/laminas-servicemanager": "^3.7",
+                "laminas/laminas-stratigility": "^3.5",
                 "league/event": "^3.0",
                 "league/flysystem": "^2.3",
                 "league/route": "^5.1",
                 "mathsgod/html": "^1.0",
-                "php": "^7.3 || ~8.0.0",
+                "php": ">=7.3 || >=8.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
@@ -8171,6 +8171,9 @@
             "default-branch": true,
             "type": "framework",
             "autoload": {
+                "files": [
+                    "function/puxt.php"
+                ],
                 "psr-4": {
                     "PUXT\\": "src"
                 }
@@ -8190,7 +8193,7 @@
                 "issues": "https://github.com/mathsgod/puxt/issues",
                 "source": "https://github.com/mathsgod/puxt/tree/main"
             },
-            "time": "2022-12-23T04:36:14+00:00"
+            "time": "2023-07-31T04:10:16+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",

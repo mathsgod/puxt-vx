@@ -25,7 +25,7 @@ return new class
         $col = $table->addColumn("First name", "first_name")->sortable()->searchable();
 
         $path = $request->getUri()->withPath("/api/User/")->__toString();
-        $col->addComponent("XInput")
+        $col->addComponent("x-input")
             ->setProp("name", "first_name")
             ->setProp("modelValue", '$row.first_name')
             ->setProp("action", '$: "' . $path . '"+$row.user_id');
