@@ -8,7 +8,14 @@ class ElPassword extends ElInputNode
 {
     public function clearable()
     {
-        $this->setAttribute('clearable', true);
+        $this->setAttribute('clearable', "");
+        return $this;
+    }
+
+    public function showPassword()
+    {
+
+        $this->setAttribute('show-password', "");
         return $this;
     }
 }

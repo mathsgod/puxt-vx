@@ -3,11 +3,11 @@
 namespace FormKit;
 
 use FormKit\Quasar\QuasarTrait;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElementNode extends \FormKit\SchemaDOMNode
 {
     use QuasarTrait;
+    use FormKitTrait;
 
     public function attr(string $name, $value)
     {

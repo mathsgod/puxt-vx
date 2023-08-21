@@ -17,27 +17,36 @@ class ComponentBaseNode extends Component
         return $this;
     }
 
-
     public function setProp(string $key, $value)
     {
         if (is_bool($value)) {
-            if ($value === true) {
-                $this->setAttribute($key, "");
+            if ($value) {
+                $this->setAttribute($key, '');
             } else {
                 $this->removeAttribute($key);
             }
-        } elseif (is_array($value)) {
-            $this->setAttribute(":$key", json_encode($value, JSON_UNESCAPED_UNICODE));
-        }else{
+        } elseif (!is_string($value)) {
+            $this->setAttribute(":{$key}", json_encode($value, JSON_UNESCAPED_UNICODE));
+        } else {
             $this->setAttribute($key, $value);
         }
-
         return $this;
     }
 
-    public function addComponent(string $name)
+
+    public function addComponent(string $name, array $props = []): ComponentNode
     {
+        //check to kebab case
+        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name));
+
         $schema = $this->ownerDocument;
-        $schema->registerClass($name, Component::class);
+        $schema->registerClass($name, ComponentNode::class);
+
+
+        $comp = $this->appendHTML("<{$name}></{$name}>")[0];
+        foreach ($props as $key => $value) {
+            $comp->setProp($key, $value);
+        }
+        return $comp;
     }
 }

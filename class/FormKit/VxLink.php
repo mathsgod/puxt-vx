@@ -2,8 +2,6 @@
 
 namespace FormKit;
 
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 class VxLink extends ComponentNode
 {
 

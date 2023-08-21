@@ -2,10 +2,7 @@
 
 namespace FormKit;
 
-class VxFormFileInput extends FormKitNode
+class VxFormFileInput extends FormKitInputs
 {
-    public function __construct($props = [])
-    {
-        parent::__construct('vxFormFileInput', $props);
-    }
+
 }
