@@ -12,7 +12,7 @@ return new class
     function get(VX $vx)
     {
 
-        $schema = new Schema;
+        $schema = $vx->createSchema();
 
         $form = $schema->addForm();
         $form->showBack(false);

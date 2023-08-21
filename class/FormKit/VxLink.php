@@ -7,73 +7,73 @@ class VxLink extends ComponentNode
 
     function action(string $action)
     {
-        $this->setProp('action', $action);
+        $this->setAttribute('action', $action);
         return $this;
     }
 
     function confirmOptions(array $confirmOptions)
     {
-        $this->setProp('confirm-options', $confirmOptions);
+        $this->setAttribute('confirm-options', $confirmOptions);
         return $this;
     }
 
     function confirmTitle(string $confirmTitle)
     {
-        $this->setProp('confirm-title', $confirmTitle);
+        $this->setAttribute('confirm-title', $confirmTitle);
         return $this;
     }
 
     function confirmMessage(string $confirmMessage)
     {
-        $this->setProp('confirm-message', $confirmMessage);
+        $this->setAttribute('confirm-message', $confirmMessage);
         return $this;
     }
 
     function confirm(bool $confirm = true)
     {
-        $this->setProp('confirm', $confirm);
+        $this->setAttribute('confirm', $confirm);
         return $this;
     }
 
     function label(string $label)
     {
-        $this->setProp('label', $label);
+        $this->setAttribute('label', $label);
         return $this;
     }
 
     function to(string $to)
     {
-        $this->setProp('to', $to);
+        $this->setAttribute('to', $to);
         return $this;
     }
 
     function href(string $href)
     {
-        $this->setProp('href', $href);
+        $this->setAttribute('href', $href);
         return $this;
     }
 
     function icon(string $icon)
     {
-        $this->setProp('icon', $icon);
+        $this->setAttribute('icon', $icon);
         return $this;
     }
 
     function type(string $type)
     {
-        $this->setProp('type', $type);
+        $this->setAttribute('type', $type);
         return $this;
     }
 
     function underline(bool $underline)
     {
-        $this->setProp('underline', $underline);
+        $this->setAttribute('underline', $underline);
         return $this;
     }
 
     function disabled(bool $disabled)
     {
-        $this->setProp('disabled', $disabled);
+        $this->setAttribute('disabled', $disabled);
         return $this;
     }
 }

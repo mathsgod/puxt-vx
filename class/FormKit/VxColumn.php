@@ -10,21 +10,21 @@ class VxColumn extends ComponentNode
 
     public function searchable(?string $type = "text")
     {
-        $this->setProp('searchable', true);
-        $this->setProp('search-type', $type);
+        $this->setAttribute('searchable', true);
+        $this->setAttribute('search-type', $type);
 
         return $this;
     }
 
     public function searchType(string $type)
     {
-        $this->setProp('search-type', $type);
+        $this->setAttribute('search-type', $type);
         return $this;
     }
 
     public function searchOptions(array $options)
     {
-        $this->setProp('search-options', $options);
+        $this->setAttribute('search-options', $options);
         return $this;
     }
 
@@ -33,7 +33,7 @@ class VxColumn extends ComponentNode
      */
     public function type(string $type)
     {
-        $this->setProp('type', $type);
+        $this->setAttribute('type', $type);
         return $this;
     }
 
@@ -42,7 +42,7 @@ class VxColumn extends ComponentNode
      */
     public function index(int $index)
     {
-        $this->setProp('index', $index);
+        $this->setAttribute('index', $index);
         return $this;
     }
 
@@ -51,7 +51,7 @@ class VxColumn extends ComponentNode
      */
     public function label(string $label)
     {
-        $this->setProp('label', $label);
+        $this->setAttribute('label', $label);
         return $this;
     }
 
@@ -60,7 +60,7 @@ class VxColumn extends ComponentNode
      */
     public function columnKey(string $columnKey)
     {
-        $this->setProp('column-key', $columnKey);
+        $this->setAttribute('column-key', $columnKey);
         return $this;
     }
 
@@ -69,7 +69,7 @@ class VxColumn extends ComponentNode
      */
     public function prop(string $prop)
     {
-        $this->setProp('prop', $prop);
+        $this->setAttribute('prop', $prop);
         return $this;
     }
 
@@ -78,7 +78,7 @@ class VxColumn extends ComponentNode
      */
     public function width(string|int $width)
     {
-        $this->setProp('width', $width);
+        $this->setAttribute('width', $width);
         return $this;
     }
 
@@ -87,7 +87,7 @@ class VxColumn extends ComponentNode
      */
     public function minWidth(string|int $minWidth)
     {
-        $this->setProp('min-width', $minWidth);
+        $this->setAttribute('min-width', $minWidth);
         return $this;
     }
 
@@ -96,7 +96,7 @@ class VxColumn extends ComponentNode
      */
     public function fixed(string|bool $fixed)
     {
-        $this->setProp('fixed', $fixed);
+        $this->setAttribute('fixed', $fixed);
         return $this;
     }
 
@@ -105,7 +105,7 @@ class VxColumn extends ComponentNode
      */
     public function sortable(bool $sortable = true)
     {
-        $this->setProp('sortable', $sortable);
+        $this->setAttribute('sortable', $sortable);
         return $this;
     }
 
@@ -114,7 +114,7 @@ class VxColumn extends ComponentNode
      */
     public function sortOrders(array $sortOrders)
     {
-        $this->setProp('sort-orders', $sortOrders);
+        $this->setAttribute('sort-orders', $sortOrders);
         return $this;
     }
 
@@ -123,7 +123,7 @@ class VxColumn extends ComponentNode
      */
     public function resizable(bool $resizable = true)
     {
-        $this->setProp('resizable', $resizable);
+        $this->setAttribute('resizable', $resizable);
         return $this;
     }
 
@@ -132,7 +132,7 @@ class VxColumn extends ComponentNode
      */
     public function showOverflowTooltip(bool $showOverflowTooltip = true)
     {
-        $this->setProp('show-overflow-tooltip', $showOverflowTooltip);
+        $this->setAttribute('show-overflow-tooltip', $showOverflowTooltip);
         return $this;
     }
 
@@ -141,7 +141,7 @@ class VxColumn extends ComponentNode
      */
     public function align(string $align)
     {
-        $this->setProp('align', $align);
+        $this->setAttribute('align', $align);
         return $this;
     }
 
@@ -150,7 +150,7 @@ class VxColumn extends ComponentNode
      */
     public function headerAlign(string $headerAlign)
     {
-        $this->setProp('header-align', $headerAlign);
+        $this->setAttribute('header-align', $headerAlign);
         return $this;
     }
 
@@ -159,7 +159,7 @@ class VxColumn extends ComponentNode
      */
     public function className(string $className)
     {
-        $this->setProp('class-name', $className);
+        $this->setAttribute('class-name', $className);
         return $this;
     }
 
@@ -168,7 +168,7 @@ class VxColumn extends ComponentNode
      */
     public function labelClassName(string $labelClassName)
     {
-        $this->setProp('label-class-name', $labelClassName);
+        $this->setAttribute('label-class-name', $labelClassName);
         return $this;
     }
 
@@ -177,13 +177,13 @@ class VxColumn extends ComponentNode
      */
     public function reserveSelection(bool $reserveSelection = true)
     {
-        $this->setProp('reserve-selection', $reserveSelection);
+        $this->setAttribute('reserve-selection', $reserveSelection);
         return $this;
     }
 
     public function filters(array $filters)
     {
-        $this->setProp('filters', $filters);
+        $this->setAttribute('filters', $filters);
         return $this;
     }
 }

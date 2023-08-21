@@ -8,38 +8,38 @@ class VxActionColumn extends ComponentBaseNode
 
     public function addEditButton()
     {
-        $this->setProp('edit', true);
+        $this->setAttribute('edit', true);
         return $this;
     }
 
     public function addViewButton()
     {
-        $this->setProp('view', true);
+        $this->setAttribute('view', true);
         return $this;
     }
 
     public function addDeleteButton()
     {
-        $this->setProp('delete', true);
+        $this->setAttribute('delete', true);
         return $this;
     }
 
 
     public function view(bool $view = true)
     {
-        $this->setProp('view', $view);
+        $this->setAttribute('view', $view);
         return $this;
     }
 
     public function edit(bool $edit = true)
     {
-        $this->setProp('edit', $edit);
+        $this->setAttribute('edit', $edit);
         return $this;
     }
 
     public function delete(bool $delete = true)
     {
-        $this->setProp('delete', $delete);
+        $this->setAttribute('delete', $delete);
         return $this;
     }
 
@@ -48,7 +48,7 @@ class VxActionColumn extends ComponentBaseNode
      */
     public function showDelete()
     {
-        $this->setProp('delete', true);
+        $this->setAttribute('delete', true);
         return $this;
     }
 
@@ -57,7 +57,7 @@ class VxActionColumn extends ComponentBaseNode
      */
     public function showEdit()
     {
-        $this->setProp('edit', true);
+        $this->setAttribute('edit', true);
         return $this;
     }
 
@@ -66,7 +66,7 @@ class VxActionColumn extends ComponentBaseNode
      */
     public function showView()
     {
-        $this->setProp('view', true);
+        $this->setAttribute('view', true);
         return $this;
     }
 }

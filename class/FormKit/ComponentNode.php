@@ -17,6 +17,4 @@ class ComponentNode extends ComponentBaseNode
         $this->append($children);
         return $this;
     }
-
-
 }

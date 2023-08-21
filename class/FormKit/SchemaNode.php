@@ -2,20 +2,12 @@
 
 namespace FormKit;
 
-use FormKit\Element\ElementTrait;
-use FormKit\Element\ElMenu;
-use FormKit\Inputs\Group;
-use FormKit\Quasar\QuasarTrait;
-use JsonSerializable;
+
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SchemaNode extends \FormKit\Schema
 {
-    use QuasarTrait;
-    use ElementTrait;
     use FormKitTrait;
-
-
 
     protected $translator;
 
@@ -58,5 +50,32 @@ class SchemaNode extends \FormKit\Schema
         $this->registerClass("vx-link", VxLink::class);
 
         $this->registerDefaultDOMNodeClass(ElementNode::class);
+    }
+
+    /**
+     * @deprecated use appendComponent instead
+     */
+    public function addComponent(string $name, array $props = []): ComponentNode
+    {
+
+        //check to kebab case
+        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name));
+
+        /** @var Schema $schema */
+        $schema = $this;
+        $schema->registerClass($name, ComponentNode::class);
+
+
+        $comp = $this->appendHTML("<{$name}></{$name}>")[0];
+        foreach ($props as $key => $value) {
+            $comp->setAttribute($key, $value);
+        }
+        return $comp;
+    }
+
+
+    public function getTranslator(): ?TranslatorInterface
+    {
+        return $this->translator;
     }
 }

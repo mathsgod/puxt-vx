@@ -6,6 +6,15 @@ use FormKit\FormKitInputs;
 
 class ElInputNode extends FormKitInputs
 {
+    public function label(string $val)
+    {
+        $translator = $this->ownerDocument->getTranslator();
+        if ($translator instanceof \Symfony\Contracts\Translation\TranslatorInterface) {
+            return parent::label($translator->trans($val));
+        }
+        return parent::label($val);
+    }
+
     public function options(array $options)
     {
         $this->setAttribute("options", $options);

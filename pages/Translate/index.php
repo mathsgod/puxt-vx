@@ -53,9 +53,11 @@ return new class
         foreach ($vx->getModules() as $module) {
             $modules[] = ["name" => $module->name];
         }
+
+
         return [
             "modules" => $modules,
-            "languages" => array_keys($vx->config->VX->language->toArray())
+            "languages" => array_keys($vx->config->VX->language)
         ];
     }
 };

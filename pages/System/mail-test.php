@@ -22,9 +22,9 @@ return new class
         return new EmptyResponse();
     }
 
-    function get()
+    function get(VX $vx)
     {
-        $schema = new FormKit\Schema;
+        $schema = $vx->createSchema();
         $form = $schema->addForm();
 
         $form->value([

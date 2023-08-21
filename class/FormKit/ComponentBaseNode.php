@@ -10,7 +10,23 @@ class ComponentBaseNode extends Component
     protected $props = [];
     protected $translator;
 
+    public function addComponent(string $name, array $props = []): ComponentNode
+    {
+        //check to kebab case
+        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name));
 
+        /** @var Schema $schema */
+        $schema = $this->ownerDocument;
+        $schema->registerClass($name, ComponentNode::class);
+
+
+        $comp = $this->appendHTML("<{$name}></{$name}>")[0];
+        foreach ($props as $key => $value) {
+            $comp->setAttribute($key, $value);
+        }
+        return $comp;
+    }
+    
     public function setClass(string $class)
     {
         $this->setProp('class', $class);
@@ -37,22 +53,6 @@ class ComponentBaseNode extends Component
     }
 
 
-    public function addComponent(string $name, array $props = []): ComponentNode
-    {
-        //check to kebab case
-        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name));
-
-        /** @var Schema $schema */
-        $schema = $this->ownerDocument;
-        $schema->registerClass($name, ComponentNode::class);
-
-
-        $comp = $this->appendHTML("<{$name}></{$name}>")[0];
-        foreach ($props as $key => $value) {
-            $comp->setAttribute($key, $value);
-        }
-        return $comp;
-    }
 
     public function setAttribute(string $qualifiedName, $value)
     {
