@@ -10,76 +10,76 @@ class QTable extends ComponentBaseNode
     // Behavior
     function fullscreen(bool $fullscreen = true)
     {
-        $this->attributes["fullscreen"] = $fullscreen;
+        $this->setAttribute("fullscreen", $fullscreen);
         return $this;
     }
 
     function grid(bool $grid = true)
     {
-        $this->attributes["grid"] = $grid;
+        $this->setAttribute("grid", $grid);
         return $this;
     }
 
     function gridHeader(bool $gridHeader = true)
     {
-        $this->attributes["grid-header"] = $gridHeader;
+        $this->setAttribute("grid-header", $gridHeader);
         return $this;
     }
 
     // Content
     function title(string $title)
     {
-        $this->attributes["title"] = $title;
+        $this->setAttribute("title", $title);
         return $this;
     }
 
     function hideHeader(bool $hideHeader = true)
     {
-        $this->attributes["hide-header"] = $hideHeader;
+        $this->setAttribute("hide-header", $hideHeader);
         return $this;
     }
 
     function hideNoData(bool $hideNoData = true)
     {
-        $this->attributes["hide-no-data"] = $hideNoData;
+        $this->setAttribute("hide-no-data", $hideNoData);
         return $this;
     }
 
     function hidePagination(bool $hidePagination = true)
     {
-        $this->attributes["hide-pagination"] = $hidePagination;
+        $this->setAttribute("hide-pagination", $hidePagination);
         return $this;
     }
 
     //horizontal|vertical|cell|none
     function sperator(string $sperator)
     {
-        $this->attributes["sperator"] = $sperator;
+        $this->setAttribute("sperator", $sperator);
         return $this;
     }
 
     function wrapCells(bool $wrapCells = true)
     {
-        $this->attributes["wrap-cells"] = $wrapCells;
+        $this->setAttribute("wrap-cells", $wrapCells);
         return $this;
     }
 
     function noResultsLabel(string $noResultsLabel)
     {
-        $this->attributes["no-results-label"] = $noResultsLabel;
+        $this->setAttribute("no-results-label", $noResultsLabel);
         return $this;
     }
 
     //General
     function rows(array $rows)
     {
-        $this->attributes["rows"] = $rows;
+        $this->setAttribute("rows", $rows);
         return $this;
     }
 
     function rowKey(string $rowKey)
     {
-        $this->attributes["row-key"] = $rowKey;
+        $this->setAttribute("row-key", $rowKey);
         return $this;
     }
 
@@ -87,37 +87,37 @@ class QTable extends ComponentBaseNode
     // Style
     function color(string $color)
     {
-        $this->attributes["color"] = $color;
+        $this->setAttribute("color", $color);
         return $this;
     }
 
     function dense(bool $dense = true)
     {
-        $this->attributes["dense"] = $dense;
+        $this->setAttribute("dense", $dense);
         return $this;
     }
 
     function dark(bool $dark = true)
     {
-        $this->attributes["dark"] = $dark;
+        $this->setAttribute("dark", $dark);
         return $this;
     }
 
     function flat(bool $flat = true)
     {
-        $this->attributes["flat"] = $flat;
+        $this->setAttribute("flat", $flat);
         return $this;
     }
 
     function bordered(bool $bordered = true)
     {
-        $this->attributes["bordered"] = $bordered;
+        $this->setAttribute("bordered", $bordered);
         return $this;
     }
 
     function square(bool $square = true)
     {
-        $this->attributes["square"] = $square;
+        $this->setAttribute("square", $square);
         return $this;
     }
 
@@ -128,7 +128,7 @@ class QTable extends ComponentBaseNode
 
     function columns(array $columns)
     {
-        $this->attributes["columns"] = $columns;
+        $this->setAttribute("columns", $columns);
         return $this;
     }
 }

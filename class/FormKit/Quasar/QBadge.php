@@ -3,7 +3,6 @@
 namespace FormKit\Quasar;
 
 use FormKit\ComponentNode;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QBadge extends ComponentNode
 {
@@ -11,19 +10,19 @@ class QBadge extends ComponentNode
     // Content
     function floating(bool $floating = true)
     {
-        $this->attributes["floating"] = $floating;
+        $this->setAttribute("floating", $floating);
         return $this;
     }
 
     function multiLine(bool $multiLine = true)
     {
-        $this->attributes["multi-line"] = $multiLine;
+        $this->setAttribute("multi-line", $multiLine);
         return $this;
     }
 
     function label(string|int $label)
     {
-        $this->attributes["label"] = $label;
+        $this->setAttribute("label", $label);
         return $this;
     }
 
@@ -32,38 +31,38 @@ class QBadge extends ComponentNode
      */
     function align(string $align)
     {
-        $this->attributes["align"] = $align;
+        $this->setAttribute("align", $align);
         return $this;
     }
 
     // Style
     function color(string $color)
     {
-        $this->attributes["color"] = $color;
+        $this->setAttribute("color", $color);
         return $this;
     }
 
     function textColor(string $textColor)
     {
-        $this->attributes["text-color"] = $textColor;
+        $this->setAttribute("text-color", $textColor);
         return $this;
     }
 
     function transparent(bool $transparent = true)
     {
-        $this->attributes["transparent"] = $transparent;
+        $this->setAttribute("transparent", $transparent);
         return $this;
     }
 
     function outline(bool $outline = true)
     {
-        $this->attributes["outline"] = $outline;
+        $this->setAttribute("outline", $outline);
         return $this;
     }
 
     function rounded(bool $rounded = true)
     {
-        $this->attributes["rounded"] = $rounded;
+        $this->setAttribute("rounded", $rounded);
         return $this;
     }
 }

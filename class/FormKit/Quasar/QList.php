@@ -10,12 +10,12 @@ class QList extends ComponentBaseNode
 
     public function separator(bool $sperator = true)
     {
-        return $this->setProp("separator", $sperator);
+        return $this->setAttribute("separator", $sperator);
     }
 
     public function dense(bool $dense = true)
     {
-        return $this->setProp("dense", $dense);
+        return $this->setAttribute("dense", $dense);
     }
 
     public function addQItem(): QItem

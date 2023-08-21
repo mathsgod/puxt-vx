@@ -10,6 +10,6 @@ class QItemSection extends ComponentNode
 
     public function side()
     {
-        return $this->setProp("side", true);
+        return $this->setAttribute("side", true);
     }
 }

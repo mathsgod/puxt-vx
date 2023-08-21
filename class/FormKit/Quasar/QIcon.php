@@ -12,7 +12,7 @@ class QIcon extends ComponentBaseNode
      */
     function tag(string $tag)
     {
-        $this->attributes["tag"] = $tag;
+        $this->setAttribute("tag", $tag);
         return $this;
     }
 
@@ -21,7 +21,7 @@ class QIcon extends ComponentBaseNode
      */
     function left(bool $left = true)
     {
-        $this->attributes["left"] = $left;
+        $this->setAttribute("left", $left);
         return $this;
     }
 
@@ -30,7 +30,7 @@ class QIcon extends ComponentBaseNode
      */
     function right(bool $right = true)
     {
-        $this->attributes["right"] = $right;
+        $this->setAttribute("right", $right);
         return $this;
     }
 
@@ -39,7 +39,7 @@ class QIcon extends ComponentBaseNode
      */
     function name(string $name)
     {
-        $this->attributes["name"] = $name;
+        $this->setAttribute("name", $name);
         return $this;
     }
 
@@ -48,7 +48,7 @@ class QIcon extends ComponentBaseNode
      */
     function size(string $size)
     {
-        $this->attributes["size"] = $size;
+        $this->setAttribute("size", $size);
         return $this;
     }
 
@@ -57,7 +57,7 @@ class QIcon extends ComponentBaseNode
      */
     function color(string $color)
     {
-        $this->attributes["color"] = $color;
+        $this->setAttribute("color", $color);
         return $this;
     }
 }

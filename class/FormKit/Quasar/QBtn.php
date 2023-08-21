@@ -10,31 +10,31 @@ class QBtn extends ComponentNode
 
     public function to(string $to)
     {
-        return $this->setProp("to", $to);
+        return $this->setAttribute("to", $to);
     }
 
     public function round()
     {
-        return $this->setProp("round", true);
+        return $this->setAttribute("round", true);
     }
 
     public function rounded()
     {
-        return $this->setProp("rounded", true);
+        return $this->setAttribute("rounded", true);
     }
 
     public function icon(string $icon)
     {
-        return $this->setProp("icon", $icon);
+        return $this->setAttribute("icon", $icon);
     }
 
     public function color(string $color)
     {
-        return $this->setProp("color", $color);
+        return $this->setAttribute("color", $color);
     }
 
     public function outline()
     {
-        return $this->setProp("outline", true);
+        return $this->setAttribute("outline", true);
     }
 }
