@@ -6,7 +6,7 @@ class ElInput extends ElInputNode
 {
     public function clearable()
     {
-        $this->setAttribute("clearable", "");
+        $this->setAttribute("clearable", true);
         return $this;
     }
 }

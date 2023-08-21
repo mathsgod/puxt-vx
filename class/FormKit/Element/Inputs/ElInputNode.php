@@ -8,7 +8,7 @@ class ElInputNode extends FormKitInputs
 {
     public function options(array $options)
     {
-        $this->setAttribute(":options", json_encode($options, JSON_UNESCAPED_UNICODE));
+        $this->setAttribute("options", $options);
         return $this;
     }
 
@@ -20,5 +20,13 @@ class ElInputNode extends FormKitInputs
             $this->removeAttribute("form-item");
         }
         return $this;
+    }
+
+    public function setAttribute(string $qualifiedName, $value)
+    {
+        if (!is_string($value)) {
+            return parent::setAttribute(":{$qualifiedName}", json_encode($value, JSON_UNESCAPED_UNICODE));
+        }
+        return parent::setAttribute($qualifiedName, $value);
     }
 }

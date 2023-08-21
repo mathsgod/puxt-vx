@@ -2,20 +2,17 @@
 
 namespace FormKit\Element\Inputs;
 
-
-
 class ElPassword extends ElInputNode
 {
-    public function clearable()
+    public function clearable(bool $clearable = true)
     {
-        $this->setAttribute('clearable', "");
+        $this->setAttribute('clearable', $clearable);
         return $this;
     }
 
-    public function showPassword()
+    public function showPassword(bool $showPassword = true)
     {
-
-        $this->setAttribute('show-password', "");
+        $this->setAttribute('show-password', $showPassword);
         return $this;
     }
 }

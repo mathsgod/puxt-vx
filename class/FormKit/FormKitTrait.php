@@ -37,7 +37,7 @@ trait FormKitTrait
     }
 
 
-    function addFileInput(string $label, string $name)
+    function addFileInput(string $label, string $name): VxFormFileInput
     {
         $formkit = $this->appendHTML("<form-kit type='FormFileInput'></form-kit>")[0];
         $formkit->label($label);
@@ -45,7 +45,7 @@ trait FormKitTrait
         return $formkit;
     }
 
-    function addTinymce(string $label, string $name)
+    function addTinymce(string $label, string $name): VxFormTinymce
     {
         return $this->appendHTML("<form-kit type='FormTinymce'></form-kit>")[0]->label($label)->name($name);
     }

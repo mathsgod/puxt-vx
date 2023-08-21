@@ -65,7 +65,7 @@ class ElDatePicker extends ElInputNode
         return $this;
     }
 
-    public function clearable(bool $clearable)
+    public function clearable(bool $clearable = true)
     {
         $this->setAttribute('clearable', $clearable);
         return $this;

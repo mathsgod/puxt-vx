@@ -39,6 +39,7 @@ class ComponentBaseNode extends Component
         //check to kebab case
         $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name));
 
+        /** @var Schema $schema */
         $schema = $this->ownerDocument;
         $schema->registerClass($name, ComponentNode::class);
 

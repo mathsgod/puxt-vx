@@ -10,7 +10,7 @@ class ElTree extends ElInputNode
      */
     public function data(array $data)
     {
-        $this->setAttribute(':data', json_encode($data, JSON_UNESCAPED_UNICODE));
+        $this->setAttribute('data', $data);
         return $this;
     }
 
@@ -37,7 +37,7 @@ class ElTree extends ElInputNode
      */
     public function _props(array $props)
     {
-        $this->setAttribute(':props', json_encode($props, JSON_UNESCAPED_UNICODE));
+        $this->setAttribute('props', $props);
         return $this;
     }
 
@@ -91,7 +91,7 @@ class ElTree extends ElInputNode
      */
     public function defaultExpandedKeys(array $defaultExpandedKeys)
     {
-        $this->setAttribute(':default-expanded-keys', json_encode($defaultExpandedKeys, JSON_UNESCAPED_UNICODE));
+        $this->setAttribute('default-expanded-keys', $defaultExpandedKeys);
         return $this;
     }
 
@@ -118,7 +118,7 @@ class ElTree extends ElInputNode
      */
     public function defaultCheckedKeys(array $defaultCheckedKeys)
     {
-        $this->setAttribute(':default-checked-keys', json_encode($defaultCheckedKeys, JSON_UNESCAPED_UNICODE));
+        $this->setAttribute('default-checked-keys', $defaultCheckedKeys);
         return $this;
     }
 

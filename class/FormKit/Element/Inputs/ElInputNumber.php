@@ -6,8 +6,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElInputNumber extends ElInputNode
 {
-
-
     public function min(int $min)
     {
         $this->setAttribute('min', $min);

@@ -30,7 +30,8 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
-
+        $schema->addDatePicker("a", "b")->clearable();
+        return $schema;
         $form = $schema->addForm();
 
         $col = $form->addRow();
@@ -50,16 +51,16 @@ return new class
 
         //check schema is json serializable
 
-      /*   if ($schema instanceof JsonSerializable) {
+        /*   if ($schema instanceof JsonSerializable) {
             return new JsonResponse($schema, 200, [], JsonResponse::DEFAULT_JSON_FLAGS | JSON_UNESCAPED_UNICODE);
         }
         die();
  */
 
-       // echo json_encode($schema);die;
+        // echo json_encode($schema);die;
 
 
-        
+
         return $schema;
 
         return;
