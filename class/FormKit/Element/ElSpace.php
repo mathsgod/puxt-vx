@@ -14,7 +14,7 @@ class ElSpace extends ComponentNode
      */
     function alignment(string $align)
     {
-        $this->attributes['align'] = $align;
+        $this->setAttribute('alignment', $align);
         return $this;
     }
 
@@ -23,7 +23,7 @@ class ElSpace extends ComponentNode
      */
     function class(string|array $class)
     {
-        $this->attributes['class'] = $class;
+        $this->setAttribute('class', $class);
         return $this;
     }
 
@@ -33,7 +33,7 @@ class ElSpace extends ComponentNode
      */
     function direction(string $direction)
     {
-        $this->attributes['direction'] = $direction;
+        $this->setAttribute('direction', $direction);
         return $this;
     }
 
@@ -42,7 +42,7 @@ class ElSpace extends ComponentNode
      */
     function prefixCls(string $prefixCls)
     {
-        $this->attributes['prefixCls'] = $prefixCls;
+        $this->setAttribute('prefix-cls', $prefixCls);
         return $this;
     }
 
@@ -51,7 +51,7 @@ class ElSpace extends ComponentNode
      */
     function style(string|array $style)
     {
-        $this->attributes['style'] = $style;
+        $this->setAttribute('style', $style);
         return $this;
     }
 
@@ -60,7 +60,7 @@ class ElSpace extends ComponentNode
      */
     function spacer(string|int $spacer)
     {
-        $this->attributes['spacer'] = $spacer;
+        $this->setAttribute('spacer', $spacer);
         return $this;
     }
 
@@ -71,7 +71,7 @@ class ElSpace extends ComponentNode
      */
     function size(string|int|array $size)
     {
-        $this->attributes['size'] = $size;
+        $this->setAttribute('size', $size);
         return $this;
     }
 
@@ -80,7 +80,7 @@ class ElSpace extends ComponentNode
      */
     function wrap(bool $wrap = true)
     {
-        $this->attributes['wrap'] = $wrap;
+        $this->setAttribute('wrap', $wrap);
         return $this;
     }
 
@@ -89,7 +89,7 @@ class ElSpace extends ComponentNode
      */
     function fill(bool $fill = true)
     {
-        $this->attributes['fill'] = $fill;
+        $this->setAttribute('fill', $fill);
         return $this;
     }
 
@@ -98,7 +98,7 @@ class ElSpace extends ComponentNode
      */
     function fillRatio(int $fillRatio)
     {
-        $this->attributes['fill-ratio'] = $fillRatio;
+        $this->setAttribute('fill-ratio', $fillRatio);
         return $this;
     }
 }

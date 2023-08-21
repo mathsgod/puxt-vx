@@ -15,43 +15,43 @@ class ElSteps extends ComponentBaseNode
 
     function space(int|string $value)
     {
-        $this->attributes['space'] = $value;
+        $this->setAttribute('space', $value);
         return $this;
     }
 
     function direction(string $value)
     {
-        $this->attributes['direction'] = $value;
+        $this->setAttribute('direction', $value);
         return $this;
     }
 
     function active(int $value)
     {
-        $this->attributes['active'] = $value;
+        $this->setAttribute('active', $value);
         return $this;
     }
 
     function processStatus(string $value)
     {
-        $this->attributes['process-status'] = $value;
+        $this->setAttribute('process-status', $value);
         return $this;
     }
 
     function finishStatus(string $value)
     {
-        $this->attributes['finish-status'] = $value;
+        $this->setAttribute('finish-status', $value);
         return $this;
     }
 
     function alignCenter(bool $value = true)
     {
-        $this->attributes['align-center'] = $value;
+        $this->setAttribute('align-center', $value);
         return $this;
     }
 
     function simple(bool $value = true)
     {
-        $this->attributes['simple'] = $value;
+        $this->setAttribute('simple', $value);
         return $this;
     }
 }

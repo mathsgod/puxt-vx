@@ -3,25 +3,24 @@
 namespace FormKit\Element;
 
 use FormKit\ComponentBaseNode;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ElPageHeader extends ComponentBaseNode
 {
     function icon(string $value)
     {
-        $this->attributes['icon'] = $value;
+        $this->setAttribute('icon', $value);
         return $this;
     }
 
     function title(string $value)
     {
-        $this->attributes['title'] = $value;
+        $this->setAttribute('title', $value);
         return $this;
     }
 
     function content(string $value)
     {
-        $this->attributes['content'] = $value;
+        $this->setAttribute('content', $value);
         return $this;
     }
 }

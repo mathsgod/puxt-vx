@@ -17,6 +17,9 @@ class ComponentBaseNode extends Component
         return $this;
     }
 
+    /**
+     * @deprecated use setAttribute instead
+     */
     public function setProp(string $key, $value)
     {
         if (is_bool($value)) {
@@ -46,8 +49,16 @@ class ComponentBaseNode extends Component
 
         $comp = $this->appendHTML("<{$name}></{$name}>")[0];
         foreach ($props as $key => $value) {
-            $comp->setProp($key, $value);
+            $comp->setAttribute($key, $value);
         }
         return $comp;
+    }
+
+    public function setAttribute(string $qualifiedName, $value)
+    {
+        if (!is_string($value)) {
+            return parent::setAttribute(":{$qualifiedName}", json_encode($value, JSON_UNESCAPED_UNICODE));
+        }
+        return parent::setAttribute($qualifiedName, $value);
     }
 }

@@ -18,7 +18,7 @@ class ElTable extends ComponentBaseNode
      */
     public function data($data)
     {
-        $this->setProp('data', $data);
+        $this->setAttribute('data', $data);
         return $this;
     }
 
@@ -27,7 +27,7 @@ class ElTable extends ComponentBaseNode
      */
     public function height(string|int $height)
     {
-        $this->setProp('height', $height);
+        $this->setAttribute('height', $height);
         return $this;
     }
 
@@ -36,7 +36,7 @@ class ElTable extends ComponentBaseNode
      */
     public function maxHeight(string|int $maxHeight)
     {
-        $this->setProp('max-height', $maxHeight);
+        $this->setAttribute('max-height', $maxHeight);
         return $this;
     }
 
@@ -45,7 +45,7 @@ class ElTable extends ComponentBaseNode
      */
     public function stripe(bool $stripe = true)
     {
-        $this->setProp('stripe', $stripe);
+        $this->setAttribute('stripe', $stripe);
         return $this;
     }
 
@@ -54,7 +54,7 @@ class ElTable extends ComponentBaseNode
      */
     public function border(bool $border = true)
     {
-        $this->setProp('border', $border);
+        $this->setAttribute('border', $border);
         return $this;
     }
 
@@ -63,7 +63,7 @@ class ElTable extends ComponentBaseNode
      */
     public function size(string $size)
     {
-        $this->setProp('size', $size);
+        $this->setAttribute('size', $size);
         return $this;
     }
 
@@ -72,7 +72,7 @@ class ElTable extends ComponentBaseNode
      */
     public function fit(bool $fit = true)
     {
-        $this->setProp('fit', $fit);
+        $this->setAttribute('fit', $fit);
         return $this;
     }
 
@@ -81,7 +81,7 @@ class ElTable extends ComponentBaseNode
      */
     public function showHeader(bool $showHeader = true)
     {
-        $this->setProp('show-header', $showHeader);
+        $this->setAttribute('show-header', $showHeader);
         return $this;
     }
 
@@ -90,163 +90,163 @@ class ElTable extends ComponentBaseNode
      */
     public function highlightCurrentRow(bool $highlightCurrentRow = true)
     {
-        $this->setProp('highlight-current-row', $highlightCurrentRow);
+        $this->setAttribute('highlight-current-row', $highlightCurrentRow);
         return $this;
     }
 
     public function currentRowKey(string $currentRowKey)
     {
-        $this->setProp('current-row-key', $currentRowKey);
+        $this->setAttribute('current-row-key', $currentRowKey);
         return $this;
     }
 
     public function rowClassName(string $rowClassName)
     {
-        $this->setProp('row-class-name', $rowClassName);
+        $this->setAttribute('row-class-name', $rowClassName);
         return $this;
     }
 
     public function rowStyle(string $rowStyle)
     {
-        $this->setProp('row-style', $rowStyle);
+        $this->setAttribute('row-style', $rowStyle);
         return $this;
     }
 
     public function cellClassName(string $cellClassName)
     {
-        $this->setProp('cell-class-name', $cellClassName);
+        $this->setAttribute('cell-class-name', $cellClassName);
         return $this;
     }
 
     public function cellStyle(string $cellStyle)
     {
-        $this->setProp('cell-style', $cellStyle);
+        $this->setAttribute('cell-style', $cellStyle);
         return $this;
     }
 
     public function headerRowClassName(string $headerRowClassName)
     {
-        $this->setProp('header-row-class-name', $headerRowClassName);
+        $this->setAttribute('header-row-class-name', $headerRowClassName);
         return $this;
     }
 
     public function headerRowStyle(string $headerRowStyle)
     {
-        $this->setProp('header-row-style', $headerRowStyle);
+        $this->setAttribute('header-row-style', $headerRowStyle);
         return $this;
     }
 
     public function headerCellClassName(string $headerCellClassName)
     {
-        $this->setProp('header-cell-class-name', $headerCellClassName);
+        $this->setAttribute('header-cell-class-name', $headerCellClassName);
         return $this;
     }
 
     public function headerCellStyle(string $headerCellStyle)
     {
-        $this->setProp('header-cell-style', $headerCellStyle);
+        $this->setAttribute('header-cell-style', $headerCellStyle);
         return $this;
     }
 
     public function rowKey(string $rowKey)
     {
-        $this->setProp('row-key', $rowKey);
+        $this->setAttribute('row-key', $rowKey);
         return $this;
     }
 
     public function emptyText(string $emptyText)
     {
-        $this->setProp('empty-text', $emptyText);
+        $this->setAttribute('empty-text', $emptyText);
         return $this;
     }
 
     public function defaultExpandAll(bool $defaultExpandAll = true)
     {
-        $this->setProp('default-expand-all', $defaultExpandAll);
+        $this->setAttribute('default-expand-all', $defaultExpandAll);
         return $this;
     }
 
     public function expandRowKeys(array $expandRowKeys)
     {
-        $this->setProp('expand-row-keys', $expandRowKeys);
+        $this->setAttribute('expand-row-keys', $expandRowKeys);
         return $this;
     }
 
     public function defaultSort(array $defaultSort)
     {
-        $this->setProp('default-sort', $defaultSort);
+        $this->setAttribute('default-sort', $defaultSort);
         return $this;
     }
 
     public function tooltipEffect(string $tooltipEffect)
     {
-        $this->setProp('tooltip-effect', $tooltipEffect);
+        $this->setAttribute('tooltip-effect', $tooltipEffect);
         return $this;
     }
 
     public function showSummary(bool $showSummary = true)
     {
-        $this->setProp('show-summary', $showSummary);
+        $this->setAttribute('show-summary', $showSummary);
         return $this;
     }
 
     public function sumText(string $sumText)
     {
-        $this->setProp('sum-text', $sumText);
+        $this->setAttribute('sum-text', $sumText);
         return $this;
     }
 
     public function summaryMethod(array $summaryMethod)
     {
-        $this->setProp('summary-method', $summaryMethod);
+        $this->setAttribute('summary-method', $summaryMethod);
         return $this;
     }
 
     public function spanMethod(array $spanMethod)
     {
-        $this->setProp('span-method', $spanMethod);
+        $this->setAttribute('span-method', $spanMethod);
         return $this;
     }
 
     public function selectOnIndeterminate(bool $selectOnIndeterminate = true)
     {
-        $this->setProp('select-on-indeterminate', $selectOnIndeterminate);
+        $this->setAttribute('select-on-indeterminate', $selectOnIndeterminate);
         return $this;
     }
 
     public function indent(int $indent)
     {
-        $this->setProp('indent', $indent);
+        $this->setAttribute('indent', $indent);
         return $this;
     }
 
     public function lazy(bool $lazy = true)
     {
-        $this->setProp('lazy', $lazy);
+        $this->setAttribute('lazy', $lazy);
         return $this;
     }
 
     public function load(array $load)
     {
-        $this->setProp('load', $load);
+        $this->setAttribute('load', $load);
         return $this;
     }
 
     public function treeProps(array $treeProps)
     {
-        $this->setProp('tree-props', $treeProps);
+        $this->setAttribute('tree-props', $treeProps);
         return $this;
     }
 
     public function tableLayout(string $tableLayout)
     {
-        $this->setProp('table-layout', $tableLayout);
+        $this->setAttribute('table-layout', $tableLayout);
         return $this;
     }
 
     public function scrollbarAlwaysOn(bool $scrollbarAlwaysOn = true)
     {
-        $this->setProp('scrollbar-always-on', $scrollbarAlwaysOn);
+        $this->setAttribute('scrollbar-always-on', $scrollbarAlwaysOn);
         return $this;
     }
 }

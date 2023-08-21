@@ -26,7 +26,7 @@ class ElTabs extends ComponentBaseNode
      */
     function type(string $type)
     {
-        $this->setProp('type', $type);
+        $this->setAttribute('type', $type);
         return $this;
     }
 
@@ -35,7 +35,7 @@ class ElTabs extends ComponentBaseNode
      */
     function closable(bool $closable = true)
     {
-        $this->setProp('closable', $closable);
+        $this->setAttribute('closable', $closable);
         return $this;
     }
 
@@ -44,7 +44,7 @@ class ElTabs extends ComponentBaseNode
      */
     function addable(bool $addable = true)
     {
-        $this->setProp('addable', $addable);
+        $this->setAttribute('addable', $addable);
         return $this;
     }
 
@@ -53,7 +53,7 @@ class ElTabs extends ComponentBaseNode
      */
     function editable(bool $editable = true)
     {
-        $this->setProp('editable', $editable);
+        $this->setAttribute('editable', $editable);
         return $this;
     }
 
@@ -62,7 +62,7 @@ class ElTabs extends ComponentBaseNode
      */
     function tabPosition(string $tabPosition)
     {
-        $this->setProp('tab-position', $tabPosition);
+        $this->setAttribute('tab-position', $tabPosition);
         return $this;
     }
 
@@ -71,7 +71,7 @@ class ElTabs extends ComponentBaseNode
      */
     function stretch(bool $stretch = true)
     {
-        $this->setProp('stretch', $stretch);
+        $this->setAttribute('stretch', $stretch);
         return $this;
     }
 }

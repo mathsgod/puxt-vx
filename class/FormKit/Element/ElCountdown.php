@@ -9,31 +9,31 @@ class ElCountdown extends ComponentNode
 {
     function format(string $format)
     {
-        $this->setProp('format', $format);
+        $this->setAttribute('format', $format);
         return $this;
     }
 
     function prefix(string $prefix)
     {
-        $this->setProp('prefix', $prefix);
+        $this->setAttribute('prefix', $prefix);
         return $this;
     }
 
     function suffix(string $suffix)
     {
-        $this->setProp('suffix', $suffix);
+        $this->setAttribute('suffix', $suffix);
         return $this;
     }
 
     function title(string $title)
     {
-        $this->setProp('title', $title);
+        $this->setAttribute('title', $title);
         return $this;
     }
 
     function valueStyle(string|array $valueStyle)
     {
-        $this->setProp('value-style', $valueStyle);
+        $this->setAttribute('value-style', $valueStyle);
         return $this;
     }
 }

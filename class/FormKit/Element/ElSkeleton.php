@@ -13,7 +13,7 @@ class ElSkeleton extends ComponentNode
      */
     function animated(bool $animated = true)
     {
-        $this->attributes['animated'] = $animated;
+        $this->setAttribute('animated', $animated);
         return $this;
     }
 
@@ -22,7 +22,7 @@ class ElSkeleton extends ComponentNode
      */
     function count(int $count)
     {
-        $this->attributes['count'] = $count;
+        $this->setAttribute('count', $count);
         return $this;
     }
 
@@ -31,7 +31,7 @@ class ElSkeleton extends ComponentNode
      */
     function loading(bool $loading = true)
     {
-        $this->attributes['loading'] = $loading;
+        $this->setAttribute('loading', $loading);
         return $this;
     }
 
@@ -40,7 +40,7 @@ class ElSkeleton extends ComponentNode
      */
     function rows(int $rows)
     {
-        $this->attributes['rows'] = $rows;
+        $this->setAttribute('rows', $rows);
         return $this;
     }
 
@@ -49,7 +49,7 @@ class ElSkeleton extends ComponentNode
      */
     function throttle(int $throttle)
     {
-        $this->attributes['throttle'] = $throttle;
+        $this->setAttribute('throttle', $throttle);
         return $this;
     }
 }

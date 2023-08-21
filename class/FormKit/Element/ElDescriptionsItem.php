@@ -12,7 +12,7 @@ class ElDescriptionsItem extends ComponentNode
      */
     public function label(string $label)
     {
-        $this->setProp('label', $this->translator ? $this->translator->trans($label) : $label);
+        $this->setAttribute('label', $this->translator ? $this->translator->trans($label) : $label);
         return $this;
     }
 
@@ -21,7 +21,7 @@ class ElDescriptionsItem extends ComponentNode
      */
     public function span(int $span)
     {
-        $this->setProp('span', $span);
+        $this->setAttribute('span', $span);
         return $this;
     }
 
@@ -30,31 +30,31 @@ class ElDescriptionsItem extends ComponentNode
      */
     public function width(string|int $width)
     {
-        $this->setProp('width', $width);
+        $this->setAttribute('width', $width);
         return $this;
     }
 
     public function minWidth(string|int $minWidth)
     {
-        $this->setProp('min-width', $minWidth);
+        $this->setAttribute('min-width', $minWidth);
         return $this;
     }
 
     public function align(string $align)
     {
-        $this->setProp('align', $align);
+        $this->setAttribute('align', $align);
         return $this;
     }
 
     public function labelAlign(string $labelAlign)
     {
-        $this->setProp('label-align', $labelAlign);
+        $this->setAttribute('label-align', $labelAlign);
         return $this;
     }
 
     public function className(string $className)
     {
-        $this->setProp('class-name', $className);
+        $this->setAttribute('class-name', $className);
         return $this;
     }
 }

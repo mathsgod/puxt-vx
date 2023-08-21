@@ -43,13 +43,13 @@ class ElDescriptions extends ComponentNode
      */
     public function border(bool $border = true)
     {
-        $this->setProp('border', $border);
+        $this->setAttribute('border', $border);
         return $this;
     }
 
     public function column(int $column)
     {
-        $this->setProp('column', $column);
+        $this->setAttribute('column', $column);
         return $this;
     }
 
@@ -58,13 +58,13 @@ class ElDescriptions extends ComponentNode
      */
     public function direction(string $direction)
     {
-        $this->setProp('direction', $direction);
+        $this->setAttribute('direction', $direction);
         return $this;
     }
 
     public function size(string $size)
     {
-        $this->setProp('size', $size);
+        $this->setAttribute('size', $size);
         return $this;
     }
 
@@ -73,13 +73,13 @@ class ElDescriptions extends ComponentNode
      */
     public function title(bool $title = true)
     {
-        $this->setProp('title', $title);
+        $this->setAttribute('title', $title);
         return $this;
     }
 
     public function extra(string $extra)
     {
-        $this->setProp('extra', $extra);
+        $this->setAttribute('extra', $extra);
         return $this;
     }
 }

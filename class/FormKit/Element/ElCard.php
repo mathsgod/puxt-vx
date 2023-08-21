@@ -23,7 +23,7 @@ class ElCard extends ComponentNode
 
     public function bodyStyle(array $bodyStyle)
     {
-        $this->setAttribute(':body-style', json_encode($bodyStyle));
+        $this->setAttribute('body-style', $bodyStyle);
         return $this;
     }
 }

@@ -14,32 +14,31 @@ class ElTag extends ComponentNode
      */
     function type(string $type)
     {
-
-        $this->attributes["type"] = $type;
+        $this->setAttribute("type", $type);
         return $this;
     }
 
     function closable(bool $closable = true)
     {
-        $this->attributes["closable"] = $closable;
+        $this->setAttribute("closable", $closable);
         return $this;
     }
 
     function disableTransitions(bool $disableTransitions = true)
     {
-        $this->attributes["disable-transitions"] = $disableTransitions;
+        $this->setAttribute("disable-transitions", $disableTransitions);
         return $this;
     }
 
     function hit(bool $hit = true)
     {
-        $this->attributes["hit"] = $hit;
+        $this->setAttribute("hit", $hit);
         return $this;
     }
 
     function color(string $color)
     {
-        $this->attributes["color"] = $color;
+        $this->setAttribute("color", $color);
         return $this;
     }
 
@@ -48,7 +47,7 @@ class ElTag extends ComponentNode
      */
     function size(string $size)
     {
-        $this->attributes["size"] = $size;
+        $this->setAttribute("size", $size);
         return $this;
     }
 
@@ -57,7 +56,7 @@ class ElTag extends ComponentNode
      */
     function effect(string $effect)
     {
-        $this->attributes["effect"] = $effect;
+        $this->setAttribute("effect", $effect);
         return $this;
     }
 
@@ -66,7 +65,7 @@ class ElTag extends ComponentNode
      */
     function round(bool $round = true)
     {
-        $this->attributes["round"] = $round;
+        $this->setAttribute("round", $round);
         return $this;
     }
 }

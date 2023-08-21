@@ -30,61 +30,61 @@ class ElMenu extends ComponentBaseNode
 
     public function mode(string $mode)
     {
-        $this->setProp('mode', $mode);
+        $this->setAttribute('mode', $mode);
         return $this;
     }
 
     public function collapse(bool $collapse)
     {
-        $this->setProp('collapse', $collapse);
+        $this->setAttribute('collapse', $collapse);
         return $this;
     }
 
     public function backgroundColor(string $backgroundColor)
     {
-        $this->setProp('background-color', $backgroundColor);
+        $this->setAttribute('background-color', $backgroundColor);
         return $this;
     }
 
     public function textColor(string $textColor)
     {
-        $this->setProp('text-color', $textColor);
+        $this->setAttribute('text-color', $textColor);
         return $this;
     }
 
     public function activeTextColor(string $activeTextColor)
     {
-        $this->setProp('active-text-color', $activeTextColor);
+        $this->setAttribute('active-text-color', $activeTextColor);
         return $this;
     }
 
     public function defaultActive(string $defaultActive)
     {
-        $this->setProp('default-active', $defaultActive);
+        $this->setAttribute('default-active', $defaultActive);
         return $this;
     }
 
     public function defaultOpeneds(array $defaultOpeneds)
     {
-        $this->setProp('default-openeds', $defaultOpeneds);
+        $this->setAttribute('default-openeds', $defaultOpeneds);
         return $this;
     }
 
     public function uniqueOpened(bool $uniqueOpened)
     {
-        $this->setProp('unique-opened', $uniqueOpened);
+        $this->setAttribute('unique-opened', $uniqueOpened);
         return $this;
     }
 
     public function menuTrigger(string $menuTrigger)
     {
-        $this->setProp('menu-trigger', $menuTrigger);
+        $this->setAttribute('menu-trigger', $menuTrigger);
         return $this;
     }
 
     public function router(bool $router = true)
     {
-        $this->setProp('router', $router);
+        $this->setAttribute('router', $router);
         return $this;
     }
 }

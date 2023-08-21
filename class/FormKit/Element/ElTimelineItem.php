@@ -9,19 +9,19 @@ class ElTimelineItem extends ComponentNode
 {
     function timestamp($value)
     {
-        $this->attributes['timestamp'] = $value;
+        $this->setAttribute('timestamp', $value);
         return $this;
     }
 
     function hideTimestamp(bool $value = true)
     {
-        $this->attributes['hide-timestamp'] = $value;
+        $this->setAttribute('hide-timestamp', $value);
         return $this;
     }
 
     function center(bool $value = true)
     {
-        $this->attributes['center'] = $value;
+        $this->setAttribute('center', $value);
         return $this;
     }
 
@@ -30,7 +30,7 @@ class ElTimelineItem extends ComponentNode
      */
     function placement(string $value)
     {
-        $this->attributes['placement'] = $value;
+        $this->setAttribute('placement', $value);
         return $this;
     }
 
@@ -39,7 +39,7 @@ class ElTimelineItem extends ComponentNode
      */
     function type(string $value)
     {
-        $this->attributes['type'] = $value;
+        $this->setAttribute('type', $value);
         return $this;
     }
 
@@ -48,7 +48,7 @@ class ElTimelineItem extends ComponentNode
      */
     function color(string $value)
     {
-        $this->attributes['color'] = $value;
+        $this->setAttribute('color', $value);
         return $this;
     }
 
@@ -57,19 +57,19 @@ class ElTimelineItem extends ComponentNode
      */
     function size(string $value)
     {
-        $this->attributes['size'] = $value;
+        $this->setAttribute('size', $value);
         return $this;
     }
 
     function icon(string $value)
     {
-        $this->attributes['icon'] = $value;
+        $this->setAttribute('icon', $value);
         return $this;
     }
 
     function hollow(bool $value = true)
     {
-        $this->attributes['hollow'] = $value;
+        $this->setAttribute('hollow', $value);
         return $this;
     }
 }

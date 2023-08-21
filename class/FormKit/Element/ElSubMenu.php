@@ -31,61 +31,61 @@ class ElSubMenu extends ComponentBaseNode
     function popperClass(string $value)
     {
 
-        $this->attributes['popper-class'] = $value;
+        $this->setAttribute('popper-class', $value);
         return $this;
     }
 
     function showTimeout(int $value)
     {
-        $this->attributes['show-timeout'] = $value;
+        $this->setAttribute('show-timeout', $value);
         return $this;
     }
 
     function hideTimeout(int $value)
     {
-        $this->attributes['hide-timeout'] = $value;
+        $this->setAttribute('hide-timeout', $value);
         return $this;
     }
 
     function disabled(bool $value = true)
     {
-        $this->attributes['disabled'] = $value;
+        $this->setAttribute('disabled', $value);
         return $this;
     }
 
     function teleported(bool $value = true)
     {
-        $this->attributes['teleported'] = $value;
+        $this->setAttribute('teleported', $value);
         return $this;
     }
 
     function popperOffset(int $value)
     {
-        $this->attributes['popper-offset'] = $value;
+        $this->setAttribute('popper-offset', $value);
         return $this;
     }
 
     function expandCloseIcon(string $value)
     {
-        $this->attributes['expand-close-icon'] = $value;
+        $this->setAttribute('expand-close-icon', $value);
         return $this;
     }
 
     function expandOpenIcon(string $value)
     {
-        $this->attributes['expand-open-icon'] = $value;
+        $this->setAttribute('expand-open-icon', $value);
         return $this;
     }
 
     function collapseCloseIcon(string $value)
     {
-        $this->attributes['collapse-close-icon'] = $value;
+        $this->setAttribute('collapse-close-icon', $value);
         return $this;
     }
 
     function collapseOpenIcon(string $value)
     {
-        $this->attributes['collapse-open-icon'] = $value;
+        $this->setAttribute('collapse-open-icon', $value);
         return $this;
     }
 }

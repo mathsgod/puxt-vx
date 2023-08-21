@@ -12,7 +12,7 @@ class ElResult extends ComponentNode
      */
     function title(string $value)
     {
-        $this->attributes['title'] = $value;
+        $this->setAttribute('title', $value);
         return $this;
     }
 
@@ -21,7 +21,7 @@ class ElResult extends ComponentNode
      */
     function subTitle(string $value)
     {
-        $this->attributes['sub-title'] = $value;
+        $this->setAttribute('sub-title', $value);
         return $this;
     }
 
@@ -30,7 +30,7 @@ class ElResult extends ComponentNode
      */
     function icon(string $value)
     {
-        $this->attributes['icon'] = $value;
+        $this->setAttribute('icon', $value);
         return $this;
     }
 }

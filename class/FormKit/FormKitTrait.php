@@ -27,6 +27,15 @@ trait FormKitTrait
     use ElementTrait;
     use QuasarTrait;
 
+    public function setAttribute(string $qualifiedName, $value)
+    {
+        if (!is_string($value)) {
+            return parent::setAttribute(":{$qualifiedName}", json_encode($value, JSON_UNESCAPED_UNICODE));
+        }
+        return parent::setAttribute($qualifiedName, $value);
+    }
+
+
     function addButton(?string $text = null)
     {
         $button = $this->addElButton();

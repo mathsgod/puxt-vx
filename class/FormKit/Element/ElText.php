@@ -25,7 +25,7 @@ class ElText extends ComponentNode
 
     function truncated(bool $truncated = true)
     {
-        $this->setProp("truncated", $truncated);
+        $this->setAttribute("truncated", $truncated);
         return $this;
     }
 

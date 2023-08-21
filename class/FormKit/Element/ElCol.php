@@ -8,61 +8,61 @@ class ElCol extends ComponentNode
 {
     public function span(int $span)
     {
-        $this->setProp('span', $span);
+        $this->setAttribute('span', $span);
         return $this;
     }
 
     public function offset(int $offset)
     {
-        $this->setProp('offset', $offset);
+        $this->setAttribute('offset', $offset);
         return $this;
     }
 
     public function push(int $push)
     {
-        $this->setProp('push', $push);
+        $this->setAttribute('push', $push);
         return $this;
     }
 
     public function pull(int $pull)
     {
-        $this->setProp('pull', $pull);
+        $this->setAttribute('pull', $pull);
         return $this;
     }
 
     public function xs(int $xs)
     {
-        $this->setProp('xs', $xs);
+        $this->setAttribute('xs', $xs);
         return $this;
     }
 
     public function sm(int $sm)
     {
-        $this->setProp('sm', $sm);
+        $this->setAttribute('sm', $sm);
         return $this;
     }
 
     public function md(int $md)
     {
-        $this->setProp('md', $md);
+        $this->setAttribute('md', $md);
         return $this;
     }
 
     public function lg(int $lg)
     {
-        $this->setProp('lg', $lg);
+        $this->setAttribute('lg', $lg);
         return $this;
     }
 
     public function xl(int $xl)
     {
-        $this->setProp('xl', $xl);
+        $this->setAttribute('xl', $xl);
         return $this;
     }
 
     public function tag(string $tag)
     {
-        $this->setProp('tag', $tag);
+        $this->setAttribute('tag', $tag);
         return $this;
     }
 }

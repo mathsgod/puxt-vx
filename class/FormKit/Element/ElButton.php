@@ -62,33 +62,20 @@ class ElButton extends ComponentNode
 
     function disabled(bool $disabled)
     {
-        if ($disabled) {
-            $this->setAttribute('disabled', 'disabled');
-        } else {
-            $this->removeAttribute('disabled');
-        }
+        $this->setAttribute('disabled', $disabled);
         return $this;
     }
 
     function loading(bool $loading)
     {
-        if ($loading) {
-            $this->setAttribute('loading', 'loading');
-        } else {
-            $this->removeAttribute('loading');
-        }
+        $this->setAttribute('loading', $loading);
 
         return $this;
     }
 
     function autofocus(bool $autofocus)
     {
-        if ($autofocus) {
-            $this->setAttribute('autofocus', 'autofocus');
-        } else {
-            $this->removeAttribute('autofocus');
-        }
-
+        $this->setAttribute('autofocus', $autofocus);
         return $this;
     }
 

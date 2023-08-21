@@ -9,7 +9,7 @@ class ElProgress extends ComponentNode
 {
     function percentage(int $percentage)
     {
-        $this->attributes['percentage'] = $percentage;
+        $this->setAttribute('percentage', $percentage);
         return $this;
     }
 
@@ -18,19 +18,19 @@ class ElProgress extends ComponentNode
      */
     function type(string $type)
     {
-        $this->attributes['type'] = $type;
+        $this->setAttribute('type', $type);
         return $this;
     }
 
     function strokeWidth(int $strokeWidth)
     {
-        $this->attributes['stroke-width'] = $strokeWidth;
+        $this->setAttribute('stroke-width', $strokeWidth);
         return $this;
     }
 
     function textInside(bool $textInside)
     {
-        $this->attributes['text-inside'] = $textInside;
+        $this->setAttribute('text-inside', $textInside);
         return $this;
     }
 
@@ -39,37 +39,37 @@ class ElProgress extends ComponentNode
      */
     function status(string $status)
     {
-        $this->attributes['status'] = $status;
+        $this->setAttribute('status', $status);
         return $this;
     }
 
     function indeterminate(bool $indeterminate)
     {
-        $this->attributes['indeterminate'] = $indeterminate;
+        $this->setAttribute('indeterminate', $indeterminate);
         return $this;
     }
 
     function duration(int $duration)
     {
-        $this->attributes['duration'] = $duration;
+        $this->setAttribute('duration', $duration);
         return $this;
     }
 
     function color(string $color)
     {
-        $this->attributes['color'] = $color;
+        $this->setAttribute('color', $color);
         return $this;
     }
 
     function width(int $width)
     {
-        $this->attributes['width'] = $width;
+        $this->setAttribute('width', $width);
         return $this;
     }
 
     function showText(bool $showText)
     {
-        $this->attributes['show-text'] = $showText;
+        $this->setAttribute('show-text', $showText);
         return $this;
     }
 
@@ -78,13 +78,13 @@ class ElProgress extends ComponentNode
      */
     function strokeLinecap(string $strokeLinecap)
     {
-        $this->attributes['stroke-linecap'] = $strokeLinecap;
+        $this->setAttribute('stroke-linecap', $strokeLinecap);
         return $this;
     }
 
     function format(string $format)
     {
-        $this->attributes['format'] = $format;
+        $this->setAttribute('format', $format);
         return $this;
     }
 }

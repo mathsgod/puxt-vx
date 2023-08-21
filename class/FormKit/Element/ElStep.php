@@ -10,25 +10,25 @@ class ElStep extends ComponentBaseNode
 
     function title(string $value)
     {
-        $this->attributes['title'] = $value;
+        $this->setAttribute('title', $value);
         return $this;
     }
 
     function description(string $value)
     {
-        $this->attributes['description'] = $value;
+        $this->setAttribute('description', $value);
         return $this;
     }
 
     function icon(string $value)
     {
-        $this->attributes['icon'] = $value;
+        $this->setAttribute('icon', $value);
         return $this;
     }
 
     function status(string $value)
     {
-        $this->attributes['status'] = $value;
+        $this->setAttribute('status', $value);
         return $this;
     }
 }

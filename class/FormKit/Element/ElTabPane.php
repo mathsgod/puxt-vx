@@ -12,7 +12,7 @@ class ElTabPane extends ComponentNode
      */
     public function label(string $label)
     {
-        $this->setProp('label', $label);
+        $this->setAttribute('label', $label);
         return $this;
     }
 
@@ -21,7 +21,7 @@ class ElTabPane extends ComponentNode
      */
     public function disabled(bool $disabled = true)
     {
-        $this->setProp('disabled', $disabled);
+        $this->setAttribute('disabled', $disabled);
         return $this;
     }
 
@@ -30,7 +30,7 @@ class ElTabPane extends ComponentNode
      */
     public function name(string $name)
     {
-        $this->setProp('name', $name);
+        $this->setAttribute('name', $name);
         return $this;
     }
 
@@ -39,7 +39,7 @@ class ElTabPane extends ComponentNode
      */
     public function closable(bool $closable = true)
     {
-        $this->setProp('closable', $closable);
+        $this->setAttribute('closable', $closable);
         return $this;
     }
 
@@ -48,7 +48,7 @@ class ElTabPane extends ComponentNode
      */
     public function lazy(bool $lazy = true)
     {
-        $this->setProp('lazy', $lazy);
+        $this->setAttribute('lazy', $lazy);
         return $this;
     }
 }

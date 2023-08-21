@@ -30,7 +30,12 @@ return new class
     function get(VX $vx)
     {
         $schema = $vx->createSchema();
-        $schema->addDatePicker("a", "b")->clearable();
+
+        $schema->addElBadge()->isDot(true)->appendHTML("hello");
+
+
+
+        //$schema->addDatePicker("a", "b")->clearable();
         return $schema;
         $form = $schema->addForm();
 
