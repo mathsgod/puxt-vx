@@ -17,73 +17,34 @@ return new class
         $schema = $vx->createSchema();
 
         $toolbar = $schema->addQToolbar();
-        $toolbar->addQBtn()->to("change-password")->rounded()->outline()->color("primary")->addChildren("Change password");
-        $toolbar->addQBtn()->to("change-role")->rounded()->outline()->color("primary")->addChildren("Change role");
+        $toolbar->addQBtn()->to("change-password")->rounded()->outline()->color("primary")->appendHTML("Change password");
+        $toolbar->addQBtn()->to("change-role")->rounded()->outline()->color("primary")->appendHTML("Change role");
 
-        $div = $schema->addElement("div")->attrs(["class" => "row q-col-gutter-md"]);
+        $div = $schema->addElement("div", ["class" => "row q-col-gutter-md"]);
 
-        $list = $div->addElement("div")->attrs(["class" => "col-12 col-md-6"])->addQCard()->flat()
+        $list = $div->addElement("div", ["class" => "col-12 col-md-6"])->addQCard()->flat()
             ->addQList()->separator();
 
-        $item = $list->addQItem();
-        $item->addSection("Username");
-        $item->addSection($user->username)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("First name");
-        $item->addSection($user->first_name)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Last name");
-        $item->addSection($user->last_name)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Email");
-        $item->addSection($user->email)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Phone");
-        $item->addSection($user->phone)->side();
+        $list->item("Username", $user->username);
+        $list->item("First name", $user->first_name);
+        $list->item("Last name", $user->last_name);
+        $list->item("Email", $user->email);
+        $list->item("Phone", $user->phone);
 
 
-
-        $list = $div->addElement("div")->attrs(["class" => "col-12 col-md-6"])->addQCard()->flat()
+        $list = $div->addElement("div", ["class" => "col-12 col-md-6"])->addQCard()->flat()
             ->addQList()->separator();
-        $item = $list->addQItem();
-        $item->addSection("Address1");
-        $item->addSection($user->addr1)->side();
 
-        $item = $list->addQItem();
-        $item->addSection("Address2");
-        $item->addSection($user->addr2)->side();
 
-        $item = $list->addQItem();
-        $item->addSection("Address3");
-        $item->addSection($user->addr3)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Join date");
-        $item->addSection($user->join_date)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Status");
-        $item->addSection($user->getStatus())->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Expiry date");
-        $item->addSection($user->expiry_date)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Language");
-        $item->addSection($user->language)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Default page");
-        $item->addSection($user->default_page)->side();
-
-        $item = $list->addQItem();
-        $item->addSection("Role");
-        $item->addSection(implode(",", $user->getRoles()))->side();
+        $list->item("Address1", $user->addr1);
+        $list->item("Address2", $user->addr2);
+        $list->item("Address3", $user->addr3);
+        $list->item("Join date", $user->join_date);
+        $list->item("Status", $user->getStatus());
+        $list->item("Expiry date", $user->expiry_date);
+        $list->item("Language", $user->language);
+        $list->item("Default page", $user->default_page);
+        $list->item("Role", implode(",", $user->getRoles()));
 
 
 

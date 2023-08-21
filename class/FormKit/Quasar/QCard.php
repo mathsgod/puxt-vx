@@ -10,7 +10,8 @@ class QCard extends ComponentNode
 
     public function flat()
     {
-        return $this->setAttribute("flat", true);
+        $this->setAttribute("flat", true);
+        return $this;
     }
 
     public function addSection(): QCardSection

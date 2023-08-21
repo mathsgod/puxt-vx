@@ -192,12 +192,7 @@ trait FormKitTrait
         $formkit = $this->appendHTML("<form-kit type='el-switch'></form-kit>")[0];
         $formkit->formItem();
         $formkit->name($name);
-
-        if ($label) {
-            $formkit->label($label);
-        }
-
-        $this->children[] = $formkit;
+        $formkit->label($label);
 
         return $formkit;
     }
@@ -207,10 +202,12 @@ trait FormKitTrait
     {
         $component = $this->addElDivider();
 
-
         if ($label) {
-            if ($this->translator) {
-                $label = $this->translator->trans($label);
+
+            if ($translator = $this->translator) {
+                $label = $translator->trans($label);
+            } elseif ($this->ownerDocument && $translator = $this->ownerDocument->getTranslator()) {
+                $label = $translator->trans($label);
             }
             $component->appendHTML($label);
         }
@@ -648,13 +645,6 @@ trait FormKitTrait
     }
 
 
-
-
-
-
-
-
-
     function addTabs()
     {
         $tabs = $this->addElTabs();
@@ -663,10 +653,9 @@ trait FormKitTrait
     }
 
 
-    function addVxSchema()
+    function addVxSchema(): VxSchema
     {
-        $component = new VxSchema([], $this->translator);
-        $this->children[] = $component;
+        $component = $this->appendHTML("<vx-schema></vx-schema>")[0];
         return $component;
     }
 }

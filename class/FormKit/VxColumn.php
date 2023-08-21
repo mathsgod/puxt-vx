@@ -51,7 +51,8 @@ class VxColumn extends ComponentNode
      */
     public function label(string $label)
     {
-        $this->setAttribute('label', $label);
+
+        $this->setAttribute('label', $this->ownerDocument->getTranslator()->trans($label));
         return $this;
     }
 

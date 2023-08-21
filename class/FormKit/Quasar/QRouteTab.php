@@ -31,8 +31,4 @@ class QRouteTab extends ComponentNode
         return $this;
     }
 
-    function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-    }
 }
