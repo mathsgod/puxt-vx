@@ -10,6 +10,12 @@ class QItemSection extends ComponentNode
 
     public function side()
     {
-        return $this->setAttribute("side", true);
+        $this->setAttribute("side", true);
+        return $this;
+    }
+
+    public function addItemLabel(): QItemLabel
+    {
+        return $this->appendHTML('<q-item-label></q-item-label>')[0];
     }
 }

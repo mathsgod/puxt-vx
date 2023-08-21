@@ -1,6 +1,3 @@
-<div id="phpinfo">
-    {{pinfo|raw}}
-</div>
 <?php
 
 /**
@@ -25,15 +22,13 @@ return new class
 
 
         $schema = $vx->createSchema();
-        $card = $schema->addCard()->bodyStyle(["padding" => "0px"]);
+        $card = $schema->addQCard();
         $card->addElement("iframe")->attrs([
             "srcdoc" => (string)$p,
             "class" => "h-[80vh] border-none",
             "width" => "100%"
         ]);
-
-
-
+        
         return $schema;
     }
 };

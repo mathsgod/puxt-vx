@@ -20,7 +20,18 @@ return new class
 
     function get(VX $vx)
     {
+
         $schema = $vx->createSchema();
+
+        /*  $lists = $schema->addQCard()->addLists();
+        foreach ($this->getData() as $item) {
+            $qi = $lists->addQItem();
+            $sec = $qi->addSection();
+            $sec->addItemLabel()->appendHTML($item["name"]);
+
+            $sec->addItemLabel()->caption()->lines(10)->appendHTML($item["value"]);
+            //$lists->item($item["name"], $item["value"]);
+        } */
         $table = $schema->addElTable();
         $table->size("small");
         $table->data($this->getData());
