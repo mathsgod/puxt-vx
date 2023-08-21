@@ -17,16 +17,6 @@ return new class
         $logined = $vx->logined;
         $data = [
             "logined" => $logined,
-            "version" => [
-                [
-                    "name" => "puxt-vx",
-                    "value" => Composer\InstalledVersions::getVersion("mathsgod/puxt-vx")
-                ],
-                [
-                    "name" => "puxt",
-                    "value" => Composer\InstalledVersions::getVersion("mathsgod/puxt")
-                ]
-            ],
             "locale" => "en"
         ];
 
@@ -75,10 +65,10 @@ return new class
 
             //language 
             $data["language"] = [];
-            foreach($vx->languages as $language){
-                $data["language"][$language['locale']]= $language['name'];
+            foreach ($vx->languages as $language) {
+                $data["language"][$language['locale']] = $language['name'];
             }
-            
+
             //user
             $user = $vx->user;
 

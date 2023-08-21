@@ -8,9 +8,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class QCard extends ComponentNode
 {
 
-    public function flat()
+    public function flat(bool $flat = true)
     {
-        $this->setAttribute("flat", true);
+        $this->setAttribute("flat", $flat);
         return $this;
     }
 

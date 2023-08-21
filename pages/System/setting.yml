@@ -1,46 +1,50 @@
 group: System
 sequence: 50
-icon: computer
+icon: sym_o_computer
 
 menu:
   Setting:
     link: /System/setting
     label: Setting
-    icon: tune
+    icon: sym_o_tune
   Package:
     link: /System/package
     label: Package
-    icon: fa fa-cubes
+    icon: sym_o_package
   PHPInfo:
     link: /System/phpinfo
     label: PHPInfo
-    icon: fab fa-php
+    icon: sym_o_php
   Mail test:
     link: /System/mail-test
     label: Mail test
-    icon: far fa-envelope
+    icon: sym_o_mail
   File system:
     link: /System/filesystem
     label: File system
-    icon: fa fa-folder
+    icon: sym_o_folder
   Database:
     link: /System/database
     label: Database
-    icon: fa fa-database
+    icon: sym_o_database
     menu: 
       Table:
         link: /System/database/table
         label: Table
-        icon: fa fa-table
+        icon: sym_o_data_table
       Charset:
         link: /System/database/charset
         label: Charset
-        icon: fa fa-spell-check
+        icon: sym_o_spellcheck
       Backup:
         link: /System/database/backup
         label: Backup
-        icon: backup_table
+        icon: sym_o_backup_table
       Restore:
         link: /System/database/restore
         label: Restore
-        icon: restore
+        icon: sym_o_restore
+  Version:
+    link: /System/version
+    label: Version
+    icon: sym_o_info

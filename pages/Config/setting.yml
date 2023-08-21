@@ -1,4 +1,4 @@
 class: VX\Config
-icon: settings
+icon: sym_o_settings
 group: System
 show_create: true

@@ -9,11 +9,13 @@ return new class
 {
     function get(VX $vx)
     {
+
         $schema = $vx->createSchema();
-        $table = $schema->addElTable();
-        $table->data(iterator_to_array($this->data()));
-        $table->addColumn()->label("Name")->prop("name")->sortable();
-        $table->addColumn()->label("Version")->prop("version")->sortable();
+
+        $list = $schema->addQCard()->addQList();
+        foreach (iterator_to_array($this->data()) as $data) {
+            $list->item($data["name"], $data["version"]);
+        }
 
         return $schema;
     }

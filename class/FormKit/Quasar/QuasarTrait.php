@@ -16,7 +16,9 @@ trait QuasarTrait
 
     function addQCard(): QCard
     {
-        return $this->appendHTML('<q-card></q-card>')[0];
+        $card = $this->appendHTML('<q-card></q-card>')[0];
+        $card->flat();
+        return $card;
     }
 
     function addQItem(): QItem
@@ -26,7 +28,9 @@ trait QuasarTrait
 
     function addQList(): QList
     {
-        return $this->appendHTML('<q-list></q-list>')[0];
+        $list = $this->appendHTML('<q-list></q-list>')[0];
+        $list->separator();
+        return $list;
     }
 
     function addQTabs(): QTabs

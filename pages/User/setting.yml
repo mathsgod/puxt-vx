@@ -1,5 +1,5 @@
 sequence: 15
 class: VX\User
-icon: person
+icon: sym_o_person
 group: System
 show_create: true
