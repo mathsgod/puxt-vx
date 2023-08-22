@@ -17,4 +17,5 @@ class QItem extends ComponentNode
         }
         return $section;
     }
+
 }

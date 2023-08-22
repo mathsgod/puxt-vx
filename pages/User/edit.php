@@ -12,6 +12,10 @@ return new class
 
     public function get(VX $vx, User $user)
     {
+        if (!$vx->isGranted("update", $user)) {
+            throw new \Exception("You are not allowed to view this page");
+        }
+
         $schema = $vx->createSchema();
         $form = $schema->addForm();
         $form->action($user->uri());

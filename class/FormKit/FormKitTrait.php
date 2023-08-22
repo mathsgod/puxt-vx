@@ -504,6 +504,20 @@ trait FormKitTrait
 
     //--------------------------------------------------------------------------------
 
+    function addVxTree(?string $label = null, ?string $name = null): VX\Tree
+    {
+        $tree = $this->appendHTML("<form-kit type='vxTree'></form-kit>")[0];
+        if ($label) {
+            $tree->label($label);
+        }
+        if ($name) {
+            $tree->name($name);
+        }
+        //        $tree->formItem();
+        return $tree;
+    }
+
+
     function addTree(?string $label = null, ?string $name = null)
     {
         $elTree = $this->addElTree($name);

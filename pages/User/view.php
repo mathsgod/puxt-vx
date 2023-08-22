@@ -5,6 +5,7 @@
  * @date 2023-01-30 
  */
 
+use VX\Security\Security;
 use VX\User;
 
 return new class
@@ -13,6 +14,10 @@ return new class
     {
 
         $user = User::FromGlobal();
+
+        if (!$vx->isGranted("read", $user)) {
+            throw new \Exception("You are not allowed to view this page");
+        }
 
         $schema = $vx->createSchema();
 

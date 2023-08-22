@@ -174,7 +174,7 @@ class Module implements MenuItemInterface
             $items[] = new ModuleMenu($m, $this->translator);
         }
 
-
+       
         return $items;
     }
 
@@ -525,10 +525,15 @@ class Module implements MenuItemInterface
 
 
         foreach ($this->getMenus() as $menu) {
+
+            outp($menu->getName());
+            
             if ($this->security->isGranted($user, $menu->getName(), $menu)) {
                 $menus[] = $menu->getMenuLinkByUser($user, $this->security);
             }
         }
+
+        
 
 
 

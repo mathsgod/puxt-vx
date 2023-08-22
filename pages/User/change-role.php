@@ -13,6 +13,11 @@ return new class
 
     function get(VX $vx, Security $security, User $user)
     {
+        $user = User::FromGlobal();
+
+        if (!$vx->isGranted("read", $user)) {
+            throw new \Exception("You are not allowed to view this page");
+        }
 
         $stub = require_once dirname(__DIR__) . "/Role/get-data.php";
 
@@ -28,11 +33,12 @@ return new class
 
         $form->addHidden("user_id");
 
-        $tree = $form->addElTree("roles")
+        $tree = $form->addVxTree("Role", "roles")
             ->showCheckbox()
             ->defaultExpandAll()
+            ->checkStrictly(true)
             ->nodeKey("name");
-            
+
 
         $data = $stub->get($vx, $security);
         $tree->data($data);

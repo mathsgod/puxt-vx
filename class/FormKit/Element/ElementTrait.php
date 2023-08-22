@@ -4,7 +4,6 @@ namespace FormKit\Element;
 
 use FormKit\Element\Inputs\ElInput;
 use FormKit\Element\Inputs\ElSelect;
-use FormKit\Element\Inputs\ElTree;
 
 trait ElementTrait
 {
@@ -189,13 +188,13 @@ trait ElementTrait
     {
         return $this->appendHTML('<el-countdown></el-countdown>')[0];
     }
-
+    
     function addElTree(?string $name): ElTree
     {
         $tree = $this->appendHTML('<el-tree></el-tree>')[0];
-        if ($name) {
+    /*     if ($name) {
             $tree->name($name);
-        }
+        } */
         return $tree;
     }
 }

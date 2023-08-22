@@ -18,4 +18,17 @@ class QItemSection extends ComponentNode
     {
         return $this->appendHTML('<q-item-label></q-item-label>')[0];
     }
+
+    public function label(string $label)
+    {
+        $this->addItemLabel()->appendHTML($label);
+        return $this;
+    }
+
+    public function caption(string $caption)
+    {
+        $this->addItemLabel()->caption()->appendHTML($caption);
+
+        return $this;
+    }
 }

@@ -17,7 +17,7 @@ trait QuasarTrait
     function addQCard(): QCard
     {
         $card = $this->appendHTML('<q-card></q-card>')[0];
-        $card->flat();
+        $card->flat()->bordered();
         return $card;
     }
 

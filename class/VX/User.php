@@ -2,6 +2,8 @@
 
 namespace VX;
 
+use Laminas\Db\Sql\Where;
+use Closure;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use TheCodingMachine\GraphQLite\Annotations\Field;
@@ -9,6 +11,7 @@ use VX\Security\AssertionInterface;
 use VX\Security\Security;
 use VX\Security\UserInterface;
 use VX\User\Favoriteable;
+use Laminas\Db\Sql\Predicate;
 
 /**
  * @property int $user_id
@@ -37,6 +40,20 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
     public $status;
 
     const STATUS = ["Active", "Inactive"];
+
+    static function Query($predicate = null, $combination = Predicate\PredicateSet::OP_AND)
+    {
+        $q = parent::Query($predicate, $combination);
+
+        //only administator can see administrator
+        if (!self::$_vx->getCurrentUser()->is("Administrators")) {
+
+            $q->where->notIn("user_id", array_column(UserRole::Query(["role" => "Administrators"])->columns(["user_id"])->toArray(), "user_id"));;
+        }
+
+        return $q;
+    }
+
 
     function getFavorites()
     {
@@ -329,6 +346,5 @@ class User extends Model implements UserInterface, StyleableInterface, Assertion
         //remove password
         unset($arr["password"]);
         return $arr;
-        
     }
 }

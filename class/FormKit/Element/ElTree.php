@@ -1,8 +1,10 @@
 <?php
 
-namespace FormKit\Element\Inputs;
+namespace FormKit\Element;
 
-class ElTree extends ElInputNode
+use FormKit\ComponentNode;
+
+class ElTree extends ComponentNode
 {
 
     /**

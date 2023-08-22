@@ -47,6 +47,7 @@ class SchemaNode extends \FormKit\Schema
         $this->registerInputClass("FormCodeInput", VxFormCodeInput::class);
         $this->registerInputClass("FormTinymce", VxFormTinymce::class);
         $this->registerInputClass("vxFormFileInput", VxFormTinymce::class);
+        $this->registerInputClass("vxTree", VX\Tree::class);
         $this->registerClass("vx-link", VxLink::class);
 
         $this->registerDefaultDOMNodeClass(ElementNode::class);

@@ -8,7 +8,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ElTimeline extends ComponentBaseNode
 {
 
-    public function addTimelineItem()
+    public function addTimelineItem(): ElTimelineItem
     {
         return $this->appendHTML('<el-timeline-item></el-timeline-item>')[0];
     }

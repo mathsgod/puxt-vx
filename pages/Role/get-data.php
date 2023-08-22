@@ -28,12 +28,22 @@ return new class
     {
         $everyone = $security->getRole("Everyone");
         foreach ($everyone->getParents() as $parent) {
+
             $name = $parent->getName();
             if ($name == "Administrators" || $name == "Power Users" || $name == "Users" || $name == "Guests") {
                 $readonly = true;
-            }else{
+            } else {
                 $readonly = false;
             }
+
+
+            if (!$vx->user->is("Administrators")) {
+                if ($name == "Administrators") {
+                    continue;
+                }
+            }
+
+
             $data[] = [
                 "label" => $parent->getName(),
                 "name" => $parent->getName(),
