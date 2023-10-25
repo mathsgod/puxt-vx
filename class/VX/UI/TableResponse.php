@@ -8,6 +8,7 @@ use Laminas\Db\Sql\Where;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use VX;
 use VX\IModel;
+use R\DB\Model;
 
 class TableResponse implements JsonSerializable
 {
@@ -220,8 +221,14 @@ class TableResponse implements JsonSerializable
                 }
 
                 $dmap = $this->data_map->__invoke($obj);
-                foreach ($dmap as $k => $v) {
-                    $d[$k] = $v;
+                if($dmap instanceof Model){
+                    foreach($dmap->__fields() as  $v){
+                        $d[$v] = $dmap->$v;
+                    }
+                }else{
+                    foreach ($dmap as $k => $v) {
+                        $d[$k] = $v;
+                    }
                 }
 
                 foreach ($d as $k => $v) {
