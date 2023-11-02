@@ -26,16 +26,15 @@ class AuthLock extends Model
     public static function LockIP(string $ip)
     {
 
-        return;
-        $a = AuthLock::Query([
-            "ip" => $ip
-        ])->first();
+        $a = AuthLock::Query(["ip" => $ip])->first();
 
         if ($a) {
             $a->value++;
         } else {
-            $a->ip = $ip;
-            $a->value = 0;
+            $a = AuthLock::Create([
+                "ip" => $ip,
+                "value" => 1,
+            ]);
         }
         $a->time = date("Y-m-d H:i:s");
 
