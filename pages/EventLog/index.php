@@ -25,7 +25,7 @@ return new class
         $rt->add("Class", "class")->sortable()->searchable();
         $rt->add("Action", "action")->sortable()->searchable();
         $rt->add("Created time", "created_time");
-        $rt->add("Created by", "user_id")->searchable(TableColumn::SEARCH_TYPE_SELECT, function ($select) {
+        $rt->add("Created by", "user")->searchable(TableColumn::SEARCH_TYPE_SELECT, function ($select) {
             $select->option(User::Query(), "username", "user_id");
         });
         $this->table = $rt;
@@ -39,7 +39,7 @@ return new class
         $rt->add("class");
         $rt->add("action");
         $rt->add("created_time");
-        $rt->add("user_id", fn (EventLog $e) => $e->User()?->__toString());
+        $rt->add("user", fn (EventLog $e) => $e->User()?->__toString());
 
 
         return $rt;
