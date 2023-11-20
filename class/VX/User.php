@@ -48,12 +48,13 @@ class User extends Model implements RoleInterface
 
     function saveLastAccessLog(string $jti)
     {
-        if ($ul = UserLog::Get(["jti" => $jti])) {
-            $ul->last_access_time = date("Y-m-d H:i:s");
-            $ul->save();
-        }
+        UserLog::_table()->update([
+            "last_access_time" => date("Y-m-d H:i:s")
+        ], [
+            "jti" => $jti
+        ]);
     }
-    
+
     function save()
     {
         $attr = self::__attribute("style");
