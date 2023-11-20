@@ -85,6 +85,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public $base_path;
 
+    public $jti; //user access token id
+
     public function __construct(App $puxt)
     {
         $this->useEventDispatcher($puxt->eventDispatcher());
@@ -404,6 +406,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
                 //save last access log
                 $user = User::Get($this->user_id);
                 $token = $this->decodeJWT($access_token);
+
+                $this->jti = $token->jti;
                 $user->saveLastAccessLog($token->jti ?? "");
             }
         }
@@ -972,15 +976,15 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function logout()
     {
-        //get last logout
-        $o = UserLog::Query([
-            "user_id" => $this->user_id
-        ])->order("userlog_id desc")->first();
 
-        if ($o) {
-            $o->logout_dt = date("Y-m-d H:i:s");
-            $o->save();
+        if ($this->jti) {
+            UserLog::_table()->update([
+                "logout_dt" => date("Y-m-d H:i:s")
+            ], [
+                "jti" => $this->jti
+            ]);
         }
+
         $this->user_id = 2;
     }
 
