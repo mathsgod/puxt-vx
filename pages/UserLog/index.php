@@ -38,6 +38,9 @@ return new class
         $rt->add("userlog_id");
         $rt->add("user", fn (UserLog $o) => $o->User()?->__toString());
         $rt->add("login_dt");
+        $rt->add("logout_time", function (UserLog $o) {
+            return $o->getLogoutTime();
+        });
         $rt->add("logout_dt");
         $rt->add("last_access_time");
         $rt->add("ip");
