@@ -10,10 +10,12 @@ return new class
     {
         $rt = $context->ui->createTable("data");
         $rt->setDefaultSort("userlog_id", "desc");
-        $rt->add("ID", "userlog_id")->sortable()->searchable()->width("60");
+        $rt->add("ID", "userlog")->sortable()->searchable()->width("60");
         $rt->add("User", "user_id");
         $rt->add("Login time", "login_dt")->sortable()->searchable("date");
+        $rt->add("Last access", "last_access_time")->sortable();
         $rt->add("Logout time", "logout_dt")->sortable()->searchable("date");
+
         $rt->add("IP address", "ip")->sortable()->searchable();
         $rt->add("Result", "result")->sortable()->filterable([
             [
@@ -33,10 +35,11 @@ return new class
     {
         $rt = $vx->ui->createTableResponse();
         $rt->source = UserLog::Query();
-        $rt->add("user_id", fn (UserLog $o) => $o->User()?->__toString());
+        $rt->add("user", fn (UserLog $o) => $o->User()?->__toString());
         $rt->add("userlog_id");
         $rt->add("login_dt");
         $rt->add("logout_dt");
+        $rt->add("last_access_time");
         $rt->add("ip");
         $rt->add("result");
         $rt->add("user_agent");
