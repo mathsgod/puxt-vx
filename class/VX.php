@@ -400,6 +400,11 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             if ($user_id = $this->getUserIdByToken($access_token)) {
                 $this->user_id = $user_id;
                 $this->logined = true;
+
+                //save last access log
+                $user = User::Get($this->user_id);
+                $token = $this->decodeJWT($access_token);
+                $user->saveLastAccessLog($token->jti ?? "");
             }
         }
 
@@ -965,13 +970,8 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         ];
     }
 
-
-
-
-
     public function logout()
     {
-        $this->user_id = 2;
         //get last logout
         $o = UserLog::Query([
             "user_id" => $this->user_id
@@ -981,6 +981,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             $o->logout_dt = date("Y-m-d H:i:s");
             $o->save();
         }
+        $this->user_id = 2;
     }
 
     public function object(): ?IModel
