@@ -12,6 +12,10 @@ return new class
 
     function post(VX $vx)
     {
+        $token = $vx->decodeJWT($vx->getAccessToken());
+        $vx->jti = $token->jti;
+        $vx->logout();
+
         $vx->invalidateJWT($vx->getAccessToken());
         $vx->invalidateJWT($vx->getRefreshToken());
 
