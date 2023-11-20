@@ -899,7 +899,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     }
 
     // login with username, password and code, throw exception if failed
-    function login(string $username, string $password, ?string $code = null): User
+    function login(string $username, string $password, ?string $code = null)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -936,6 +936,11 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
             $ul->user_id = $user->user_id;
             $ul->result = "SUCCESS";
+
+            $access_token = $this->generateAccessToken($user);
+            $token = $this->decodeJWT($access_token);
+
+            $ul->jti = $token->jti;
             $ul->save();
             AuthLock::ClearLockedIP($ip);
         } catch (Exception $e) {
@@ -951,8 +956,18 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             }
             throw $e;
         }
-        return $user;
+
+
+        return [
+            "user" => $user,
+            "access_token" => $access_token,
+            "refresh_token" => $this->generateRefreshToken($user),
+        ];
     }
+
+
+
+
 
     public function logout()
     {
