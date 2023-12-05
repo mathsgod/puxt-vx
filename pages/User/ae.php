@@ -54,7 +54,7 @@ return new class
 
         $ugs = UserGroup::Query();
         if (!$vx->user->isAdmin()) {
-            $ugs = collect($ugs)->filter(fn ($ug) => $ug->name != "Administrators");
+            $ugs->where->notIn("usergroup_id", [1, 4]);//admin, guest
         }
         $form->add("User group")->multiSelect("_usergroup_id")->option($ugs, "name", "usergroup_id");
 

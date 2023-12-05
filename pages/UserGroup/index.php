@@ -59,6 +59,12 @@ return new class
     {
         $r = $vx->ui->createTableResponse();
         $r->source = UserGroup::Query();
+
+        //check if user is admin
+        if (!$vx->user->isAdmin()) {
+            $r->source->where->notIn("usergroup_id", [1, 4]);
+        }
+
         $r->add("usergroup_id");
         $r->add("name");
         $r->add("code");
