@@ -98,7 +98,7 @@
 
                     return;
                 } else {
-                    let resp = (await this.$vx.get("User/setting-2step?_entry=qrcode")).data;
+                    let resp = (await this.$vx.get("setting-2step?_entry=qrcode")).data;
                     this.qr_code = resp.image;
                     this.secret = resp.secret
                 }
@@ -106,23 +106,23 @@
         },
         methods: {
             async removeWhitelist(value) {
-                await this.$vx.post("User/setting-2step?_entry=removeWhitelist", {
+                await this.$vx.post("setting-2step?_entry=removeWhitelist", {
                     ip: value
                 });
                 await this.loadWhitelist();
             },
             async addToWhitelist() {
-                await this.$vx.post("User/setting-2step?_entry=addWhitelist");
+                await this.$vx.post("setting-2step?_entry=addWhitelist");
                 await this.loadWhitelist();
             },
             async loadWhitelist() {
                 let {
                     data
-                } = await this.$vx.get("User/setting-2step");
+                } = await this.$vx.get("setting-2step");
                 this.whitelist = data.whitelist;
             },
             async onSubmit() {
-                let resp = (await this.$vx.post("User/setting-2step", {
+                let resp = (await this.$vx.post("setting-2step", {
                     code: this.code,
                     secret: this.secret
                 })).data;
