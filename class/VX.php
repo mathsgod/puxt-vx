@@ -994,7 +994,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         if ($this->module) {
             $class = $this->module->class;
 
-            if (class_exists($class, true)) {
+            if (is_subclass_of($class, IModel::class)) {
                 return new $class($this->object_id);
             }
         }
