@@ -20,6 +20,30 @@
   var menuWrapper_el = $('div[data-menu="menu-wrapper"]').html();
   var menuWrapperClasses = $('div[data-menu="menu-wrapper"]').attr('class');
 
+  function getCurrentBreakpoint() {
+    var breakpoint = Unison.fetch.now();
+    if (breakpoint && breakpoint.name) {
+      return breakpoint;
+    }
+
+    // Unison can run before its CSS metadata is available. Match the
+    // breakpoints in the bundled theme so menu initialization still completes.
+    var width = window.innerWidth || document.documentElement.clientWidth;
+    var breakpoints = [
+      { name: 'xl', width: '1200px' },
+      { name: 'lg', width: '992px' },
+      { name: 'md', width: '768px' },
+      { name: 'sm', width: '544px' },
+      { name: 'xs', width: '0px' }
+    ];
+    for (var i = 0; i < breakpoints.length; i++) {
+      if (width >= parseInt(breakpoints[i].width, 10)) {
+        return breakpoints[i];
+      }
+    }
+    return breakpoints[breakpoints.length - 1];
+  }
+
   // Main menu
   $.app.menu = {
     expanded: null,
@@ -134,7 +158,7 @@
     },
 
     change: function (compactMenu) {
-      var currentBreakpoint = Unison.fetch.now(); // Current Breakpoint
+      var currentBreakpoint = getCurrentBreakpoint();
 
       this.reset();
 
@@ -562,7 +586,7 @@
     },
 
     toggle: function () {
-      var currentBreakpoint = Unison.fetch.now(); // Current Breakpoint
+      var currentBreakpoint = getCurrentBreakpoint();
       var collapsed = this.collapsed;
       var expanded = this.expanded;
       var hidden = this.hidden;

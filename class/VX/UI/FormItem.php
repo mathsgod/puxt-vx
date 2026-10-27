@@ -149,13 +149,13 @@ class FormItem extends EL\FormItem
         return $input;
     }
 
-    function setAttribute($name, $value)
+    function setAttribute(string $name, mixed $value): void
     {
         if ($name == "prop") {
             $event = new CustomEvent("prop_added", ["detail" => ["name" => $value]]);
             $this->dispatchEvent($event);
         }
-        return parent::setAttribute($name, $value);
+        parent::setAttribute($name, $value);
     }
 
     function datePicker(string $name)
@@ -336,7 +336,7 @@ class FormItem extends EL\FormItem
         return $input;
     }
 
-    function required(string $message = null)
+    function required(?string $message = null)
     {
         $label = $this->getAttribute("label");
 

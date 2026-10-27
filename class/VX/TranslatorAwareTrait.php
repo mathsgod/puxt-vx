@@ -8,7 +8,7 @@ trait TranslatorAwareTrait
 {
     protected $translator = null;
 
-    public function setTranslator(TranslatorInterface $translator = null)
+    public function setTranslator(?TranslatorInterface $translator = null)
     {
         $this->translator = $translator;
     }

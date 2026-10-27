@@ -78,12 +78,12 @@ class Form extends HTMLElement implements TranslatorAwareInterface
         return $item;
     }
 
-    public function addDivider(string $content = null)
+    public function addDivider(?string $content = null)
     {
 
         $divider = new EL\Divider();
         if ($divider) {
-            $divider->textContent = $content;
+            $divider->textContent = $content ?? '';
         }
 
         $this->append($divider);

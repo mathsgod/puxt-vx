@@ -137,7 +137,10 @@ return new class
 
         if ($logined) {
             $data["config"]["css"] = explode("\n", $config["css"]) ?? [];
-            $data["config"]["js"] = explode("\n", $config["js"]) ?? [];
+            $data["config"]["js"] = array_values(array_filter(
+                array_map('trim', explode("\n", $config["js"] ?? '')),
+                static fn ($url) => $url !== ''
+            ));
         }
 
         return $data;

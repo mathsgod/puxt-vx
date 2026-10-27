@@ -6,7 +6,7 @@ use P\Element;
 
 class FormItemElement extends Element
 {
-    public function required(string $message = null)
+    public function required(?string $message = null)
     {
         $node = $this->parentNode;
 
