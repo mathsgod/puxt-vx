@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Laminas\Diactoros\Response\EmptyResponse;
 use VX\User;
 
@@ -15,7 +16,7 @@ return new class
 
 
         try {
-            $payload = JWT::decode($refresh_token, $vx->config["VX"]["jwt"]["secret"], ["HS256"]);
+            $payload = JWT::decode($refresh_token, new Key($vx->config["VX"]["jwt"]["secret"], "HS256"));
         } catch (Exception $e) {
             //remove the cookie
             $resp = new EmptyResponse(200);

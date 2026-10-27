@@ -2,6 +2,7 @@
 
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Google\Authenticator\GoogleAuthenticator;
 use GuzzleHttp\Psr7\Query;
 use Laminas\Db\Adapter\AdapterAwareInterface;
@@ -222,7 +223,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     function getUserIdByToken(string $token)
     {
         try {
-            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+            $token = JWT::decode($token, new Key($this->config["VX"]["jwt"]["secret"], "HS256"));
         } catch (Exception $e) {
             return null;
         }
@@ -234,7 +235,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
     function decodeJWT(string $token)
     {
         try {
-            $token = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+            $token = JWT::decode($token, new Key($this->config["VX"]["jwt"]["secret"], "HS256"));
         } catch (Exception $e) {
             return null;
         }
@@ -507,12 +508,12 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "exp" => time() + 3600,
             "user_id" => $user->user_id,
             "data" => $data
-        ], $this->config["VX"]["jwt"]["secret"]);
+        ], $this->config["VX"]["jwt"]["secret"], "HS256");
     }
 
     function jwtDecode(string $jwt)
     {
-        $data =  JWT::decode($jwt, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        $data = JWT::decode($jwt, new Key($this->config["VX"]["jwt"]["secret"], "HS256"));
         return json_decode(json_encode($data), true);
     }
 
@@ -525,7 +526,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "iat" => time(),
             "exp" => time() + $access_token_expire,
             "user_id" => $user->user_id,
-        ], $this->config["VX"]["jwt"]["secret"]);
+        ], $this->config["VX"]["jwt"]["secret"], "HS256");
     }
 
     public function invalidateJWT(string $token)
@@ -545,7 +546,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "iat" => time(),
             "exp" => time() + $refresh_token_expire,
             "user_id" => $user->user_id
-        ], $this->config["VX"]["jwt"]["secret"]);
+        ], $this->config["VX"]["jwt"]["secret"], "HS256");
     }
 
     function getFileSystem(int $index = 0)
@@ -804,7 +805,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
 
     public function resetPassword(string $password, string $token)
     {
-        $payload = JWT::decode($token, $this->config["VX"]["jwt"]["secret"], ["HS256"]);
+        $payload = JWT::decode($token, new Key($this->config["VX"]["jwt"]["secret"], "HS256"));
         $user = User::Load($payload->user_id);
 
         if (md5($user->password) != $payload->hash) {
@@ -826,7 +827,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
             "exp" => time() + 3600,
             "user_id" => $user->user_id,
             "hash" => md5($user->password)
-        ], $this->config["VX"]["jwt"]["secret"]);
+        ], $this->config["VX"]["jwt"]["secret"], "HS256");
 
         $reset_link = $this->config["VX"]["vx_url"] . "/reset-password?token=" . $token;
 
@@ -849,7 +850,7 @@ class VX extends Context implements AdapterAwareInterface, MiddlewareInterface, 
         $mailer->send();
     }
 
-    public function getTwig(LoaderInterface $loader = null)
+    public function getTwig(?LoaderInterface $loader = null)
     {
         if (!$loader) {
             $loader = new FilesystemLoader([$this->root, $this->vx_root]);
